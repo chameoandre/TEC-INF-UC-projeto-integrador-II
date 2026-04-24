@@ -1,0 +1,829 @@
+\documentclass[12pt,a4paper]{article}
+
+% =====================================================
+% PACOTES
+% =====================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{newtxtext,newtxmath}
+\usepackage[most]{tcolorbox}
+
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{qrcode}
+\usepackage{titlesec}
+
+\usepackage{tikz} %graphs
+\usetikzlibrary{positioning, arrows.meta} %graphs
+\usepackage{float} %to positioning elements
+
+% =====================================================
+% SUBSECTION customizada
+% =====================================================
+\usepackage{titlesec}
+
+% SUBSECTION personalizada
+\titleformat{\subsection}
+  {\normalfont\Large\bfseries\color{azulTitulo}} % estilo
+  {\thesubsection} % número
+  {0.8em} % espaço número-texto
+  {}
+
+\titlespacing*{\subsection}
+  {0pt}
+  {1.5em}
+  {0.8em}
+  
+
+
+% \geometry{margin=2.5cm}
+\geometry{
+    top=2.5cm,
+    bottom=3cm,
+    left=1.5cm,
+    right=1.5cm
+}
+
+\onehalfspacing
+
+% =====================================================
+% CORES PERSONALIZADAS
+% =====================================================
+
+\definecolor{azulObjetivos}{RGB}{30,60,90}
+\definecolor{cinzaCodigo}{RGB}{245,245,245}
+\definecolor{vermelhoCodigo}{RGB}{180,50,50}
+\definecolor{pretoTabela}{RGB}{0,0,0}
+\definecolor{cinzaTabela}{RGB}{235,235,235}
+\definecolor{mostarda}{RGB}{204,153,0}
+
+
+% =====================================================
+% BOX VISUAL PARA OBJETIVOS
+% =====================================================
+\tcbset{
+    boxObjetivos/.style={
+        % colback=azulTitulo!5,
+        colback=mostarda!15,
+        % colframe=azulTitulo,
+        colframe=mostarda,
+        fonttitle=\bfseries,
+        coltitle=black,
+        title=Objetivos,
+        arc=4pt,
+        boxrule=0.8pt,
+        left=6pt,
+        right=6pt,
+        top=6pt,
+        bottom=6pt
+    }
+}
+
+
+\newtcolorbox{boxObjetivos}{
+    colback=azulObjetivos!10,
+    colframe=azulObjetivos,
+    boxrule=1pt,
+    arc=4pt,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt
+}
+
+\newtcolorbox{boxCodigo}{
+    colback=cinzaCodigo,
+    colframe=vermelhoCodigo,
+    boxrule=0.8pt,
+    arc=2pt,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt,
+    borderline={0.5pt}{0pt}{vermelhoCodigo,dashed}
+}
+
+
+\newtcolorbox{boxTabela}{
+    colback=cinzaTabela,
+    colframe=pretoTabela,
+    boxrule=0.8pt,
+    arc=2pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt
+}
+
+
+
+\newtcolorbox{boxAtividade}[1][]{
+    enhanced,
+    colback=azulTitulo!5, % fundo azul bem suave
+    colframe=azulTitulo,
+    boxrule=0pt,
+    arc=6pt,
+    outer arc=6pt,
+    boxsep=0pt,
+    left=14pt,
+    right=14pt,
+    top=16pt,
+    bottom=14pt,
+    title=#1,
+    coltitle=white,
+    colbacktitle=azulTitulo,
+    fonttitle=\bfseries,
+    attach boxed title to top left={
+        yshift=-3mm,
+        xshift=6mm
+    },
+    boxed title style={
+        sharp corners,
+        boxrule=0pt
+    }
+}
+
+
+
+% =====================================================
+% BOX DICAS ÚTEIS
+% =====================================================
+
+\newtcolorbox{boxDica}{
+    colback=blue!5,
+    colframe=azulTitulo,
+    title=\textbf{Dicas Úteis — VS Code},
+    fonttitle=\bfseries,
+    arc=2mm,
+    boxrule=0.8pt
+    }
+
+
+
+
+
+
+% =====================================================
+% QR CODE PERSONALIZADO
+% =====================================================
+\newcommand{\RepositorioQRCode}[2]{
+\begin{tcolorbox}[
+    colback=gray!5,
+    colframe=black!40,
+    title=Material de repositório,
+    fonttitle=\bfseries,
+    arc=3pt,
+    boxrule=0.5pt
+]
+\begin{minipage}{0.7\textwidth}
+Acesse o repositório oficial deste conteúdo:
+
+\texttt{#1}
+
+\end{minipage}
+\begin{minipage}{0.25\textwidth}
+\centering
+\qrcode[height=2.0cm]{#2}
+\end{minipage}
+\end{tcolorbox}
+}
+
+
+
+% =====================================================
+% CORES
+% =====================================================
+\definecolor{azulTitulo}{RGB}{30,60,90}
+
+% =====================================================
+% CABEÇALHO
+% =====================================================
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{
+\includegraphics[height=1.8cm]{figures/garopaba_horizontal_marca2015_PNG.png}
+}
+
+\fancyhead[R]{
+\textbf{UC – Projeto Integrador II}\\
+Docentes: Prof. André Moraes\\
+            Nauber \\
+\textbf{Curso Técnico em Informática
+}}
+
+
+% =====================================================
+% RODAPÉ
+% =====================================================
+\pagestyle{fancy}
+
+\fancyfoot[L]{\small\textit{\leftmark}}
+\fancyfoot[C]{}
+\fancyfoot[R]{\small Página \thepage}
+% \fancyfoot[R]{\small IFSC – Técnico Integrado}
+\renewcommand{\footrulewidth}{2.4pt}
+
+\setlength{\headheight}{45pt}
+
+
+% =====================================================
+% ESTILO DE SEÇÃO
+% =====================================================
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{azulTitulo}}
+{\thesection}
+{1em}
+{}
+[\vspace{0.3cm}\hrule]
+
+\titleformat{\subsection}
+{\normalfont\bfseries}
+{}
+{0em}
+{}
+[\vspace{0.2cm}\hrule]
+
+% =====================================================
+% DOCUMENTO
+% =====================================================
+\begin{document}
+
+% =====================================================
+% CAPA GERAL
+% =====================================================
+\begin{center}
+    {\Large \textbf{PROJETO INTEGRADOR II}}\\
+    Caderno de Atividades da Unidade Curricular\\
+    Semestre 3 – 60h
+\end{center}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.8cm}
+
+\tableofcontents
+\newpage
+
+
+
+% =====================================================
+% VISÃO GERAL DA DISCIPLINA
+% =====================================================
+\section{Visão Geral da Unidade Curricular}
+
+Esta unidade curricular tem como objetivo consolidar e evoluir projetos desenvolvidos anteriormente no curso, promovendo a integração multidisciplinar de conhecimentos técnicos, metodológicos e científicos.
+
+Ao longo do semestre, os estudantes irão revisar criticamente seus projetos anteriores, realizar diagnóstico técnico, propor ajustes estruturais, planejar nova execução e implementar melhorias por meio de micro-experimentos controlados.
+
+A disciplina será orientada por uma perspectiva prática, investigativa e profissional, incentivando organização, autonomia, pensamento crítico e responsabilidade técnica na condução de projetos de tecnologia.
+
+\subsection*{Estrutura do Semestre}
+
+O semestre está organizado em 5 etapas estruturantes, distribuídas ao longo dos encontros:
+
+\begin{enumerate}
+    \item \textbf{Diagnóstico e Recuperação do Projeto} \\
+    Revisão dos resultados anteriores, organização de repositórios, recuperação de datasets e análise crítica das limitações técnicas.
+
+    \item \textbf{Plano de Ajustes e Replanejamento} \\
+    Redefinição de objetivos, elaboração de cronograma atualizado, definição de métricas e metodologia de execução.
+
+    \item \textbf{Execução Técnica e Implementação} \\
+    Desenvolvimento de melhorias, refatoração de código, ajustes estruturais e consolidação da solução.
+
+    \item \textbf{Micro-Experimentos e Validação} \\
+    Planejamento e execução de 2 a 3 experimentos aplicados ao projeto, com coleta e análise de resultados.
+
+    \item \textbf{Consolidação Científica e Apresentação Final} \\
+    Produção de relatório técnico em formato de artigo científico utilizando \LaTeX{}, incluindo fundamentação teórica, trabalhos relacionados e apresentação dos resultados.
+\end{enumerate}
+
+
+% =====================================================
+% FIGURA – PIPELINE DO PROJETO INTEGRADOR II
+% =====================================================
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.4cm and 1.2cm,
+    every node/.style={font=\small},
+    etapa/.style={
+        rectangle,
+        rounded corners=6pt,
+        draw=azulTitulo,
+        thick,
+        minimum width=3.2cm,
+        minimum height=1.55cm,
+        text width=3.2cm,
+        align=center,
+        fill=azulTitulo!5
+    },
+    seta/.style={
+        -{Latex[length=2.2mm]},
+        thick,
+        draw=azulTitulo
+    }
+]
+
+\node[etapa] (e1) {\textbf{1. Diagnóstico}\\Recuperação do projeto\\Análise crítica};
+
+\node[etapa, right=of e1] (e2) {\textbf{2. Plano de Ajustes}\\Replanejamento\\Definição de métricas};
+
+\node[etapa, right=of e2] (e3) {\textbf{3. Execução Técnica}\\Implementação\\Refatoração};
+
+\node[etapa, right=of e3] (e4) {\textbf{4. Micro-Experimentos}\\Validação\\Análise de dados};
+
+\node[etapa, right=of e4] (e5) {\textbf{5. Consolidação Científica}\\Artigo em \LaTeX{}\\Apresentação final};
+
+\draw[seta] (e1) -- (e2);
+\draw[seta] (e2) -- (e3);
+\draw[seta] (e3) -- (e4);
+\draw[seta] (e4) -- (e5);
+
+\end{tikzpicture}%
+}
+\caption{Pipeline estruturante do Projeto Integrador II.}
+\end{figure}
+
+
+
+\subsection*{Competências Desenvolvidas}
+
+Ao final da disciplina, o estudante deverá ser capaz de:
+
+\begin{itemize}
+    \item Realizar análise crítica de projetos tecnológicos;
+    \item Planejar e reorganizar projetos com base em diagnóstico técnico;
+    \item Definir objetivos, métricas e cronogramas de execução;
+    \item Executar melhorias técnicas estruturadas;
+    \item Planejar e aplicar micro-experimentos com coleta de dados;
+    \item Produzir documentação técnica estruturada em formato científico;
+    \item Apresentar resultados técnicos de forma clara e fundamentada;
+    \item Integrar conhecimentos multidisciplinares na solução de problemas reais.
+\end{itemize}
+
+\subsection*{Metodologia}
+
+A disciplina será conduzida por meio de aprendizagem baseada em projetos (Project-Based Learning), com foco na evolução e maturação de projetos previamente desenvolvidos.
+
+Serão realizados ciclos estruturados de diagnóstico, planejamento, execução e validação experimental, acompanhados por checkpoints periódicos.
+
+Os grupos deverão manter um caderno de notas do projeto para registro contínuo das decisões técnicas, dificuldades, tutoriais, ajustes e aprendizados.
+
+A documentação final será elaborada em formato de artigo científico utilizando template em \LaTeX{}, incentivando a cultura de organização técnica e possível submissão a evento acadêmico.
+
+\subsection*{Avaliação da Aprendizagem}
+
+A avaliação será processual, contínua e cumulativa, considerando a evolução técnica do projeto, a qualidade da documentação e o desempenho individual do estudante.
+
+A nota final será composta por cinco componentes:
+
+\begin{itemize}
+    \item \textbf{Diagnóstico do Projeto (15\%)} \\
+    Organização dos materiais anteriores, análise crítica e definição clara do estágio atual do projeto.
+
+    \item \textbf{Plano de Ajustes e Replanejamento (20\%)} \\
+    Definição estruturada de objetivos, cronograma, métricas e metodologia de execução.
+
+    \item \textbf{Execução Técnica (30\%)} \\
+    Implementação funcional das melhorias propostas e evolução concreta do projeto.
+
+    \item \textbf{Micro-Experimentos e Análise de Resultados (20\%)} \\
+    Planejamento, execução e interpretação adequada dos experimentos realizados.
+
+    \item \textbf{Artigo Final e Apresentação (15\%)} \\
+    Produção do relatório técnico em formato científico e apresentação oral estruturada.
+\end{itemize}
+
+A avaliação prioriza a maturidade técnica do projeto, a coerência metodológica, a capacidade de análise crítica e a qualidade da documentação produzida.
+
+
+
+
+
+
+\newpage
+
+% =====================================================
+% ROTEIRO PRÁTICO 01
+% =====================================================
+
+\section{Roteiro Prático 01 — Diagnóstico e Retomada do Projeto}
+
+% =====================================================
+% OBJETIVOS
+% =====================================================
+
+\begin{boxObjetivos}
+\textbf{Objetivos da Aula}
+
+Ao final desta aula o estudante será capaz de:
+
+\begin{itemize}
+\item Recuperar e organizar materiais do projeto anterior;
+\item Identificar o estágio atual do projeto;
+\item Analisar criticamente resultados obtidos;
+\item Reconhecer limitações técnicas e metodológicas;
+\item Estruturar um diagnóstico inicial formal do projeto.
+\end{itemize}
+\end{boxObjetivos}
+
+% =====================================================
+% INTRODUÇÃO
+% =====================================================
+
+\subsection{Introdução}
+
+O Projeto Integrador II não inicia um novo projeto do zero.
+
+Ele parte da maturação do projeto anteriormente desenvolvido, promovendo:
+
+\begin{itemize}
+\item Revisão crítica dos resultados;
+\item Organização técnica dos artefatos;
+\item Replanejamento estruturado;
+\item Evolução técnica com base em diagnóstico;
+\item Consolidação científica da solução.
+\end{itemize}
+
+Antes de avançar, é fundamental compreender com clareza o estágio atual do projeto.
+
+Esta aula é dedicada à organização, análise e reflexão técnica.
+
+% =====================================================
+% PARTE 1
+% =====================================================
+
+\subsection{Parte 1 — Organização e Recuperação do Projeto (25 minutos)}
+
+\begin{boxAtividade}[Atividade 1 — Recuperação dos Materiais]
+
+Cada grupo deverá:
+
+\begin{itemize}
+\item Localizar o repositório do projeto anterior;
+\item Verificar se o código está acessível e organizado;
+\item Identificar se há datasets utilizados;
+\item Reunir relatórios, apresentações e documentos produzidos;
+\item Listar funcionalidades implementadas;
+\item Listar funcionalidades previstas que não foram concluídas.
+\end{itemize}
+
+Ao final, elaborar uma lista estruturada contendo:
+
+\begin{itemize}
+\item O que existe;
+\item O que está incompleto;
+\item O que não funciona;
+\item O que precisa ser reorganizado.
+\end{itemize}
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 2
+% =====================================================
+
+\subsection{Parte 2 — Apresentação Sintética do Projeto (5 minutos por grupo)}
+
+\begin{boxAtividade}[Atividade 2 — Pitch Técnico]
+
+Cada grupo deverá apresentar:
+
+\begin{itemize}
+\item Problema abordado no PI-I;
+\item Objetivos definidos originalmente;
+\item Cronograma previsto;
+\item Resultados alcançados;
+\item Principais dificuldades encontradas;
+\item Limitações atuais do projeto.
+\end{itemize}
+
+A apresentação deve ser objetiva e técnica.
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 3
+% =====================================================
+
+\subsection{Parte 3 — Diagnóstico Estruturado}
+
+\begin{boxAtividade}[Atividade 3 — Documento de Diagnóstico]
+
+Responder às seguintes questões no caderno de notas do projeto:
+
+\begin{enumerate}
+\item O projeto está funcional? Em qual nível?
+\item O problema original ainda é relevante?
+\item O escopo estava adequado ou superdimensionado (tentamos abraçar o mundo)?
+\item Quais foram os principais erros de planejamento?
+\item O grupo permanece o mesmo?
+\item Há dados suficientes para experimentação?
+\item Quais melhorias são prioritárias?
+\item O projeto pode gerar 2 ou 3 micro-experimentos mensuráveis?
+\end{enumerate}
+
+O diagnóstico deverá ser redigido de forma técnica e objetiva (1 a 2 páginas) e deverá compor uma seção específica no carderno de notas do projeto chamada Diagnóstico do PI-1.
+
+\end{boxAtividade}
+
+
+% =====================================================
+% PARTE 4
+% =====================================================
+
+\subsection{Parte 4 — Criação do Relatório Técnico no Overleaf}
+
+\begin{boxAtividade}[Atividade 4 — Iniciando o Relatório Oficial do Projeto]
+
+Nesta etapa, cada grupo deverá criar o documento formal do projeto utilizando o template institucional IFSC disponibilizado pelo professor.
+
+\textbf{Etapa 1 — Baixar o Template no GitHub}
+
+\begin{enumerate}
+    \item Acessar o repositório oficial do template:
+    
+    \texttt{https://github.com/chameoandre/ifsc-gpb-relatorio-template}
+    
+    \item Clicar no botão verde \textbf{Code};
+    \item Selecionar a opção \textbf{Download ZIP};
+    \item Salvar o arquivo no computador;
+    \item Extrair (descompactar) o arquivo ZIP.
+\end{enumerate}
+
+\vspace{0.4cm}
+
+\textbf{Etapa 2 — Criar Projeto no Overleaf}
+
+\begin{enumerate}
+    \item Acessar \texttt{https://www.overleaf.com};
+    \item Criar conta (caso não possua);
+    \item Clicar em \textbf{New Project};
+    \item Selecionar \textbf{Upload Project};
+    \item Enviar o conteúdo da pasta extraída do template;
+    \item Confirmar criação do projeto.
+\end{enumerate}
+\end{boxAtividade}
+
+\vspace{0.4cm}
+
+
+\newpage
+\begin{boxAtividade}[Atividade 4 — Iniciando o Relatório Oficial do Projeto Etapa 3]
+
+\textbf{Etapa 3 — Primeira Edição Obrigatória}
+
+Após abrir o projeto no Overleaf:
+
+\begin{itemize}
+    \item Atualizar o bloco de identificação do documento;
+    \item Inserir o título provisório do projeto;
+    \item Preencher integralmente a seção:
+    \textbf{Diagnóstico Inicial do Projeto};
+    \item Compilar o documento e verificar se não há erros.
+\end{itemize}
+
+\textbf{Observação:} Este documento será atualizado ao longo de todo o semestre e servirá como base para a entrega final.
+
+\end{boxAtividade}
+
+
+
+\newpage
+
+% =====================================================
+% CHECKLIST
+% =====================================================
+
+\subsection{Checklist Final da Aula}
+
+\begin{boxAtividade}[Verificação Técnica]
+
+Antes de finalizar a aula, verifique:
+
+\begin{itemize}
+\item O repositório está acessível e organizado;
+\item O grupo identificou claramente o estágio atual do projeto;
+\item O diagnóstico foi redigido de forma estruturada;
+\item O caderno de notas foi criado;
+\item Há uma visão preliminar de possíveis micro-experimentos.
+\end{itemize}
+
+\end{boxAtividade}
+
+% =====================================================
+% REFLEXÃO FINAL
+% =====================================================
+
+\subsection*{Reflexão Técnica}
+
+Projetos não evoluem apenas por implementação de código.
+
+Eles evoluem por análise crítica, organização, planejamento e validação estruturada.
+
+O Projeto Integrador II exige maturidade técnica.
+
+O diagnóstico realizado hoje é a base para todas as etapas seguintes.
+
+
+
+
+
+
+\newpage
+
+% =====================================================
+% ROTEIRO PRÁTICO 02
+% =====================================================
+
+\section{Roteiro Prático 03 — Escrita Inicial do Artigo no Padrão ACM}
+
+% =====================================================
+% OBJETIVOS
+% =====================================================
+
+\begin{boxObjetivos}
+\textbf{Objetivos da Aula}
+
+Ao final desta aula o estudante será capaz de:
+
+\begin{itemize}
+\item Criar um artigo científico utilizando o template oficial ACM no Overleaf;
+\item Configurar corretamente os dados iniciais do artigo;
+\item Redigir o resumo e a introdução do projeto;
+\item Iniciar a seção de fundamentação teórica (background);
+\item Registrar o link do artigo na planilha de acompanhamento.
+\end{itemize}
+\end{boxObjetivos}
+
+% =====================================================
+% INTRODUÇÃO
+% =====================================================
+
+\subsection{Introdução}
+
+A partir desta aula, os projetos passam a ser documentados no formato de artigo científico utilizando o padrão ACM, adotado em eventos como o Computer on the Beach.
+
+O artigo será desenvolvido ao longo do semestre e poderá ser utilizado como base para submissão em evento científico.
+
+O foco desta aula é iniciar a estrutura do artigo com os elementos essenciais.
+
+% =====================================================
+% PARTE 1
+% =====================================================
+
+\subsection{Parte 1 — Acesso ao Template ACM no Overleaf}
+
+\begin{boxAtividade}[Atividade 1 — Criação do Projeto]
+
+Cada grupo deverá:
+
+\begin{enumerate}
+\item Acessar o template oficial ACM no Overleaf:
+
+\texttt{https://www.overleaf.com/gallery/tagged/acm-official#.WOuOk2e1taQ}
+
+\item Selecionar um template de conferência (conference);
+
+\item Criar uma cópia do projeto no Overleaf;
+
+\item Renomear o projeto com o nome do trabalho;
+
+\item Verificar se o documento compila corretamente.
+\end{enumerate}
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 2
+% =====================================================
+
+\subsection{Parte 2 — Configuração Inicial do Artigo}
+
+\begin{boxAtividade}[Atividade 2 — Ajuste dos Dados]
+
+No arquivo principal do artigo, atualizar:
+
+\begin{itemize}
+\item Título do trabalho;
+\item Nome dos autores;
+\item Instituição (IFSC – Campus Garopaba);
+\item Remover textos de exemplo do template.
+\end{itemize}
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 3
+% =====================================================
+
+\subsection{Parte 3 — Escrita do Resumo (Abstract)}
+
+\begin{boxAtividade}[Atividade 3 — Resumo]
+
+O resumo deve conter:
+
+\begin{itemize}
+\item O problema abordado;
+\item A proposta do projeto;
+\item O objetivo principal.
+\end{itemize}
+
+O texto deve ser breve, claro e direto (aproximadamente 5 a 8 linhas).
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 4
+% =====================================================
+
+\subsection{Parte 4 — Introdução}
+
+\begin{boxAtividade}[Atividade 4 — Introdução]
+
+A introdução deve responder:
+
+\begin{itemize}
+\item Qual problema o projeto resolve;
+\item Por que esse problema é relevante;
+\item Qual solução está sendo proposta.
+\end{itemize}
+
+A seção deve conter entre 2 e 4 parágrafos.
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 5
+% =====================================================
+
+\subsection{Parte 5 — Fundamentação Teórica (Background)}
+
+\begin{boxAtividade}[Atividade 5 — Background/Fundamentação teórica]
+
+Cada grupo deverá:
+
+\begin{itemize}
+\item Criar ou ajustar a seção de background;
+\item Inserir pelo menos 2 referências;
+\item Explicar conceitos relacionados ao projeto;
+\item Relacionar esses conceitos com a solução proposta.
+\end{itemize}
+
+\end{boxAtividade}
+
+% =====================================================
+% PARTE 6
+% =====================================================
+
+\subsection{Parte 6 — Registro na Planilha}
+
+\begin{boxAtividade}[Atividade 6 — Atualização do Acompanhamento]
+
+Cada grupo deverá:
+
+\begin{itemize}
+\item Copiar o link do projeto no Overleaf;
+\item Inserir o link na planilha de acompanhamento;
+\item Atualizar o status do projeto;
+\item Registrar a data da última atualização.
+\end{itemize}
+
+\end{boxAtividade}
+
+% =====================================================
+% CHECKLIST
+% =====================================================
+
+\subsection{Checklist Final da Aula}
+
+\begin{boxAtividade}[Verificação Técnica]
+
+Antes de finalizar:
+
+\begin{itemize}
+\item O artigo foi criado no Overleaf usando template ACM;
+\item O título e autores foram atualizados;
+\item O resumo foi escrito;
+\item A introdução está estruturada;
+\item A seção de background foi iniciada;
+\item O link do artigo está na planilha.
+\end{itemize}
+
+\end{boxAtividade}
+
+
+\end{document}
