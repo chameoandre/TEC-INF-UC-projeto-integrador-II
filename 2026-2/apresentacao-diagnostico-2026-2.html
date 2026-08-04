@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFSC — Diagnóstico da Turma INF-2024 (PI-II 2026-2)</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* IFSC Official Color Palette */
+      --ifsc-green-primary: #16a34a;
+      --ifsc-green-dark: #15803d;
+      --ifsc-green-light: #4ade80;
+      --ifsc-green-glow: rgba(34, 197, 94, 0.25);
+      --ifsc-red: #dc2626;
+      --ifsc-red-glow: rgba(220, 38, 38, 0.25);
+      
+      --bg-dark: #09110d;
+      --bg-card: rgba(18, 32, 24, 0.8);
+      --bg-card-border: rgba(34, 197, 94, 0.2);
+      
+      --accent-amber: #f59e0b;
+      --accent-blue: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(22, 163, 74, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(220, 38, 38, 0.05) 0%, transparent 40%);
+    }
+
+    /* Top Bar Institutional Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2rem;
+      background: rgba(13, 23, 17, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--ifsc-green-primary);
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .ifsc-logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    }
+
+    /* Stylized IFSC 9+1 Grid CSS Mark */
+    .ifsc-grid-mark {
+      display: grid;
+      grid-template-columns: repeat(3, 8px);
+      grid-template-rows: repeat(3, 8px);
+      gap: 3px;
+    }
+
+    .ifsc-grid-square {
+      background-color: var(--ifsc-green-primary);
+      border-radius: 2px;
+    }
+
+    .ifsc-grid-square.red {
+      background-color: var(--ifsc-red);
+    }
+
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-main {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--ifsc-green-light);
+      font-weight: 500;
+    }
+
+    .brand-badge {
+      background: rgba(22, 163, 74, 0.2);
+      color: var(--ifsc-green-light);
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .controls-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--bg-card-border);
+      color: var(--text-main);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-icon:hover {
+      background: rgba(22, 163, 74, 0.2);
+      border-color: var(--ifsc-green-light);
+      color: var(--ifsc-green-light);
+    }
+
+    /* Slide Viewport */
+    .deck-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 2rem 3.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.96) translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Slide Typography */
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Layout Components */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(34, 197, 94, 0.4);
+      box-shadow: 0 12px 35px rgba(22, 163, 74, 0.15);
+    }
+
+    /* Progress Bar Metrics */
+    .metric-row {
+      margin-bottom: 1rem;
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .metric-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    .tag-success { background: rgba(22, 163, 74, 0.25); color: var(--ifsc-green-light); border: 1px solid rgba(74, 222, 128, 0.3); }
+    .tag-warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-danger { background: rgba(220, 38, 38, 0.25); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.4); }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease-out;
+    }
+
+    /* Highlight Banner */
+    .banner-danger {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(13, 23, 17, 0.9) 100%);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
+    }
+
+    .banner-title {
+      color: #fca5a5;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Slide 1 - Cover */
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #ffffff 0%, #4ade80 50%, #86efac 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-box {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(13, 23, 17, 0.9) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 20px;
+      padding: 1.8rem;
+      margin-top: 1rem;
+    }
+
+    /* Interactive Columns Guide Component */
+    .col-nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .col-tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--bg-card-border);
+      color: var(--text-muted);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .col-tab-btn:hover {
+      background: rgba(22, 163, 74, 0.2);
+      color: #fff;
+    }
+
+    .col-tab-btn.active {
+      background: rgba(22, 163, 74, 0.25);
+      border-color: var(--ifsc-green-light);
+      color: var(--ifsc-green-light);
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
+    }
+
+    .col-detail-card {
+      background: linear-gradient(135deg, rgba(18, 32, 24, 0.95) 0%, rgba(9, 17, 13, 0.98) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: 16px;
+      padding: 1.5rem;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .col-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .col-icon-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(22, 163, 74, 0.2);
+      color: var(--ifsc-green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+
+    .col-detail-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .col-detail-section {
+      margin-bottom: 0.8rem;
+    }
+
+    .col-detail-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 700;
+      color: var(--ifsc-green-light);
+      margin-bottom: 0.25rem;
+    }
+
+    .col-detail-text {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    /* Counter Big Card */
+    .big-number-card {
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .big-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .color-danger { color: #fca5a5; }
+    .color-warning { color: var(--accent-amber); }
+    .color-success { color: var(--ifsc-green-light); }
+
+    ul.check-list {
+      list-style: none;
+      margin-top: 0.8rem;
+    }
+
+    ul.check-list li {
+      position: relative;
+      padding-left: 1.6rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    ul.check-list li::before {
+      content: '➔';
+      position: absolute;
+      left: 0;
+      color: var(--ifsc-green-light);
+      font-weight: bold;
+    }
+
+    .qr-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: rgba(22, 163, 74, 0.05);
+      border: 1px dashed rgba(74, 222, 128, 0.3);
+      border-radius: 14px;
+      padding: 1.2rem;
+    }
+
+    /* Bottom Navigation Bar */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2rem;
+      background: rgba(13, 23, 17, 0.9);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--bg-card-border);
+    }
+
+    .dots-container {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: var(--ifsc-green-light);
+      width: 28px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-nav {
+      background: rgba(22, 163, 74, 0.2);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: var(--text-main);
+      padding: 0.5rem 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: var(--ifsc-green-primary);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(22, 163, 74, 0.5);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      box-shadow: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border-color: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar Institutional Header -->
+  <header>
+    <div class="brand">
+      <!-- Official IFSC Garopaba Logo Image -->
+      <img src="../figures/garopaba_horizontal_marca2015_PNG.png" alt="IFSC Câmpus Garopaba" class="ifsc-logo-img" onerror="this.style.display='none'; document.getElementById('ifsc-fallback-logo').style.display='flex';">
+      
+      <!-- Fallback IFSC Brand Badge if image fails -->
+      <div id="ifsc-fallback-logo" style="display: none; align-items: center; gap: 0.6rem;">
+        <div class="ifsc-grid-mark">
+          <div class="ifsc-grid-square red"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+          <div class="ifsc-grid-square"></div>
+        </div>
+        <div class="brand-title">
+          <span class="brand-main">INSTITUTO FEDERAL</span>
+          <span class="brand-sub">Santa Catarina — Câmpus Garopaba</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-top">
+      <div class="brand-badge">
+        <span>●</span> UC Projeto Integrador II (INF-2024)
+      </div>
+      <button class="btn-icon" onclick="toggleFullscreen()">
+        <span>⛶</span> Tela Cheia
+      </button>
+    </div>
+  </header>
+
+  <!-- Slide Viewport -->
+  <main class="deck-container">
+
+    <!-- SLIDE 1: Capa / Contexto -->
+    <section class="slide active" id="slide-1">
+      <div style="max-width: 920px;">
+        <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+          <div class="ifsc-grid-mark">
+            <div class="ifsc-grid-square red"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+            <div class="ifsc-grid-square"></div>
+          </div>
+          <span style="color: var(--ifsc-green-light); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem;">Retomada das Atividades 2026-2</span>
+        </div>
+
+        <h1 class="hero-title">Raio-X de Retomada: Onde Estamos?</h1>
+        <p class="slide-subtitle">Diagnóstico institucional e mapa de acompanhamento dos 10 projetos da turma Técnico em Informática.</p>
+        
+        <div class="hero-box">
+          <div style="display: flex; align-items: center; gap: 1.2rem;">
+            <div style="background: rgba(22, 163, 74, 0.25); border: 1px solid rgba(74, 222, 128, 0.4); width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+              📊
+            </div>
+            <div>
+              <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; color: #fff;">Objetivo da Aula de Hoje</h3>
+              <p style="color: #cbd5e1; font-size: 0.95rem; margin-top: 0.2rem;">Zerar as lacunas técnicas na planilha de acompanhamento, entender a função de cada entregável e alinhar as metas com a equipe docente (Profª. Karina & Prof. André Moraes).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Visão Geral de Entregas -->
+    <section class="slide" id="slide-2">
+      <h2 class="slide-title">Visão Geral da Turma (10 Projetos)</h2>
+      <p class="slide-subtitle">Mapeamento do preenchimento dos entregáveis na planilha oficial no Google Sheets.</p>
+
+      <div class="grid-2" style="align-items: center;">
+        <div>
+          <!-- Metric 1: Diagrama Canva -->
+          <div class="metric-row card">
+            <div class="metric-header">
+              <span>📐 Diagrama de Arquitetura (Canva)</span>
+              <span class="metric-tag tag-success">8 de 10 (80%)</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: 80%; background: var(--ifsc-green-primary);"></div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">Faltam apenas 2 grupos preencherem.</p>
+          </div>
+
+          <!-- Metric 2: Experimento 1-4 (Ao menos 1 descritivo) -->
+          <div class="metric-row card">
+            <div class="metric-header">
+              <span>🧪 Descrição de Experimentos (Exp1-4)</span>
+              <span class="metric-tag tag-warning">8 de 10 (80%)</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: 80%; background: var(--accent-amber);"></div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">8 grupos possuem ao menos 1 experimento. 2 estão totalmente zerados.</p>
+          </div>
+
+          <!-- Metric 3: Pitch Apresentação -->
+          <div class="metric-row card">
+            <div class="metric-header">
+              <span>🎬 Pitch Técnico em Vídeo (3 min)</span>
+              <span class="metric-tag tag-danger">1 de 10 (10%)</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: 10%; background: var(--ifsc-red);"></div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">Gargalo crítico da turma! 9 de 10 grupos não cadastraram o link.</p>
+          </div>
+        </div>
+
+        <!-- Highlight Card -->
+        <div class="card big-number-card" style="border-color: rgba(220, 38, 38, 0.4); background: rgba(220, 38, 38, 0.08);">
+          <span style="font-size: 0.85rem; text-transform: uppercase; font-weight: 700; color: #fca5a5;">Gargalo Mais Crítico</span>
+          <div class="big-number color-danger">90%</div>
+          <p style="font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem;">da Turma sem Pitch cadastrado!</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Apenas o projeto <strong style="color: #fff;">SMC: Montagem de Computadores</strong> cadastrou o link do vídeo de 3 minutos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Grupos Mais Atrasados -->
+    <section class="slide" id="slide-3">
+      <h2 class="slide-title">⚠️ Atenção Prioritária Imediata</h2>
+      <p class="slide-subtitle">Dois projetos possuem pendências acumuladas em múltiplos entregáveis na planilha.</p>
+
+      <div class="grid-2">
+        <!-- Grupo 1 -->
+        <div class="banner-danger">
+          <div class="banner-title">
+            <span>🔴</span> JifTV — Streaming Adaptativo
+          </div>
+          <p style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 0.8rem;">O projeto não possui os registros essenciais de planejamento e validação cadastrados.</p>
+          <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.82rem;">
+            <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.7rem; border-radius: 6px; color: #fca5a5;">❌ Diagrama Canva: <strong>PENDENTE</strong></div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.7rem; border-radius: 6px; color: #fca5a5;">❌ Pitch Vídeo: <strong>PENDENTE</strong></div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.7rem; border-radius: 6px; color: #fca5a5;">❌ Experimentos Exp1-Exp4: <strong>SEM DESCRIÇÃO</strong></div>
+          </div>
+        </div>
+
+        <!-- Grupo 2 -->
+        <div class="banner-danger">
+          <div class="banner-title">
+            <span>🔴</span> RasPorta — Fechadura Automática
+          </div>
+          <p style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 0.8rem;">Nenhum material de arquitetura ou teste foi formalizado na planilha.</p>
+          <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.82rem;">
+            <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.7rem; border-radius: 6px; color: #fca5a5;">❌ Diagrama Canva: <strong>PENDENTE</strong></div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.7rem; border-radius: 6px; color: #fca5a5;">❌ Pitch Vídeo: <strong>PENDENTE</strong></div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.7rem; border-radius: 6px; color: #fca5a5;">❌ Experimentos Exp1-Exp4: <strong>SEM DESCRIÇÃO</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.25rem; background: rgba(22, 163, 74, 0.08); border-color: rgba(74, 222, 128, 0.3);">
+        <p style="font-size: 0.9rem; color: var(--ifsc-green-light); text-align: center;"><strong>Meta de hoje para JifTV e RasPorta:</strong> Preencher o diagrama e definir a descrição do Experimento 1 na planilha até o fim do encontro!</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Raio-X dos Experimentos -->
+    <section class="slide" id="slide-4">
+      <h2 class="slide-title">🧪 Raio-X dos Experimentos (Exp1 a Exp4)</h2>
+      <p class="slide-subtitle">Como está o nível de maturação experimental da turma?</p>
+
+      <div class="grid-3">
+        <!-- Exp 1 & 2 -->
+        <div class="card">
+          <h3 style="font-family: 'Outfit', sans-serif; color: var(--ifsc-green-light); font-size: 1.15rem; margin-bottom: 0.4rem;">Exp 1 & Exp 2</h3>
+          <div class="big-number color-success" style="font-size: 2.8rem;">80%</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem;">8 de 10 projetos descreveram o Experimento 1 e 2.</p>
+          <p style="font-size: 0.78rem; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 6px;">Fase avançada de testes iniciais e medições de protótipo.</p>
+        </div>
+
+        <!-- Exp 3 -->
+        <div class="card">
+          <h3 style="font-family: 'Outfit', sans-serif; color: var(--accent-amber); font-size: 1.15rem; margin-bottom: 0.4rem;">Exp 3</h3>
+          <div class="big-number color-warning" style="font-size: 2.8rem;">1 de 10</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem;">Apenas <strong>1 grupo</strong> preencheu o Experimento 3.</p>
+          <p style="font-size: 0.78rem; color: var(--accent-amber); background: rgba(245, 158, 11, 0.1); padding: 0.4rem; border-radius: 6px;">Destaque para o projeto <strong>D20Hub</strong>!</p>
+        </div>
+
+        <!-- Exp 4 -->
+        <div class="card">
+          <h3 style="font-family: 'Outfit', sans-serif; color: #fca5a5; font-size: 1.15rem; margin-bottom: 0.4rem;">Exp 4</h3>
+          <div class="big-number color-danger" style="font-size: 2.8rem;">0 de 10</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem;">Nenhum grupo detalhou o Experimento 4.</p>
+          <p style="font-size: 0.78rem; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 6px;">Será o foco dos experimentos finais no 2º semestre.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Guia Interativo das Colunas da Planilha -->
+    <section class="slide" id="slide-5">
+      <h2 class="slide-title">📘 Guia da Planilha: Significado & Importância</h2>
+      <p class="slide-subtitle">Clique nas colunas abaixo para entender a função pedagógica e técnica de cada entregável:</p>
+
+      <!-- Navigation Tabs for Columns -->
+      <div class="col-nav-tabs">
+        <button class="col-tab-btn active" onclick="showColDetail('objetivo')">🎯 Objetivo</button>
+        <button class="col-tab-btn" onclick="showColDetail('github')">💻 URL GitHub</button>
+        <button class="col-tab-btn" onclick="showColDetail('relatorio')">📄 URL Relatório</button>
+        <button class="col-tab-btn" onclick="showColDetail('diagrama')">📐 Diagrama Canva</button>
+        <button class="col-tab-btn" onclick="showColDetail('pitch')">🎬 Pitch Vídeo</button>
+        <button class="col-tab-btn" onclick="showColDetail('experimentos')">🧪 Experimentos 1-4</button>
+        <button class="col-tab-btn" onclick="showColDetail('papers')">📚 Papers 1-4</button>
+        <button class="col-tab-btn" onclick="showColDetail('status')">🚦 Bloco STATUS</button>
+      </div>
+
+      <!-- Detail Card Display -->
+      <div class="col-detail-card" id="col-detail-display">
+        <!-- Content inserted dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Ação para Hoje -->
+    <section class="slide" id="slide-6">
+      <h2 class="slide-title">🎯 Plano de Ação para Hoje</h2>
+      <p class="slide-subtitle">O que cada grupo deve realizar no encontro de agora?</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="font-family: 'Outfit', sans-serif; color: var(--ifsc-green-light); font-size: 1.15rem; margin-bottom: 0.8rem;">1. Atualização da Planilha ao Vivo</h3>
+          <ul class="check-list">
+            <li>Acessar a linha do seu projeto na planilha oficial.</li>
+            <li>Preencher <strong>AVANÇOS</strong>, <strong>PRÓXIMOS PASSOS</strong> e <strong>DIFICULDADES</strong>.</li>
+            <li>Classificar a coluna <strong>STATUS</strong> usando os valores padrão (<em>Diagnóstico, Planejamento, Execução, Experimentos, Consolidação, Finalizado</em>).</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="font-family: 'Outfit', sans-serif; color: var(--accent-amber); font-size: 1.15rem; margin-bottom: 0.8rem;">2. Ajuste das Sprints Técnicas (Atividade 4)</h3>
+          <ul class="check-list">
+            <li><strong>Grupos em Diagnóstico/Planejamento:</strong> focar em recuperar repositório e fechar diagrama/Pitch.</li>
+            <li><strong>Grupos em Execução/Experimentos:</strong> definir cronograma dos Experimentos 2 e 3 e ajustar código.</li>
+            <li>Validar o link na coluna <strong>URL Relatório</strong> (Overleaf).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Link & QR Code ao Vivo -->
+    <section class="slide" id="slide-7">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <span style="color: var(--ifsc-green-light); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem;">Mãos à Obra</span>
+        <h2 class="slide-title" style="margin-top: 0.4rem; margin-bottom: 1.2rem;">Abram a Planilha Oficial Agora!</h2>
+        
+        <div class="card qr-container" style="text-align: left; margin-bottom: 1.5rem;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" alt="QR Code Planilha" style="width: 130px; height: 130px; border-radius: 10px; background: #fff; padding: 6px;">
+          <div>
+            <h3 style="font-family: 'Outfit', sans-serif; color: #fff; font-size: 1.15rem; margin-bottom: 0.3rem;">Planilha de Acompanhamento INF-2024</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.7rem;">Edição simultânea pela turma com projeção dos resultados na tela.</p>
+            <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" style="display: inline-block; background: var(--ifsc-green-primary); color: #fff; padding: 0.55rem 1.1rem; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);">Abrir Google Sheets ↗</a>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Vamos revisar em plenária linha por linha à medida que os grupos forem preenchendo!</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation -->
+  <footer>
+    <div style="font-size: 0.85rem; color: var(--text-muted);" id="slide-indicator">
+      Slide <span id="current-slide">1</span> de 7
+    </div>
+    
+    <div class="dots-container" id="dots-wrapper">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+      <div class="dot" onclick="goToSlide(3)"></div>
+      <div class="dot" onclick="goToSlide(4)"></div>
+      <div class="dot" onclick="goToSlide(5)"></div>
+      <div class="dot" onclick="goToSlide(6)"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-nav" id="btn-prev" onclick="prevSlide()" disabled>Anterior</button>
+      <button class="btn-nav" id="btn-next" onclick="nextSlide()">Próximo ➔</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const totalSlides = slides.length;
+
+    // Columns Guide Data
+    const columnsGuideData = {
+      objetivo: {
+        icon: '🎯',
+        title: 'Coluna: Objetivo',
+        significado: 'Resumo conciso (1 a 2 frases) do problema real que o projeto aborda e da solução tecnológica desenvolvida pelo grupo.',
+        importancia: 'Previne o desvio de escopo ("tentar abraçar o mundo"), alinha a proposta entre os integrantes do grupo e permite aos professores avaliar a viabilidade técnica do projeto.'
+      },
+      github: {
+        icon: '💻',
+        title: 'Coluna: URL Repositório GitHub',
+        significado: 'Link direto para o repositório público ou privado no GitHub onde todo o código-fonte, scripts, commits e arquivos do projeto estão versionados.',
+        importancia: 'Garante versionamento de código, transparência de contribuições individuais de cada aluno e adoção de boas práticas profissionais de engenharia de software.'
+      },
+      relatorio: {
+        icon: '📄',
+        title: 'Coluna: URL Relatório (Overleaf / LaTeX)',
+        significado: 'Link direto para o artigo científico do grupo no Overleaf, formatado nos modelos oficiais (ACM / SEPEI / IFSC).',
+        importancia: 'Serve como a FONTE DE VERDADE da documentação técnica e científica do projeto. É onde os resultados dos experimentos são consolidados ao longo do ano.'
+      },
+      diagrama: {
+        icon: '📐',
+        title: 'Coluna: Diagrama Canva (Arquitetura & Fluxo)',
+        significado: 'Esquema visual que ilustra a arquitetura do sistema, fluxo de dados entre componentes (hardware/software/banco de dados) ou jornada do usuário.',
+        importancia: 'Facilita a comunicação visual rápida do projeto em feiras e bancas, além de compor obrigatoriamente a Seção de Metodologia do artigo científico.'
+      },
+      pitch: {
+        icon: '🎬',
+        title: 'Coluna: Pitch Apresentação (Vídeo 3 min)',
+        significado: 'Link para um vídeo objetivo de até 3 minutos apresentando a dor/problema, a proposta de valor, a demonstração do protótipo e os próximos passos.',
+        importancia: 'Desenvolve a habilidade técnica de síntese e oratória comercial/acadêmica, preparando os alunos para apresentações de mercado e bancas de avaliação.'
+      },
+      experimentos: {
+        icon: '🧪',
+        title: 'Colunas: Experimentos (Exp 1, Exp 2, Exp 3, Exp 4)',
+        significado: 'Detalhamento dos testes empíricos controlados aplicados ao projeto (ex.: tempo de resposta, consumo de memória, taxa de acerto de modelos, teste de usabilidade SUS).',
+        importancia: 'Diferencia um mero "trabalho de programação" de um Projeto Integrador Científico. Gera dados numéricos, gráficos e tabelas para comprovar a eficácia da solução.'
+      },
+      papers: {
+        icon: '📚',
+        title: 'Colunas: Consolidação Científica (Paper 1 a 4)',
+        significado: 'Fases progressivas de evolução do texto acadêmico (versão diagnóstica, versão com fundamentação, versão com dados experimentais e versão camera-ready).',
+        importancia: 'Orienta a escrita acadêmica em ciclos contínuos de revisão de pares e docente, preparando os trabalhos para submissão no SEPEI ou conferências científicas.'
+      },
+      status: {
+        icon: '🚦',
+        title: 'Bloco STATUS (Status, Avanços, Passos, Dificuldades)',
+        significado: 'Painel vivo do projeto indicando a fase atual (Diagnóstico, Planejamento, Execução, Experimentos, Consolidação, Finalizado), avanços recentes e gargalos.',
+        importancia: 'Proporciona visibilidade em tempo real para a equipe docente intervir pontualmente em grupos bloqueados e orientar o planejamento das sprints.'
+      }
+    };
+
+    function showColDetail(key) {
+      const data = columnsGuideData[key];
+      if (!data) return;
+
+      // Update Active Tab Button
+      document.querySelectorAll('.col-tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update Card Content
+      const display = document.getElementById('col-detail-display');
+      display.innerHTML = `
+        <div class="col-detail-header">
+          <div class="col-icon-badge">${data.icon}</div>
+          <div class="col-detail-title">${data.title}</div>
+        </div>
+        <div class="col-detail-section">
+          <div class="col-detail-label">📌 O que significa:</div>
+          <div class="col-detail-text">${data.significado}</div>
+        </div>
+        <div class="col-detail-section">
+          <div class="col-detail-label">⭐ Por que é importante:</div>
+          <div class="col-detail-text">${data.importancia}</div>
+        </div>
+      `;
+    }
+
+    function updateDeck() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      dots.forEach((dot, index) => {
+        if (index === currentSlide) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      document.getElementById('current-slide').textContent = currentSlide + 1;
+      document.getElementById('btn-prev').disabled = (currentSlide === 0);
+      document.getElementById('btn-next').disabled = (currentSlide === totalSlides - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateDeck();
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+
+    // Initialize Default Detail
+    showColDetail('objetivo');
+  </script>
+</body>
+</html>

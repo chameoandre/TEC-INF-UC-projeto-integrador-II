@@ -1,0 +1,180 @@
+\documentclass[12pt,a4paper]{article}
+
+% =====================================================
+% PACOTES E CONFIGURAÇÕES DE PÁGINA
+% =====================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{newtxtext,newtxmath}
+\usepackage[most]{tcolorbox}
+\usepackage{colortbl}
+\usepackage{qrcode}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\usepackage{float}
+
+% =====================================================
+% MARGENS E ESPAÇAMENTO
+% =====================================================
+\geometry{
+    top=2.5cm,
+    bottom=3cm,
+    left=1.5cm,
+    right=1.5cm
+}
+
+\onehalfspacing
+
+% =====================================================
+% CORES PERSONALIZADAS
+% =====================================================
+\definecolor{azulTitulo}{RGB}{30,60,90}
+\definecolor{azulObjetivos}{RGB}{30,60,90}
+\definecolor{cinzaCodigo}{RGB}{245,245,245}
+\definecolor{vermelhoCodigo}{RGB}{180,50,50}
+\definecolor{pretoTabela}{RGB}{0,0,0}
+\definecolor{cinzaTabela}{RGB}{235,235,235}
+\definecolor{mostarda}{RGB}{204,153,0}
+
+% =====================================================
+% TCOLORBOXES PERSONALIZADOS
+% =====================================================
+\newtcolorbox{boxObjetivos}{
+    colback=azulObjetivos!10,
+    colframe=azulObjetivos,
+    boxrule=1pt,
+    arc=4pt,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt
+}
+
+\newtcolorbox{boxAtividade}[1][]{
+    enhanced,
+    breakable,
+    colback=azulTitulo!5,
+    colframe=azulTitulo,
+    boxrule=0pt,
+    arc=6pt,
+    outer arc=6pt,
+    boxsep=0pt,
+    left=14pt,
+    right=14pt,
+    top=16pt,
+    bottom=14pt,
+    title=#1,
+    coltitle=white,
+    colbacktitle=azulTitulo,
+    fonttitle=\bfseries,
+    attach boxed title to top left={
+        yshift=-3mm,
+        xshift=6mm
+    },
+    boxed title style={
+        sharp corners,
+        boxrule=0pt
+    }
+}
+
+% =====================================================
+% QR CODE PERSONALIZADO
+% =====================================================
+\newcommand{\RepositorioQRCode}[2]{
+\begin{tcolorbox}[
+    colback=gray!5,
+    colframe=black!40,
+    title=Material de repositório e acompanhamento,
+    fonttitle=\bfseries,
+    arc=3pt,
+    boxrule=0.5pt
+]
+\begin{minipage}{0.7\textwidth}
+Acesse a planilha oficial deste conteúdo:
+
+\url{#1}
+
+\end{minipage}
+\begin{minipage}{0.25\textwidth}
+\centering
+\qrcode[height=2.0cm]{#2}
+\end{minipage}
+\end{tcolorbox}
+}
+
+% =====================================================
+% ESTILOS DE SEÇÃO
+% =====================================================
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{azulTitulo}}
+{\thesection}
+{1em}
+{}
+[\vspace{0.3cm}\hrule]
+
+\titleformat{\subsection}
+{\normalfont\Large\bfseries\color{azulTitulo}}
+{\thesubsection}
+{0.8em}
+{}
+
+\titlespacing*{\subsection}
+{0pt}
+{1.5em}
+{0.8em}
+
+% =====================================================
+% CABEÇALHO E RODAPÉ (ATUALIZADO: PROFª KARINA)
+% =====================================================
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{
+\includegraphics[height=1.8cm]{../figures/garopaba_horizontal_marca2015_PNG.png}
+}
+
+\fancyhead[R]{
+\textbf{UC – Projeto Integrador II (2026-2)}\\
+Docentes: Prof. André Moraes\\
+          Profª. Karina\\
+\textbf{Curso Técnico em Informática}
+}
+
+\fancyfoot[L]{\small\textit{\leftmark}}
+\fancyfoot[C]{}
+\fancyfoot[R]{\small Página \thepage}
+\renewcommand{\footrulewidth}{2.4pt}
+
+\setlength{\headheight}{45pt}
+
+% =====================================================
+% DOCUMENTO PRINCIPAL (2º SEMESTRE - 2026-2)
+% =====================================================
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{PROJETO INTEGRADOR II}}\\
+    Caderno de Atividades da Unidade Curricular — Semestre 2026-2\\
+    Curso Técnico em Informática Integrado (Turma INF-2024)
+\end{center}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.8cm}
+
+\tableofcontents
+\newpage
+
+% Roteiros do 2º Semestre
+\input{roteiro-5/main.tex}
+
+\end{document}

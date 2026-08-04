@@ -1,0 +1,104 @@
+APRESENTAÇÃO PI
+
+GRUPO 2: MUSIC BOX (NOTA - 8)
+
+CRITÉRIOS:
+Apresentação:
+	Demonstração da ferramenta desenvolvida: 
+		- demonstrada a ferramenta com detalhes e com as implementações que foram adotadas
+	
+	Contribuição dos integrantes na apresentação:
+		 - Enricky apresentou a ferramenta de forma geral, adicionando músicas, postagens, alguns.
+	
+	O que faltou?
+		 - Faltou o grupo apresentar e dar uma introdução no trabalho
+		 
+COMENTÁRIOS GERAIS:
+Percebe-se a constante busca por implementar as funcionalidades que foram propostas por parte do grupo. Também é notável o capricho visual que foi dedicado para a organização dos elementos na tela.
+
+Necesário adaptar o texto para explorar como foi atingido o objetivo geral da ferramenta, que era a de Teoria Musical e compartilhar as ideias.
+
+Implementar na totalidade as funcionalidades é mais complicado do que projetá-las inicialmente. Tempo,  e dedicação constante são elementos chave para que o sucesso do projeto ocorra.
+
+
+GRUPO 3: ORGANIZE AS SUAS PARTIDAS (Gustavo Santana, Pedro Cavinato, Davi Rafael, João Gabriel, Maikel mandou áudio) (NOTA -8)
+Apresentação:
+	Demonstração da ferramenta desenvolvida: 
+		- Demonstrada a ferramenta com algumas funcionalidades. Aparentemente a implementação se mostra um pouco elementar em termos de recursos disponíveis aos usuários.
+		
+	Contribuição dos integrantes na apresentação:
+		 - Gustavo apresentou os recursos da ferramenta.
+	O que faltou?
+	 	 -  Acredito que ainda faltam recursos para a ferramenta, as funcionalidades aparentemente ficaram em:
+	 	 		+ cadastro de usuários;
+	 	 		+ cadastro das partidas;
+	 	 		+ listagem de partidas agendadas;
+	 	 		+ alteração de partidas;
+	 	 		+ aleração de usuários.
+	 	 		
+		- Tecnologias utilizadas
+			+ Materialize, PHP? , Banco Mysql?
+			
+
+
+GRUPO 4: CIDADE LITERÁRIA (Pedro Souza, Vitória Trevisan, Sabrina, Lavinia) (NOTA 8)
+Falas: PedroSouza, Sabrina, 
+
+Demonstração da ferramenta desenvolvida: 
+	 -  Acredito que ainda faltam recursos para a ferramenta, as funcionalidades aparentemente ficaram em:
+	 	 		+ cadastro de usuários;
+	 	 		+ cadastro das livros;
+	 	 		+ listagem de livros de um usuário;
+	 	 		+ alteração de livros; (físico e digital)
+	 	 		+ alteração de usuários.
+		
+	Contribuição dos integrantes na apresentação:
+		 - Todos falaram.
+	O que faltou?
+	 	 -  Não identifiquei pontos a serem acrescentados nesta implementação.
+
+
+
+GRUPO 5: FERRAMENTA PARA CONTROLE DE CALORIAS ( NOTA 5 - Kaynan 6)
+	* Apresentaram em vídeo
+	
+GRUPO 6: GAROPABA TURISMO (NOTA - 8 e 9 para Vitor Hugo)
+
+Apresentado (Matheus Rogério)
+Demonstração da ferramenta desenvolvida: 
+	 -  o que foi demonstrado:
+	 	 		+ 
+	 - Tecnologias utilizadas
+	 	* 
+	Contribuição dos integrantes na apresentação:
+		 - 
+	O que faltou?
+	 	 -  
+
+
+GRUPO 7: Depressivamente (NOTA - 10)
+
+
+
+GRUPO 1: LAST DAYS (Nota 9,0)
+
+Apresentado (Matheus Rogério)
+Demonstração da ferramenta desenvolvida: 
+	 -  o que foi demonstrado:
+	 	 		+ Personagens do jogo
+	 	 		+ Direção de arte do jogo
+	 	 		
+	 - Tecnologias utilizadas
+	 	* Unit
+	 	* C#
+	 	
+	Contribuição dos integrantes na apresentação:
+		 - .
+	O que faltou?
+	 	 -  Menu de salvar o Jogo
+	 	 - Corrigir sobreposição de personagens
+	
+
+
+
+

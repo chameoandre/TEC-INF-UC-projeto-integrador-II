@@ -1,0 +1,132 @@
+% =====================================================
+% VISÃO GERAL DA DISCIPLINA
+% =====================================================
+\section{Visão Geral da Unidade Curricular}
+
+Esta unidade curricular tem como objetivo consolidar e evoluir projetos desenvolvidos anteriormente no curso, promovendo a integração multidisciplinar de conhecimentos técnicos, metodológicos e científicos.
+
+Ao longo do semestre, os estudantes irão revisar criticamente seus projetos anteriores, realizar diagnóstico técnico, propor ajustes estruturais, planejar nova execução e implementar melhorias por meio de micro-experimentos controlados.
+
+A disciplina será orientada por uma perspectiva prática, investigativa e profissional, incentivando organização, autonomia, pensamento crítico e responsabilidade técnica na condução de projetos de tecnologia.
+
+\subsection*{Estrutura do Semestre}
+
+O semestre está organizado em 5 etapas estruturantes, distribuídas ao longo dos encontros:
+
+\begin{enumerate}
+    \item \textbf{Diagnóstico e Recuperação do Projeto} \\
+    Revisão dos resultados anteriores, organização de repositórios, recuperação de datasets e análise crítica das limitações técnicas.
+
+    \item \textbf{Plano de Ajustes e Replanejamento} \\
+    Redefinição de objetivos, elaboração de cronograma atualizado, definição de métricas e metodologia de execução.
+
+    \item \textbf{Execução Técnica e Implementação} \\
+    Desenvolvimento de melhorias, refatoração de código, ajustes estruturais e consolidação da solução.
+
+    \item \textbf{Micro-Experimentos e Validação} \\
+    Planejamento e execução de 2 a 3 experimentos aplicados ao projeto, com coleta e análise de resultados.
+
+    \item \textbf{Consolidação Científica e Apresentação Final} \\
+    Produção de relatório técnico em formato de artigo científico utilizando \LaTeX{}, incluindo fundamentação teórica, trabalhos relacionados e apresentação dos resultados.
+\end{enumerate}
+
+
+% =====================================================
+% FIGURA – PIPELINE DO PROJETO INTEGRADOR II
+% =====================================================
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.4cm and 1.2cm,
+    every node/.style={font=\small},
+    etapa/.style={
+        rectangle,
+        rounded corners=6pt,
+        draw=azulTitulo,
+        thick,
+        minimum width=3.2cm,
+        minimum height=1.55cm,
+        text width=3.2cm,
+        align=center,
+        fill=azulTitulo!5
+    },
+    seta/.style={
+        -{Latex[length=2.2mm]},
+        thick,
+        draw=azulTitulo
+    }
+]
+
+\node[etapa] (e1) {\textbf{1. Diagnóstico}\\Recuperação do projeto\\Análise crítica};
+
+\node[etapa, right=of e1] (e2) {\textbf{2. Plano de Ajustes}\\Replanejamento\\Definição de métricas};
+
+\node[etapa, right=of e2] (e3) {\textbf{3. Execução Técnica}\\Implementação\\Refatoração};
+
+\node[etapa, right=of e3] (e4) {\textbf{4. Micro-Experimentos}\\Validação\\Análise de dados};
+
+\node[etapa, right=of e4] (e5) {\textbf{5. Consolidação Científica}\\Artigo em \LaTeX{}\\Apresentação final};
+
+\draw[seta] (e1) -- (e2);
+\draw[seta] (e2) -- (e3);
+\draw[seta] (e3) -- (e4);
+\draw[seta] (e4) -- (e5);
+
+\end{tikzpicture}%
+}
+\caption{Pipeline estruturante do Projeto Integrador II.}
+\end{figure}
+
+
+
+\subsection*{Competências Desenvolvidas}
+
+Ao final da disciplina, o estudante deverá ser capaz de:
+
+\begin{itemize}
+    \item Realizar análise crítica de projetos tecnológicos;
+    \item Planejar e reorganizar projetos com base em diagnóstico técnico;
+    \item Definir objetivos, métricas e cronogramas de execução;
+    \item Executar melhorias técnicas estruturadas;
+    \item Planejar e aplicar micro-experimentos com coleta de dados;
+    \item Produzir documentação técnica estruturada em formato científico;
+    \item Apresentar resultados técnicos de forma clara e fundamentada;
+    \item Integrar conhecimentos multidisciplinares na solução de problemas reais.
+\end{itemize}
+
+\subsection*{Metodologia}
+
+A disciplina será conduzida por meio de aprendizagem baseada em projetos (Project-Based Learning), com foco na evolução e maturação de projetos previamente desenvolvidos.
+
+Serão realizados ciclos estruturados de diagnóstico, planejamento, execução e validação experimental, acompanhados por checkpoints periódicos.
+
+Os grupos deverão manter um caderno de notas do projeto para registro contínuo das decisões técnicas, dificuldades, tutoriais, ajustes e aprendizados.
+
+A documentação final será elaborada em formato de artigo científico utilizando template em \LaTeX{}, incentivando a cultura de organização técnica e possível submissão a evento acadêmico.
+
+\subsection*{Avaliação da Aprendizagem}
+
+A avaliação será processual, contínua e cumulativa, considerando a evolução técnica do projeto, a qualidade da documentação e o desempenho individual do estudante.
+
+A nota final será composta por cinco componentes:
+
+\begin{itemize}
+    \item \textbf{Diagnóstico do Projeto (15\%)} \\
+    Organização dos materiais anteriores, análise crítica e definição clara do estágio atual do projeto.
+
+    \item \textbf{Plano de Ajustes e Replanejamento (20\%)} \\
+    Definição estruturada de objetivos, cronograma, métricas e metodologia de execução.
+
+    \item \textbf{Execução Técnica (30\%)} \\
+    Implementação funcional das melhorias propostas e evolução concreta do projeto.
+
+    \item \textbf{Micro-Experimentos e Análise de Resultados (20\%)} \\
+    Planejamento, execução e interpretação adequada dos experimentos realizados.
+
+    \item \textbf{Artigo Final e Apresentação (15\%)} \\
+    Produção do relatório técnico em formato científico e apresentação oral estruturada.
+\end{itemize}
+
+A avaliação prioriza a maturidade técnica do projeto, a coerência metodológica, a capacidade de análise crítica e a qualidade da documentação produzida.
