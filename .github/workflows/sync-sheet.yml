@@ -1,0 +1,39 @@
+name: Sincronização Automática da Planilha PI-II
+
+on:
+  # Execução diária às 06:00 BRT (09:00 UTC) e 18:00 BRT (21:00 UTC)
+  schedule:
+    - cron: '0 9,21 * * *'
+  # Permite disparar manualmente na aba Actions do GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Executar Script de Sincronização
+        run: |
+          python scripts/sync_sheet.py
+
+      - name: Comitar e Publicar Alterações
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add 2026-2/
+          if git diff --staged --quiet; then
+            echo "Nenhuma alteração encontrada na planilha."
+          else
+            git commit -m "chore(sync): sincronização automática da planilha de projetos [skip ci]"
+            git push origin main
+          fi

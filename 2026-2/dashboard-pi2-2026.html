@@ -973,6 +973,11 @@
     </div>
 
     <div class="header-actions">
+      <!-- Live Sync Button -->
+      <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar dados mais recentes da planilha Google Sheets">
+        <i class="fa-solid fa-rotate" id="liveSyncIcon"></i> Sincronizar
+      </button>
+
       <!-- Theme Switcher Button -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">
         <i class="fa-solid fa-sun" id="themeIcon"></i>
@@ -1445,237 +1450,273 @@
 
     // Full Data parsed from the official Google Sheet
     const projectsData = [
-      {
-        id: 1,
-        title: "SMC: Montagem de computadores",
-        team: "Lucas Pacheco, Bernardo, Henrique Cardoso",
-        objective: "Criação de ferramenta para aprendizado sobre Hardware, aprendendo a prática adotando uma ferramenta virtual.",
-        github: "https://github.com/henriquec30-web/projeto_pi.git",
-        overleaf: "",
-        overleafStatus: "pendente",
-        canva: "https://canva.link/wc61pjb1k2prmb4",
-        pitch: "https://youtu.be/CPQ0VqHQGHg",
-        techs: ["Godot", "GDScript", "GameDev", "Hardware Sim"],
-        advances: "[21/06] Criação de marcas de peças; Documentação de comandos do app; Geração de design dos cards.",
-        nextSteps: "Ampliar acervo de peças; Definir lógica principal do game; Revisão Paper SEPEI.",
-        difficulties: "Domínio da engine Godot e lógica de montagem.",
-        observations: "Apresentar em 2 semanas o projeto na turma INF-2025.",
-        experiments: {
-          exp1: "Protótipo: Ambiente com peças em drag-and-drop",
-          exp2: "Pendente",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "[SEPEI 2026] Submetido"
-      },
-      {
-        id: 2,
-        title: "JifTV Streaming Adaptativo",
-        team: "Rodrigo, Eluney, João, Anderson",
-        objective: "Transmitir jogos do IFSC via Streaming Adaptativo em tempo real e organizar uma estrutura online para catálogo e armazenamento dos vídeos dos jogos.",
-        github: "https://github.com/yaurodzz/JifTV-StreamingAdaptativo.git",
-        overleaf: "",
-        overleafStatus: "pendente",
-        canva: "https://canva.link/ma54h2bqhkmw0iy",
-        pitch: "https://youtu.be/B0tZgwmd4vg?feature=shared",
-        techs: ["Docker", "OBS Studio", "NGINX", "Cloudflare", "Firebase", "Linux"],
-        advances: "Compra de domínio (jiftv.org); Aquisição de 2 subdomínios; Montagem do servidor local no IFSC.",
-        nextSteps: "Finalizar servidor de streaming; Resolver roteamento de rede; Avançar na documentação.",
-        difficulties: "Configuração do Sistema Operacional Linux e banda de rede.",
-        observations: "",
-        experiments: {
-          exp1: "Pendente",
-          exp2: "Pendente",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "SNCT em planejamento"
-      },
-      {
-        id: 3,
-        title: "Curso Popular de Informática para o Trabalhador",
-        team: "Pietro, Artur, Lucas Sehn",
-        objective: "Facilitar o uso de tecnologias da Informação e comunicação para a comunidade trabalhadora.",
-        github: "https://github.com/PietroFachini/PI-Curso-Popular-de-Inform-tica-do-Trabalhador",
-        overleaf: "https://www.overleaf.com/read/gtgftsdygqqb#5307fc",
-        overleafStatus: "ok",
-        canva: "https://drive.google.com/file/d/1sb0Uq1kXHZKlVMbkcJNlseZK3p8WP-Wz/view?usp=sharing",
-        pitch: "",
-        techs: ["Google Docs", "Metodologias Ativas", "Extensão", "TICs"],
-        advances: "Reunião marcada com Profa. Karina; Definição da Aula 1 e conteúdo programático.",
-        nextSteps: "Definir data e conteúdo da Aula 2; Elaborar material didático.",
-        difficulties: "Encontrar forma padrão para documentar aulas e tempo de criação.",
-        observations: "Projeto com perfil extensionista e contato direto com a Profa. Karina.",
-        experiments: {
-          exp1: "Protótipo: Curso experimental de Ferramentas Acadêmicas",
-          exp2: "Pendente",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "Recusado no SEPEI (readequando para SNCT/COTB)"
-      },
-      {
-        id: 4,
-        title: "RasPorta: Fechadura Biométrica Automática",
-        team: "Petrus, Martin, Felipe",
-        objective: "Criar uma fechadura automática controlada por biometria e gerenciada via dashboard web local.",
-        github: "https://github.com/petrusgunder/projeto-rasptraca",
-        overleaf: "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b",
-        overleafStatus: "privado",
-        canva: "https://canva.link/5plpzei3nxzsiia",
-        pitch: "https://youtu.be/qFKXWlbp3Lg?is=MBFXBiiwa3I0iXKO",
-        techs: ["Raspberry Pi", "Python", "SQLite", "Flask", "Biometria"],
-        advances: "Aquisição de equipamentos (Raspberry Pi); LEDs de status; Banco de dados SQLite; Servidor Flask operacional.",
-        nextSteps: "Colocar dashboard no ar; Configurar MicroSD do Raspberry; Testes físicos de abertura.",
-        difficulties: "Reorganização das tarefas entre os integrantes e tempo de montagem.",
-        observations: "",
-        experiments: {
-          exp1: "Pendente",
-          exp2: "Pendente",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "Paper em edição no Overleaf"
-      },
-      {
-        id: 5,
-        title: "D20Hub: Gerenciador de Fichas de RPG",
-        team: "Nicolas, Eduardo, Henrique Gama",
-        objective: "Criar um site que incentive e facilite o uso do RPG de mesa como ferramenta de comunicação e enriquecimento cultural.",
-        github: "https://github.com/Nicolas0413/d20hub_project",
-        overleaf: "https://www.overleaf.com/project/69bd9d5e665d3072258ec42a",
-        overleafStatus: "privado",
-        canva: "https://www.canva.com/design/DAHMSqlrfbw/Kzh1QLLKbe_ngv0zF1EQUA/edit?ui=e30",
-        pitch: "https://youtu.be/UQryzKcBu1A",
-        techs: ["TypeScript", "Django", "Flask", "Bootstrap", "SQLite", "Python", "WebSocket"],
-        advances: "Tela de personagens 80% finalizada; Autenticação e segurança; Operação CRUD de fichas; Lógica do BD finalizada.",
-        nextSteps: "Organizar controle das sessões de jogadores; Ajuste no perfil de cores; Integração com WebSocket.",
-        difficulties: "Implementação das salas em tempo real e sincronização.",
-        observations: "",
-        experiments: {
-          exp1: "Protótipo: Tela principal e características",
-          exp2: "Protótipo: Banco de dados e autenticação",
-          exp3: "Protótipo: Criação de salas em tempo real",
-          exp4: "Protótipo: Internacionalização (EN/ES)"
-        },
-        paperStatus: "[SEPEI 2026] Submetido"
-      },
-      {
-        id: 6,
-        title: "Acervo Digital MAGE 3D",
-        team: "Raul, Pedro H, Augusto, Maria Cecília",
-        objective: "Criar modelagem de elementos 3D interativos para os itens e fósseis existentes no laboratório MAGE (IFSC).",
-        github: "https://github.com/PedroHvieiraC/Acervo-Digital-MAGe.git",
-        overleaf: "https://www.overleaf.com/read/hypyvwpynptw#4f8063",
-        overleafStatus: "ok",
-        canva: "https://miro.com/welcomeonboard/eGtpWTVqMllqb2J0Y2J1a1NnTDR6Zlo4SHVPa08yVFRzT1lpR0F2MmFVWURKZ1VSdG1SbEx0b08ydmRwL0YxdGRFbmtnUUV0RWZBUC9Obzl6VGZPcWVLNFlmSkZIV1VtcHIvdm41alJDVlZmcEZZdXB2dlY3Rm96ZmRvNjVhOStBS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=173534374327",
-        pitch: "",
-        techs: ["Polycam", "Sketchfab", "Blender", "GIMP", "Fotogrametria"],
-        advances: "Registro fotográfico de 18 itens do acervo; Separação das fotos para criação de modelos 3D.",
-        nextSteps: "Finalizar protótipos de 2 modelos 3D antes de processar os outros 16; Organizar planilha de assets.",
-        difficulties: "Organização do fluxo de trabalho e renderização pesada.",
-        observations: "",
-        experiments: {
-          exp1: "Pendente",
-          exp2: "Protótipo: Visualização 3D no navegador",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "[SEPEI 2026] Submetido"
-      },
-      {
-        id: 7,
-        title: "Música, Jogo e Atenção",
-        team: "Luisa Narvaz",
-        objective: "Jogo educacional com estímulos rítmicos e sonoros para crianças com dificuldades de atenção no âmbito escolar.",
-        github: "https://github.com/luisablankenburg08/jogo_pygame.git",
-        overleaf: "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
-        overleafStatus: "ok",
-        canva: "https://drive.google.com/drive/folders/1gkIR48RiBaHfomWznYDienqCqdkxJvj6?usp=drive_link",
-        pitch: "https://youtu.be/Wm4SfQHkzHI?si=lWNC7QELy9D_ZZpT",
-        techs: ["Python", "Pygame", "Raspberry Pi", "Áudio Processing"],
-        advances: "Implementação de música da Fase 1; Reorganização do código em módulos separados.",
-        nextSteps: "Construção das Fases 2 e 3; Integração com Raspberry Pi; Submissão ao Comitê de Ética.",
-        difficulties: "Conhecimento avançado em Pygame e validação do protocolo de testes com crianças.",
-        observations: "Projeto individual de alto potencial — requer apoio especial no Comitê de Ética.",
-        experiments: {
-          exp1: "Protótipo: Menu e inserção de dados",
-          exp2: "Protótipo: Registro de respostas e sons",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "Overleaf ativo"
-      },
-      {
-        id: 8,
-        title: "Estação Meteorológica no Câmpus Garopaba",
-        team: "Beatriz, Laura, Oriana, Sophie, Victória",
-        objective: "Desenvolver uma estação meteorológica de baixo custo utilizando Raspberry Pi, sensores ambientais e aplicação pedagógica.",
-        github: "https://github.com/sophirie/Estacao-Meteorologica-no-IFSC-Garopaba.git",
-        overleaf: "https://www.overleaf.com/project/69c6dabcf81662db85315a02",
-        overleafStatus: "privado",
-        canva: "https://canva.link/h3ax5hymb1liy5h",
-        pitch: "https://youtu.be/Vu1pXKOnp58",
-        techs: ["Raspberry Pi", "Python", "BME280", "SQLite", "HTML/CSS"],
-        advances: "Familiarização com o equipamento; Testes iniciais e calibração de sensores.",
-        nextSteps: "Corrigir documentação sobre troca de hardware; Implementação do sensor BME280.",
-        difficulties: "Tempo e conhecimentos específicos de integração eletrônica.",
-        observations: "",
-        experiments: {
-          exp1: "Protótipo: Obtenção de dados no Raspberry",
-          exp2: "Protótipo: Calibramento de sensores",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "Overleaf em edição"
-      },
-      {
-        id: 9,
-        title: "Scout de Vôlei: Coleta e Análise Estatística",
-        team: "Nathan, João Contreira, Pedro E",
-        objective: "Aquisição e visualização de dados de partidas de vôlei para aprendizado tático e autoanálise esportiva.",
-        github: "https://github.com/ImEnrik/Volleyball-scout",
-        overleaf: "https://www.overleaf.com/project/69b46ac0762f515edca19b1a",
-        overleafStatus: "privado",
-        canva: "https://drive.google.com/file/d/1PCQLRToUkHRBljULndR3fnH4SBtdwjHe/view?usp=sharing",
-        pitch: "https://www.youtube.com/watch?v=-PZDz0iYYZQ",
-        techs: ["Python", "JavaScript", "TypeScript", "HTML/CSS", "GitHub Pages"],
-        advances: "Aplicativo Beta funcionando na web com captura de lances.",
-        nextSteps: "Transformar em Web App instalável (PWA); Melhorar banco de dados e fundamentação teórica.",
-        difficulties: "Aprender TypeScript e banco de dados; Manter consistência do grupo.",
-        observations: "",
-        experiments: {
-          exp1: "Pendente",
-          exp2: "Protótipo: Banco de dados e suporte mobile",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "Overleaf em edição"
-      },
-      {
-        id: 10,
-        title: "ChatBot Secretaria Acadêmica (LLM Local)",
-        team: "Cauã, Enzo, Ariane",
-        objective: "Assistente virtual baseado em modelo de linguagem local para sanar dúvidas da secretaria acadêmica do IFSC.",
-        github: "https://github.com/lyag-dev/Tensor-IFSC",
-        overleaf: "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
-        overleafStatus: "ok",
-        canva: "https://canva.link/uznnsrssl7qdjm5",
-        pitch: "",
-        techs: ["LM Studio", "PyTorch", "Python", "FastAPI", "LaTeX"],
-        advances: "Estruturação inicial da metodologia; Acesso à sala de pesquisa; Definição de metas.",
-        nextSteps: "Colocar em prática a metodologia; Testar inferência com LM Studio via API; Documentar no Git.",
-        difficulties: "Atribuição de tarefas (colega que trabalha) e limitação de horário na sala de pesquisa.",
-        observations: "Requer flexibilidade de tarefas assíncronas para a integrante que trabalha.",
-        experiments: {
-          exp1: "Pendente",
-          exp2: "Protótipo: API para acessar servidor LM Studio",
-          exp3: "Pendente",
-          exp4: "Pendente"
-        },
-        paperStatus: "Overleaf público OK"
-      }
-    ];
+  {
+    "id": 1,
+    "title": "SMC: Montagem de computadores",
+    "team": "Lucas Pacheco, Bernando, Henrique Cardoso",
+    "objective": "Criação de ferramenta para aprendizado sobre Hardware, aprendendo a prática adotando uma ferramenta virtual.",
+    "github": "https://github.com/henriquec30-web/projeto_pi.git",
+    "overleaf": "",
+    "overleafStatus": "pendente",
+    "canva": "https://canva.link/wc61pjb1k2prmb4",
+    "pitch": "https://youtu.be/CPQ0VqHQGHg",
+    "techs": [
+      "Godot"
+    ],
+    "advances": "[21/06] Criação de nomes de marcas de peças;[21/06] Documentação de comandos que serão utilizados no app;Geração estilizado de design de cards de equipamentos;",
+    "nextSteps": "Ampiar o acervo de peças de hardware que o sistema pode trabalhar,Definir lógica principal do game.Revisão Paper SEPEI;",
+    "difficulties": "Domínio da linguagem Godot",
+    "observations": "Apresentar em 2x semanas o projeto na INF 25",
+    "experiments": {
+      "exp1": "Protótipo: Ambiente com peças de computadores em comportamento drag and drop estilizadas com formato de peças",
+      "exp2": "PENDENTE",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "[SEPEI 2026]NOTIFICAÇÃO: 19/06DEADLINE: 26/06REVISÃO: 25/06"
+  },
+  {
+    "id": 2,
+    "title": "JifTV Streaming Ataptativo",
+    "team": "Rodrigo, Eluney, João, Anderson",
+    "objective": "Transmitir jogos do IFSC via Streaming Adaptativo em tempo real e organizar uma estrutura online para  catálogo e armazenamento dos vídeos dos jogos",
+    "github": "https://github.com/yaurodzz/JifTV-StreamingAdaptativo.git",
+    "overleaf": "",
+    "overleafStatus": "pendente",
+    "canva": "https://canva.link/ma54h2bqhkmw0iy",
+    "pitch": "https://youtu.be/B0tZgwmd4vg?feature=shared",
+    "techs": [
+      "DOCKEROBS STUDIONGINXCLOUDFAREFIREBASE"
+    ],
+    "advances": "COMPRA DE DOMÍNIO (JIFTV.ORG)AQUISIÇÃO DE 2 SUBDOMÍNIOSMONTAGEM DE SERVIDOR NO IFSC",
+    "nextSteps": "FINALIZAR SERVIDORRESOLVER REDEAVANÇAR NA DOCUMENTAÇÃO",
+    "difficulties": "SISTEMA OPERACIONAL [LINUX]",
+    "observations": "",
+    "experiments": {
+      "exp1": "PENDENTE",
+      "exp2": "PENDENTE",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "[SEPEI 2026]NOTIFICAÇÃO: xx/06DEADLINE: xx/06REVISÃO: 25/06"
+  },
+  {
+    "id": 3,
+    "title": "Curso Popular de Informática para o Trabalhador",
+    "team": "Pietro, Artur, Lucas Sehn",
+    "objective": "Facilitar o uso de tecnologias da Informação e comunicação",
+    "github": "https://github.com/PietroFachini/PI-Curso-Popular-de-Inform-tica-do-Trabalhador",
+    "overleaf": "https://www.overleaf.com/read/gtgftsdygqqb#5307fc[SEPEI",
+    "overleafStatus": "ok",
+    "canva": "https://drive.google.com/file/d/1sb0Uq1kXHZKlVMbkcJNlseZK3p8WP-Wz/view?usp=sharing",
+    "pitch": "",
+    "techs": [
+      "Documentação",
+      "Pesquisa"
+    ],
+    "advances": "REUNIÃO MARCADA COM PROFA. KARYNADEFINIÇÃO DA AULA 1DEFINIÇÃO CONTEÚDO DA AULA 1 [GOOGLE DOCS]",
+    "nextSteps": "DEFINIR DATA E CONTEÚDO DA AULA 2",
+    "difficulties": "ENCONTRAR FORMA PARA DOCUMENTAR AULASACHAR TEMPO PARA CRIAR AULAS",
+    "observations": "",
+    "experiments": {
+      "exp1": "PENDENTE",
+      "exp2": "Protótipo: Curso experimental sobre Ferramentas para produção de trabalhos acadêmicos",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://www.overleaf.com/read/gtgftsdygqqb#5307fc[SEPEI 2026] - recused"
+  },
+  {
+    "id": 4,
+    "title": "RasPorta: Fechadura automática",
+    "team": "Petrus, Martin, Felipe",
+    "objective": "Criar uma fechadura automática controlada por biometria",
+    "github": "https://github.com/petrusgunder/projeto-rasptraca",
+    "overleaf": "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b",
+    "overleafStatus": "privado",
+    "canva": "https://canva.link/5plpzei3nxzsiia",
+    "pitch": "https://youtu.be/qFKXWlbp3Lg?is=MBFXBiiwa3I0iXKO",
+    "techs": [
+      "RASPBERRY PY",
+      "Python",
+      "SQLiteFLASK"
+    ],
+    "advances": "Aquisição da maioria dos equipamentos [raspberry],Sistema de LeDs para Raspberry,Adaptador HDMI,Criação do Banco de Dados do projetoCRIAÇÃO DE UMA TABELA PARA DIVISÃO DAS TAREFASFUNCIONAMENTO DO FLASK",
+    "nextSteps": "COLOCAR O SITE NO ARESPERAR CHEGAR O MICROSD PARA FAZER O RASPBERRY FUNCIONARTestar equipamentos noRaspberry,Efetivar o funcionamento do Banco no Raspberry.",
+    "difficulties": "EFETIVAR A REORGANIZAÇÃO DAS TAREFAS",
+    "observations": "",
+    "experiments": {
+      "exp1": "PENDENTE",
+      "exp2": "PENDENTE",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b"
+  },
+  {
+    "id": 5,
+    "title": "D20Hub: Gerenciador de fichas de RPG",
+    "team": "Nicolas, Eduardo, Henrique Gama",
+    "objective": "Criar um site que incentive e facilite o uso do RPG de mesa como ferramenta de comunicação e enriquecimento cultural.",
+    "github": "https://github.com/Nicolas0413/d20hub_project",
+    "overleaf": "https://www.overleaf.com/project/69bd9d5e665d3072258ec42a",
+    "overleafStatus": "privado",
+    "canva": "https://www.canva.com/design/DAHMSqlrfbw/Kzh1QLLKbe_ngv0zF1EQUA/edit?ui=e30",
+    "pitch": "https://youtu.be/UQryzKcBu1A",
+    "techs": [
+      "TYPESCRIPT",
+      "JAVASCRIPT",
+      "DJANGO",
+      "FLASK",
+      "BOOTSTRAP",
+      "PILLOW",
+      "SQLITE",
+      "PYTHON",
+      "WebSocket"
+    ],
+    "advances": "TELA DE PERSONAGENS 80% FINALIZADAADEQUAÇÃO DA SEGURANÇA DO PROJETO AO PADRÃO GIT HUBOPERAÇÃO CRUD COM FICHASCORREÇÃO DO PAPER DE SUBMISSÃO SEPEIFINALIZAÇÃO DA LÓGICA DO BANCO DE DADOS",
+    "nextSteps": "ORGANIZAR CONTROLE DAS SESSÕES DE JOGADORESALTERAÇÃO DE PERFIS DE CORES DOS SITEINTEGRAÇÃO COM BOOTSTRAP",
+    "difficulties": "IMPLEMENTAR ORGANIZAÇÃO DE SALAS",
+    "observations": "",
+    "experiments": {
+      "exp1": "Protótipo: Tela principal contendo caracarísticas do jogador, poderes e opções de jogo",
+      "exp2": "Protótipo: Implementação do banco de dados e autenticação dos usuários, tela de seleção de fichas.",
+      "exp3": "Protótipo: Criação das salas para interação entre os usuários.",
+      "exp4": "Protótipo: Internacionalização do site, tradução de todas as páginas para espanhol e inglês."
+    },
+    "paperStatus": "[SEPEI 2026]NOTIFICAÇÃO: 20/06DEADLINE: 27/06REVISÃO: 25/06https://www.overleaf.com/project/69bd9d5e665d3072258ec42a"
+  },
+  {
+    "id": 6,
+    "title": "Acervo MAGE 3D",
+    "team": "Raul, Pedro H, Augusto, Maria Cecília",
+    "objective": "Criar modelagem de elementos 3D para os itens existenes no laboratório MAGE (IFSC)",
+    "github": "https://github.com/PedroHvieiraC/Acervo-Digital-MAGe.git",
+    "overleaf": "https://www.overleaf.com/read/hypyvwpynptw#4f8063",
+    "overleafStatus": "ok",
+    "canva": "https://miro.com/welcomeonboard/eGtpWTVqMllqb2J0Y2J1a1NnTDR6Zlo4SHVPa08yVFRzT1lpR0F2MmFVWURKZ1VSdG1SbEx0b08ydmRwL0YxdGRFbmtnUUV0RWZBUC9Obzl6VGZPcWVLNFlmSkZIV1VtcHIvdm41alJDVlZmcEZZdXB2dlY3Rm96ZmRvNjVhOStBS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=173534374327",
+    "pitch": "",
+    "techs": [
+      "POLYCAM",
+      "SKETCHFAB",
+      "BLENDER",
+      "GIMP."
+    ],
+    "advances": "[28/06] - FINALIZADO REGISTRO DE ITENS DO ACERVO [18 ITENS][28/06] - FEITA SEPARAÇÃO DAS FOTOS PARA A CRIAÇÃO D PROTÓTIPO;PROTÓTTIPO PARA MEXER EM FERRAMENTAS [EMANDAMENTO]",
+    "nextSteps": "CONTINUAR A SEPARAÇÃO E ORGANIZAÇÃO DAS FOTOS [150 FOTOS POR ELEMENTO][CRIAÇÃO DE PLANILHA PARA SEPARAR AS TAREFASDAR CONTINUIDADE NA PRODUÇÃO DOS PROTÓTIPOS [FINALIZAR 1 OU 2 ANTES DE FAZER OS OUTROS 16]",
+    "difficulties": "ORGANIZAÇÃO DE FUNÇÕES. [REQUER AVALIAR ESTRATÉGIA]",
+    "observations": "",
+    "experiments": {
+      "exp1": "PENDENTE",
+      "exp2": "Protótipo: Geração da visualização 3D dos objetos.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://www.overleaf.com/read/hypyvwpynptw#4f8063\"[SEPEI 2026]NOTIFICAÇÃO: XX06DEADLINE: XX/06REVISÃO: XX/06\""
+  },
+  {
+    "id": 7,
+    "title": "Música, Jogo e Atenção",
+    "team": "Luisa Narvaz",
+    "objective": "Jogo educacional que traz jogo como música para crianças com dificuldade de atenção, que apresentem dificuldade no âmbito escolar.",
+    "github": "https://github.com/luisablankenburg08/jogo_pygame.git",
+    "overleaf": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
+    "overleafStatus": "ok",
+    "canva": "https://drive.google.com/drive/folders/1gkIR48RiBaHfomWznYDienqCqdkxJvj6?usp=drive_link",
+    "pitch": "https://youtu.be/Wm4SfQHkzHI?si=lWNC7QELy9D_ZZpT",
+    "techs": [
+      "PYTHON",
+      "RASPBERRY PY",
+      "BIBLIOTECA PYGAME E DEMAIS BIBLIOTECAS"
+    ],
+    "advances": "IMPLEMENTAÇÃO DE MÚSICA DE FASE 1;REORGANIZAÇÃO DO CÓDIGO PARA MÓDULOS SEPARADOS COM USO DE IMPORTS;",
+    "nextSteps": "CONSTRUÇÃO DAS FASES [2, 3],INTEGRAÇÃO COM RASPBERRY PY,COMITÊ DE ÉTICA [FEITA INVESTIGAÇÃO DOS PASSOS SOBRE COMO ENCAMINHAR O PROJETO PARA O COMITÊ DE ÉTICA]",
+    "difficulties": "CONHECIMENTO LIMITADO NO PYGAME,VALIDAR PROTOCOLO DE TESTES",
+    "observations": "",
+    "experiments": {
+      "exp1": "Protótipo: Menu principal, inclusão de dados dos jogadores, interface gráfica",
+      "exp2": "Protótipo: registro de respostas, inserção dos sons das atividades, relatório com acertos e erros",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e"
+  },
+  {
+    "id": 8,
+    "title": "Estação Meteorológica",
+    "team": "Beatriz, Laura, Oriana, Sophie, Victória",
+    "objective": "O objetivo do projeto é desenvolver uma estação meteorológica de baixo custo para o câmpus, utilizando Raspberry Pi, sensores e módulos de comunicação para coleta, envio e armazenamento das informações. Para além da coleta, o projeto prioriza também a análise e aplicação dos dados no contexto educacional.",
+    "github": "https://github.com/sophirie/Estacao-Meteorologica-no-IFSC-Garopaba.git",
+    "overleaf": "https://www.overleaf.com/project/69c6dabcf81662db85315a02",
+    "overleafStatus": "privado",
+    "canva": "https://canva.link/h3ax5hymb1liy5h",
+    "pitch": "https://youtu.be/Vu1pXKOnp58",
+    "techs": [
+      "RASPBERRY PYPYTHONBANCO DE DADOSHTML"
+    ],
+    "advances": "FAMILIARIZAÇÃO COM EQUIPAMENTO, TESTES E CALIBRAMENTO DE SENSORES",
+    "nextSteps": "CORRIGIR A DOCUMENTAÇÃO REFERENTE À TROCA DE HARDWARECONTINUAÇÃO COM TESTES E IMPLEMENTAÇÃO DO SENSOR BME280",
+    "difficulties": "TEMPO E CONHECIMENTOS ESPECIFICOS",
+    "observations": "",
+    "experiments": {
+      "exp1": "Protótipo: Organização e funcionamento da obtenção de dados dos sensores no Raspberry.",
+      "exp2": "Protótipo: Primeiros testes e calibramento de sensores.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://www.overleaf.com/project/69c6dabcf81662db85315a02"
+  },
+  {
+    "id": 9,
+    "title": "Scout de Vôlei",
+    "team": "Nathan, João Contreira, Pedro E",
+    "objective": "Melhoria de capacidade de aquisição de dados de partidas de vôlei para aprendizado de técnicas e estratégias contras possíveis adversários e para autoánalise",
+    "github": "https://github.com/ImEnrik/Volleyball-scout",
+    "overleaf": "https://www.overleaf.com/project/69b46ac0762f515edca19b1a",
+    "overleafStatus": "privado",
+    "canva": "https://drive.google.com/file/d/1PCQLRToUkHRBljULndR3fnH4SBtdwjHe/view?usp=sharing",
+    "pitch": "https://www.youtube.com/watch?v=-PZDz0iYYZQ",
+    "techs": [
+      "PYTHONJAVA SCRIPTHTMLCSSBANCO DE DADOSGIT HUB (PAGES)"
+    ],
+    "advances": "APLICATIVO BETA FUNCIONANDO",
+    "nextSteps": "TRANSFORMAR O APLICATIVO DE IN WEB APP PAA UM APP BAIXÁVELMELHORIAS NO FUNCIONAMENTO (OPÇÕES DE INTERAÇÃO)BANCO DE DADOSFUNDAMENTAÇÃO TEÓRICA",
+    "difficulties": "APRENDER A TRABALHAR COM LINGUAGENS NOVAS (BANCO DE DADOS, TYPE SCRIPT)MANTER A MOTIVAÇÃO PARA EXECUÇÃO DO PROJETO",
+    "observations": "",
+    "experiments": {
+      "exp1": "PENDENTE",
+      "exp2": "Protótipo: Criação do banco de dados de informações estatísticas. Implementação typescript para garantir funcionamento em dispositivos móveis.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://www.overleaf.com/project/69b46ac0762f515edca19b1a"
+  },
+  {
+    "id": 10,
+    "title": "ChatBot de Atendimento virtual: Secretaria Acadêmica",
+    "team": "Cauã, Enzo, Ariane",
+    "objective": "",
+    "github": "https://github.com/lyag-dev/Tensor-IFSC",
+    "overleaf": "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
+    "overleafStatus": "ok",
+    "canva": "https://canva.link/uznnsrssl7qdjm5",
+    "pitch": "",
+    "techs": [
+      "GIT HUBLATEXPYTORCHLMSTUDIOPYTHON"
+    ],
+    "advances": "ESTRUTURAÇÃO INICIAL DA METODOLOGIADETERMINAÇÃO DAS METAS INICIAISACESSO À SALA DE PESQUISA",
+    "nextSteps": "COLOCAR EM PRÁTICA A METODOLOGIATESTAR FERRAMENTAS ESPECÍFICAS ORGANIZAÇÃO DA DOCUMENTAÇÃO NO GIT HUBREFINAR A DIVISÃO DE PAPÉIS DA EQUIPE",
+    "difficulties": "DETERMINAR A FUNÇÃO DE CADA MEMBRO DA EQUIPE DE ACORDO COM AS APTIDÕES TÉCNICASATRIBUIÇÃO DE TAREFAS PARA UMA COLEGA QUE TRABALHA NO HORÁRIO DA AULARESTRIÇÃ0 DE TEMPO PARA EXECUÇÃO DEVIDO À LIMITAÇÃO DE HORÁRIO NA SALA DE PESQUISA",
+    "observations": "",
+    "experiments": {
+      "exp1": "PENDENTE",
+      "exp2": "Protótipo: Estruturar uma API básica para acessar o servidor da rede local do LM studio.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
+    },
+    "paperStatus": "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4"
+  }
+];
 
     let currentFilter = 'all';
 
@@ -1897,6 +1938,135 @@
         `;
         tbody.appendChild(tr);
       });
+
+      // Recalculate KPIs
+      const okCount = projectsData.filter(p => p.overleafStatus === 'ok').length;
+      const privadoCount = projectsData.filter(p => p.overleafStatus === 'privado').length;
+      const pendenteCount = projectsData.filter(p => p.overleafStatus === 'pendente').length;
+
+      document.getElementById('kpi-overleaf-ok').innerText = `${okCount} / 10`;
+      document.getElementById('kpi-overleaf-privado').innerText = `${privadoCount} / 10`;
+      document.getElementById('kpi-overleaf-pendente').innerText = `${pendenteCount} / 10`;
+      document.getElementById('badge-overleaf-alert').innerText = `${privadoCount} alertas`;
+    }
+
+    // Live Sync Directly from Google Sheets CSV
+    async function liveSyncFromSheet() {
+      const btn = document.getElementById('liveSyncBtn');
+      const icon = document.getElementById('liveSyncIcon');
+      
+      icon.className = 'fa-solid fa-spinner fa-spin';
+      btn.disabled = true;
+
+      try {
+        const url = 'https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ/export?format=csv&t=' + Date.now();
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Status HTTP: ' + res.status);
+        const csvText = await res.text();
+        
+        parseCsvAndUpdate(csvText);
+        showToast('Planilha sincronizada ao vivo com sucesso!', 'success');
+      } catch (err) {
+        console.warn('Falha ao baixar CSV ao vivo:', err);
+        showToast('Não foi possível conectar ao Google Sheets diretamente. Exibindo dados locais.', 'warning');
+      } finally {
+        icon.className = 'fa-solid fa-rotate';
+        btn.disabled = false;
+      }
+    }
+
+    // Parse CSV Text from Google Sheets in JS
+    function parseCsvAndUpdate(csvText) {
+      const lines = csvText.split(/\r?\n/);
+      let updatedCount = 0;
+
+      lines.forEach(line => {
+        // Simple regex CSV splitter handling quotes
+        const cols = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
+        if (cols.length < 5) return;
+        const cleanCols = cols.map(c => c.replace(/^"|"$/g, '').trim());
+        
+        const firstCol = cleanCols[0];
+        if (/^[1-9]|10$/.test(firstCol)) {
+          const id = parseInt(firstCol, 10);
+          const proj = projectsData.find(p => p.id === id);
+          if (proj) {
+            if (cleanCols[1]) proj.title = cleanCols[1];
+            if (cleanCols[2]) proj.team = cleanCols[2];
+            if (cleanCols[3]) proj.objective = cleanCols[3];
+            if (cleanCols[4]) proj.github = cleanCols[4];
+
+            // Overleaf
+            let ovUrl = cleanCols[5] && cleanCols[5].includes('overleaf.com') ? cleanCols[5] : '';
+            if (!ovUrl && cleanCols[12] && cleanCols[12].includes('overleaf.com')) {
+              const m = cleanCols[12].match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
+              if (m) ovUrl = m[0];
+            }
+            if (ovUrl) {
+              proj.overleaf = ovUrl;
+              proj.overleafStatus = ovUrl.includes('/project/') ? 'privado' : 'ok';
+            } else {
+              proj.overleaf = '';
+              proj.overleafStatus = 'pendente';
+            }
+
+            if (cleanCols[6] && cleanCols[6].toUpperCase() !== 'PENDENTE') proj.canva = cleanCols[6];
+            if (cleanCols[7] && cleanCols[7].toUpperCase() !== 'PENDENTE') proj.pitch = cleanCols[7];
+            
+            if (cleanCols[16]) proj.advances = cleanCols[16];
+            if (cleanCols[17]) proj.nextSteps = cleanCols[17];
+            if (cleanCols[18]) proj.difficulties = cleanCols[18];
+
+            updatedCount++;
+          }
+        }
+      });
+
+      if (updatedCount > 0) {
+        renderProjects();
+        renderAuditTable();
+      }
+    }
+
+    // Toast Notification Utility
+    function showToast(msg, type = 'success') {
+      let toast = document.getElementById('dashToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'dashToast';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '2rem';
+        toast.style.right = '2rem';
+        toast.style.padding = '0.9rem 1.4rem';
+        toast.style.borderRadius = '10px';
+        toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+        toast.style.fontSize = '0.88rem';
+        toast.style.fontWeight = '600';
+        toast.style.zIndex = '9999';
+        toast.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        toast.style.display = 'flex';
+        toast.style.alignItems = 'center';
+        toast.style.gap = '0.6rem';
+        document.body.appendChild(toast);
+      }
+
+      if (type === 'success') {
+        toast.style.background = '#15803d';
+        toast.style.color = '#fff';
+        toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${msg}`;
+      } else {
+        toast.style.background = '#d97706';
+        toast.style.color = '#fff';
+        toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${msg}`;
+      }
+
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+      }, 4000);
     }
 
     // Keyboard support
