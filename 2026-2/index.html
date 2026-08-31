@@ -1313,10 +1313,81 @@
           <div class="step-content">
             <h4>Apresentação do Conceito: "O que são Trabalhos Relacionados?" (20 minutos)</h4>
             <p>Mostre que todo artigo científico precisa responder a duas perguntas centrais:</p>
-            <ul style="margin-left: 1.5rem; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.5rem;">
+            <ul style="margin-left: 1.5rem; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.8rem;">
               <li><em>"O que outros pesquisadores ou desenvolvedores já fizeram sobre esse mesmo problema?"</em></li>
               <li><em>"Em que aspecto a nossa solução se diferencia ou traz um avanço em relação a eles?" (Ex.: menor custo, foco em acessibilidade, uso de hardware local, interface intuitiva, etc.)</em></li>
             </ul>
+
+            <!-- Repository Cards Grid -->
+            <h5 style="color: var(--text-main); font-size: 0.92rem; margin: 1rem 0 0.6rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-book-bookmark" style="color: var(--accent-cyan);"></i> Repositórios e Fontes Recomendadas para Busca:
+            </h5>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.85rem; margin-bottom: 1rem;">
+              
+              <!-- Google Scholar -->
+              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-brands fa-google text-cyan"></i> Google Acadêmico</strong>
+                  <a href="https://scholar.google.com.br" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Maior indexador acadêmico global. Excelente para buscar artigos em português de conferências brasileiras e TCCs de computação.</p>
+              </div>
+
+              <!-- Computer on the Beach -->
+              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-umbrella-beach text-amber"></i> Anais COTB (UNIVALI)</strong>
+                  <a href="https://periodicos.univali.br/index.php/cotb" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;"><em>Computer on the Beach</em> — Maior evento regional de computação de SC, com artigos aplicados e protótipos de graduação/médio integrado.</p>
+              </div>
+
+              <!-- SBC OpenLib -->
+              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-laptop-code text-green"></i> SBC OpenLib (SOL)</strong>
+                  <a href="https://sol.sbc.org.br" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Biblioteca Digital da Sociedade Brasileira de Computação (SBGames, WEIT, CSBC, ERRC, WPerformance, etc.).</p>
+              </div>
+
+              <!-- Periódicos IFSC -->
+              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-building-columns text-green"></i> Periódicos do IFSC</strong>
+                  <a href="https://periodicos.ifsc.edu.br" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Portal <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;"><strong>RTC</strong> (Revista Técnico-Científica) e <strong>Caminho Aberto</strong> (Revista de Extensão). Ideal para projetos aplicados e extensionistas.</p>
+              </div>
+
+              <!-- Periódicos IFC -->
+              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-graduation-cap text-amber"></i> Periódicos & Anais IFC</strong>
+                  <a href="https://periodicos.ifc.edu.br" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Portal <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Publicações técnico-científicas e anais de feiras de iniciação científica do Instituto Federal Catarinense (IFC).</p>
+              </div>
+
+              <!-- SciELO Brasil -->
+              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-globe text-cyan"></i> SciELO Brasil / Oasisbr</strong>
+                  <a href="https://scielo.org" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Portal de acesso aberto com artigos revisados por pares em âmbito nacional e latino-americano.</p>
+              </div>
+
+            </div>
+
+            <div class="callout-box" style="background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.25); color: var(--text-main);">
+              <i class="fa-solid fa-lightbulb" style="color: var(--accent-cyan);"></i>
+              <div>
+                <strong>Dica de Pesquisa para os Estudantes:</strong> Usar operadores com aspas e termos em português e inglês: Exemplo: <code>"fechadura eletrônica" AND "raspberry pi"</code> ou <code>"estação meteorológica" AND "educação"</code> ou <code>"RPG de mesa" AND "web"</code>.
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -1325,7 +1396,7 @@
           <div class="step-number">3</div>
           <div class="step-content">
             <h4>Laboratório Prático: Preenchimento da Matriz Comparativa (45 minutos)</h4>
-            <p>Cada equipe pesquisa <strong>2 artigos ou soluções correlatas</strong> no <a href="https://scholar.google.com.br" target="_blank" style="color: var(--accent-cyan);">Google Acadêmico</a> ou na biblioteca da SBC e preenche a seguinte estrutura:</p>
+            <p>Cada equipe pesquisa <strong>2 artigos ou soluções correlatas</strong> nas fontes acima e preenche a seguinte estrutura:</p>
             
             <table class="matrix-sample-table">
               <thead>
