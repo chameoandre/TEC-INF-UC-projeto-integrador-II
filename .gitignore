@@ -1,1 +1,19 @@
+# macOS
+.DS_Store
+Icon\r
+Icon*
+._*
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.bbl
+*.blg
+
+# Local / Temp
+*.tmp
 2026-1/roteiro-4/Anais_Sepei2025.pdf
+templates/template-relatorios-ifsc-gpb/

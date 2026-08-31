@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Executivo — Projeto Integrador II (2026) | IFSC Câmpus Garopaba</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      /* Palette IFSC / High-Tech Modern Dark */
+      --bg-dark: #080d0a;
+      --bg-surface: #0f1712;
+      --bg-card: rgba(18, 28, 22, 0.75);
+      --bg-card-hover: rgba(26, 42, 32, 0.9);
+      --bg-glass: rgba(15, 23, 18, 0.65);
+      --border-color: rgba(34, 197, 94, 0.15);
+      --border-glow: rgba(34, 197, 94, 0.35);
+
+      --ifsc-green: #16a34a;
+      --ifsc-green-light: #4ade80;
+      --ifsc-green-glow: rgba(34, 197, 94, 0.2);
+      --ifsc-red: #ef4444;
+      --ifsc-red-glow: rgba(239, 68, 68, 0.2);
+
+      --accent-cyan: #06b6d4;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+      --accent-blue: #3b82f6;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(22, 163, 74, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(15, 23, 18, 0.5) 0%, transparent 100%);
+      background-attachment: fixed;
+      line-height: 1.5;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(34, 197, 94, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--ifsc-green);
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12, 20, 15, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    /* Stylized IFSC 3x3 Grid Logo */
+    .ifsc-logo {
+      display: grid;
+      grid-template-columns: repeat(3, 9px);
+      grid-template-rows: repeat(3, 9px);
+      gap: 3px;
+      padding: 4px;
+      background: rgba(22, 163, 74, 0.1);
+      border: 1px solid rgba(22, 163, 74, 0.3);
+      border-radius: 6px;
+    }
+    .ifsc-dot {
+      background-color: var(--ifsc-green);
+      border-radius: 2px;
+    }
+    .ifsc-dot.red {
+      background-color: var(--ifsc-red);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand-text h1 span {
+      color: var(--ifsc-green-light);
+      font-weight: 600;
+      font-size: 0.85rem;
+      background: rgba(34, 197, 94, 0.15);
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .brand-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--ifsc-green), var(--ifsc-green-light));
+      color: #042f14;
+      box-shadow: 0 4px 14px var(--ifsc-green-glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-outline:hover {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: var(--ifsc-green);
+      color: #fff;
+    }
+
+    /* Navigation Bar / Tabs */
+    .nav-tabs-bar {
+      background: rgba(10, 16, 12, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 2rem;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(22, 163, 74, 0.18);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+    }
+    .tab-btn .badge-count {
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
+    }
+    .tab-btn.active .badge-count {
+      background: var(--ifsc-green);
+      color: #042f14;
+      font-weight: 700;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 1.8rem 2rem 3rem;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero / Header Stat Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(6, 182, 212, 0.08) 50%, rgba(15, 23, 18, 0.4) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-glass);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--ifsc-green), var(--accent-cyan), var(--accent-amber));
+    }
+    .hero-info h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+    .hero-info p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 750px;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .meta-tag {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.4rem 0.85rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .meta-tag strong {
+      color: #fff;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--ifsc-green-light);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .kpi-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+    .kpi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .kpi-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .kpi-icon.green { background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green-light); }
+    .kpi-icon.cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); }
+    .kpi-icon.amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+    .kpi-icon.red { background: rgba(239, 68, 68, 0.15); color: var(--ifsc-red); }
+
+    /* Filter & Search Bar */
+    .filter-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+    .search-box input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-box input:focus {
+      border-color: var(--ifsc-green);
+      box-shadow: 0 0 0 2px var(--ifsc-green-glow);
+    }
+    .filter-pills {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .pill.active {
+      background: var(--ifsc-green);
+      color: #042f14;
+      font-weight: 700;
+      border-color: var(--ifsc-green);
+    }
+
+    /* Projects Grid View */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.4rem;
+    }
+    .project-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
+    }
+    .project-card:hover {
+      border-color: var(--ifsc-green-light);
+      background: var(--bg-card-hover);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+    .proj-id-badge {
+      background: rgba(22, 163, 74, 0.2);
+      color: var(--ifsc-green-light);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .proj-overleaf-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .proj-overleaf-badge.ok {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .proj-overleaf-badge.privado {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .proj-overleaf-badge.pendente {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .proj-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+    }
+    .proj-team {
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .proj-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.45;
+    }
+
+    .proj-techs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.1rem;
+    }
+    .tech-chip {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .proj-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.4rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .link-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.45rem 0.2rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 600;
+      transition: var(--transition);
+      text-align: center;
+    }
+    .link-btn:hover:not(.disabled) {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: var(--ifsc-green);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .link-btn.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .link-btn i { font-size: 0.85rem; }
+
+    /* Timeline Section */
+    .timeline-container {
+      position: relative;
+      padding: 1.5rem 0 2rem 2.5rem;
+    }
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--ifsc-green) 0%, var(--accent-cyan) 60%, rgba(255,255,255,0.1) 100%);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2.2rem;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -2.5rem;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      border: 2px solid var(--ifsc-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--ifsc-green-light);
+      box-shadow: 0 0 10px var(--ifsc-green-glow);
+    }
+    .timeline-item.active .timeline-dot {
+      background: var(--ifsc-green);
+      color: #042f14;
+      border-color: #fff;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.6);
+      animation: pulseDot 2s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+    }
+    .timeline-item.future .timeline-dot {
+      border-color: var(--text-dim);
+      color: var(--text-dim);
+      box-shadow: none;
+    }
+
+    .timeline-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.3rem 1.6rem;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+    }
+    .timeline-card:hover {
+      border-color: var(--ifsc-green-light);
+      transform: translateX(4px);
+    }
+    .timeline-item.active .timeline-card {
+      border-color: var(--ifsc-green);
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.15) 0%, rgba(18, 28, 22, 0.9) 100%);
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .timeline-date {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-family: 'Fira Code', monospace;
+      background: rgba(6, 182, 212, 0.12);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+    }
+    .timeline-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .timeline-instructor {
+      font-size: 0.78rem;
+      color: var(--accent-amber);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .timeline-body p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+    .timeline-deliverables {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .deliv-tag {
+      font-size: 0.74rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Teacher Guide Tab */
+    .guide-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(14px);
+    }
+    .guide-box h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .guide-step {
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .guide-step:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .step-number {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      background: linear-gradient(135deg, var(--ifsc-green), var(--ifsc-green-light));
+      color: #042f14;
+      font-weight: 800;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .step-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+    .step-content p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .callout-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1.1rem;
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: #fde68a;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .matrix-sample-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+    }
+    .matrix-sample-table th, .matrix-sample-table td {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .matrix-sample-table th {
+      background: rgba(22, 163, 74, 0.15);
+      color: var(--ifsc-green-light);
+      font-weight: 700;
+    }
+    .matrix-sample-table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Modal Details */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-container {
+      background: #0d1510;
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      max-width: 800px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .modal-close:hover {
+      background: var(--ifsc-red);
+      color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      header { padding: 0.75rem 1rem; }
+      .nav-tabs-bar { padding: 0.5rem 1rem; }
+      main { padding: 1.2rem 1rem; }
+      .hero-banner { padding: 1.2rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Institutional Bar -->
+  <header>
+    <div class="brand-group">
+      <div class="ifsc-logo">
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot red"></div>
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot"></div>
+        <div class="ifsc-dot"></div>
+      </div>
+      <div class="brand-text">
+        <h1>Projeto Integrador II <span>INF-2024</span></h1>
+        <p>IFSC Câmpus Garopaba • Gestão Pedagógica & Acompanhamento de Projetos</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" class="btn btn-outline">
+        <i class="fa-solid fa-table"></i> Planilha Oficial
+      </a>
+      <button class="btn btn-primary" onclick="switchTab('guia-docente')">
+        <i class="fa-solid fa-chalkboard-user"></i> Guia da Aula (Karina)
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('projetos')">
+      <i class="fa-solid fa-cubes"></i> Painel dos 10 Projetos <span class="badge-count">10</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('timeline')">
+      <i class="fa-solid fa-timeline"></i> Timeline de Atividades & Aulas
+    </button>
+    <button class="tab-btn" onclick="switchTab('guia-docente')">
+      <i class="fa-solid fa-graduation-cap"></i> Pauta de Aula 01/09 (Trabalhos Relacionados)
+    </button>
+    <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
+      <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">4 alertas</span>
+    </button>
+  </nav>
+
+  <!-- Main Body -->
+  <main>
+
+    <!-- TAB 1: PROJETOS -->
+    <section id="tab-projetos" class="tab-content active">
+      
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-info">
+          <h2>Acompanhamento Executivo da Turma INF-2024</h2>
+          <p>Visão unificada do estágio de desenvolvimento, tecnologias empregadas, links de documentação científica e entregáveis práticos do 2º semestre (2026-2).</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-users"></i> Total: <strong>10 Projetos Ativos</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-microchip"></i> Foco: <strong>Refatoração & Experimentos</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-pen-nib"></i> Escrita: <strong>Artigo ACM / Overleaf</strong></div>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Projetos Ativos</span>
+            <div class="kpi-icon green"><i class="fa-solid fa-cubes"></i></div>
+          </div>
+          <div class="kpi-val">10</div>
+          <div class="kpi-sub">31 estudantes envolvidos</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Overleaf Funcionais</span>
+            <div class="kpi-icon cyan"><i class="fa-solid fa-check-double"></i></div>
+          </div>
+          <div class="kpi-val" id="kpi-overleaf-ok">4 / 10</div>
+          <div class="kpi-sub">4 links de leitura públicos OK</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Links Privados (403)</span>
+            <div class="kpi-icon amber"><i class="fa-solid fa-lock"></i></div>
+          </div>
+          <div class="kpi-val" id="kpi-overleaf-privado">4 / 10</div>
+          <div class="kpi-sub">Requer liberar "Share Link"</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Sem Overleaf Cadastrado</span>
+            <div class="kpi-icon red"><i class="fa-solid fa-circle-exclamation"></i></div>
+          </div>
+          <div class="kpi-val" id="kpi-overleaf-pendente">2 / 10</div>
+          <div class="kpi-sub">Projetos 1 e 2 pendentes</div>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="filter-bar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Buscar por título, estudante, tecnologia ou palavra-chave..." oninput="filterProjects()">
+        </div>
+        <div class="filter-pills">
+          <button class="pill active" onclick="setFilter('all', this)">Todos (10)</button>
+          <button class="pill" onclick="setFilter('overleaf-ok', this)"><i class="fa-solid fa-check text-green"></i> Overleaf OK</button>
+          <button class="pill" onclick="setFilter('overleaf-privado', this)"><i class="fa-solid fa-lock text-amber"></i> Link Privado (403)</button>
+          <button class="pill" onclick="setFilter('raspberry', this)">Raspberry Pi</button>
+          <button class="pill" onclick="setFilter('games', this)">Jogos / Godot / Pygame</button>
+          <button class="pill" onclick="setFilter('ai', this)">IA / LLM</button>
+        </div>
+      </div>
+
+      <!-- Grid of 10 Projects -->
+      <div class="projects-grid" id="projectsContainer">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </section>
+
+
+    <!-- TAB 2: TIMELINE -->
+    <section id="tab-timeline" class="tab-content">
+      <div class="hero-banner">
+        <div class="hero-info">
+          <h2>Linha do Tempo Pedagógica & Entregáveis (2026)</h2>
+          <p>Mapeamento completo da jornada curricular: desde a transição no 1º semestre, passando pelas aulas de escrita da Profª Karina em agosto, até o planejamento de experimentos e banca final.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-calendar-check"></i> Semestre: <strong>2026-2</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-chalkboard-user"></i> Professores: <strong>André & Karina</strong></div>
+        </div>
+      </div>
+
+      <div class="timeline-container">
+
+        <!-- Marco 1: 2026-1 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-flag"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Fase 1: Diagnóstico, Setup Inicial & Submissão SEPEI 2026</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-user-tie"></i> Prof. André Moraes & Prof. Nauber</div>
+              </div>
+              <span class="timeline-date">2026-1 (Até Julho)</span>
+            </div>
+            <div class="timeline-body">
+              <p>Auditoria dos códigos herdados do PI-I, recuperação de repositórios no GitHub, setup de templates LaTeX no Overleaf, escrita inicial do artigo no padrão ACM e submissões institucionais para o SEPEI 2026.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-brands fa-github"></i> Repositórios Git</span>
+                <span class="deliv-tag"><i class="fa-solid fa-file-lines"></i> Roteiro 01 (Diagnóstico)</span>
+                <span class="deliv-tag"><i class="fa-solid fa-pen"></i> Roteiro 03 (Artigo ACM)</span>
+                <span class="deliv-tag"><i class="fa-solid fa-paper-plane"></i> Submissão SEPEI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 2: Retomada -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-rotate"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Retomada do Semestre & Atualização da Planilha</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-user-tie"></i> Prof. André Moraes & Prof. Nauber</div>
+              </div>
+              <span class="timeline-date">03/07/2026 – 10/07/2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Reativação dos grupos pós-férias, checagem dos equipamentos e preenchimento detalhado do bloco de STATUS da planilha com Avanços, Próximos Passos e Dificuldades.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-table"></i> Atualização Matriz de Projetos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 3: Karina Aula 1 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-book-open"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Produção do Artigo: Estrutura Canônica da Introdução</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-user-graduate"></i> Profª. Karina</div>
+              </div>
+              <span class="timeline-date">11/08/2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Trabalho dos elementos fundamentais da introdução científica: Apresentação do tema, problema de pesquisa, objetivos geral e específicos, justificativa, breve revisão e estrutura do trabalho.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-cloud-arrow-up"></i> Tarefa SIGAA: Introdução do Artigo (11/08 - 15/08)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 4: Karina Aula 2 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-list-check"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Execução Técnica & Relatório de Atividades Pendentes</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-user-graduate"></i> Profª. Karina</div>
+              </div>
+              <span class="timeline-date">18/08/2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Nivelamento e execução de pendências dos grupos, organização do modelo formal de relatório e acompanhamento dos blocos de trabalho.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-file-contract"></i> Tarefa SIGAA: Relatório de Pendências (18/08 - 19/08)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 5: Karina Aula 3 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-font"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Arquitetura das Frases e Estrutura das Orações na Escrita Científica</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-user-graduate"></i> Profª. Karina</div>
+              </div>
+              <span class="timeline-date">25/08/2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Qualificação sintática dos textos: período simples, período composto por coordenação e subordinação, pontuação e coesão textual em textos técnicos/científicos.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-file-lines"></i> Material: Orações Subordinadas (.pptx)</span>
+                <span class="deliv-tag"><i class="fa-solid fa-pencil"></i> Atividade SIGAA: Arquitetura das Frases</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 6: AULA ATUAL (01/09) -->
+        <div class="timeline-item active">
+          <div class="timeline-dot"><i class="fa-solid fa-star"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Aula Atual: Regularização Overleaf & Seção de Trabalhos Relacionados</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-user-graduate"></i> Profª. Karina (com suporte de dashboard do Prof. André)</div>
+              </div>
+              <span class="timeline-date">01/09/2026 (AMANHÃ)</span>
+            </div>
+            <div class="timeline-body">
+              <p><strong>Pauta da Aula:</strong> 1) Ajuste imediato dos links de leitura aberta do Overleaf (Share Link). 2) Pesquisa de 2 a 3 artigos correlatos. 3) Preenchimento do Quadro Comparativo e redação da seção de Trabalhos Relacionados no Overleaf com conectivos de contraste.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green-light);"><i class="fa-solid fa-link"></i> Link Overleaf Público Atualizado</span>
+                <span class="deliv-tag" style="border-color: var(--accent-cyan); color: var(--accent-cyan);"><i class="fa-solid fa-table-columns"></i> Quadro Comparativo de Trabalhos</span>
+                <span class="deliv-tag" style="border-color: var(--accent-amber); color: var(--accent-amber);"><i class="fa-solid fa-pen-fancy"></i> 2-3 Parágrafos no Overleaf</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 7: Futuro -->
+        <div class="timeline-item future">
+          <div class="timeline-dot"><i class="fa-solid fa-flask"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Sprint de Execução & Micro-Experimentos (Exp 1 a 4)</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Prof. André & Profª. Karina</div>
+              </div>
+              <span class="timeline-date">Setembro / Outubro 2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Coleta de dados experimentais, testes de carga, usabilidade, calibração de sensores e geração de gráficos comparativos para a Seção de Resultados.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-chart-line"></i> Gráficos e Resultados</span>
+                <span class="deliv-tag"><i class="fa-solid fa-code-commit"></i> Commits/PRs no GitHub</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 8: Encerramento -->
+        <div class="timeline-item future">
+          <div class="timeline-dot"><i class="fa-solid fa-award"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Revisão por Pares, Artigo Final & Banca de Apresentação</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Banca Docente</div>
+              </div>
+              <span class="timeline-date">Novembro / Dezembro 2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Revisão cega entre grupos, padronização final das referências BibTeX, fechamento da versão em PDF (Camera-Ready) e apresentação perante a banca.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-file-pdf"></i> Artigo Final Completo</span>
+                <span class="deliv-tag"><i class="fa-solid fa-person-chalkboard"></i> Apresentação Oral / Pitch</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- TAB 3: GUIA DOCENTE PARA KARINA -->
+    <section id="tab-guia-docente" class="tab-content">
+      <div class="hero-banner">
+        <div class="hero-info">
+          <h2>Roteiro Prático de Aula para a Profª Karina (01/09)</h2>
+          <p>Guia passo a passo pronto para conduzir a aula com tranquilidade, sem necessidade de resolver dúvidas técnicas de código, conectando a matéria de sintaxe e orações diretamente com a escrita científica.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-clock"></i> Duração Sugerida: <strong>2h a 3h</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-bullseye"></i> Entregável: <strong>Trabalhos Relacionados no Overleaf</strong></div>
+        </div>
+      </div>
+
+      <div class="guide-box">
+        <h3><i class="fa-solid fa-list-ol text-green"></i> Dinâmica da Aula em 4 Etapas Simples</h3>
+
+        <!-- Etapa 1 -->
+        <div class="guide-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Ajuste Imediato dos Links do Overleaf (10 minutos)</h4>
+            <p>Explique à turma que para os professores corrigirem os artigos, o link precisa ser de <strong>leitura pública</strong>, e não o link de edição interna que gera erro de permissão.</p>
+            <div class="callout-box">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <div>
+                <strong>Como os estudantes fazem:</strong> No Overleaf, clicar no botão verde <code>Share</code> (canto superior direito) ➔ Clicar em <code>Turn on link sharing</code> ➔ Copiar o link de <code>Anyone with this link can view</code> ➔ Colar na coluna <strong>URL Relatório</strong> da planilha oficial.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Etapa 2 -->
+        <div class="guide-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Apresentação do Conceito: "O que são Trabalhos Relacionados?" (20 minutos)</h4>
+            <p>Mostre que todo artigo científico precisa responder a duas perguntas centrais:</p>
+            <ul style="margin-left: 1.5rem; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.5rem;">
+              <li><em>"O que outros pesquisadores ou desenvolvedores já fizeram sobre esse mesmo problema?"</em></li>
+              <li><em>"Em que aspecto a nossa solução se diferencia ou traz um avanço em relação a eles?" (Ex.: menor custo, foco em acessibilidade, uso de hardware local, interface intuitiva, etc.)</em></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Etapa 3 -->
+        <div class="guide-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Laboratório Prático: Preenchimento da Matriz Comparativa (45 minutos)</h4>
+            <p>Cada equipe pesquisa <strong>2 artigos ou soluções correlatas</strong> no <a href="https://scholar.google.com.br" target="_blank" style="color: var(--accent-cyan);">Google Acadêmico</a> ou na biblioteca da SBC e preenche a seguinte estrutura:</p>
+            
+            <table class="matrix-sample-table">
+              <thead>
+                <tr>
+                  <th>Trabalho / Autor (Ano)</th>
+                  <th>Solução Proposta por Eles</th>
+                  <th>Limitação / O que falta neles</th>
+                  <th>Diferencial do Nosso Projeto (INF-2024)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Silva et al. (2022)</td>
+                  <td>Fechadura eletrônica via RFID comercial</td>
+                  <td>Custo elevado e sem interface web local</td>
+                  <td><strong>RasPorta:</strong> Uso de Raspberry Pi de baixo custo com biometria e interface web Flask.</td>
+                </tr>
+                <tr>
+                  <td>Costa e Souza (2023)</td>
+                  <td>Estação meteorológica conectada à nuvem paga</td>
+                  <td>Dependência de assinatura e servidor externo</td>
+                  <td><strong>Estação IFSC:</strong> Banco local, protocolo aberto e aplicação pedagógica direta no campus.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Etapa 4 -->
+        <div class="guide-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Redação no Overleaf com Conectivos de Contraste (45 minutos)</h4>
+            <p>Os estudantes abrem a seção <code>\section{Trabalhos Relacionados}</code> no Overleaf e redigem 2 a 3 parágrafos aplicando as orações subordinadas e coordenativas da aula passada.</p>
+            
+            <div class="callout-box" style="background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.25); color: #bae6fd;">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <strong>Banco de Conectivos & Expressões Prontas para a Escrita:</strong><br>
+                • <em>"Enquanto a abordagem de [Autor] concentra-se em [...], a presente proposta diferencia-se por [...]"</em><br>
+                • <em>"Diferentemente do trabalho desenvolvido por [Autor], que exige [...], nosso projeto adota [...]"</em><br>
+                • <em>"Embora a solução de [Autor] apresente resultados satisfatórios, nota-se uma limitação quanto a [...]. Nesse sentido, este artigo propõe [...]"</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- TAB 4: DIAGNÓSTICO OVERLEAF -->
+    <section id="tab-diagnostico-overleaf" class="tab-content">
+      <div class="hero-banner">
+        <div class="hero-info">
+          <h2>Auditoria de Links do Overleaf (Acesso Docente)</h2>
+          <p>Resultado do teste automatizado de permissão e disponibilidade realizado em todos os 10 links cadastrados na planilha.</p>
+        </div>
+      </div>
+
+      <div class="guide-box">
+        <h3><i class="fa-solid fa-shield-halved text-green"></i> Status Detalhado por Projeto</h3>
+        
+        <table class="matrix-sample-table" id="overleafAuditTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Projeto</th>
+              <th>Integrantes</th>
+              <th>Link Cadastrado</th>
+              <th>Status do Acesso</th>
+              <th>Ação Necessária</th>
+            </tr>
+          </thead>
+          <tbody id="overleafAuditBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Project Deep View -->
+  <div class="modal-overlay" id="projectModal" onclick="closeModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modalContent">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Script -->
+  <script>
+    // Full Data parsed from the official Google Sheet
+    const projectsData = [
+      {
+        id: 1,
+        title: "SMC: Montagem de computadores",
+        team: "Lucas Pacheco, Bernardo, Henrique Cardoso",
+        objective: "Criação de ferramenta para aprendizado sobre Hardware, aprendendo a prática adotando uma ferramenta virtual.",
+        github: "https://github.com/henriquec30-web/projeto_pi.git",
+        overleaf: "",
+        overleafStatus: "pendente", // pendente, privado, ok
+        canva: "https://canva.link/wc61pjb1k2prmb4",
+        pitch: "https://youtu.be/CPQ0VqHQGHg",
+        techs: ["Godot", "GDScript", "GameDev", "Hardware Sim"],
+        advances: "[21/06] Criação de marcas de peças; Documentação de comandos do app; Geração de design dos cards.",
+        nextSteps: "Ampliar acervo de peças; Definir lógica principal do game; Revisão Paper SEPEI.",
+        difficulties: "Domínio da engine Godot e lógica de montagem.",
+        observations: "Apresentar em 2 semanas o projeto na turma INF-2025.",
+        experiments: {
+          exp1: "Protótipo: Ambiente com peças em drag-and-drop",
+          exp2: "Pendente",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "[SEPEI 2026] Submetido"
+      },
+      {
+        id: 2,
+        title: "JifTV Streaming Adaptativo",
+        team: "Rodrigo, Eluney, João, Anderson",
+        objective: "Transmitir jogos do IFSC via Streaming Adaptativo em tempo real e organizar uma estrutura online para catálogo e armazenamento dos vídeos dos jogos.",
+        github: "https://github.com/yaurodzz/JifTV-StreamingAdaptativo.git",
+        overleaf: "",
+        overleafStatus: "pendente",
+        canva: "https://canva.link/ma54h2bqhkmw0iy",
+        pitch: "https://youtu.be/B0tZgwmd4vg?feature=shared",
+        techs: ["Docker", "OBS Studio", "NGINX", "Cloudflare", "Firebase", "Linux"],
+        advances: "Compra de domínio (jiftv.org); Aquisição de 2 subdomínios; Montagem do servidor local no IFSC.",
+        nextSteps: "Finalizar servidor de streaming; Resolver roteamento de rede; Avançar na documentação.",
+        difficulties: "Configuração do Sistema Operacional Linux e banda de rede.",
+        observations: "",
+        experiments: {
+          exp1: "Pendente",
+          exp2: "Pendente",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "SNCT em planejamento"
+      },
+      {
+        id: 3,
+        title: "Curso Popular de Informática para o Trabalhador",
+        team: "Pietro, Artur, Lucas Sehn",
+        objective: "Facilitar o uso de tecnologias da Informação e comunicação para a comunidade trabalhadora.",
+        github: "https://github.com/PietroFachini/PI-Curso-Popular-de-Inform-tica-do-Trabalhador",
+        overleaf: "https://www.overleaf.com/read/gtgftsdygqqb#5307fc",
+        overleafStatus: "ok",
+        canva: "https://drive.google.com/file/d/1sb0Uq1kXHZKlVMbkcJNlseZK3p8WP-Wz/view?usp=sharing",
+        pitch: "",
+        techs: ["Google Docs", "Metodologias Ativas", "Extensão", "TICs"],
+        advances: "Reunião marcada com Profa. Karina; Definição da Aula 1 e conteúdo programático.",
+        nextSteps: "Definir data e conteúdo da Aula 2; Elaborar material didático.",
+        difficulties: "Encontrar forma padrão para documentar aulas e tempo de criação.",
+        observations: "Projeto com perfil extensionista e contato direto com a Profa. Karina.",
+        experiments: {
+          exp1: "Protótipo: Curso experimental de Ferramentas Acadêmicas",
+          exp2: "Pendente",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "Recusado no SEPEI (readequando para SNCT/COTB)"
+      },
+      {
+        id: 4,
+        title: "RasPorta: Fechadura Biométrica Automática",
+        team: "Petrus, Martin, Felipe",
+        objective: "Criar uma fechadura automática controlada por biometria e gerenciada via dashboard web local.",
+        github: "https://github.com/petrusgunder/projeto-rasptraca",
+        overleaf: "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b",
+        overleafStatus: "privado",
+        canva: "https://canva.link/5plpzei3nxzsiia",
+        pitch: "https://youtu.be/qFKXWlbp3Lg?is=MBFXBiiwa3I0iXKO",
+        techs: ["Raspberry Pi", "Python", "SQLite", "Flask", "Biometria"],
+        advances: "Aquisição de equipamentos (Raspberry Pi); LEDs de status; Banco de dados SQLite; Servidor Flask operacional.",
+        nextSteps: "Colocar dashboard no ar; Configurar MicroSD do Raspberry; Testes físicos de abertura.",
+        difficulties: "Reorganização das tarefas entre os integrantes e tempo de montagem.",
+        observations: "",
+        experiments: {
+          exp1: "Pendente",
+          exp2: "Pendente",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "Paper em edição no Overleaf"
+      },
+      {
+        id: 5,
+        title: "D20Hub: Gerenciador de Fichas de RPG",
+        team: "Nicolas, Eduardo, Henrique Gama",
+        objective: "Criar um site que incentive e facilite o uso do RPG de mesa como ferramenta de comunicação e enriquecimento cultural.",
+        github: "https://github.com/Nicolas0413/d20hub_project",
+        overleaf: "https://www.overleaf.com/project/69bd9d5e665d3072258ec42a",
+        overleafStatus: "privado",
+        canva: "https://www.canva.com/design/DAHMSqlrfbw/Kzh1QLLKbe_ngv0zF1EQUA/edit?ui=e30",
+        pitch: "https://youtu.be/UQryzKcBu1A",
+        techs: ["TypeScript", "Django", "Flask", "Bootstrap", "SQLite", "Python", "WebSocket"],
+        advances: "Tela de personagens 80% finalizada; Autenticação e segurança; Operação CRUD de fichas; Lógica do BD finalizada.",
+        nextSteps: "Organizar controle das sessões de jogadores; Ajuste no perfil de cores; Integração com WebSocket.",
+        difficulties: "Implementação das salas em tempo real e sincronização.",
+        observations: "",
+        experiments: {
+          exp1: "Protótipo: Tela principal e características",
+          exp2: "Protótipo: Banco de dados e autenticação",
+          exp3: "Protótipo: Criação de salas em tempo real",
+          exp4: "Protótipo: Internacionalização (EN/ES)"
+        },
+        paperStatus: "[SEPEI 2026] Submetido"
+      },
+      {
+        id: 6,
+        title: "Acervo Digital MAGE 3D",
+        team: "Raul, Pedro H, Augusto, Maria Cecília",
+        objective: "Criar modelagem de elementos 3D interativos para os itens e fósseis existentes no laboratório MAGE (IFSC).",
+        github: "https://github.com/PedroHvieiraC/Acervo-Digital-MAGe.git",
+        overleaf: "https://www.overleaf.com/read/hypyvwpynptw#4f8063",
+        overleafStatus: "ok",
+        canva: "https://miro.com/welcomeonboard/eGtpWTVqMllqb2J0Y2J1a1NnTDR6Zlo4SHVPa08yVFRzT1lpR0F2MmFVWURKZ1VSdG1SbEx0b08ydmRwL0YxdGRFbmtnUUV0RWZBUC9Obzl6VGZPcWVLNFlmSkZIV1VtcHIvdm41alJDVlZmcEZZdXB2dlY3Rm96ZmRvNjVhOStBS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=173534374327",
+        pitch: "",
+        techs: ["Polycam", "Sketchfab", "Blender", "GIMP", "Fotogrametria"],
+        advances: "Registro fotográfico de 18 itens do acervo; Separação das fotos para criação de modelos 3D.",
+        nextSteps: "Finalizar protótipos de 2 modelos 3D antes de processar os outros 16; Organizar planilha de assets.",
+        difficulties: "Organização do fluxo de trabalho e renderização pesada.",
+        observations: "",
+        experiments: {
+          exp1: "Pendente",
+          exp2: "Protótipo: Visualização 3D no navegador",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "[SEPEI 2026] Submetido"
+      },
+      {
+        id: 7,
+        title: "Música, Jogo e Atenção",
+        team: "Luisa Narvaz",
+        objective: "Jogo educacional com estímulos rítmicos e sonoros para crianças com dificuldades de atenção no âmbito escolar.",
+        github: "https://github.com/luisablankenburg08/jogo_pygame.git",
+        overleaf: "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
+        overleafStatus: "ok",
+        canva: "https://drive.google.com/drive/folders/1gkIR48RiBaHfomWznYDienqCqdkxJvj6?usp=drive_link",
+        pitch: "https://youtu.be/Wm4SfQHkzHI?si=lWNC7QELy9D_ZZpT",
+        techs: ["Python", "Pygame", "Raspberry Pi", "Áudio Processing"],
+        advances: "Implementação de música da Fase 1; Reorganização do código em módulos separados.",
+        nextSteps: "Construção das Fases 2 e 3; Integração com Raspberry Pi; Submissão ao Comitê de Ética.",
+        difficulties: "Conhecimento avançado em Pygame e validação do protocolo de testes com crianças.",
+        observations: "Projeto individual de alto potencial — requer apoio especial no Comitê de Ética.",
+        experiments: {
+          exp1: "Protótipo: Menu e inserção de dados",
+          exp2: "Protótipo: Registro de respostas e sons",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "Overleaf ativo"
+      },
+      {
+        id: 8,
+        title: "Estação Meteorológica no Câmpus Garopaba",
+        team: "Beatriz, Laura, Oriana, Sophie, Victória",
+        objective: "Desenvolver uma estação meteorológica de baixo custo utilizando Raspberry Pi, sensores ambientais e aplicação pedagógica.",
+        github: "https://github.com/sophirie/Estacao-Meteorologica-no-IFSC-Garopaba.git",
+        overleaf: "https://www.overleaf.com/project/69c6dabcf81662db85315a02",
+        overleafStatus: "privado",
+        canva: "https://canva.link/h3ax5hymb1liy5h",
+        pitch: "https://youtu.be/Vu1pXKOnp58",
+        techs: ["Raspberry Pi", "Python", "BME280", "SQLite", "HTML/CSS"],
+        advances: "Familiarização com o equipamento; Testes iniciais e calibração de sensores.",
+        nextSteps: "Corrigir documentação sobre troca de hardware; Implementação do sensor BME280.",
+        difficulties: "Tempo e conhecimentos específicos de integração eletrônica.",
+        observations: "",
+        experiments: {
+          exp1: "Protótipo: Obtenção de dados no Raspberry",
+          exp2: "Protótipo: Calibramento de sensores",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "Overleaf em edição"
+      },
+      {
+        id: 9,
+        title: "Scout de Vôlei: Coleta e Análise Estatística",
+        team: "Nathan, João Contreira, Pedro E",
+        objective: "Aquisição e visualização de dados de partidas de vôlei para aprendizado tático e autoanálise esportiva.",
+        github: "https://github.com/ImEnrik/Volleyball-scout",
+        overleaf: "https://www.overleaf.com/project/69b46ac0762f515edca19b1a",
+        overleafStatus: "privado",
+        canva: "https://drive.google.com/file/d/1PCQLRToUkHRBljULndR3fnH4SBtdwjHe/view?usp=sharing",
+        pitch: "https://www.youtube.com/watch?v=-PZDz0iYYZQ",
+        techs: ["Python", "JavaScript", "TypeScript", "HTML/CSS", "GitHub Pages"],
+        advances: "Aplicativo Beta funcionando na web com captura de lances.",
+        nextSteps: "Transformar em Web App instalável (PWA); Melhorar banco de dados e fundamentação teórica.",
+        difficulties: "Aprender TypeScript e banco de dados; Manter consistência do grupo.",
+        observations: "",
+        experiments: {
+          exp1: "Pendente",
+          exp2: "Protótipo: Banco de dados e suporte mobile",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "Overleaf em edição"
+      },
+      {
+        id: 10,
+        title: "ChatBot Secretaria Acadêmica (LLM Local)",
+        team: "Cauã, Enzo, Ariane",
+        objective: "Assistente virtual baseado em modelo de linguagem local para sanar dúvidas da secretaria acadêmica do IFSC.",
+        github: "https://github.com/lyag-dev/Tensor-IFSC",
+        overleaf: "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
+        overleafStatus: "ok",
+        canva: "https://canva.link/uznnsrssl7qdjm5",
+        pitch: "",
+        techs: ["LM Studio", "PyTorch", "Python", "FastAPI", "LaTeX"],
+        advances: "Estruturação inicial da metodologia; Acesso à sala de pesquisa; Definição de metas.",
+        nextSteps: "Colocar em prática a metodologia; Testar inferência com LM Studio via API; Documentar no Git.",
+        difficulties: "Atribuição de tarefas (colega que trabalha) e limitação de horário na sala de pesquisa.",
+        observations: "Requer flexibilidade de tarefas assíncronas para a integrante que trabalha.",
+        experiments: {
+          exp1: "Pendente",
+          exp2: "Protótipo: API para acessar servidor LM Studio",
+          exp3: "Pendente",
+          exp4: "Pendente"
+        },
+        paperStatus: "Overleaf público OK"
+      }
+    ];
+
+    let currentFilter = 'all';
+
+    // Initialize Dashboard
+    function initDashboard() {
+      renderProjects();
+      renderAuditTable();
+    }
+
+    // Render Projects Cards
+    function renderProjects() {
+      const container = document.getElementById('projectsContainer');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      container.innerHTML = '';
+
+      const filtered = projectsData.filter(p => {
+        // Search text
+        const matchesSearch = p.title.toLowerCase().includes(searchVal) ||
+                              p.team.toLowerCase().includes(searchVal) ||
+                              p.techs.some(t => t.toLowerCase().includes(searchVal)) ||
+                              p.objective.toLowerCase().includes(searchVal);
+
+        // Filter pills
+        if (!matchesSearch) return false;
+
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'overleaf-ok') return p.overleafStatus === 'ok';
+        if (currentFilter === 'overleaf-privado') return p.overleafStatus === 'privado';
+        if (currentFilter === 'raspberry') return p.techs.some(t => t.toLowerCase().includes('raspberry'));
+        if (currentFilter === 'games') return p.techs.some(t => ['godot', 'pygame', 'gamedev'].some(g => t.toLowerCase().includes(g)));
+        if (currentFilter === 'ai') return p.techs.some(t => ['lm studio', 'pytorch', 'llm'].some(g => t.toLowerCase().includes(g)));
+
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-dim);">
+            <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+            <p>Nenhum projeto corresponde ao filtro ou busca realizada.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(p => {
+        let badgeHtml = '';
+        if (p.overleafStatus === 'ok') {
+          badgeHtml = `<span class="proj-overleaf-badge ok"><i class="fa-solid fa-circle-check"></i> Overleaf OK</span>`;
+        } else if (p.overleafStatus === 'privado') {
+          badgeHtml = `<span class="proj-overleaf-badge privado"><i class="fa-solid fa-lock"></i> Link Privado (403)</span>`;
+        } else {
+          badgeHtml = `<span class="proj-overleaf-badge pendente"><i class="fa-solid fa-circle-xmark"></i> Sem Overleaf</span>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.innerHTML = `
+          <div>
+            <div class="project-top">
+              <span class="proj-id-badge">PI #${p.id.toString().padStart(2, '0')}</span>
+              ${badgeHtml}
+            </div>
+
+            <h3 class="proj-title">${p.title}</h3>
+            <div class="proj-team"><i class="fa-solid fa-user-group"></i> ${p.team}</div>
+            <p class="proj-desc">${p.objective || 'Objetivo em consolidação na planilha.'}</p>
+
+            <div class="proj-techs">
+              ${p.techs.map(t => `<span class="tech-chip">${t}</span>`).join('')}
+            </div>
+          </div>
+
+          <div>
+            <div class="proj-links">
+              <a href="${p.github}" target="_blank" class="link-btn ${!p.github ? 'disabled' : ''}" title="Repositório GitHub">
+                <i class="fa-brands fa-github"></i> Git
+              </a>
+              <a href="${p.overleaf}" target="_blank" class="link-btn ${!p.overleaf ? 'disabled' : ''}" title="Artigo Overleaf">
+                <i class="fa-solid fa-file-code"></i> Overleaf
+              </a>
+              <a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama Visual">
+                <i class="fa-solid fa-diagram-project"></i> Canva
+              </a>
+              <button onclick="openModal(${p.id})" class="link-btn" title="Ficha Completa" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: var(--ifsc-green-light);">
+                <i class="fa-solid fa-eye"></i> Detalhes
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Filter controls
+    function setFilter(filter, el) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-pills .pill').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      renderProjects();
+    }
+
+    function filterProjects() {
+      renderProjects();
+    }
+
+    // Tab Switcher
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      const targetSection = document.getElementById('tab-' + tabId);
+      if (targetSection) targetSection.classList.add('active');
+
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Modal Details View
+    function openModal(id) {
+      const p = projectsData.find(item => item.id === id);
+      if (!p) return;
+
+      const modal = document.getElementById('projectModal');
+      const content = document.getElementById('modalContent');
+
+      content.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div>
+            <span class="proj-id-badge" style="font-size: 0.85rem;">PROJETO #${p.id}</span>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; color: #fff; margin-top: 0.3rem;">${p.title}</h2>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.2rem;">
+          <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.3rem;">Integrantes</h4>
+          <p style="color: #fff; font-size: 0.95rem;">${p.team}</p>
+        </div>
+
+        <div style="margin-bottom: 1.2rem;">
+          <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.3rem;">Objetivo Geral</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">${p.objective}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem;">
+          <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
+            <h4 style="font-size: 0.82rem; color: var(--ifsc-green-light); margin-bottom: 0.4rem;"><i class="fa-solid fa-arrow-trend-up"></i> Avanços Recentes</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">${p.advances || 'Sem registros'}</p>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
+            <h4 style="font-size: 0.82rem; color: var(--accent-amber); margin-bottom: 0.4rem;"><i class="fa-solid fa-forward-step"></i> Próximos Passos</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">${p.nextSteps || 'Sem registros'}</p>
+          </div>
+        </div>
+
+        <div style="background: rgba(239, 68, 68, 0.06); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.2); margin-bottom: 1.2rem;">
+          <h4 style="font-size: 0.82rem; color: #fca5a5; margin-bottom: 0.4rem;"><i class="fa-solid fa-triangle-exclamation"></i> Dificuldades Relatadas</h4>
+          <p style="font-size: 0.85rem; color: #fecaca;">${p.difficulties || 'Nenhuma dificuldade crítica registrada.'}</p>
+        </div>
+
+        <div style="margin-bottom: 1.2rem;">
+          <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.5rem;">Pipeline de Micro-Experimentos</h4>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; font-size: 0.8rem;">
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: 6px;"><strong>Exp 1:</strong> ${p.experiments.exp1}</div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: 6px;"><strong>Exp 2:</strong> ${p.experiments.exp2}</div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: 6px;"><strong>Exp 3:</strong> ${p.experiments.exp3}</div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: 6px;"><strong>Exp 4:</strong> ${p.experiments.exp4}</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+          ${p.github ? `<a href="${p.github}" target="_blank" class="btn btn-outline"><i class="fa-brands fa-github"></i> GitHub</a>` : ''}
+          ${p.overleaf ? `<a href="${p.overleaf}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-file-code"></i> Abrir Overleaf</a>` : ''}
+          ${p.canva ? `<a href="${p.canva}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-diagram-project"></i> Diagrama / Canva</a>` : ''}
+          ${p.pitch ? `<a href="${p.pitch}" target="_blank" class="btn btn-outline"><i class="fa-brands fa-youtube"></i> Pitch Vídeo</a>` : ''}
+        </div>
+      `;
+
+      modal.classList.add('open');
+    }
+
+    function closeModal(e) {
+      if (!e || e.target.id === 'projectModal' || e.target.closest('.modal-close')) {
+        document.getElementById('projectModal').classList.remove('open');
+      }
+    }
+
+    // Render Overleaf Audit Table
+    function renderAuditTable() {
+      const tbody = document.getElementById('overleafAuditBody');
+      tbody.innerHTML = '';
+
+      projectsData.forEach(p => {
+        let statusBadge = '';
+        let actionTxt = '';
+
+        if (p.overleafStatus === 'ok') {
+          statusBadge = '<span class="proj-overleaf-badge ok"><i class="fa-solid fa-check"></i> 100% Funcional (Público)</span>';
+          actionTxt = '<span style="color: var(--ifsc-green-light); font-size: 0.8rem;">Pronto para leitura e correção.</span>';
+        } else if (p.overleafStatus === 'privado') {
+          statusBadge = '<span class="proj-overleaf-badge privado"><i class="fa-solid fa-lock"></i> Link Privado (Erro 403)</span>';
+          actionTxt = '<span style="color: var(--accent-amber); font-size: 0.8rem;">Grupo colou URL interna (/project/). Pedir para ativar "Share -> Turn on link sharing".</span>';
+        } else {
+          statusBadge = '<span class="proj-overleaf-badge pendente"><i class="fa-solid fa-xmark"></i> Não Informado</span>';
+          actionTxt = '<span style="color: #f87171; font-size: 0.8rem;">Grupo precisa criar o projeto no Overleaf e colar o link de visualização na planilha.</span>';
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${p.id}</strong></td>
+          <td style="font-weight: 600; color: #fff;">${p.title}</td>
+          <td style="font-size: 0.8rem; color: var(--text-muted);">${p.team}</td>
+          <td>
+            ${p.overleaf ? `<a href="${p.overleaf}" target="_blank" style="color: var(--accent-cyan); font-family: monospace; font-size: 0.75rem; text-decoration: underline;">${p.overleaf.substring(0, 32)}...</a>` : '<span style="color: var(--text-dim); font-size: 0.75rem;">Pendente</span>'}
+          </td>
+          <td>${statusBadge}</td>
+          <td>${actionTxt}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.getElementById('projectModal').classList.remove('open');
+      }
+    });
+
+    // Run on load
+    window.onload = initDashboard;
+  </script>
+</body>
+</html>
