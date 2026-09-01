@@ -986,8 +986,8 @@
       <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" class="btn btn-outline">
         <i class="fa-solid fa-table"></i> Planilha Oficial
       </a>
-      <button class="btn btn-primary" onclick="switchTab('guia-docente')">
-        <i class="fa-solid fa-chalkboard-user"></i> Guia da Aula (Karina)
+      <button class="btn btn-primary" onclick="switchTab('trabalhos-relacionados')">
+        <i class="fa-solid fa-graduation-cap"></i> Aula: Trabalhos Relacionados
       </button>
     </div>
   </header>
@@ -1000,8 +1000,8 @@
     <button class="tab-btn" onclick="switchTab('timeline')">
       <i class="fa-solid fa-timeline"></i> Timeline de Atividades & Aulas
     </button>
-    <button class="tab-btn" onclick="switchTab('guia-docente')">
-      <i class="fa-solid fa-graduation-cap"></i> Pauta de Aula 01/09 (Trabalhos Relacionados)
+    <button class="tab-btn" onclick="switchTab('trabalhos-relacionados')">
+      <i class="fa-solid fa-graduation-cap"></i> Aula: Trabalhos Relacionados
     </button>
     <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
       <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">4 alertas</span>
@@ -1276,32 +1276,32 @@
     </section>
 
 
-    <!-- TAB 3: GUIA DOCENTE PARA KARINA -->
-    <section id="tab-guia-docente" class="tab-content">
+    <!-- TAB 3: AULA TRABALHOS RELACIONADOS -->
+    <section id="tab-trabalhos-relacionados" class="tab-content">
       <div class="hero-banner">
         <div class="hero-info">
-          <h2>Roteiro Prático de Aula para a Profª Karina (01/09)</h2>
-          <p>Guia passo a passo pronto para conduzir a aula com tranquilidade, sem necessidade de resolver dúvidas técnicas de código, conectando a matéria de sintaxe e orações diretamente com a escrita científica.</p>
+          <h2>Aula Prática: Seção de Trabalhos Relacionados</h2>
+          <p>Roteiro interativo de pesquisa bibliográfica, identificação de diferenciais frente ao estado da arte, redação científica no Overleaf e estruturação do Quadro Comparativo para os 10 projetos da turma INF-2024.</p>
         </div>
         <div class="hero-meta">
-          <div class="meta-tag"><i class="fa-solid fa-clock"></i> Duração Sugerida: <strong>2h a 3h</strong></div>
-          <div class="meta-tag"><i class="fa-solid fa-bullseye"></i> Entregável: <strong>Trabalhos Relacionados no Overleaf</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-clock"></i> Carga Prevista: <strong>2h a 3h</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-file-pen"></i> Entregável: <strong>\section{Trabalhos Relacionados} no Overleaf</strong></div>
         </div>
       </div>
 
       <div class="guide-box">
-        <h3><i class="fa-solid fa-list-ol" style="color: var(--ifsc-green);"></i> Dinâmica da Aula em 4 Etapas Simples</h3>
+        <h3><i class="fa-solid fa-book-open-reader" style="color: var(--ifsc-green);"></i> Roteiro da Aula em 4 Etapas Práticas</h3>
 
         <!-- Etapa 1 -->
         <div class="guide-step">
           <div class="step-number">1</div>
           <div class="step-content">
-            <h4>Ajuste Imediato dos Links do Overleaf (10 minutos)</h4>
-            <p>Explique à turma que para os professores corrigirem os artigos, o link precisa ser de <strong>leitura pública</strong>, e não o link de edição interna que gera erro de permissão.</p>
+            <h4>Alinhamento Inicial: Regularização do Link de Leitura do Overleaf (10 min)</h4>
+            <p>Para que o artigo da sua equipe possa ser lido e avaliado sem barreiras de login, a URL na planilha oficial deve ser um <strong>link de leitura aberto</strong> (e não a URL interna de edição <code>/project/</code> que gera erro 403).</p>
             <div class="callout-box">
-              <i class="fa-solid fa-triangle-exclamation"></i>
+              <i class="fa-solid fa-circle-info" style="color: var(--accent-amber);"></i>
               <div>
-                <strong>Como os estudantes fazem:</strong> No Overleaf, clicar no botão verde <code>Share</code> (canto superior direito) ➔ Clicar em <code>Turn on link sharing</code> ➔ Copiar o link de <code>Anyone with this link can view</code> ➔ Colar na coluna <strong>URL Relatório</strong> da planilha oficial.
+                <strong>Como regularizar em 3 passos:</strong> No Overleaf, clique no botão verde <code>Share</code> (topo direito) ➔ Ative <code>Turn on link sharing</code> ➔ Copie a URL de <code>Anyone with this link can view</code> e cole na coluna <strong>URL Relatório</strong> da planilha oficial.
               </div>
             </div>
           </div>
@@ -1311,11 +1311,11 @@
         <div class="guide-step">
           <div class="step-number">2</div>
           <div class="step-content">
-            <h4>Apresentação do Conceito: "O que são Trabalhos Relacionados?" (20 minutos)</h4>
-            <p>Mostre que todo artigo científico precisa responder a duas perguntas centrais:</p>
+            <h4>O que são Trabalhos Relacionados e Onde Localizar Fontes (20 min)</h4>
+            <p>A seção de Trabalhos Relacionados (*Related Works*) situa o seu projeto no mundo científico. Ela responde a duas perguntas cruciais:</p>
             <ul style="margin-left: 1.5rem; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.8rem;">
-              <li><em>"O que outros pesquisadores ou desenvolvedores já fizeram sobre esse mesmo problema?"</em></li>
-              <li><em>"Em que aspecto a nossa solução se diferencia ou traz um avanço em relação a eles?" (Ex.: menor custo, foco em acessibilidade, uso de hardware local, interface intuitiva, etc.)</em></li>
+              <li><em>1. O que outros autores, grupos de pesquisa ou desenvolvedores já criaram para tentar resolver esse mesmo problema?</em></li>
+              <li><em>2. Em que aspectos a solução do nosso grupo se diferencia ou avança em relação a eles? (Ex.: menor custo, código aberto, uso de IA local, interface acessível, etc.)</em></li>
             </ul>
 
             <!-- Repository Cards Grid -->
@@ -1331,7 +1331,7 @@
                   <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-brands fa-google text-cyan"></i> Google Acadêmico</strong>
                   <a href="https://scholar.google.com.br" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Maior indexador acadêmico global. Excelente para buscar artigos em português de conferências brasileiras e TCCs de computação.</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Maior base acadêmica aberta. Excelente para buscar artigos em português de conferências brasileiras e TCCs de computação.</p>
               </div>
 
               <!-- Computer on the Beach -->
@@ -1340,7 +1340,7 @@
                   <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-umbrella-beach text-amber"></i> Anais COTB (UNIVALI)</strong>
                   <a href="https://periodicos.univali.br/index.php/cotb" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;"><em>Computer on the Beach</em> — Maior evento regional de computação de SC, com artigos aplicados e protótipos de graduação/médio integrado.</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;"><em>Computer on the Beach</em> — Maior evento regional de computação de SC, com artigos aplicados e protótipos de graduação/médio técnico.</p>
               </div>
 
               <!-- SBC OpenLib -->
@@ -1376,7 +1376,7 @@
                   <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-globe text-cyan"></i> SciELO Brasil / Oasisbr</strong>
                   <a href="https://scielo.org" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Portal de acesso aberto com artigos revisados por pares em âmbito nacional e latino-americano.</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Portal de acesso aberto com artigos revisados por pares em âmbito nacional e internacional.</p>
               </div>
 
             </div>
@@ -1384,7 +1384,7 @@
             <div class="callout-box" style="background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.25); color: var(--text-main);">
               <i class="fa-solid fa-lightbulb" style="color: var(--accent-cyan);"></i>
               <div>
-                <strong>Dica de Pesquisa para os Estudantes:</strong> Usar operadores com aspas e termos em português e inglês: Exemplo: <code>"fechadura eletrônica" AND "raspberry pi"</code> ou <code>"estação meteorológica" AND "educação"</code> ou <code>"RPG de mesa" AND "web"</code>.
+                <strong>Dica de Pesquisa com Palavras-chave:</strong> Utilize operadores booleanos com aspas para focar a busca: Exemplo: <code>"fechadura eletrônica" AND "raspberry pi"</code> ou <code>"estação meteorológica" AND "baixo custo"</code> ou <code>"RPG de mesa" AND "web"</code>.
               </div>
             </div>
 
@@ -1395,8 +1395,8 @@
         <div class="guide-step">
           <div class="step-number">3</div>
           <div class="step-content">
-            <h4>Laboratório Prático: Preenchimento da Matriz Comparativa (45 minutos)</h4>
-            <p>Cada equipe pesquisa <strong>2 artigos ou soluções correlatas</strong> nas fontes acima e preenche a seguinte estrutura:</p>
+            <h4>Matriz Comparativa: Analisando o Trabalho Correlato vs. Nosso Projeto (40 min)</h4>
+            <p>Cada equipe deve selecionar <strong>2 a 3 artigos ou ferramentas correlatas</strong> e extrair as 4 informações-chave:</p>
             
             <table class="matrix-sample-table">
               <thead>
@@ -1409,16 +1409,22 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Silva et al. (2022)</td>
-                  <td>Fechadura eletrônica via RFID comercial</td>
-                  <td>Custo elevado e sem interface web local</td>
-                  <td><strong>RasPorta:</strong> Uso de Raspberry Pi de baixo custo com biometria e interface web Flask.</td>
+                  <td><strong>Silva et al. (2022)</strong></td>
+                  <td>Fechadura eletrônica via RFID comercial com Arduino</td>
+                  <td>Custo elevado, sem biometria e sem dashboard web</td>
+                  <td><strong>RasPorta:</strong> Uso de Raspberry Pi de baixo custo com leitor biométrico e interface web Flask local.</td>
                 </tr>
                 <tr>
-                  <td>Costa e Souza (2023)</td>
-                  <td>Estação meteorológica conectada à nuvem paga</td>
-                  <td>Dependência de assinatura e servidor externo</td>
-                  <td><strong>Estação IFSC:</strong> Banco local, protocolo aberto e aplicação pedagógica direta no campus.</td>
+                  <td><strong>Costa e Souza (2023)</strong></td>
+                  <td>Estação meteorológica conectada à nuvem proprietária paga</td>
+                  <td>Dependência de assinatura mensal e sem armazenamento offline</td>
+                  <td><strong>Estação IFSC:</strong> Banco SQLite local no campus, protocolo aberto e aplicação pedagógica direta.</td>
+                </tr>
+                <tr>
+                  <td><strong>Almeida (2021)</strong></td>
+                  <td>Gerenciador de fichas de RPG estático em PDF</td>
+                  <td>Ausência de cálculo automático de dados e sem suporte a sessões síncronas</td>
+                  <td><strong>D20Hub:</strong> Plataforma web interativa em Django/WebSocket com cálculo de regras em tempo real.</td>
                 </tr>
               </tbody>
             </table>
@@ -1429,18 +1435,84 @@
         <div class="guide-step">
           <div class="step-number">4</div>
           <div class="step-content">
-            <h4>Redação no Overleaf com Conectivos de Contraste (45 minutos)</h4>
-            <p>Os estudantes abrem a seção <code>\section{Trabalhos Relacionados}</code> no Overleaf e redigem 2 a 3 parágrafos aplicando as orações subordinadas e coordenativas da aula passada.</p>
-            
-            <div class="callout-box" style="background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.3); color: var(--accent-cyan);">
-              <i class="fa-solid fa-lightbulb"></i>
-              <div>
-                <strong>Banco de Conectivos & Expressões Prontas para a Escrita:</strong><br>
-                • <em>"Enquanto a abordagem de [Autor] concentra-se em [...], a presente proposta diferencia-se por [...]"</em><br>
-                • <em>"Diferentemente do trabalho desenvolvido por [Autor], que exige [...], nosso projeto adota [...]"</em><br>
-                • <em>"Embora a solução de [Autor] apresente resultados satisfatórios, nota-se uma limitação quanto a [...]. Nesse sentido, este artigo propõe [...]"</em>
+            <h4>Como Redigir o Parágrafo do Trabalho Relacionado no Overleaf (50 min)</h4>
+            <p>Um bom parágrafo de Trabalhos Relacionados possui uma <strong>anatomia científica em 4 passos</strong>. Veja como estruturar a escrita conectando as orações:</p>
+
+            <!-- Anatomia do Parágrafo -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; margin: 1rem 0;">
+              <div style="background: rgba(6, 182, 212, 0.08); border-left: 3px solid var(--accent-cyan); padding: 0.75rem; border-radius: 4px;">
+                <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.78rem;">1. CITAÇÃO & PROPOSTA</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Identificar o autor/ano e qual problema ele buscou resolver.</p>
+              </div>
+              <div style="background: rgba(34, 197, 94, 0.08); border-left: 3px solid var(--ifsc-green); padding: 0.75rem; border-radius: 4px;">
+                <span style="color: var(--ifsc-green); font-weight: 700; font-size: 0.78rem;">2. ABORDAGEM TÉCNICA</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Sintetizar as tecnologias e a metodologia que eles adotaram.</p>
+              </div>
+              <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--accent-amber); padding: 0.75rem; border-radius: 4px;">
+                <span style="color: var(--accent-amber); font-weight: 700; font-size: 0.78rem;">3. LACUNA / LIMITAÇÃO</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Apontar o ponto fraco, custo, falta de interface ou restrição.</p>
+              </div>
+              <div style="background: rgba(168, 85, 247, 0.08); border-left: 3px solid var(--accent-purple); padding: 0.75rem; border-radius: 4px;">
+                <span style="color: var(--accent-purple); font-weight: 700; font-size: 0.78rem;">4. DIFERENCIAL DO NOSSO PI</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Explicar como o seu projeto avança ou supera essa limitação.</p>
               </div>
             </div>
+
+            <!-- Exemplo Prático de Redação -->
+            <h5 style="color: var(--text-main); font-size: 0.95rem; margin: 1.2rem 0 0.5rem;">
+              <i class="fa-solid fa-pen-nib" style="color: var(--ifsc-green);"></i> Exemplo Prático de Texto no Artigo (Hardware / IoT):
+            </h5>
+
+            <div style="background: var(--chip-bg); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.2rem; margin-bottom: 1.2rem; font-family: 'Inter', sans-serif; font-size: 0.88rem; line-height: 1.65; color: var(--text-main);">
+              <span style="color: var(--accent-cyan); font-weight: 600;">[1. Citação e Proposta] O trabalho desenvolvido por Silva et al. (2022)</span> 
+              <span style="color: var(--ifsc-green);">[2. Abordagem] propõe uma fechadura eletrônica controlada por cartões RFID acoplados a um microcontrolador Arduino.</span> 
+              <span style="color: var(--accent-amber);">[3. Limitação] Embora a solução apresente resposta rápida no acionamento, os autores destacam limitações quanto à ausência de autenticação biométrica e à impossibilidade de monitorar os acessos remotamente por uma interface gráfica.</span> 
+              <span style="color: var(--accent-purple);">[4. Diferencial do Projeto] Diferentemente dessa abordagem, a presente proposta (RasPorta) utiliza uma arquitetura baseada em Raspberry Pi integrada a um leitor biométrico capacitivo e a um dashboard web em Flask, permitindo o cadastro de usuários e a auditoria de horários em tempo real com hardware de baixo custo.</span>
+            </div>
+
+            <!-- Código LaTeX correspondente -->
+            <h5 style="color: var(--text-main); font-size: 0.92rem; margin-bottom: 0.4rem;">
+              <i class="fa-solid fa-code" style="color: var(--accent-cyan);"></i> Como fica o código no Overleaf (\LaTeX):
+            </h5>
+            <pre style="background: var(--modal-bg); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; color: #a5f3fc; font-family: 'Fira Code', monospace; font-size: 0.78rem; overflow-x: auto; margin-bottom: 1.2rem;"><code>\section{Trabalhos Relacionados}
+
+O trabalho desenvolvido por \cite{silva2022fechadura} propõe uma fechadura eletrônica 
+controlada por cartões RFID acoplados a um microcontrolador. Embora a solução apresente 
+resposta rápida no acionamento, nota-se uma limitação quanto à ausência de autenticação 
+biométrica e à impossibilidade de auditoria remota via web. Diferentemente dessa abordagem, 
+o presente projeto (\textit{RasPorta}) integra um leitor biométrico capacitivo a um 
+servidor \textit{Flask} embarcado em Raspberry Pi, viabilizando o registro de acessos em 
+banco local com baixo custo financeiro.
+
+A Tabela~\ref{tab:relacionados} sintetiza a comparação entre os trabalhos correlatos e a 
+proposta desenvolvida neste artigo.
+
+\begin{table}[ht]
+\centering
+\caption{Quadro comparativo entre trabalhos relacionados e o projeto proposto.}
+\label{tab:relacionados}
+\small
+\begin{tabular}{|l|p{3.8cm}|p{3.8cm}|p{4.2cm}|}
+\hline
+\textbf{Trabalho} & \textbf{Solução Adotada} & \textbf{Limitação / Lacuna} & \textbf{Diferencial deste Projeto} \\ \hline
+Silva et al. \cite{silva2022fechadura} & Fechadura RFID com Arduino & Sem biometria e sem dashboard & Biometria capacitiva e painel web Flask local \\ \hline
+Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Custo de assinatura e dependência externa & Armazenamento local SQLite e foco pedagógico \\ \hline
+\textbf{Proposta Atual} & \textbf{Solução Integrada Aberta} & \textbf{---} & \textbf{Baixo custo, hardware modular e código aberto} \\ \hline
+\end{tabular}
+\end{table}</code></pre>
+
+            <!-- Conectivos Úteis -->
+            <div class="callout-box" style="background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.3); color: var(--text-main);">
+              <i class="fa-solid fa-quote-left" style="color: var(--accent-purple);"></i>
+              <div>
+                <strong>Banco de Conectivos para Enriquecer a Redação:</strong><br>
+                • <em>"Enquanto a abordagem de [Autor] concentra-se em [...], a presente proposta diferencia-se por [...]"</em><br>
+                • <em>"Diferentemente do trabalho desenvolvido por [Autor], que exige [...], nosso projeto adota [...]"</em><br>
+                • <em>"Embora a solução de [Autor] apresente resultados satisfatórios, nota-se uma limitação quanto a [...]. Nesse sentido, este artigo propõe [...]"</em><br>
+                • <em>"Em contrapartida à arquitetura proposta por [Autor], nosso trabalho prioriza [...]"</em>
+              </div>
+            </div>
+
           </div>
         </div>
 
