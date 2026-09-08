@@ -1434,6 +1434,118 @@
       margin: 0;
     }
 
+  
+    /* Focused Card Sections for Karyna (Trabalhos Relacionados & 4 Experimentos) */
+    .card-focus-block {
+      margin-top: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .card-rel-box {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 0.85rem;
+      font-size: 0.82rem;
+    }
+    .card-rel-box.pendente {
+      border-left: 3px solid var(--accent-amber);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), var(--chip-bg));
+    }
+    .card-rel-box.ok {
+      border-left: 3px solid var(--ifsc-green);
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), var(--chip-bg));
+    }
+    .card-rel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      font-size: 0.8rem;
+    }
+    .card-rel-content {
+      color: var(--text-main);
+      line-height: 1.4;
+      font-size: 0.8rem;
+      background: var(--bg-card);
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+    .card-rel-instruction {
+      font-size: 0.75rem;
+      color: var(--accent-amber);
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+
+    /* 4 Experiments Mini-List */
+    .card-exps-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 0.85rem;
+    }
+    .card-exps-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .card-exps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin: 0;
+      padding: 0;
+    }
+    .card-exp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+    }
+    .card-exp-item.ok {
+      border-left: 3px solid var(--ifsc-green);
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), var(--chip-bg));
+    }
+    .card-exp-item.pendente {
+      border-left: 3px solid var(--border-color);
+      opacity: 0.75;
+    }
+    .card-exp-num {
+      font-weight: 800;
+      font-size: 0.72rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .card-exp-item.ok .card-exp-num {
+      background: rgba(34, 197, 94, 0.18);
+      color: var(--ifsc-green);
+    }
+    .card-exp-item.pendente .card-exp-num {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-muted);
+    }
+    .card-exp-title {
+      flex: 1;
+      word-break: break-word;
+    }
+
   </style>
 </head>
 <body>
@@ -1583,13 +1695,12 @@
           <i class="fa-solid fa-magnifying-glass"></i>
           <input type="text" id="searchInput" placeholder="Buscar por título, estudante, tecnologia ou palavra-chave..." oninput="filterProjects()">
         </div>
-        <div class="filter-pills">
+                <div class="filter-pills">
           <button class="pill active" onclick="setFilter('all', this)">Todos (10)</button>
+          <button class="pill" onclick="setFilter('exps-completos', this)"><i class="fa-solid fa-circle-check text-green"></i> Experimentos 4/4</button>
+          <button class="pill" onclick="setFilter('exps-pendentes', this)"><i class="fa-solid fa-hourglass-half text-amber"></i> Experimentos a Definir</button>
           <button class="pill" onclick="setFilter('overleaf-ok', this)"><i class="fa-solid fa-check text-green"></i> Overleaf OK</button>
           <button class="pill" onclick="setFilter('overleaf-privado', this)"><i class="fa-solid fa-lock text-amber"></i> Link Privado (403)</button>
-          <button class="pill" onclick="setFilter('raspberry', this)">Raspberry Pi</button>
-          <button class="pill" onclick="setFilter('games', this)">Jogos / Godot / Pygame</button>
-          <button class="pill" onclick="setFilter('ai', this)">IA / LLM</button>
         </div>
       </div>
 
@@ -2661,16 +2772,16 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           </div>
         </div>
 
-        <table class="matrix-sample-table">
+                <table class="matrix-sample-table">
           <thead>
             <tr>
-              <th style="width: 50px;">ID</th>
-              <th style="width: 200px;">Projeto & Integrantes</th>
-              <th style="width: 140px;">Overleaf</th>
-              <th style="width: 90px;">Pitch (3m)</th>
-              <th style="width: 120px;">Experimentos</th>
-              <th style="width: 100px;">COTB (15/11)</th>
-              <th>Ação Imediata Cobrada na Aula de Hoje (Profª Karyna)</th>
+              <th style="width: 45px;">ID</th>
+              <th style="width: 170px;">Projeto & Equipe</th>
+              <th style="width: 150px;">Trabalhos Relacionados (Ano & Título)</th>
+              <th style="width: 220px;">Título dos 4 Experimentos</th>
+              <th style="width: 110px;">Overleaf</th>
+              <th style="width: 80px;">Pitch</th>
+              <th>Ação Prioritária para a Aula de Hoje (Profª Karyna)</th>
             </tr>
           </thead>
           <tbody>
@@ -2682,11 +2793,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">SMC: Montagem de PCs</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Lucas P., Bernardo, Henrique C.</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Protótipo: Peças drag & drop<br>
+                <span style="color: var(--text-dim);">Exp 2 a 4: Pendentes</span>
+              </td>
               <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Não Informado</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 1)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td><strong style="color: var(--ifsc-red);">Criar Overleaf no padrão SBC/COTB</strong> e planejar Exp 2 (teste de retenção pedagógica com alunos da 1ª fase).</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td><strong style="color: var(--ifsc-red);">Criar Overleaf no padrão SBC/COTB</strong>; inserir artigos correlatos com ano na coluna 8; planejar Exp 2 (teste pedagógico).</td>
             </tr>
 
             <!-- P2 -->
@@ -2696,11 +2810,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">JifTV Streaming Adaptativo</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Rodrigo, Eluney, João, Anderson</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 Experimentos</span><br>
+                <span style="color: var(--text-dim); font-style: italic;">Nenhum experimento definido</span>
+              </td>
               <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Não Informado</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 (Zerado)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Grupo não definiu nenhum experimento! Cadastrar Overleaf e definir Exp 1 (medição de latência RTT) e Exp 2 (variação de bitrate).</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Cadastrar Overleaf; inserir artigos correlatos com ano; definir Exp 1 (latência RTT) e Exp 2 (bitrate sob perda de pacotes).</td>
             </tr>
 
             <!-- P3 -->
@@ -2710,11 +2827,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Curso Popular de Informática</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Pietro, Artur, Lucas S.</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Curso experimental de ferramentas<br>
+                <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
+              </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Pendente</span></td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; validar com Karyna a metodologia da oficina piloto e critérios de avaliação de aprendizagem.</td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
+              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; inserir 2-3 artigos com ano na coluna 8; desenhar métricas de avaliação pré/pós oficina piloto.</td>
             </tr>
 
             <!-- P4 -->
@@ -2724,11 +2844,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">RasPorta: Fechadura Biométrica</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Petrus, Martin, Felipe</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 Experimentos</span><br>
+                <span style="color: var(--text-dim); font-style: italic;">Nenhum experimento definido</span>
+              </td>
               <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 (Zerado)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Experimentos zerados! Trocar link Overleaf para leitura pública e definir Exp 1 (tempo de leitura da biometria) e Exp 2 (tempo de acionamento).</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Trocar link Overleaf para público (Share Link); inserir artigos com ano; definir Exp 1 (tempo de leitura biometria) e Exp 2 (tempo de acionamento relé).</td>
             </tr>
 
             <!-- P5 -->
@@ -2738,11 +2861,16 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">D20Hub: Gerenciador de RPG</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Nicolas, Eduardo, Henrique G.</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Tela principal e poderes<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Banco de dados e autenticação<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Salas para interação<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Internacionalização (ES/EN)
+              </td>
               <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-circle-check"></i> 4 de 4 (Mapeados)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td>Trocar link Overleaf para público (Share Link); transformar os protótipos em testes controlados de latência com WebSockets e avaliação SUS de usabilidade.</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td>Trocar Overleaf para público (Share Link); inserir artigos de RPG/WebSockets com ano na coluna 8; transformar protótipos em testes de latência e escala SUS.</td>
             </tr>
 
             <!-- P6 -->
@@ -2752,11 +2880,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Acervo MAGE 3D</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Raul, Pedro H., Augusto, Maria C.</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Geração de visualização 3D<br>
+                <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
+              </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Pendente</span></td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; definir métricas do Exp 1 (tempo de fotogrametria por elemento) e Exp 3 (taxa de compressão vs fidelidade).</td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
+              <td>Gravar e colar <strong>Pitch Vídeo</strong>; inserir artigos de fotogrametria com ano; definir Exp 1 (tempo de fotogrametria por item) e Exp 3 (compressão vs malha).</td>
             </tr>
 
             <!-- P7 -->
@@ -2766,11 +2897,16 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Música, Jogo e Atenção</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Luisa Narvaz</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Menu e inclusão de dados<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Respostas, sons e acertos/erros<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> ID automático, espanhol, ícones<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Coleta/análise e relatórios
+              </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-circle-check"></i> 4 de 4 (100% OK)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td><strong style="color: var(--ifsc-green);">Projeto Modelo da Turma:</strong> Parabéns pelo preenchimento dos 4 experimentos! Foco imediato na coleta de dados (Exp 4) para redigir a Seção de Resultados no Overleaf.</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td><strong style="color: var(--ifsc-green);">Parabenizar Luisa pelos 4 Experimentos!</strong> Inserir artigos correlatos de jogos musicais e cognição com ano na coluna 8; rodar coleta do Exp 4.</td>
             </tr>
 
             <!-- P8 -->
@@ -2780,11 +2916,16 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Estação Meteorológica</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Beatriz, Laura, Oriana, Sophie, Victória</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Obtenção de dados no Raspberry<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Testes e calibramento sensores<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Elaboração do banco de dados<br>
+                <span style="color: var(--text-dim);">Exp 4: Pendente</span>
+              </td>
               <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 3 de 4 (Exp 1, 2, 3)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td>Trocar novo link do Overleaf para modo público (Share Link); cadastrar o Exp 4 (análise de telemetria contínua por 48h sem queda).</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td>Trocar novo link do Overleaf para modo público (Share Link); inserir artigos correlatos de estações IoT com ano; definir Exp 4 (estabilidade de coleta 48h).</td>
             </tr>
 
             <!-- P9 -->
@@ -2794,11 +2935,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Scout de Vôlei</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Nathan, João C., Pedro E.</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Banco de dados e typescript<br>
+                <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
+              </td>
               <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td>Trocar link Overleaf para público (Share Link); cadastrar Exp 1 (tempo de registro por lance no Web App vs papel) e Exp 3 (persistência estatística).</td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
+              <td>Trocar Overleaf para público (Share Link); inserir artigos de estatística esportiva com ano; cadastrar Exp 1 (tempo por lance no Web App vs papel).</td>
             </tr>
 
             <!-- P10 -->
@@ -2808,11 +2952,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">ChatBot Secretaria Acadêmica</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Cauã, Enzo, Ariane</span>
               </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> API servidor local LM Studio<br>
+                <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
+              </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Pendente</span></td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
-              <td><span class="pending-status-pill warn">Pendente</span></td>
-              <td>Preencher o campo <strong>Objetivo</strong> na planilha (vazio); gravar Pitch Vídeo; cadastrar Exp 1 (acurácia de 20 dúvidas acadêmicas) e Exp 3 (latência por token).</td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
+              <td>Preencher o campo <strong>Objetivo</strong> na planilha (vazio); gravar Pitch Vídeo; inserir artigos de LLMs locais com ano; cadastrar Exp 1 (acurácia) e Exp 3 (latência).</td>
             </tr>
 
           </tbody>
@@ -2899,21 +3046,28 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "overleafStatus": "pendente",
     "canva": "https://canva.link/wc61pjb1k2prmb4",
     "pitch": "https://youtu.be/CPQ0VqHQGHg",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "Godot"
     ],
-    "advances": "",
-    "nextSteps": "[SEPEI 2026]NOTIFICAÇÃO: 19/06DEADLINE: 26/06REVISÃO: 25/06",
-    "difficulties": "SNCT",
-    "observations": "",
+    "advances": "[21/06] Criação de nomes de marcas de peças;[21/06] Documentação de comandos que serão utilizados no app;Geração estilizado de design de cards de equipamentos;",
+    "nextSteps": "Ampiar o acervo de peças de hardware que o sistema pode trabalhar,Definir lógica principal do game.Revisão Paper SEPEI;",
+    "difficulties": "Domínio da linguagem Godot",
+    "observations": "Apresentar em 2x semanas o projeto na INF 25",
     "experiments": {
-      "exp1": "PENDENTE",
-      "exp2": "Protótipo: Ambiente com peças de computadores em comportamento drag and drop estilizadas com formato de peças",
-      "exp3": "Pendente",
+      "exp1": "Protótipo: Ambiente com peças de computadores em comportamento drag and drop estilizadas com formato de peças",
+      "exp2": "PENDENTE",
+      "exp3": "PENDENTE",
       "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "[SEPEI 2026]NOTIFICAÇÃO: 19/06DEADLINE: 26/06REVISÃO: 25/06",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 2,
@@ -2925,21 +3079,28 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "overleafStatus": "pendente",
     "canva": "https://canva.link/ma54h2bqhkmw0iy",
     "pitch": "https://youtu.be/B0tZgwmd4vg?feature=shared",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "DOCKEROBS STUDIONGINXCLOUDFAREFIREBASE"
     ],
-    "advances": "",
-    "nextSteps": "[SEPEI 2026]NOTIFICAÇÃO: xx/06DEADLINE: xx/06REVISÃO: 25/06",
-    "difficulties": "SNCT",
+    "advances": "COMPRA DE DOMÍNIO (JIFTV.ORG)AQUISIÇÃO DE 2 SUBDOMÍNIOSMONTAGEM DE SERVIDOR NO IFSC",
+    "nextSteps": "FINALIZAR SERVIDORRESOLVER REDEAVANÇAR NA DOCUMENTAÇÃO",
+    "difficulties": "SISTEMA OPERACIONAL [LINUX]",
     "observations": "",
     "experiments": {
       "exp1": "PENDENTE",
       "exp2": "PENDENTE",
-      "exp3": "Pendente",
+      "exp3": "PENDENTE",
       "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "[SEPEI 2026]NOTIFICAÇÃO: xx/06DEADLINE: xx/06REVISÃO: 25/06",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 3,
@@ -2947,25 +3108,33 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Pietro, Artur, Lucas Sehn",
     "objective": "Facilitar o uso de tecnologias da Informação e comunicação",
     "github": "https://github.com/PietroFachini/PI-Curso-Popular-de-Inform-tica-do-Trabalhador",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/read/gtgftsdygqqb#5307fc[SEPEI",
+    "overleafStatus": "ok",
     "canva": "https://drive.google.com/file/d/1sb0Uq1kXHZKlVMbkcJNlseZK3p8WP-Wz/view?usp=sharing",
     "pitch": "",
+    "relatedWorks": "PENDENTE",
     "techs": [
       "Documentação",
       "Pesquisa"
     ],
-    "advances": "",
-    "nextSteps": "https://www.overleaf.com/read/gtgftsdygqqb#5307fc[SEPEI 2026] - recused",
-    "difficulties": "SNCT",
+    "advances": "REUNIÃO MARCADA COM PROFA. KARYNADEFINIÇÃO DA AULA 1DEFINIÇÃO CONTEÚDO DA AULA 1 [GOOGLE DOCS]",
+    "nextSteps": "DEFINIR DATA E CONTEÚDO DA AULA 2",
+    "difficulties": "ENCONTRAR FORMA PARA DOCUMENTAR AULASACHAR TEMPO PARA CRIAR AULAS",
     "observations": "",
     "experiments": {
       "exp1": "PENDENTE",
-      "exp2": "PENDENTE",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: Curso experimental sobre Ferramentas para produção de trabalhos acadêmicos"
+      "exp2": "Protótipo: Curso experimental sobre Ferramentas para produção de trabalhos acadêmicos",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://www.overleaf.com/read/gtgftsdygqqb#5307fc[SEPEI 2026] - recused",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 4,
@@ -2973,25 +3142,34 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Petrus, Martin, Felipe",
     "objective": "Criar uma fechadura automática controlada por biometria",
     "github": "https://github.com/petrusgunder/projeto-rasptraca",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b",
+    "overleafStatus": "privado",
     "canva": "https://canva.link/5plpzei3nxzsiia",
     "pitch": "https://youtu.be/qFKXWlbp3Lg?is=MBFXBiiwa3I0iXKO",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "RASPBERRY PY",
+      "Python",
+      "SQLiteFLASK"
     ],
-    "advances": "",
-    "nextSteps": "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b",
-    "difficulties": "SNCT",
+    "advances": "Aquisição da maioria dos equipamentos [raspberry],Sistema de LeDs para Raspberry,Adaptador HDMI,Criação do Banco de Dados do projetoCRIAÇÃO DE UMA TABELA PARA DIVISÃO DAS TAREFASFUNCIONAMENTO DO FLASK",
+    "nextSteps": "COLOCAR O SITE NO ARESPERAR CHEGAR O MICROSD PARA FAZER O RASPBERRY FUNCIONARTestar equipamentos noRaspberry,Efetivar o funcionamento do Banco no Raspberry.",
+    "difficulties": "EFETIVAR A REORGANIZAÇÃO DAS TAREFAS",
     "observations": "",
     "experiments": {
       "exp1": "PENDENTE",
       "exp2": "PENDENTE",
-      "exp3": "Pendente",
+      "exp3": "PENDENTE",
       "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://www.overleaf.com/project/69bd9f13bd6a65a3dfa2a03b",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 5,
@@ -2999,25 +3177,40 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Nicolas, Eduardo, Henrique Gama",
     "objective": "Criar um site que incentive e facilite o uso do RPG de mesa como ferramenta de comunicação e enriquecimento cultural.",
     "github": "https://github.com/Nicolas0413/d20hub",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/project/69bd9d5e665d3072258ec42a",
+    "overleafStatus": "privado",
     "canva": "https://www.canva.com/design/DAHMSqlrfbw/Kzh1QLLKbe_ngv0zF1EQUA/edit?ui=e30",
     "pitch": "https://youtu.be/UQryzKcBu1A",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "TYPESCRIPT",
+      "JAVASCRIPT",
+      "DJANGO",
+      "FLASK",
+      "BOOTSTRAP",
+      "PILLOW",
+      "SQLITE",
+      "PYTHON",
+      "WebSocket"
     ],
-    "advances": "",
-    "nextSteps": "[SEPEI 2026]NOTIFICAÇÃO: 20/06DEADLINE: 27/06REVISÃO: 25/06https://www.overleaf.com/project/69bd9d5e665d3072258ec42a",
-    "difficulties": "SNCT",
+    "advances": "TELA DE PERSONAGENS 80% FINALIZADAADEQUAÇÃO DA SEGURANÇA DO PROJETO AO PADRÃO GIT HUBOPERAÇÃO CRUD COM FICHASCORREÇÃO DO PAPER DE SUBMISSÃO SEPEIFINALIZAÇÃO DA LÓGICA DO BANCO DE DADOS",
+    "nextSteps": "ORGANIZAR CONTROLE DAS SESSÕES DE JOGADORESALTERAÇÃO DE PERFIS DE CORES DOS SITEINTEGRAÇÃO COM BOOTSTRAP",
+    "difficulties": "IMPLEMENTAR ORGANIZAÇÃO DE SALAS",
     "observations": "",
     "experiments": {
-      "exp1": "PENDENTE",
-      "exp2": "Protótipo: Tela principal contendo caracarísticas do jogador, poderes e opções de jogo",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: Implementação do banco de dados e autenticação dos usuários, tela de seleção de fichas."
+      "exp1": "Protótipo: Tela principal contendo caracarísticas do jogador, poderes e opções de jogo",
+      "exp2": "Protótipo: Implementação do banco de dados e autenticação dos usuários, tela de seleção de fichas.",
+      "exp3": "Protótipo: Criação das salas para interação entre os usuários.",
+      "exp4": "Protótipo: Internacionalização do site, tradução de todas as páginas para espanhol e inglês."
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "[SEPEI 2026]NOTIFICAÇÃO: 20/06DEADLINE: 27/06REVISÃO: 25/06https://www.overleaf.com/project/69bd9d5e665d3072258ec42a",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 6,
@@ -3025,25 +3218,35 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Raul, Pedro H, Augusto, Maria Cecília",
     "objective": "Criar modelagem de elementos 3D para os itens existenes no laboratório MAGE (IFSC)",
     "github": "https://github.com/PedroHvieiraC/Acervo-Digital-MAGe.git",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/read/hypyvwpynptw#4f8063",
+    "overleafStatus": "ok",
     "canva": "https://miro.com/welcomeonboard/eGtpWTVqMllqb2J0Y2J1a1NnTDR6Zlo4SHVPa08yVFRzT1lpR0F2MmFVWURKZ1VSdG1SbEx0b08ydmRwL0YxdGRFbmtnUUV0RWZBUC9Obzl6VGZPcWVLNFlmSkZIV1VtcHIvdm41alJDVlZmcEZZdXB2dlY3Rm96ZmRvNjVhOStBS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=173534374327",
     "pitch": "",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "POLYCAM",
+      "SKETCHFAB",
+      "BLENDER",
+      "GIMP."
     ],
-    "advances": "",
-    "nextSteps": "https://www.overleaf.com/read/hypyvwpynptw#4f8063\"[SEPEI 2026]NOTIFICAÇÃO: XX06DEADLINE: XX/06REVISÃO: XX/06\"",
-    "difficulties": "SNCT",
+    "advances": "[28/06] - FINALIZADO REGISTRO DE ITENS DO ACERVO [18 ITENS][28/06] - FEITA SEPARAÇÃO DAS FOTOS PARA A CRIAÇÃO D PROTÓTIPO;PROTÓTTIPO PARA MEXER EM FERRAMENTAS [EMANDAMENTO]",
+    "nextSteps": "CONTINUAR A SEPARAÇÃO E ORGANIZAÇÃO DAS FOTOS [150 FOTOS POR ELEMENTO][CRIAÇÃO DE PLANILHA PARA SEPARAR AS TAREFASDAR CONTINUIDADE NA PRODUÇÃO DOS PROTÓTIPOS [FINALIZAR 1 OU 2 ANTES DE FAZER OS OUTROS 16]",
+    "difficulties": "ORGANIZAÇÃO DE FUNÇÕES. [REQUER AVALIAR ESTRATÉGIA]",
     "observations": "",
     "experiments": {
       "exp1": "PENDENTE",
-      "exp2": "PENDENTE",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: Geração da visualização 3D dos objetos."
+      "exp2": "Protótipo: Geração da visualização 3D dos objetos.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://www.overleaf.com/read/hypyvwpynptw#4f8063\"[SEPEI 2026]NOTIFICAÇÃO: XX06DEADLINE: XX/06REVISÃO: XX/06\"",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 7,
@@ -3051,25 +3254,34 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Luisa Narvaz",
     "objective": "Jogo educacional que traz jogo como música para crianças com dificuldade de atenção, que apresentem dificuldade no âmbito escolar.",
     "github": "https://github.com/luisablankenburg08/jogo_pygame.git",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
+    "overleafStatus": "ok",
     "canva": "https://drive.google.com/drive/folders/1gkIR48RiBaHfomWznYDienqCqdkxJvj6?usp=drive_link",
     "pitch": "https://youtu.be/Wm4SfQHkzHI?si=lWNC7QELy9D_ZZpT",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "PYTHON",
+      "RASPBERRY PY",
+      "BIBLIOTECA PYGAME E DEMAIS BIBLIOTECAS"
     ],
-    "advances": "",
-    "nextSteps": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
-    "difficulties": "SNCT",
+    "advances": "IMPLEMENTAÇÃO DE MÚSICA DE FASE 1;REORGANIZAÇÃO DO CÓDIGO PARA MÓDULOS SEPARADOS COM USO DE IMPORTS;",
+    "nextSteps": "CONSTRUÇÃO DAS FASES [2, 3],INTEGRAÇÃO COM RASPBERRY PY,COMITÊ DE ÉTICA [FEITA INVESTIGAÇÃO DOS PASSOS SOBRE COMO ENCAMINHAR O PROJETO PARA O COMITÊ DE ÉTICA]",
+    "difficulties": "CONHECIMENTO LIMITADO NO PYGAME,VALIDAR PROTOCOLO DE TESTES",
     "observations": "",
     "experiments": {
-      "exp1": "PENDENTE",
-      "exp2": "Protótipo: Menu principal, inclusão de dados dos jogadores, interface gráfica",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: registro de respostas, inserção dos sons das atividades, relatório com acertos e erros"
+      "exp1": "Protótipo: Menu principal, inclusão de dados dos jogadores, interface gráfica",
+      "exp2": "Protótipo: registro de respostas, inserção dos sons das atividades, relatório com acertos e erros",
+      "exp3": "Protótipo: geração de ID automático, versão em espanhol, melhoramento dos ícones",
+      "exp4": "Protótipo: coleta e análise de dados, geração de relatórios"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 8,
@@ -3077,25 +3289,32 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Beatriz, Laura, Oriana, Sophie, Victória",
     "objective": "O objetivo do projeto é desenvolver uma estação meteorológica de baixo custo para o câmpus, utilizando Raspberry Pi, sensores e módulos de comunicação para coleta, envio e armazenamento das informações. Para além da coleta, o projeto prioriza também a análise e aplicação dos dados no contexto educacional.",
     "github": "https://github.com/sophirie/Estacao-Meteorologica-no-IFSC-Garopaba.git",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/project/6a39801e2ef17fa88887aba5",
+    "overleafStatus": "privado",
     "canva": "https://canva.link/h3ax5hymb1liy5h",
     "pitch": "https://youtu.be/Vu1pXKOnp58",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "RASPBERRY PYPYTHONBANCO DE DADOSHTML"
     ],
-    "advances": "",
-    "nextSteps": "https://www.overleaf.com/project/6a39801e2ef17fa88887aba5",
-    "difficulties": "SNCT",
+    "advances": "FAMILIARIZAÇÃO COM EQUIPAMENTO, TESTES E CALIBRAMENTO DE SENSORES",
+    "nextSteps": "CORRIGIR A DOCUMENTAÇÃO REFERENTE À TROCA DE HARDWARECONTINUAÇÃO COM TESTES E IMPLEMENTAÇÃO DO SENSOR BME280",
+    "difficulties": "TEMPO E CONHECIMENTOS ESPECIFICOS",
     "observations": "",
     "experiments": {
-      "exp1": "PENDENTE",
-      "exp2": "Protótipo: Organização e funcionamento da obtenção de dados dos sensores no Raspberry.",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: Primeiros testes e calibramento de sensores."
+      "exp1": "Protótipo: Organização e funcionamento da obtenção de dados dos sensores no Raspberry.",
+      "exp2": "Protótipo: Primeiros testes e calibramento de sensores.",
+      "exp3": "Protótipo: Elaboração do banco de dados",
+      "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://www.overleaf.com/project/6a39801e2ef17fa88887aba5",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 9,
@@ -3103,25 +3322,32 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Nathan, João Contreira, Pedro E",
     "objective": "Melhoria de capacidade de aquisição de dados de partidas de vôlei para aprendizado de técnicas e estratégias contras possíveis adversários e para autoánalise",
     "github": "https://github.com/ImEnrik/Volleyball-scout",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://www.overleaf.com/project/69b46ac0762f515edca19b1a",
+    "overleafStatus": "privado",
     "canva": "https://drive.google.com/file/d/1PCQLRToUkHRBljULndR3fnH4SBtdwjHe/view?usp=sharing",
     "pitch": "https://www.youtube.com/watch?v=-PZDz0iYYZQ",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "PYTHONJAVA SCRIPTHTMLCSSBANCO DE DADOSGIT HUB (PAGES)"
     ],
-    "advances": "",
-    "nextSteps": "https://www.overleaf.com/project/69b46ac0762f515edca19b1a",
-    "difficulties": "SNCT",
+    "advances": "APLICATIVO BETA FUNCIONANDO",
+    "nextSteps": "TRANSFORMAR O APLICATIVO DE IN WEB APP PAA UM APP BAIXÁVELMELHORIAS NO FUNCIONAMENTO (OPÇÕES DE INTERAÇÃO)BANCO DE DADOSFUNDAMENTAÇÃO TEÓRICA",
+    "difficulties": "APRENDER A TRABALHAR COM LINGUAGENS NOVAS (BANCO DE DADOS, TYPE SCRIPT)MANTER A MOTIVAÇÃO PARA EXECUÇÃO DO PROJETO",
     "observations": "",
     "experiments": {
       "exp1": "PENDENTE",
-      "exp2": "PENDENTE",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: Criação do banco de dados de informações estatísticas. Implementação typescript para garantir funcionamento em dispositivos móveis."
+      "exp2": "Protótipo: Criação do banco de dados de informações estatísticas. Implementação typescript para garantir funcionamento em dispositivos móveis.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://www.overleaf.com/project/69b46ac0762f515edca19b1a",
+    "cotbStatus": "Pendente"
   },
   {
     "id": 10,
@@ -3129,25 +3355,32 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     "team": "Cauã, Enzo, Ariane",
     "objective": "",
     "github": "https://github.com/Ary-u/IFSC-chatbot",
-    "overleaf": "",
-    "overleafStatus": "pendente",
+    "overleaf": "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
+    "overleafStatus": "ok",
     "canva": "https://canva.link/uznnsrssl7qdjm5",
     "pitch": "",
+    "relatedWorks": "PENDENTE",
     "techs": [
-      "Documentação",
-      "Pesquisa"
+      "GIT HUBLATEXPYTORCHLMSTUDIOPYTHON"
     ],
-    "advances": "",
-    "nextSteps": "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
-    "difficulties": "SNCT",
+    "advances": "ESTRUTURAÇÃO INICIAL DA METODOLOGIADETERMINAÇÃO DAS METAS INICIAISACESSO À SALA DE PESQUISA",
+    "nextSteps": "COLOCAR EM PRÁTICA A METODOLOGIATESTAR FERRAMENTAS ESPECÍFICAS ORGANIZAÇÃO DA DOCUMENTAÇÃO NO GIT HUBREFINAR A DIVISÃO DE PAPÉIS DA EQUIPE",
+    "difficulties": "DETERMINAR A FUNÇÃO DE CADA MEMBRO DA EQUIPE DE ACORDO COM AS APTIDÕES TÉCNICASATRIBUIÇÃO DE TAREFAS PARA UMA COLEGA QUE TRABALHA NO HORÁRIO DA AULARESTRIÇÃ0 DE TEMPO PARA EXECUÇÃO DEVIDO À LIMITAÇÃO DE HORÁRIO NA SALA DE PESQUISA",
     "observations": "",
     "experiments": {
       "exp1": "PENDENTE",
-      "exp2": "PENDENTE",
-      "exp3": "Pendente",
-      "exp4": "Protótipo: Estruturar uma API básica para acessar o servidor da rede local do LM studio."
+      "exp2": "Protótipo: Estruturar uma API básica para acessar o servidor da rede local do LM studio.",
+      "exp3": "PENDENTE",
+      "exp4": "PENDENTE"
     },
-    "paperStatus": "Planejamento"
+    "experimentResults": {
+      "exp1": "",
+      "exp2": "",
+      "exp3": "",
+      "exp4": ""
+    },
+    "paperStatus": "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
+    "cotbStatus": "Pendente"
   }
 ];
 
@@ -3177,6 +3410,20 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
         if (currentFilter === 'all') return true;
         if (currentFilter === 'overleaf-ok') return p.overleafStatus === 'ok';
         if (currentFilter === 'overleaf-privado') return p.overleafStatus === 'privado';
+        if (currentFilter === 'exps-completos') {
+          const exps = p.experiments || {};
+          return [1, 2, 3, 4].every(num => {
+            const val = (exps['exp' + num] || '').trim().toUpperCase();
+            return val && val !== 'PENDENTE';
+          });
+        }
+        if (currentFilter === 'exps-pendentes') {
+          const exps = p.experiments || {};
+          return [1, 2, 3, 4].some(num => {
+            const val = (exps['exp' + num] || '').trim().toUpperCase();
+            return !val || val === 'PENDENTE';
+          });
+        }
         if (currentFilter === 'raspberry') return p.techs.some(t => t.toLowerCase().includes('raspberry'));
         if (currentFilter === 'games') return p.techs.some(t => ['godot', 'pygame', 'gamedev'].some(g => t.toLowerCase().includes(g)));
         if (currentFilter === 'ai') return p.techs.some(t => ['lm studio', 'pytorch', 'llm'].some(g => t.toLowerCase().includes(g)));
@@ -3204,6 +3451,51 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           badgeHtml = `<span class="proj-overleaf-badge pendente"><i class="fa-solid fa-circle-xmark"></i> Sem Overleaf</span>`;
         }
 
+        // Status Trabalhos Relacionados (com exigência de título + ano)
+        const relRaw = (p.relatedWorks || 'PENDENTE').trim();
+        const isRelPendente = !relRaw || relRaw.toUpperCase() === 'PENDENTE';
+        const relHtml = isRelPendente
+          ? `<div class="card-rel-box pendente">
+               <div class="card-rel-header">
+                 <span><i class="fa-solid fa-book-bookmark text-amber"></i> Trabalhos Relacionados</span>
+                 <span class="pending-status-pill warn">PENDENTE</span>
+               </div>
+               <div class="card-rel-instruction">
+                 <i class="fa-solid fa-triangle-exclamation"></i> <strong>Ação em Sala:</strong> Inserir o título de cada trabalho junto do ano de publicação (Coluna 8).
+               </div>
+             </div>`
+          : `<div class="card-rel-box ok">
+               <div class="card-rel-header">
+                 <span><i class="fa-solid fa-book-bookmark text-green"></i> Trabalhos Relacionados</span>
+                 <span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Preenchido</span>
+               </div>
+               <div class="card-rel-content">${relRaw}</div>
+             </div>`;
+
+        // 4 Experimentos: puxando os títulos dos que já foram feitos
+        const exps = p.experiments || {};
+        const expItems = [1, 2, 3, 4].map(num => {
+          const key = 'exp' + num;
+          const val = (exps[key] || 'PENDENTE').trim();
+          const isDone = val && val.toUpperCase() !== 'PENDENTE';
+          return `
+            <li class="card-exp-item ${isDone ? 'ok' : 'pendente'}">
+              <span class="card-exp-num">Exp ${num}</span>
+              <span class="card-exp-title">
+                ${isDone 
+                  ? `<i class="fa-solid fa-circle-check text-green" style="font-size: 0.75rem; margin-right: 0.25rem;"></i> <strong>${val}</strong>`
+                  : `<span style="color: var(--text-dim); font-style: italic;">Pendente (Definir título do experimento)</span>`
+                }
+              </span>
+            </li>
+          `;
+        }).join('');
+
+        const completedCount = [1, 2, 3, 4].filter(num => {
+          const val = (exps['exp' + num] || 'PENDENTE').trim();
+          return val && val.toUpperCase() !== 'PENDENTE';
+        }).length;
+
         const card = document.createElement('div');
         card.className = 'project-card';
         card.innerHTML = `
@@ -3213,16 +3505,28 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
               ${badgeHtml}
             </div>
 
-            <h3 class="proj-title">${p.title}</h3>
-            <div class="proj-team"><i class="fa-solid fa-user-group"></i> ${p.team}</div>
-            <p class="proj-desc">${p.objective || 'Objetivo em consolidação na planilha.'}</p>
+            <h3 class="proj-title" style="margin-bottom: 0.25rem;">${p.title}</h3>
+            <div class="proj-team" style="margin-bottom: 0.85rem;"><i class="fa-solid fa-user-group"></i> ${p.team}</div>
 
-            <div class="proj-techs">
-              ${p.techs.map(t => `<span class="tech-chip">${t}</span>`).join('')}
+            <!-- Bloco Foco: Trabalhos Relacionados & 4 Experimentos -->
+            <div class="card-focus-block">
+              ${relHtml}
+
+              <div class="card-exps-box">
+                <div class="card-exps-header">
+                  <span><i class="fa-solid fa-flask-vial text-cyan"></i> 4 Experimentos (${completedCount}/4 Mapeados)</span>
+                  <span class="badge-count" style="font-size: 0.72rem; font-weight: 700; background: ${completedCount === 4 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${completedCount === 4 ? 'var(--ifsc-green)' : 'var(--accent-amber)'};">
+                    ${completedCount === 4 ? '4/4 Concluídos' : `${4 - completedCount} a definir`}
+                  </span>
+                </div>
+                <ul class="card-exps-list">
+                  ${expItems}
+                </ul>
+              </div>
             </div>
           </div>
 
-          <div>
+          <div style="margin-top: 1rem;">
             <div class="proj-links">
               <a href="${p.github}" target="_blank" class="link-btn ${!p.github ? 'disabled' : ''}" title="Repositório GitHub">
                 <i class="fa-brands fa-github"></i> Git
@@ -3277,6 +3581,9 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
       const modal = document.getElementById('projectModal');
       const content = document.getElementById('modalContent');
 
+      const relRaw = (p.relatedWorks || 'PENDENTE').trim();
+      const isRelPendente = !relRaw || relRaw.toUpperCase() === 'PENDENTE';
+
       content.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
           <div>
@@ -3292,7 +3599,38 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
 
         <div style="margin-bottom: 1.2rem;">
           <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.3rem;">Objetivo Geral</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">${p.objective}</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">${p.objective || 'Em consolidação.'}</p>
+        </div>
+
+        <!-- Seção Trabalhos Relacionados no Modal -->
+        <div style="margin-bottom: 1.2rem; background: var(--chip-bg); padding: 1rem; border-radius: var(--radius-sm); border-left: 3px solid ${isRelPendente ? 'var(--accent-amber)' : 'var(--ifsc-green)'};">
+          <h4 style="font-size: 0.82rem; text-transform: uppercase; color: ${isRelPendente ? 'var(--accent-amber)' : 'var(--ifsc-green)'}; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+            <i class="fa-solid fa-book-bookmark"></i> Trabalhos Relacionados (Status: ${isRelPendente ? 'PENDENTE' : 'CADASTRADO'})
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-main); margin: 0;">
+            ${isRelPendente ? '<em>Atenção: A equipe deve inserir o título de cada trabalho correlato junto do ano de publicação (Coluna 8 da planilha oficial).</em>' : p.relatedWorks}
+          </p>
+        </div>
+
+        <!-- Pipeline 4 Experimentos no Modal -->
+        <div style="margin-bottom: 1.2rem;">
+          <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-flask-vial"></i> Título dos 4 Experimentos
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.82rem;">
+            <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp1 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
+              <strong>Exp 1:</strong> ${p.experiments.exp1}
+            </div>
+            <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp2 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
+              <strong>Exp 2:</strong> ${p.experiments.exp2}
+            </div>
+            <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp3 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
+              <strong>Exp 3:</strong> ${p.experiments.exp3}
+            </div>
+            <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp4 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
+              <strong>Exp 4:</strong> ${p.experiments.exp4}
+            </div>
+          </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem;">
@@ -3303,21 +3641,6 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           <div style="background: var(--chip-bg); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
             <h4 style="font-size: 0.82rem; color: var(--accent-amber); margin-bottom: 0.4rem;"><i class="fa-solid fa-forward-step"></i> Próximos Passos</h4>
             <p style="font-size: 0.85rem; color: var(--text-muted);">${p.nextSteps || 'Sem registros'}</p>
-          </div>
-        </div>
-
-        <div style="background: rgba(239, 68, 68, 0.08); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.25); margin-bottom: 1.2rem;">
-          <h4 style="font-size: 0.82rem; color: var(--ifsc-red); margin-bottom: 0.4rem;"><i class="fa-solid fa-triangle-exclamation"></i> Dificuldades Relatadas</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">${p.difficulties || 'Nenhuma dificuldade crítica registrada.'}</p>
-        </div>
-
-        <div style="margin-bottom: 1.2rem;">
-          <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.5rem;">Pipeline de Micro-Experimentos</h4>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; font-size: 0.8rem;">
-            <div style="background: var(--chip-bg); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--chip-border);"><strong>Exp 1:</strong> ${p.experiments.exp1}</div>
-            <div style="background: var(--chip-bg); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--chip-border);"><strong>Exp 2:</strong> ${p.experiments.exp2}</div>
-            <div style="background: var(--chip-bg); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--chip-border);"><strong>Exp 3:</strong> ${p.experiments.exp3}</div>
-            <div style="background: var(--chip-bg); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--chip-border);"><strong>Exp 4:</strong> ${p.experiments.exp4}</div>
           </div>
         </div>
 
@@ -3414,7 +3737,6 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
       let updatedCount = 0;
 
       lines.forEach(line => {
-        // Simple regex CSV splitter handling quotes
         const cols = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
         if (cols.length < 5) return;
         const cleanCols = cols.map(c => c.replace(/^"|"$/g, '').trim());
@@ -3429,11 +3751,13 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
             if (cleanCols[3]) proj.objective = cleanCols[3];
             if (cleanCols[4]) proj.github = cleanCols[4];
 
-            // Overleaf
-            let ovUrl = cleanCols[5] && cleanCols[5].includes('overleaf.com') ? cleanCols[5] : '';
-            if (!ovUrl && cleanCols[12] && cleanCols[12].includes('overleaf.com')) {
-              const m = cleanCols[12].match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
-              if (m) ovUrl = m[0];
+            // Overleaf (cols 5, 20, 17)
+            let ovUrl = '';
+            for (const cIdx of [5, 20, 17]) {
+              if (cleanCols[cIdx] && cleanCols[cIdx].includes('overleaf.com')) {
+                const m = cleanCols[cIdx].match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
+                if (m) { ovUrl = m[0]; break; }
+              }
             }
             if (ovUrl) {
               proj.overleaf = ovUrl;
@@ -3446,9 +3770,20 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
             if (cleanCols[6] && cleanCols[6].toUpperCase() !== 'PENDENTE') proj.canva = cleanCols[6];
             if (cleanCols[7] && cleanCols[7].toUpperCase() !== 'PENDENTE') proj.pitch = cleanCols[7];
             
-            if (cleanCols[16]) proj.advances = cleanCols[16];
-            if (cleanCols[17]) proj.nextSteps = cleanCols[17];
-            if (cleanCols[18]) proj.difficulties = cleanCols[18];
+            // Col 8: Trabalhos Relacionados
+            if (cleanCols[8]) proj.relatedWorks = cleanCols[8];
+
+            // Cols 9 a 16: Experimentos
+            proj.experiments = proj.experiments || {};
+            if (cleanCols[9]) proj.experiments.exp1 = cleanCols[9];
+            if (cleanCols[11]) proj.experiments.exp2 = cleanCols[11];
+            if (cleanCols[13]) proj.experiments.exp3 = cleanCols[13];
+            if (cleanCols[15]) proj.experiments.exp4 = cleanCols[15];
+
+            // Bloco de status (cols 21, 22, 23)
+            if (cleanCols[21]) proj.advances = cleanCols[21];
+            if (cleanCols[22]) proj.nextSteps = cleanCols[22];
+            if (cleanCols[23]) proj.difficulties = cleanCols[23];
 
             updatedCount++;
           }

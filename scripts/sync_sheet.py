@@ -46,19 +46,18 @@ def parse_projects(csv_text):
                 objective = row[3].strip() if len(row) > 3 else ""
                 github = row[4].strip() if len(row) > 4 else ""
                 
-                # Check Overleaf URL (pode estar na coluna 5 ou dentro do Paper na coluna 12)
+                # Check Overleaf URL (col 5, 17 ou 20)
                 overleaf_col = row[5].strip() if len(row) > 5 else ""
-                paper_col = row[12].strip() if len(row) > 12 else ""
+                paper1_col = row[17].strip() if len(row) > 17 else ""
+                paper4_col = row[20].strip() if len(row) > 20 else ""
                 
                 overleaf_url = ""
-                if "overleaf.com" in overleaf_col:
-                    m = re.search(r'(https?://[^\s,"]*overleaf\.com[^\s,"]*)', overleaf_col)
-                    if m:
-                        overleaf_url = m.group(1)
-                elif "overleaf.com" in paper_col:
-                    m = re.search(r'(https?://[^\s,"]*overleaf\.com[^\s,"]*)', paper_col)
-                    if m:
-                        overleaf_url = m.group(1)
+                for check_col in [overleaf_col, paper4_col, paper1_col]:
+                    if "overleaf.com" in check_col:
+                        m = re.search(r'(https?://[^\s,"]*overleaf\.com[^\s,"]*)', check_col)
+                        if m:
+                            overleaf_url = m.group(1)
+                            break
                 
                 # Auditoria de status do Overleaf
                 if not overleaf_url:
@@ -76,16 +75,24 @@ def parse_projects(csv_text):
                 if pitch.upper() == "PENDENTE":
                     pitch = ""
 
-                exp1 = row[8].strip() if len(row) > 8 else "Pendente"
-                exp2 = row[9].strip() if len(row) > 9 else "Pendente"
-                exp3 = row[10].strip() if len(row) > 10 else "Pendente"
-                exp4 = row[11].strip() if len(row) > 11 else "Pendente"
+                # Nova coluna: Trabalhos Relacionados (coluna 8)
+                related_works = row[8].strip() if len(row) > 8 else "PENDENTE"
 
-                advances = row[16].strip() if len(row) > 16 else ""
-                next_steps = row[17].strip() if len(row) > 17 else ""
-                difficulties = row[18].strip() if len(row) > 18 else ""
-                techs_raw = row[19].strip() if len(row) > 19 else ""
-                observations = row[20].strip() if len(row) > 20 else ""
+                # 4 Experimentos: Títulos e Resultados (colunas 9 a 16)
+                exp1_title = row[9].strip() if len(row) > 9 else "PENDENTE"
+                exp1_res = row[10].strip() if len(row) > 10 else ""
+                exp2_title = row[11].strip() if len(row) > 11 else "PENDENTE"
+                exp2_res = row[12].strip() if len(row) > 12 else ""
+                exp3_title = row[13].strip() if len(row) > 13 else "PENDENTE"
+                exp3_res = row[14].strip() if len(row) > 14 else ""
+                exp4_title = row[15].strip() if len(row) > 15 else "PENDENTE"
+                exp4_res = row[16].strip() if len(row) > 16 else ""
+
+                advances = row[21].strip() if len(row) > 21 else ""
+                next_steps = row[22].strip() if len(row) > 22 else ""
+                difficulties = row[23].strip() if len(row) > 23 else ""
+                techs_raw = row[24].strip() if len(row) > 24 else ""
+                observations = row[25].strip() if len(row) > 25 else ""
 
                 # Extrair tecnologias como lista limpa
                 tech_list = []
@@ -105,18 +112,26 @@ def parse_projects(csv_text):
                     "overleafStatus": overleaf_status,
                     "canva": canva,
                     "pitch": pitch,
+                    "relatedWorks": related_works if related_works else "PENDENTE",
                     "techs": tech_list,
                     "advances": advances,
                     "nextSteps": next_steps,
                     "difficulties": difficulties,
                     "observations": observations,
                     "experiments": {
-                        "exp1": exp1 if exp1 else "Pendente",
-                        "exp2": exp2 if exp2 else "Pendente",
-                        "exp3": exp3 if exp3 else "Pendente",
-                        "exp4": exp4 if exp4 else "Pendente"
+                        "exp1": exp1_title if exp1_title else "PENDENTE",
+                        "exp2": exp2_title if exp2_title else "PENDENTE",
+                        "exp3": exp3_title if exp3_title else "PENDENTE",
+                        "exp4": exp4_title if exp4_title else "PENDENTE"
                     },
-                    "paperStatus": paper_col.replace("\n", " ").strip() if paper_col else "Planejamento"
+                    "experimentResults": {
+                        "exp1": exp1_res,
+                        "exp2": exp2_res,
+                        "exp3": exp3_res,
+                        "exp4": exp4_res
+                    },
+                    "paperStatus": paper1_col.replace("\n", " ").strip() if paper1_col else "Planejamento",
+                    "cotbStatus": paper4_col.replace("\n", " ").strip() if paper4_col else "Pendente"
                 })
 
     print(f"[+] Total de projetos extraídos: {len(projects)}")
