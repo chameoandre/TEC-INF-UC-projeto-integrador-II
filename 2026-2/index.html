@@ -1193,6 +1193,247 @@
       .hero-banner { padding: 1.2rem; }
       .projects-grid { grid-template-columns: 1fr; }
     }
+  
+    /* ==========================================================================
+       HOJE: AVANÇOS & PENDÊNCIAS STYLING
+       ========================================================================== */
+    .today-callout-banner {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.16) 0%, rgba(6, 182, 212, 0.12) 50%, var(--bg-card) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.6rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 30px rgba(34, 197, 94, 0.12);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .today-callout-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(34, 197, 94, 0.2);
+      border-color: var(--ifsc-green);
+    }
+    .today-callout-banner::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--ifsc-green), var(--accent-cyan));
+    }
+    .today-callout-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--ifsc-green);
+      font-weight: 800;
+      font-size: 0.76rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+    .today-callout-left h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .today-callout-left p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      max-width: 860px;
+      line-height: 1.45;
+    }
+
+    /* Advances Cards Grid */
+    .advances-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .advance-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      position: relative;
+      transition: var(--transition);
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .advance-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--ifsc-green);
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.16);
+    }
+    .advance-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--ifsc-green);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      margin-bottom: 0.6rem;
+      align-self: flex-start;
+    }
+    .advance-card h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+    .advance-team {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .advance-desc {
+      font-size: 0.84rem;
+      color: var(--text-main);
+      line-height: 1.45;
+      background: var(--chip-bg);
+      padding: 0.65rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--ifsc-green);
+      margin-bottom: 0.75rem;
+    }
+    .advance-impact {
+      font-size: 0.78rem;
+      color: var(--accent-amber);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Pending KPIs Grid */
+    .pending-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 2rem;
+    }
+    .pending-kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      transition: var(--transition);
+    }
+    .pending-kpi-card.alert-red {
+      border-color: rgba(239, 68, 68, 0.35);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.06), var(--bg-card));
+    }
+    .pending-kpi-card.alert-amber {
+      border-color: rgba(245, 158, 11, 0.35);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), var(--bg-card));
+    }
+    .pending-kpi-card.alert-purple {
+      border-color: rgba(168, 85, 247, 0.35);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.06), var(--bg-card));
+    }
+    .pending-kpi-card.alert-cyan {
+      border-color: rgba(6, 182, 212, 0.35);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.06), var(--bg-card));
+    }
+    .pending-kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .pending-kpi-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+    .pending-kpi-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+    .pending-kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Pending Matrix Table */
+    .pending-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+    }
+    .pending-status-pill.ok {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--ifsc-green);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .pending-status-pill.warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .pending-status-pill.danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--ifsc-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Teaching Plan Steps */
+    .teaching-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .teaching-card {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      position: relative;
+    }
+    .teaching-card strong {
+      display: block;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      margin-bottom: 0.45rem;
+    }
+    .teaching-card p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+
   </style>
 </head>
 <body>
@@ -1218,6 +1459,10 @@
     </div>
 
     <div class="header-actions">
+      <button class="btn btn-primary" onclick="switchTab('avancos-pendencias')" title="Raio-X de Avanços e Pendências para a Profª Karyna">
+        <i class="fa-solid fa-clipboard-check"></i> Raio-X da Aula de Hoje
+      </button>
+
       <!-- Live Sync Button -->
       <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar dados mais recentes da planilha Google Sheets">
         <i class="fa-solid fa-rotate" id="liveSyncIcon"></i> Sincronizar
@@ -2260,6 +2505,342 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
               Local: Hotel Praia Brava, Florianópolis - SC.
             </p>
           </div>
+        </div>
+      </div>
+
+    </section>
+
+  
+    <!-- TAB: AVANÇOS & PENDÊNCIAS (AULA DE HOJE) -->
+    <section id="tab-avancos-pendencias" class="tab-content">
+      
+      <!-- Hero Banner -->
+      <div class="hero-banner" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.16) 0%, rgba(6, 182, 212, 0.12) 50%, var(--bg-card) 100%); border-color: rgba(34, 197, 94, 0.45);">
+        <div class="hero-info">
+          <div class="today-callout-badge"><i class="fa-solid fa-chalkboard-user"></i> PAINEL PEDAGÓGICO DE SALA DE AULA • PROFª KARYNA & PROF. ANDRÉ</div>
+          <h2 style="color: var(--text-main);"><i class="fa-solid fa-clipboard-check text-green"></i> Raio-X de Avanços & Pendências da Turma INF-2024</h2>
+          <p>Sumário executivo sincronizado diretamente da planilha oficial do Google Sheets. Instrumento de diagnóstico rápido para conduzir os atendimentos de bancada na aula de hoje, celebrar conquistas técnicas recentes e cobrar com firmeza a resolução dos gargalos que travam o paper para o <strong>Computer on the Beach (COTB 2027)</strong>.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-bolt text-green"></i> Avanços: <strong>4 Equipes</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-lock text-amber"></i> Overleaf 403: <strong>4 Projetos</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-flask-vial text-cyan"></i> Exp. Zerados: <strong>2 Projetos</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-umbrella-beach text-amber"></i> Prazo COTB: <strong>15/11/2026</strong></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 1: AVANÇOS RECENTES DETECTADOS -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+          <div>
+            <h3><i class="fa-solid fa-trophy text-amber"></i> 1. Vitrine de Avanços Recentes Detectados na Planilha</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Projetos que registraram atualizações significativas nas últimas edições da planilha oficial:</p>
+          </div>
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--ifsc-green); background: rgba(34, 197, 94, 0.12); padding: 0.3rem 0.7rem; border-radius: 20px; border: 1px solid rgba(34, 197, 94, 0.3);">
+            <i class="fa-solid fa-circle-check"></i> Sincronizado com Google Sheets
+          </span>
+        </div>
+
+        <div class="advances-grid">
+          
+          <!-- Card Luisa -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-star"></i> MARCO CRÍTICO CONCLUÍDO (4/4 EXP)</span>
+              <h4>#07 Música, Jogo e Atenção</h4>
+              <div class="advance-team"><i class="fa-solid fa-user"></i> Luisa Narvaz</div>
+              <div class="advance-desc">
+                <strong>Avanço Detectado:</strong> Luisa preencheu e detalhou os <strong>Experimentos 3 e 4</strong> que estavam pendentes! Agora possui o ciclo experimental completo: Exp 3 (geração de ID automático, versão em espanhol, melhoria visual) e Exp 4 (coleta e análise de dados, relatórios de acertos/erros).
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> O Exp 4 é exatamente a fonte dos dados e gráficos para a Seção de Resultados do paper!
+            </div>
+          </div>
+
+          <!-- Card Estação -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-database"></i> NOVO OVERLEAF & EXP 3 CADASTRADO</span>
+              <h4>#08 Estação Meteorológica</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Beatriz, Laura, Oriana, Sophie, Victória</div>
+              <div class="advance-desc">
+                <strong>Avanço Detectado:</strong> Equipe cadastrou novo link do Overleaf e definiu o <strong>Experimento 3 ("Elaboração do banco de dados")</strong> para garantir armazenamento contínuo e telemetria estável do sensor climático BME280 no Raspberry Pi.
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-lock text-amber"></i> <strong>Atenção Karyna:</strong> O novo link do Overleaf é privado (/project/). Solicitar troca para Share Link de leitura.
+            </div>
+          </div>
+
+          <!-- Card D20Hub -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-code-branch"></i> REPOSITÓRIO GIT ATUALIZADO</span>
+              <h4>#05 D20Hub: Gerenciador de RPG</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Nicolas, Eduardo, Henrique Gama</div>
+              <div class="advance-desc">
+                <strong>Avanço Detectado:</strong> URL do repositório corrigida para <code>github.com/Nicolas0413/d20hub</code>. Projeto com backend e frontend bastante maduros (Django, TypeScript, WebSockets) e tela de personagens em 80%.
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-vial"></i> <strong>Impacto COTB:</strong> Todos os 4 experimentos estão estruturados. Focar no teste de latência e escala SUS.
+            </div>
+          </div>
+
+          <!-- Card ChatBot -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-robot"></i> REPOSITÓRIO OFICIAL REGULARIZADO</span>
+              <h4>#10 ChatBot Secretaria Acadêmica</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Cauã, Enzo, Ariane</div>
+              <div class="advance-desc">
+                <strong>Avanço Detectado:</strong> Repositório do GitHub sincronizado para o repositório oficial ativo mantido pela aluna Ariane (<code>github.com/Ary-u/IFSC-chatbot</code>), centralizando as rotinas de IA e LM Studio.
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-triangle-exclamation text-amber"></i> <strong>Pendência Restante:</strong> Preencher a coluna "Objetivo" que está vazia e gravar o Pitch.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BLOCO 2: INDICADORES EXECUTIVOS DE PENDÊNCIAS -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-triangle-exclamation text-amber"></i> 2. Raio-X Quantitativo das Pendências na Turma</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">Visão consolidada dos gargalos que a equipe docente precisa zerar com os estudantes:</p>
+
+        <div class="pending-kpi-grid">
+          
+          <div class="pending-kpi-card alert-red">
+            <div class="pending-kpi-header">
+              <span class="pending-kpi-title">Overleaf Inacessível</span>
+              <i class="fa-solid fa-lock text-red"></i>
+            </div>
+            <div class="pending-kpi-val" style="color: var(--ifsc-red);">6 / 10</div>
+            <div class="pending-kpi-sub"><strong>4 Links Privados (403)</strong> + <strong>2 Não Informados</strong>. Impede revisão do texto pelos professores.</div>
+          </div>
+
+          <div class="pending-kpi-card alert-amber">
+            <div class="pending-kpi-header">
+              <span class="pending-kpi-title">Pitch Vídeo Pendente</span>
+              <i class="fa-solid fa-video text-amber"></i>
+            </div>
+            <div class="pending-kpi-val" style="color: var(--accent-amber);">3 / 10</div>
+            <div class="pending-kpi-sub">Grupos <strong>#03 (Curso Popular)</strong>, <strong>#06 (Acervo MAGE)</strong> e <strong>#10 (ChatBot)</strong> sem link de vídeo.</div>
+          </div>
+
+          <div class="pending-kpi-card alert-cyan">
+            <div class="pending-kpi-header">
+              <span class="pending-kpi-title">Gargalo de Experimentos</span>
+              <i class="fa-solid fa-flask-vial text-cyan"></i>
+            </div>
+            <div class="pending-kpi-val" style="color: var(--accent-cyan);">8 / 10</div>
+            <div class="pending-kpi-sub"><strong>#02 (JifTV)</strong> e <strong>#04 (RasPorta)</strong> com 0/4 experimentos! Outros 6 com desenho parcial.</div>
+          </div>
+
+          <div class="pending-kpi-card alert-purple">
+            <div class="pending-kpi-header">
+              <span class="pending-kpi-title">Coluna COTB (Paper 4)</span>
+              <i class="fa-solid fa-umbrella-beach text-purple"></i>
+            </div>
+            <div class="pending-kpi-val" style="color: var(--accent-purple);">0 / 10</div>
+            <div class="pending-kpi-sub">Nenhum grupo registrou ainda a versão/link específico do COTB 2027 na coluna 15 da planilha.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BLOCO 3: MATRIZ SEMAFÓRICA DE COBRANÇA DOS 10 PROJETOS -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <h3><i class="fa-solid fa-list-check text-green"></i> 3. Matriz Semafórica por Projeto: Checklist de Bancada para a Aula</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Consulte este quadro ao atender cada bancada de estudantes para orientar as prioridades imediatas:</p>
+          </div>
+        </div>
+
+        <table class="matrix-sample-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">ID</th>
+              <th style="width: 200px;">Projeto & Integrantes</th>
+              <th style="width: 140px;">Overleaf</th>
+              <th style="width: 90px;">Pitch (3m)</th>
+              <th style="width: 120px;">Experimentos</th>
+              <th style="width: 100px;">COTB (15/11)</th>
+              <th>Ação Imediata Cobrada na Aula de Hoje (Profª Karyna)</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <!-- P1 -->
+            <tr>
+              <td><strong>#01</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">SMC: Montagem de PCs</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Lucas P., Bernardo, Henrique C.</span>
+              </td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Não Informado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 1)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td><strong style="color: var(--ifsc-red);">Criar Overleaf no padrão SBC/COTB</strong> e planejar Exp 2 (teste de retenção pedagógica com alunos da 1ª fase).</td>
+            </tr>
+
+            <!-- P2 -->
+            <tr style="background: rgba(239, 68, 68, 0.04);">
+              <td><strong>#02</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">JifTV Streaming Adaptativo</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Rodrigo, Eluney, João, Anderson</span>
+              </td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Não Informado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 (Zerado)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Grupo não definiu nenhum experimento! Cadastrar Overleaf e definir Exp 1 (medição de latência RTT) e Exp 2 (variação de bitrate).</td>
+            </tr>
+
+            <!-- P3 -->
+            <tr>
+              <td><strong>#03</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">Curso Popular de Informática</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Pietro, Artur, Lucas S.</span>
+              </td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Pendente</span></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; validar com Karyna a metodologia da oficina piloto e critérios de avaliação de aprendizagem.</td>
+            </tr>
+
+            <!-- P4 -->
+            <tr style="background: rgba(239, 68, 68, 0.04);">
+              <td><strong>#04</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">RasPorta: Fechadura Biométrica</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Petrus, Martin, Felipe</span>
+              </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 (Zerado)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Experimentos zerados! Trocar link Overleaf para leitura pública e definir Exp 1 (tempo de leitura da biometria) e Exp 2 (tempo de acionamento).</td>
+            </tr>
+
+            <!-- P5 -->
+            <tr>
+              <td><strong>#05</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">D20Hub: Gerenciador de RPG</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Nicolas, Eduardo, Henrique G.</span>
+              </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-circle-check"></i> 4 de 4 (Mapeados)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td>Trocar link Overleaf para público (Share Link); transformar os protótipos em testes controlados de latência com WebSockets e avaliação SUS de usabilidade.</td>
+            </tr>
+
+            <!-- P6 -->
+            <tr>
+              <td><strong>#06</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">Acervo MAGE 3D</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Raul, Pedro H., Augusto, Maria C.</span>
+              </td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Pendente</span></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; definir métricas do Exp 1 (tempo de fotogrametria por elemento) e Exp 3 (taxa de compressão vs fidelidade).</td>
+            </tr>
+
+            <!-- P7 -->
+            <tr style="background: rgba(34, 197, 94, 0.04);">
+              <td><strong>#07</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">Música, Jogo e Atenção</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Luisa Narvaz</span>
+              </td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-circle-check"></i> 4 de 4 (100% OK)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td><strong style="color: var(--ifsc-green);">Projeto Modelo da Turma:</strong> Parabéns pelo preenchimento dos 4 experimentos! Foco imediato na coleta de dados (Exp 4) para redigir a Seção de Resultados no Overleaf.</td>
+            </tr>
+
+            <!-- P8 -->
+            <tr>
+              <td><strong>#08</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">Estação Meteorológica</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Beatriz, Laura, Oriana, Sophie, Victória</span>
+              </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 3 de 4 (Exp 1, 2, 3)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td>Trocar novo link do Overleaf para modo público (Share Link); cadastrar o Exp 4 (análise de telemetria contínua por 48h sem queda).</td>
+            </tr>
+
+            <!-- P9 -->
+            <tr>
+              <td><strong>#09</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">Scout de Vôlei</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Nathan, João C., Pedro E.</span>
+              </td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Cadastrado</span></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td>Trocar link Overleaf para público (Share Link); cadastrar Exp 1 (tempo de registro por lance no Web App vs papel) e Exp 3 (persistência estatística).</td>
+            </tr>
+
+            <!-- P10 -->
+            <tr>
+              <td><strong>#10</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">ChatBot Secretaria Acadêmica</strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Cauã, Enzo, Ariane</span>
+              </td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
+              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Pendente</span></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-chart-pie"></i> 1 de 4 (Exp 2)</span></td>
+              <td><span class="pending-status-pill warn">Pendente</span></td>
+              <td>Preencher o campo <strong>Objetivo</strong> na planilha (vazio); gravar Pitch Vídeo; cadastrar Exp 1 (acurácia de 20 dúvidas acadêmicas) e Exp 3 (latência por token).</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- BLOCO 4: ROTEIRO PEDAGÓGICO DE INTERVENÇÃO -->
+      <div class="guide-box">
+        <h3><i class="fa-solid fa-person-chalkboard text-cyan"></i> 4. Roteiro Prático de Condução da Aula para a Profª Karyna</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Estrutura pedagógica recomendada para os 80-90 minutos de atendimento em laboratório:</p>
+
+        <div class="teaching-grid">
+          
+          <div class="teaching-card">
+            <strong><i class="fa-solid fa-1 text-green"></i> 1. Abertura & Alinhamento (15 min)</strong>
+            <p>Projetar este painel na tela. Parabenizar publicamente os avanços de <strong>Luisa (#07)</strong> e <strong>Estação (#08)</strong>. Demonstrar na prática o problema do <em>Erro 403</em> do Overleaf privado (como clicar em Share -> Turn on link sharing).</p>
+          </div>
+
+          <div class="teaching-card">
+            <strong><i class="fa-solid fa-2 text-amber"></i> 2. Foco de Choque nas Bancadas (45 min)</strong>
+            <p>Atender prioritariamente os grupos <strong>#02 (JifTV)</strong> e <strong>#04 (RasPorta)</strong> para ajudá-los a formular ao menos 2 experimentos com métricas numéricas antes de saírem da aula. Em seguida, orientar os grupos <strong>#03, #06 e #10</strong> a gravarem o Pitch.</p>
+          </div>
+
+          <div class="teaching-card">
+            <strong><i class="fa-solid fa-3 text-cyan"></i> 3. Preparação para o COTB 2027 (20 min)</strong>
+            <p>Apresentar os prazos do COTB (submissão até 15/11 via JEMS SBC). Orientar as equipes a criarem o documento do paper no padrão SBC duplamente cego (anônimo) e registrarem o link na <strong>Coluna 15 da planilha</strong>.</p>
+          </div>
+
         </div>
       </div>
 
