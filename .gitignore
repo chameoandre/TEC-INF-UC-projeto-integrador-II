@@ -17,3 +17,7 @@ Icon*
 *.tmp
 2026-1/roteiro-4/Anais_Sepei2025.pdf
 templates/template-relatorios-ifsc-gpb/
+
+# Python
+__pycache__/
+*.py[cod]

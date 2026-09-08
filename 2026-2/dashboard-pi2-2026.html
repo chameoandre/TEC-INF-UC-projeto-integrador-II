@@ -972,6 +972,219 @@
       font-family: 'Fira Code', monospace;
     }
 
+    /* ==========================================================================
+       COTB 2027 STYLING & COMPONENTS
+       ========================================================================== */
+    .cotb-announcement-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(22, 163, 74, 0.12) 50%, var(--bg-card) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: var(--radius-md);
+      padding: 1.35rem 1.6rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 30px rgba(245, 158, 11, 0.15);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+    .cotb-announcement-banner::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--accent-amber), var(--ifsc-green));
+    }
+    .cotb-announcement-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(245, 158, 11, 0.22);
+      color: var(--accent-amber);
+      font-weight: 800;
+      font-size: 0.76rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-bottom: 0.45rem;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .cotb-announcement-left h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cotb-announcement-left p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      max-width: 860px;
+      line-height: 1.5;
+    }
+    .cotb-dates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 2rem;
+    }
+    .cotb-date-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .cotb-date-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-amber);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    }
+    .cotb-date-card.highlight {
+      border: 2px solid var(--accent-amber);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, var(--bg-card) 100%);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.28);
+    }
+    .cotb-date-card .date-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--accent-amber);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+    .cotb-date-card.highlight .date-badge {
+      font-size: 1.45rem;
+      color: #fbbf24;
+      text-shadow: 0 0 14px rgba(251, 191, 36, 0.55);
+    }
+    .cotb-date-card .date-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+    }
+    .cotb-date-card .date-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .cotb-track-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.3rem;
+      margin-bottom: 2rem;
+    }
+    .cotb-track-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.6rem;
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+    }
+    .cotb-track-card:hover {
+      border-color: var(--ifsc-green-light);
+      box-shadow: var(--shadow-glass);
+    }
+    .cotb-track-card h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .ods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .ods-card {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+    .ods-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+    .ods-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      width: fit-content;
+    }
+    .ods-03 { background: rgba(76, 175, 80, 0.2); color: #4ade80; border: 1px solid rgba(76, 175, 80, 0.4); }
+    .ods-05 { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .ods-09 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .ods-11 { background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
+    .topics-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .topic-chip {
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+    .topic-chip:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+    }
+    .checklist-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 0.8rem;
+    }
+    .checklist-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.95rem 1.15rem;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+    .checklist-list li i {
+      margin-top: 0.2rem;
+      font-size: 1.1rem;
+    }
+
     /* Responsive */
     @media (max-width: 900px) {
       header { padding: 0.75rem 1rem; }
@@ -1015,6 +1228,10 @@
         <i class="fa-solid fa-sun" id="themeIcon"></i>
       </button>
 
+      <button class="btn btn-outline" onclick="switchTab('cotb-2027')" style="border-color: var(--accent-amber); color: var(--accent-amber);" title="Ver Chamada e Prazos do Computer on the Beach 2027">
+        <i class="fa-solid fa-umbrella-beach"></i> COTB 2027 (15/11)
+      </button>
+
       <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" class="btn btn-outline">
         <i class="fa-solid fa-table"></i> Planilha Oficial
       </a>
@@ -1028,6 +1245,9 @@
   <nav class="nav-tabs-bar">
     <button class="tab-btn active" onclick="switchTab('projetos')">
       <i class="fa-solid fa-cubes"></i> Painel dos 10 Projetos <span class="badge-count">10</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('cotb-2027')">
+      <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Computer on the Beach 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">Submissão 15/11</span>
     </button>
     <button class="tab-btn" onclick="switchTab('timeline')">
       <i class="fa-solid fa-timeline"></i> Timeline de Atividades & Aulas
@@ -1056,6 +1276,20 @@
           <div class="meta-tag"><i class="fa-solid fa-users"></i> Total: <strong>10 Projetos Ativos</strong></div>
           <div class="meta-tag"><i class="fa-solid fa-microchip"></i> Foco: <strong>Refatoração & Experimentos</strong></div>
           <div class="meta-tag"><i class="fa-solid fa-pen-nib"></i> Escrita: <strong>Artigo ACM / Overleaf</strong></div>
+        </div>
+      </div>
+
+      <!-- COTB 2027 Call for Papers Alert Banner -->
+      <div class="cotb-announcement-banner">
+        <div class="cotb-announcement-left">
+          <div class="cotb-announcement-badge"><i class="fa-solid fa-bullhorn"></i> CHAMADA OFICIAL PUBLICADA • 18ª EDIÇÃO</div>
+          <h3><i class="fa-solid fa-umbrella-beach text-amber"></i> Computer on the Beach 2027 — Submissões Abertas até 15/11/2026</h3>
+          <p>O COTB 2027 será realizado de <strong>13 a 17 de abril de 2027</strong> em Florianópolis (Hotel Praia Brava). As submissões via sistema <strong>JEMS da SBC</strong> abrem em 01/10 com prazo limite em <strong>15 de novembro de 2026</strong>. Formatos aceitos: <strong>Artigo Completo (até 6 págs)</strong> e <strong>Resumo Estendido (até 2-3 págs)</strong> com processo de revisão <strong>duplamente cego (anônimo)</strong>. Alvo prioritário de validação externa para os 10 projetos da turma!</p>
+        </div>
+        <div class="cotb-announcement-right">
+          <button class="btn btn-primary" onclick="switchTab('cotb-2027')" style="white-space: nowrap;">
+            <i class="fa-solid fa-arrow-right"></i> Ver Guia & Prazos COTB
+          </button>
         </div>
       </div>
 
@@ -1268,37 +1502,85 @@
           <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title">Sprint de Execução & Micro-Experimentos (Exp 1 a 4)</div>
-                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Prof. André & Profª. Karina</div>
+                <div class="timeline-title">Sprint de Execução, Micro-Experimentos & Coleta de Dados</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Prof. André Moraes & Profª. Karina</div>
               </div>
               <span class="timeline-date">Setembro / Outubro 2026</span>
             </div>
             <div class="timeline-body">
-              <p>Coleta de dados experimentais, testes de carga, usabilidade, calibração de sensores e geração de gráficos comparativos para a Seção de Resultados.</p>
+              <p>Coleta de dados experimentais (Exp 1 a 4), testes com usuários/sensores, geração de gráficos comparativos para a Seção de Resultados e consolidação da fundamentação teórica orientada ao Computer on the Beach 2027.</p>
               <div class="timeline-deliverables">
-                <span class="deliv-tag"><i class="fa-solid fa-chart-line"></i> Gráficos e Resultados</span>
+                <span class="deliv-tag"><i class="fa-solid fa-chart-line"></i> Gráficos Experimentais</span>
                 <span class="deliv-tag"><i class="fa-solid fa-code-commit"></i> Commits/PRs no GitHub</span>
+                <span class="deliv-tag"><i class="fa-solid fa-file-waveform"></i> Seção de Resultados no Overleaf</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Marco 8: Encerramento -->
+        <!-- Marco 8: Submissão COTB 2027 -->
+        <div class="timeline-item future" style="border-left-color: var(--accent-amber);">
+          <div class="timeline-dot" style="background: var(--accent-amber); color: #000; border-color: var(--accent-amber); box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);"><i class="fa-solid fa-umbrella-beach"></i></div>
+          <div class="timeline-card" style="border-color: rgba(245, 158, 11, 0.5); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, var(--bg-card) 100%);">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title" style="color: #fbbf24;"><i class="fa-solid fa-bullhorn"></i> Submissão Oficial — Computer on the Beach 2027 (18ª Edição)</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-paper-plane"></i> Submissão Eletrônica via JEMS / SBC</div>
+              </div>
+              <span class="timeline-date" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 800;">Deadline: 15/11/2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Envio dos artigos da turma no sistema JEMS (abertura em 01/10). Formato rigorosamente duplamente cego (Double-Blind Review: sem autores, e-mails ou menção ao IFSC). Artigo Completo (até 6 páginas) ou Resumo Estendido (até 2-3 páginas) no modelo oficial SBC/COTB.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag" style="border-color: var(--accent-amber); color: var(--accent-amber); font-weight: 700;"><i class="fa-solid fa-hourglass-end"></i> Prazo Final: 15/11/2026</span>
+                <span class="deliv-tag"><i class="fa-solid fa-user-secret"></i> PDF 100% Anônimo (Double-Blind)</span>
+                <span class="deliv-tag"><i class="fa-solid fa-upload"></i> Submissão no JEMS SBC</span>
+                <span class="deliv-tag"><i class="fa-solid fa-file-pdf"></i> Template Oficial COTB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 9: Encerramento Curricular -->
         <div class="timeline-item future">
           <div class="timeline-dot"><i class="fa-solid fa-award"></i></div>
           <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title">Revisão por Pares, Artigo Final & Banca de Apresentação</div>
-                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Banca Docente</div>
+                <div class="timeline-title">Revisão por Pares Interna, Artigo Final & Banca de Apresentação</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Banca Docente IFSC Garopaba</div>
               </div>
               <span class="timeline-date">Novembro / Dezembro 2026</span>
             </div>
             <div class="timeline-body">
-              <p>Revisão cega entre grupos, padronização final das referências BibTeX, fechamento da versão em PDF (Camera-Ready) e apresentação perante a banca.</p>
+              <p>Revisão cega cruzada entre os grupos da turma, padronização final das referências BibTeX, fechamento da documentação curricular do PI-II e apresentação perante a banca examinadora do IFSC.</p>
               <div class="timeline-deliverables">
-                <span class="deliv-tag"><i class="fa-solid fa-file-pdf"></i> Artigo Final Completo</span>
-                <span class="deliv-tag"><i class="fa-solid fa-person-chalkboard"></i> Apresentação Oral / Pitch</span>
+                <span class="deliv-tag"><i class="fa-solid fa-file-pdf"></i> Artigo Final PI-II</span>
+                <span class="deliv-tag"><i class="fa-solid fa-person-chalkboard"></i> Pitch / Defesa Oral</span>
+                <span class="deliv-tag"><i class="fa-solid fa-box-archive"></i> Repositório GitHub Congelado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 10: Evento COTB 2027 -->
+        <div class="timeline-item future">
+          <div class="timeline-dot" style="border-color: var(--ifsc-green); color: var(--ifsc-green);"><i class="fa-solid fa-hotel"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title">Resultados COTB 2027, Camera-Ready & Apresentação em Florianópolis</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-location-dot"></i> Hotel Praia Brava — Florianópolis/SC</div>
+              </div>
+              <span class="timeline-date">Fevereiro a Abril 2027</span>
+            </div>
+            <div class="timeline-body">
+              <p>Etapas pós-submissão do Computer on the Beach: Notificação de aceite em <strong>16/02/2027</strong>; pagamento da inscrição do autor apresentador até <strong>26/02/2027</strong>; envio da versão final Camera-Ready até <strong>07/03/2027</strong>; e participação presencial nas sessões orais e de pôsteres de <strong>13 a 17 de abril de 2027</strong>.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-bell"></i> Notificação: 16/02/2027</span>
+                <span class="deliv-tag"><i class="fa-solid fa-receipt"></i> Inscrição: 26/02/2027</span>
+                <span class="deliv-tag"><i class="fa-solid fa-file-circle-check"></i> Camera-Ready: 07/03/2027</span>
+                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green); font-weight: 700;"><i class="fa-solid fa-microphone-lines"></i> Evento Presencial: 13-17/04/2027</span>
               </div>
             </div>
           </div>
@@ -1367,12 +1649,16 @@
               </div>
 
               <!-- Computer on the Beach -->
-              <div style="background: var(--chip-bg); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: var(--radius-sm);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <div style="background: var(--chip-bg); border: 1px solid rgba(245, 158, 11, 0.45); padding: 0.95rem; border-radius: var(--radius-sm); position: relative;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.35rem;">
                   <strong style="color: var(--text-main); font-size: 0.88rem;"><i class="fa-solid fa-umbrella-beach text-amber"></i> Anais COTB (UNIVALI)</strong>
-                  <a href="https://periodicos.univali.br/index.php/cotb" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Acessar <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                  <div style="display: flex; gap: 0.35rem;">
+                    <button onclick="switchTab('cotb-2027')" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem; border-color: var(--accent-amber); color: var(--accent-amber);" title="Ver Chamada e Prazos 2027"><i class="fa-solid fa-bullhorn"></i> Chamada 2027</button>
+                    <a href="https://periodicos.univali.br/index.php/cotb" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">Anais <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                  </div>
                 </div>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;"><em>Computer on the Beach</em> — Maior evento regional de computação de SC, com artigos aplicados e protótipos de graduação/médio técnico.</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 0.45rem 0;"><em>Computer on the Beach</em> — Maior evento regional de computação de SC (H-index 7). Excelente fonte para trabalhos correlatos e alvo oficial de publicação da turma INF-2024.</p>
+                <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.3); font-weight: 600;"><i class="fa-solid fa-calendar-check"></i> Submissões 2027 Abertas até 15/11/2026</span>
               </div>
 
               <!-- SBC OpenLib -->
@@ -1580,6 +1866,403 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           </tbody>
         </table>
       </div>
+    </section>
+
+    <!-- TAB 5: COMPUTER ON THE BEACH 2027 -->
+    <section id="tab-cotb-2027" class="tab-content">
+      
+      <!-- Hero Banner COTB -->
+      <div class="hero-banner" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(22, 163, 74, 0.12) 50%, rgba(6, 182, 212, 0.08) 100%); border-color: rgba(245, 158, 11, 0.45);">
+        <div class="hero-info">
+          <div class="cotb-announcement-badge"><i class="fa-solid fa-umbrella-beach"></i> 18ª EDIÇÃO • TRILHA PRINCIPAL</div>
+          <h2 style="color: var(--text-main);"><i class="fa-solid fa-umbrella-beach text-amber"></i> Computer on the Beach 2027 (COTB)</h2>
+          <p>Florianópolis - SC • <strong>13 a 17 de abril de 2027</strong> • Hotel Praia Brava. Evento técnico-científico de referência regional da computação aplicada (Google Scholar h-index: 7). Alvo oficial de validação e submissão dos 10 projetos da turma INF-2024 do IFSC Garopaba.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-chart-simple text-cyan"></i> h-index: <strong>7 (Scholar)</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-cloud-arrow-up text-amber"></i> Sistema: <strong>JEMS SBC</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-user-secret text-green"></i> Revisão: <strong>Double-Blind</strong></div>
+          <div class="meta-tag" style="border-color: var(--accent-amber); color: var(--accent-amber);"><i class="fa-solid fa-hourglass-end"></i> Prazo Final: <strong>15/11/2026</strong></div>
+          <a href="http://www.computeronthebeach.com.br" target="_blank" class="btn btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem;">
+            <i class="fa-solid fa-globe"></i> Site Oficial <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Grid de Prazos e Datas Importantes -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-calendar-days text-amber"></i> Cronograma Oficial da Chamada de Trabalhos</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Fique atento aos marcos temporais estabelecidos pela coordenação do COTB 2027. O prazo de submissão em novembro é o foco imediato das sprints do 2º semestre.</p>
+        
+        <div class="cotb-dates-grid">
+          <div class="cotb-date-card">
+            <span class="date-badge"><i class="fa-solid fa-door-open text-cyan"></i> 01/10/2026</span>
+            <div class="date-label">Abertura no JEMS</div>
+            <div class="date-desc">Início das submissões eletrônicas pelo sistema JEMS da Sociedade Brasileira de Computação (SBC).</div>
+          </div>
+
+          <div class="cotb-date-card highlight">
+            <span class="date-badge"><i class="fa-solid fa-fire text-amber"></i> 15/11/2026</span>
+            <div class="date-label" style="color: #fbbf24;">Prazo Final de Submissão</div>
+            <div class="date-desc"><strong>Deadline improrrogável.</strong> Submissão final dos arquivos em PDF anônimo (double-blind) no JEMS SBC.</div>
+          </div>
+
+          <div class="cotb-date-card">
+            <span class="date-badge"><i class="fa-solid fa-envelope-open-text text-green"></i> 16/02/2027</span>
+            <div class="date-label">Notificação dos Autores</div>
+            <div class="date-desc">Divulgação do resultado da avaliação pelo comitê de programa (Aceito, Aceito com Restrições ou Rejeitado).</div>
+          </div>
+
+          <div class="cotb-date-card">
+            <span class="date-badge"><i class="fa-solid fa-receipt text-amber"></i> 26/02/2027</span>
+            <div class="date-label">Inscrição de Apresentador</div>
+            <div class="date-desc">Pagamento da inscrição de pelo menos um autor por artigo (uma inscrição como apresentador dá direito a até 2 artigos).</div>
+          </div>
+
+          <div class="cotb-date-card">
+            <span class="date-badge"><i class="fa-solid fa-file-circle-check text-cyan"></i> 07/03/2027</span>
+            <div class="date-label">Versão Final (Camera-Ready)</div>
+            <div class="date-desc">Envio da versão final em PDF, com desanonimização (inclusão de autores, filiação IFSC e agradecimentos).</div>
+          </div>
+
+          <div class="cotb-date-card" style="border-color: var(--ifsc-green);">
+            <span class="date-badge" style="color: var(--ifsc-green);"><i class="fa-solid fa-hotel"></i> 13-17/04/2027</span>
+            <div class="date-label" style="color: var(--ifsc-green);">Realização do Evento</div>
+            <div class="date-desc">Apresentação presencial dos artigos e pôsteres no Hotel Praia Brava em Florianópolis/SC.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modalidades de Submissão -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-file-lines text-cyan"></i> Modalidades de Submissão & Formatação Oficial</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">A chamada do COTB 2027 oferece duas categorias na Trilha Principal. Cada trabalho só pode ser submetido a uma única trilha.</p>
+
+        <div class="cotb-track-grid">
+          <!-- Artigo Completo -->
+          <div class="cotb-track-card" style="border-left: 4px solid var(--ifsc-green);">
+            <h4><i class="fa-solid fa-book-bookmark text-green"></i> Artigo Completo (Full Paper)</h4>
+            <ul style="margin-left: 1.25rem; font-size: 0.88rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+              <li><strong>Extensão:</strong> No máximo <strong>6 (seis) páginas</strong> (incluindo figuras, tabelas e referências).</li>
+              <li><strong>Escopo:</strong> Trabalhos originais de pesquisa científica ou tecnológica, relatos de experiências relevantes e estudos de casos consolidados.</li>
+              <li><strong>Formato de Apresentação:</strong> Apresentação oral em sessões técnicas durante o evento.</li>
+              <li><strong>Premiação:</strong> Uma comissão de avaliação escolherá os melhores dentre os artigos completos aceitos e apresentados.</li>
+              <li><strong>Template:</strong> Modelo SBC disponível na página oficial (aba Categorias). Submissão estritamente em PDF.</li>
+            </ul>
+            <div class="callout-box" style="background: rgba(22, 163, 74, 0.1); border-color: rgba(22, 163, 74, 0.3); color: var(--text-main); margin: 0;">
+              <i class="fa-solid fa-circle-check text-green"></i>
+              <div><strong>Recomendado para:</strong> Projetos com protótipo funcional, testes de desempenho e dados coletados (ex.: JifTV, Curso Popular, Estação Meteorológica, RasPorta).</div>
+            </div>
+          </div>
+
+          <!-- Resumo Estendido -->
+          <div class="cotb-track-card" style="border-left: 4px solid var(--accent-amber);">
+            <h4><i class="fa-solid fa-file-contract text-amber"></i> Resumo Estendido (Extended Abstract)</h4>
+            <ul style="margin-left: 1.25rem; font-size: 0.88rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+              <li><strong>Extensão:</strong> De <strong>2 a 3 páginas</strong> (no máximo 3 páginas, incluindo todas as seções e referências).</li>
+              <li><strong>Escopo:</strong> Trabalhos em andamento (<em>work in progress</em>) que ainda não apresentaram resultados plenamente consolidados.</li>
+              <li><strong>Formato de Apresentação:</strong> Apresentação visual em sessões interativas de pôsteres.</li>
+              <li><strong>Estrutura:</strong> Deve conter Introdução, Trabalhos Relacionados/Metodologia, Resultados Preliminares e Próximos Passos conforme o template.</li>
+              <li><strong>Template:</strong> Modelo oficial para pôster/resumo estendido SBC/COTB em PDF.</li>
+            </ul>
+            <div class="callout-box" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); color: var(--text-main); margin: 0;">
+              <i class="fa-solid fa-lightbulb text-amber"></i>
+              <div><strong>Recomendado para:</strong> Projetos em fase de refatoração ou testes preliminares de usabilidade e arquitetura (ex.: SMC Godot, D20Hub, Acervo MAGE 3D, Scout Vôlei).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alertas de Conformidade -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+          <div class="callout-box" style="background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--text-main); margin: 0;">
+            <i class="fa-solid fa-user-secret" style="color: var(--ifsc-red); font-size: 1.2rem;"></i>
+            <div>
+              <strong style="color: var(--ifsc-red);">Avaliação Duplamente Cega (Double-Blind Review):</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Todas as submissões devem ser <strong>estritamente anônimas</strong>. Omitir nomes dos estudantes e professores, e-mails, agradecimentos e qualquer menção ao <em>IFSC Câmpus Garopaba</em> no cabeçalho ou texto. Violações desclassificam o artigo.</p>
+            </div>
+          </div>
+
+          <div class="callout-box" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3); color: var(--text-main); margin: 0;">
+            <i class="fa-solid fa-arrows-split-up-and-left text-amber" style="font-size: 1.2rem;"></i>
+            <div>
+              <strong style="color: var(--accent-amber);">Regra de Exclusividade de Trilha:</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Cada trabalho só pode ser enviado para uma única trilha. Não envie o mesmo artigo para Artigo Completo e Resumo Estendido ou Concurso de Trabalhos Técnicos, sob pena de eliminação sumária.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temáticas Centrais - ODS ONU -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-earth-americas text-green"></i> Temáticas Centrais da Edição: Objetivos de Desenvolvimento Sustentável (ONU)</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Em 2027, o COTB destaca quatro ODS estratégicos da Agenda 2030 (não excludentes). Alinhar a justificativa e os impactos do projeto a um desses ODS enriquece consideravelmente a introdução e o abstract:</p>
+
+        <div class="ods-grid">
+          <div class="ods-card">
+            <span class="ods-badge ods-03"><i class="fa-solid fa-heart-pulse"></i> ODS 03</span>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Saúde e Bem-Estar</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades. <em>(Ex.: Projeto Música, Jogo e Atenção, tecnologias assistivas, saúde mental)</em>.</p>
+          </div>
+
+          <div class="ods-card">
+            <span class="ods-badge ods-05"><i class="fa-solid fa-venus"></i> ODS 05</span>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Igualdade de Gênero</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Alcançar a igualdade de gênero e empoderar todas as mulheres e meninas na área de exatas e computação <em>(Ex.: Projetos liderados por alunas, iniciativas de inclusão feminina)</em>.</p>
+          </div>
+
+          <div class="ods-card">
+            <span class="ods-badge ods-09"><i class="fa-solid fa-industry"></i> ODS 09</span>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Indústria, Inovação e Infraestrutura</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Construir infraestruturas resilientes, promover a industrialização inclusiva e sustentável e fomentar a inovação tecnológica <em>(Ex.: JifTV, RasPorta, ChatBot, Estação Meteorológica)</em>.</p>
+          </div>
+
+          <div class="ods-card">
+            <span class="ods-badge ods-11"><i class="fa-solid fa-city"></i> ODS 11</span>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Cidades e Comunidades Sustentáveis</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Tornar as cidades e comunidades mais inclusivas, seguras, resilientes e sustentáveis <em>(Ex.: Estação Meteorológica no campus, controle de acesso local, inclusão comunitária)</em>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mapeamento dos 10 Projetos nos Tópicos do COTB -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-network-wired text-cyan"></i> Mapeamento Pedagógico: Os 10 Projetos da Turma no COTB 2027</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">Análise de alinhamento temático de cada projeto desenvolvido em PI-II com as áreas sugeridas e as modalidades do evento:</p>
+
+        <div style="overflow-x: auto;">
+          <table class="matrix-sample-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Projeto & Equipe</th>
+                <th>Trilha Recomendada</th>
+                <th>Tópicos Sugeridos COTB</th>
+                <th>ODS ONU Alinhado</th>
+                <th>Ações de Preparação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>#01</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">SMC: Montagem de Computadores</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Lucas Pacheco, Bernardo, Henrique C.</span>
+                </td>
+                <td><span class="proj-overleaf-badge privado">Resumo Estendido</span></td>
+                <td>Jogos Educativos • Informática na Educação • Jogos Digitais</td>
+                <td><span class="ods-badge ods-09">ODS 04 / 09</span></td>
+                <td><button onclick="openModal(1)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#02</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">JifTV Streaming Adaptativo</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Rodrigo, Eluney, João, Anderson</span>
+                </td>
+                <td><span class="proj-overleaf-badge ok">Artigo Completo (6 págs)</span></td>
+                <td>Redes de Computadores • Sistemas Distribuídos • Sistemas Multimídia</td>
+                <td><span class="ods-badge ods-09">ODS 09 (Inovação)</span></td>
+                <td><button onclick="openModal(2)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#03</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">Curso Popular de Informática</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Pietro, Artur, Lucas Sehn</span>
+                </td>
+                <td><span class="proj-overleaf-badge ok">Artigo Completo (Relato)</span></td>
+                <td>Inclusão Digital • Cultura Digital • Informática na Educação</td>
+                <td><span class="ods-badge ods-11">ODS 04 / 10 / 11</span></td>
+                <td><button onclick="openModal(3)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#04</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">RasPorta: Fechadura Automática</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Petrus, Martin, Felipe</span>
+                </td>
+                <td><span class="proj-overleaf-badge ok">Artigo Completo ou Resumo</span></td>
+                <td>Sistemas Embarcados • Segurança e Privacidade • Automação</td>
+                <td><span class="ods-badge ods-09">ODS 09 / 11</span></td>
+                <td><button onclick="openModal(4)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#05</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">D20Hub: Gerenciador de RPG</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Nicolas, Eduardo, Henrique Gama</span>
+                </td>
+                <td><span class="proj-overleaf-badge privado">Resumo Estendido</span></td>
+                <td>Cultura Digital • Jogos Digitais • Sistemas de Informações</td>
+                <td><span class="ods-badge ods-09">ODS 09</span></td>
+                <td><button onclick="openModal(5)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#06</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">Acervo MAGE 3D</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Raul, Pedro H, Augusto, Maria Cecília</span>
+                </td>
+                <td><span class="proj-overleaf-badge privado">Resumo Estendido</span></td>
+                <td>Computação Gráfica • Sistemas Multimídia • Cultura Digital</td>
+                <td><span class="ods-badge ods-09">ODS 09 / 11</span></td>
+                <td><button onclick="openModal(6)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#07</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">Música, Jogo e Atenção</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Luisa Narvaz</span>
+                </td>
+                <td><span class="proj-overleaf-badge ok">Artigo Completo (Destaque)</span></td>
+                <td>Saúde Digital & Informática em Saúde • Jogos Educativos • IHC</td>
+                <td><span class="ods-badge ods-03">ODS 03 (Saúde)</span></td>
+                <td><button onclick="openModal(7)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#08</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">Estação Meteorológica</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Beatriz, Laura, Oriana, Sophie, Victória</span>
+                </td>
+                <td><span class="proj-overleaf-badge ok">Artigo Completo (Destaque)</span></td>
+                <td>Sistemas Embarcados • Automação de Sistemas • Mulheres na Computação</td>
+                <td><span class="ods-badge ods-11">ODS 11 & ODS 05</span></td>
+                <td><button onclick="openModal(8)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#09</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">Scout de Vôlei</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Nathan, João Contreira, Pedro E.</span>
+                </td>
+                <td><span class="proj-overleaf-badge privado">Resumo Estendido</span></td>
+                <td>Ciência de Dados • Interação Humano-Computador • Sistemas de Informações</td>
+                <td><span class="ods-badge ods-03">ODS 03 / 09</span></td>
+                <td><button onclick="openModal(9)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+              <tr>
+                <td><strong>#10</strong></td>
+                <td>
+                  <strong style="color: var(--text-main);">ChatBot Secretaria Acadêmica</strong><br>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">Cauã, Enzo, Ariane</span>
+                </td>
+                <td><span class="proj-overleaf-badge ok">Artigo Completo ou Resumo</span></td>
+                <td>Inteligência Artificial • Sistemas de Informações • Automação</td>
+                <td><span class="ods-badge ods-09">ODS 09 (Inovação)</span></td>
+                <td><button onclick="openModal(10)" class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.72rem;">Ver Ficha</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Grade dos 22 Tópicos Sugeridos -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-tags text-amber"></i> Grade Completa de Tópicos Sugeridos (22 Áreas Temáticas)</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Os autores são convidados a submeter trabalhos originais nos seguintes tópicos sugeridos (mas não limitados a estes):</p>
+        
+        <div class="topics-cloud">
+          <span class="topic-chip"><i class="fa-solid fa-robot text-cyan"></i> Automação de Sistemas</span>
+          <span class="topic-chip"><i class="fa-solid fa-database text-green"></i> Banco de Dados</span>
+          <span class="topic-chip"><i class="fa-solid fa-chart-line text-amber"></i> Ciência de Dados</span>
+          <span class="topic-chip"><i class="fa-solid fa-cubes text-purple"></i> Computação Gráfica</span>
+          <span class="topic-chip"><i class="fa-solid fa-mobile-screen-button text-cyan"></i> Computação Móvel</span>
+          <span class="topic-chip"><i class="fa-solid fa-users-viewfinder text-green"></i> Cultura Digital</span>
+          <span class="topic-chip"><i class="fa-solid fa-code text-amber"></i> Engenharia de Software</span>
+          <span class="topic-chip"><i class="fa-solid fa-universal-access text-purple"></i> Inclusão Digital</span>
+          <span class="topic-chip"><i class="fa-solid fa-graduation-cap text-cyan"></i> Informática na Educação</span>
+          <span class="topic-chip"><i class="fa-solid fa-brain text-amber"></i> Inteligência Artificial</span>
+          <span class="topic-chip"><i class="fa-solid fa-hand-pointer text-green"></i> Interação Humano-Computador</span>
+          <span class="topic-chip"><i class="fa-solid fa-gamepad text-purple"></i> Jogos Digitais</span>
+          <span class="topic-chip"><i class="fa-solid fa-dice text-cyan"></i> Jogos Educativos</span>
+          <span class="topic-chip"><i class="fa-solid fa-venus text-amber"></i> Mulheres na Computação</span>
+          <span class="topic-chip"><i class="fa-solid fa-eye text-green"></i> Visão Computacional & PDI</span>
+          <span class="topic-chip"><i class="fa-solid fa-network-wired text-cyan"></i> Redes de Computadores</span>
+          <span class="topic-chip"><i class="fa-solid fa-notes-medical text-green"></i> Saúde Digital & Informática em Saúde</span>
+          <span class="topic-chip"><i class="fa-solid fa-shield-halved text-amber"></i> Segurança e Privacidade</span>
+          <span class="topic-chip"><i class="fa-solid fa-sitemap text-purple"></i> Sistemas de Informações</span>
+          <span class="topic-chip"><i class="fa-solid fa-server text-cyan"></i> Sistemas Distribuídos</span>
+          <span class="topic-chip"><i class="fa-solid fa-microchip text-green"></i> Sistemas Embarcados</span>
+          <span class="topic-chip"><i class="fa-solid fa-photo-film text-amber"></i> Sistemas Multimídia</span>
+        </div>
+      </div>
+
+      <!-- Checklist de 5 Passos para Submissão -->
+      <div class="guide-box" style="margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-list-check text-green"></i> Checklist de Submissão em 5 Passos para as Equipes</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Siga este roteiro rigoroso para assegurar que o artigo do seu grupo esteja 100% elegível antes do envio no JEMS:</p>
+
+        <ul class="checklist-list">
+          <li>
+            <i class="fa-solid fa-1 text-cyan"></i>
+            <div>
+              <strong>Passo 1: Definir a Trilha Adequada ao Estágio do Projeto</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Se o grupo já possui protótipo testado e métricas experimentais, formate como <strong>Artigo Completo (até 6 páginas)</strong>. Se o trabalho está em fase de validação e coleta inicial, formate como <strong>Resumo Estendido (2 a 3 páginas)</strong>.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-2 text-cyan"></i>
+            <div>
+              <strong>Passo 2: Download do Template Oficial da SBC / COTB</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Acesse a aba <em>Categorias</em> em <a href="http://www.computeronthebeach.com.br" target="_blank" style="color: var(--accent-cyan);">computeronthebeach.com.br</a> e obtenha o template oficial (LaTeX ou Word). Importe o pacote no seu projeto do Overleaf.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-3 text-cyan"></i>
+            <div>
+              <strong>Passo 3: Sanitização Rigorosa para Avaliação Cega (Double-Blind)</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Remova todos os nomes de estudantes e professores orientadores. Substitua no cabeçalho por indicação anônima. Elimine qualquer menção nominal ao Câmpus Garopaba no texto. Oculte agradecimentos a bolsas ou editais até a versão final pós-aceite.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-4 text-cyan"></i>
+            <div>
+              <strong>Passo 4: Auditoria de Figuras, Tabelas e Referências BibTeX</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Certifique-se de que diagramas e gráficos estejam em alta resolução e legíveis. Inclua ao menos 2 a 3 trabalhos correlatos na seção de Trabalhos Relacionados e garanta que o PDF respeite estritamente o limite de páginas.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-5 text-amber"></i>
+            <div>
+              <strong style="color: var(--accent-amber);">Passo 5: Cadastro e Submissão no JEMS SBC até 15/11/2026</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">A partir de 01/10/2026, acesse o sistema JEMS, localize a chamada do <em>Computer on the Beach 2027</em>, cadastre o título, resumo, palavras-chave e faça o upload do arquivo em formato PDF.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Coordenação e Contato -->
+      <div class="guide-box">
+        <h3><i class="fa-solid fa-id-card text-cyan"></i> Organização & Contatos Oficiais do COTB 2027</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+          <div style="background: var(--chip-bg); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <strong style="color: var(--text-main); font-size: 0.95rem; display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-crown text-amber"></i> Coordenação Geral</strong>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;"><strong>Anita Maria da Rocha Fernandes</strong> (UNIVALI)</p>
+          </div>
+
+          <div style="background: var(--chip-bg); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <strong style="color: var(--text-main); font-size: 0.95rem; display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-clipboard-check text-green"></i> Comitê de Programa</strong>
+            <ul style="font-size: 0.85rem; color: var(--text-muted); list-style: none; display: flex; flex-direction: column; gap: 0.25rem; margin: 0;">
+              <li>• <strong>Douglas Rossi</strong> (UNIVALI)</li>
+              <li>• <strong>Wemerson Delcio Parreira</strong> (PUC – Campinas)</li>
+              <li>• <strong>Juliano de Souza Gaspar</strong> (SBIS e UFMG)</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--chip-bg); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <strong style="color: var(--text-main); font-size: 0.95rem; display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-envelope text-cyan"></i> Contato & Local</strong>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem;">
+              E-mail: <a href="mailto:computeronthebeachsc@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">computeronthebeachsc@gmail.com</a>
+            </p>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">
+              Local: Hotel Praia Brava, Florianópolis - SC.
+            </p>
+          </div>
+        </div>
+      </div>
+
     </section>
 
   </main>
