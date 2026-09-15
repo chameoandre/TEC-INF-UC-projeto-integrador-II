@@ -1546,6 +1546,203 @@
       word-break: break-word;
     }
 
+  
+    /* ==========================================================================
+       ESTILOS EXCLUSIVOS: GUIA DE EXPERIMENTOS CIENTÍFICOS
+       ========================================================================== */
+    .exp-subnav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      background: var(--bg-surface);
+      padding: 0.6rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+    .exp-subnav-btn {
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--text-muted);
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .exp-subnav-btn:hover, .exp-subnav-btn.active {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+    }
+
+    .reality-check-banner {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(245, 158, 11, 0.08) 50%, var(--bg-surface) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-left: 5px solid var(--ifsc-red);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      margin-bottom: 1.8rem;
+    }
+    .reality-check-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .reality-check-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      color: var(--ifsc-red);
+    }
+
+    .exp-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.2rem;
+      margin: 1.2rem 0;
+    }
+    .compare-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .compare-card.wrong {
+      border-top: 4px solid var(--ifsc-red);
+    }
+    .compare-card.correct {
+      border-top: 4px solid var(--ifsc-green);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.04) 0%, var(--bg-surface) 100%);
+    }
+    .compare-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .metric-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--accent-cyan);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .step-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .step-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      position: relative;
+    }
+    .step-badge-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--ifsc-green);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .type-exp-box {
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.2rem;
+    }
+
+    .project-exp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.3rem;
+      margin-bottom: 1.2rem;
+      transition: var(--transition);
+    }
+    .project-exp-card:hover {
+      border-color: var(--ifsc-green);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    }
+    .project-exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .code-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 0.45rem 0.85rem;
+      border-top-left-radius: var(--radius-sm);
+      border-top-right-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: none;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+    .code-box-content {
+      background: #050806;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom-left-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
+      padding: 0.9rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .chart-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      margin-top: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .chart-box svg {
+      max-width: 100%;
+      height: auto;
+    }
+
   </style>
 </head>
 <body>
@@ -1571,6 +1768,9 @@
     </div>
 
     <div class="header-actions">
+      <button class="btn btn-primary" onclick="switchTab('experimentos-cientificos')" style="background: linear-gradient(135deg, #16a34a, #0d9488); border: none;" title="Acessar o Guia Completo de Experimentos Científicos">
+        <i class="fa-solid fa-flask-vial"></i> Guia de Experimentos
+      </button>
       <button class="btn btn-primary" onclick="switchTab('avancos-pendencias')" title="Raio-X de Avanços e Pendências para a Profª Karyna">
         <i class="fa-solid fa-clipboard-check"></i> Raio-X da Aula de Hoje
       </button>
@@ -2993,6 +3193,1138 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
 
     </section>
 
+  
+    <!-- TAB: GUIA DE EXPERIMENTOS CIENTÍFICOS -->
+    <section id="tab-experimentos-cientificos" class="tab-content">
+
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-info">
+          <h2>Guia Prático: Metodologia &amp; Experimentos Científicos em Computação</h2>
+          <p>Como transformar o seu projeto de software e hardware em um trabalho científico de verdade: formulando hipóteses, isolando variáveis, medindo grandezas empíricas, coletando dados brutos e construindo gráficos para o artigo (SEPEI &amp; COTB 2027).</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-users"></i> Turma: <strong>INF-2024 (10 Projetos)</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-chart-line"></i> Foco: <strong>Dados, Métricas &amp; Gráficos</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-graduation-cap"></i> Meta: <strong>Paper Overleaf / SBC</strong></div>
+        </div>
+      </div>
+
+      <!-- Quick Subnav Index -->
+      <div class="exp-subnav">
+        <a href="#exp-modulo-1" class="exp-subnav-btn"><i class="fa-solid fa-triangle-exclamation text-red"></i> 1. Choque de Realidade: Código vs. Ciência</a>
+        <a href="#exp-modulo-2" class="exp-subnav-btn"><i class="fa-solid fa-arrows-spin text-green"></i> 2. O Ciclo em 5 Passos</a>
+        <a href="#exp-modulo-3" class="exp-subnav-btn"><i class="fa-solid fa-layer-group text-cyan"></i> 3. Os 3 Tipos de Experimento</a>
+        <a href="#exp-modulo-4" class="exp-subnav-btn"><i class="fa-solid fa-list-check text-amber"></i> 4. Roteiros dos 10 Projetos da Turma</a>
+        <a href="#exp-modulo-5" class="exp-subnav-btn"><i class="fa-solid fa-file-lines text-purple"></i> 5. Template &amp; Ficha para o Overleaf</a>
+      </div>
+
+      <!-- MÓDULO 1: CHOQUE DE REALIDADE -->
+      <div class="guide-box" id="exp-modulo-1">
+        <div class="reality-check-banner">
+          <div class="reality-check-header">
+            <i class="fa-solid fa-circle-exclamation fa-2x" style="color: var(--ifsc-red);"></i>
+            <div>
+              <h3>Módulo 1: O Choque de Realidade — "Desenvolver Software" NÃO é o mesmo que "Fazer Experimento"</h3>
+              <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem;">
+                A maior dificuldade dos estudantes no Projeto Integrador é entender a fronteira entre <strong>Engenharia de Software</strong> (construir o artefato) e <strong>Pesquisa Científica</strong> (colocar o artefato à prova e coletar evidências numéricas).
+              </p>
+            </div>
+          </div>
+          
+          <div class="callout-box" style="background: rgba(0,0,0,0.3); border-color: rgba(239, 68, 68, 0.4); margin-top: 1rem;">
+            <i class="fa-solid fa-comments fa-lg" style="color: var(--accent-amber);"></i>
+            <div style="font-size: 0.88rem;">
+              <strong style="color: #fca5a5;">Dúvida clássica no laboratório:</strong><br>
+              <em>— "Professor, no campo 'Experimento 1' da planilha eu posso colocar que implementei a tela de login e conectei com o banco SQLite?"</em><br>
+              <strong style="color: #86efac;">Resposta docente:</strong><br>
+              <strong>NÃO!</strong> Construir telas, configurar banco de dados e programar rotas são <strong>tarefas de desenvolvimento / engenharia</strong>. Sem o sistema pronto, você não tem o que testar. Mas a <strong>Ciência</strong> só começa depois que o sistema está em pé: você precisa criar um cenário de teste, submeter o sistema a estímulos ou usuários, registrar números (tempo, taxa de erro, latência, FPS) e gerar gráficos que comprovem se a sua solução funciona de verdade!
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabela Comparativa de Realidade -->
+        <h4 style="font-size: 1.05rem; color: var(--text-main); margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-code-compare text-cyan"></i> O que foi cadastrado na turma vs. Como transformar em Experimento Científico:
+        </h4>
+
+        <div class="exp-compare-grid">
+          
+          <div class="compare-card wrong">
+            <div class="compare-card-title text-red">
+              <i class="fa-solid fa-xmark"></i> O que o grupo colocou (Engenharia pura)
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+              <em>"Protótipo: Tela principal contendo características do jogador, poderes e opções de jogo."</em> (Projeto D20Hub)
+            </p>
+            <div style="font-size: 0.78rem; color: #f87171; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 4px;">
+              <strong>Por que NÃO é experimento?</strong> É apenas um entregável de interface. Não há pergunta investigativa, não há medição numérica e não gera nenhum dado estatístico.
+            </div>
+          </div>
+
+          <div class="compare-card correct">
+            <div class="compare-card-title text-green">
+              <i class="fa-solid fa-check"></i> Como vira Experimento Científico
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+              <strong>Experimento:</strong> <em>"Avaliação do tempo de criação e customização de ficha por 10 jogadores voluntários (5 novatos e 5 veteranos)."</em>
+            </p>
+            <div style="font-size: 0.78rem; color: #86efac; background: rgba(34, 197, 94, 0.1); padding: 0.5rem; border-radius: 4px;">
+              <strong>O que se mede:</strong> Tempo total na tarefa (segundos), quantidade de cliques errados e nota de usabilidade no questionário SUS (0 a 100). <strong>Gera:</strong> Gráfico de barras comparando novatos vs veteranos.
+            </div>
+          </div>
+
+          <div class="compare-card wrong">
+            <div class="compare-card-title text-red">
+              <i class="fa-solid fa-xmark"></i> O que o grupo colocou (Engenharia pura)
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+              <em>"Protótipo: Primeiros testes e calibramento de sensores no Raspberry."</em> (Projeto Estação Meteorológica)
+            </p>
+            <div style="font-size: 0.78rem; color: #f87171; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 4px;">
+              <strong>Por que NÃO é experimento?</strong> Ligar o sensor e ver se acende o LED é verificação técnica funcional, não um ensaio metodológico documentado.
+            </div>
+          </div>
+
+          <div class="compare-card correct">
+            <div class="compare-card-title text-green">
+              <i class="fa-solid fa-check"></i> Como vira Experimento Científico
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+              <strong>Experimento:</strong> <em>"Análise de estabilidade e cálculo do Erro Médio Absoluto (MAE) do sensor BME280 em relação à estação meteorológica oficial durante 24 horas."</em>
+            </p>
+            <div style="font-size: 0.78rem; color: #86efac; background: rgba(34, 197, 94, 0.1); padding: 0.5rem; border-radius: 4px;">
+              <strong>O que se mede:</strong> 1.440 medições comparadas par a par; desvio térmico (°C) e de umidade (%). <strong>Gera:</strong> Gráfico de linha temporal com duas curvas sobrepostas.
+            </div>
+          </div>
+
+          <div class="compare-card wrong">
+            <div class="compare-card-title text-red">
+              <i class="fa-solid fa-xmark"></i> O que o grupo colocou (Engenharia pura)
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+              <em>"Protótipo: Estruturar uma API básica para acessar o servidor do LM Studio."</em> (Projeto ChatBot Secretaria)
+            </p>
+            <div style="font-size: 0.78rem; color: #f87171; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 4px;">
+              <strong>Por que NÃO é experimento?</strong> Criar o endpoint da API é um requisito de infraestrutura. Falta testar a qualidade e o desempenho do modelo.
+            </div>
+          </div>
+
+          <div class="compare-card correct">
+            <div class="compare-card-title text-green">
+              <i class="fa-solid fa-check"></i> Como vira Experimento Científico
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+              <strong>Experimento:</strong> <em>"Benchmark de acurácia de respostas e taxa de geração (tokens/segundo) em um conjunto fixo de 30 dúvidas frequentes da secretaria acadêmica."</em>
+            </p>
+            <div style="font-size: 0.78rem; color: #86efac; background: rgba(34, 197, 94, 0.1); padding: 0.5rem; border-radius: 4px;">
+              <strong>O que se mede:</strong> Taxa de acerto contra gabarito oficial (%), tempo do primeiro token (ms) e consumo de RAM/VRAM. <strong>Gera:</strong> Tabela de confusão e gráfico de dispersão Acurácia vs Latência.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MÓDULO 2: O CICLO EM 5 PASSOS -->
+      <div class="guide-box" id="exp-modulo-2">
+        <h3><i class="fa-solid fa-arrows-spin text-green"></i> Módulo 2: O Método Científico em 5 Passos Práticos</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+          Todo experimento aceito em congressos de computação (como <em>Computer on the Beach</em> e <em>SEPEI</em>) segue rigorosamente esta esteira de 5 passos:
+        </p>
+
+        <div class="step-card-grid">
+          
+          <div class="step-card">
+            <div class="step-badge-num">1</div>
+            <h4 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.4rem;">Formular a Pergunta &amp; Hipótese</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              O que você quer descobrir? A hipótese precisa ser <strong>falsificável e conter um critério quantitativo</strong>.
+            </p>
+            <div style="font-size: 0.75rem; background: var(--chip-bg); padding: 0.4rem; border-radius: 4px; border-left: 3px solid var(--accent-cyan);">
+              <em>Ex.: "Esperamos que a autenticação biométrica ocorra em menos de 1,5s com taxa de falha menor que 5%."</em>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num">2</div>
+            <h4 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.4rem;">Isolar Variáveis &amp; Métricas</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              Defina o que você altera e o que você mede com instrumentos precisos:
+            </p>
+            <ul style="font-size: 0.75rem; color: var(--text-muted); padding-left: 1rem; line-height: 1.4;">
+              <li><strong>Variável Independente:</strong> O que você varia (ex.: 2, 4, 8, 16 conexões; resolução 360p vs 1080p).</li>
+              <li><strong>Variável Dependente:</strong> O que você mede (ms, %, FPS, SUS, KB).</li>
+              <li><strong>Variável de Controle:</strong> O que você mantém fixo (mesma máquina, mesma rede).</li>
+            </ul>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num">3</div>
+            <h4 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.4rem;">Protocolo de Repetições</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              <strong>Regra de Ouro:</strong> Nunca meça uma única vez! Em computação há ruído de cache, sistema operacional e rede.
+            </p>
+            <div style="font-size: 0.75rem; background: var(--chip-bg); padding: 0.4rem; border-radius: 4px; border-left: 3px solid var(--accent-amber);">
+              <em>Execute cada teste no mínimo <strong>5 a 10 vezes</strong> (para ensaios automatizados) ou com <strong>8 a 15 voluntários</strong> (para testes de usuário). Calcule <strong>Média e Desvio Padrão</strong>!</em>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num">4</div>
+            <h4 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.4rem;">Coletar Dados Brutos (Planilha)</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              Crie uma tabela estruturada (CSV / Google Sheets) para salvar cada ensaio antes de fazer qualquer cálculo.
+            </p>
+            <div style="font-size: 0.75rem; background: var(--chip-bg); padding: 0.4rem; border-radius: 4px; border-left: 3px solid var(--ifsc-green);">
+              <em>Colunas obrigatórias: <code>ID_Ensaio</code>, <code>Cenário</code>, <code>Repetição</code>, <code>Métrica_1 (ms)</code>, <code>Métrica_2 (%)</code>, <code>Status</code>.</em>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num">5</div>
+            <h4 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.4rem;">Gráficos &amp; Discussão Crítica</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              Sintetize os dados em gráficos visuais legíveis e discuta o que eles significam no texto do artigo.
+            </p>
+            <div style="font-size: 0.75rem; background: var(--chip-bg); padding: 0.4rem; border-radius: 4px; border-left: 3px solid var(--accent-purple);">
+              <em>O gráfico não fala sozinho! No texto, cite: "A Figura 3 demonstra que a latência aumentou 42% ao saltar de 8 para 16 conexões..."</em>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MÓDULO 3: OS 3 GRANDES TIPOS DE EXPERIMENTO -->
+      <div class="guide-box" id="exp-modulo-3">
+        <h3><i class="fa-solid fa-layer-group text-cyan"></i> Módulo 3: Os 3 Grandes Tipos de Experimentos em Computação</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+          Selecione o tipo de experimento correspondente à natureza tecnológica do seu projeto:
+        </p>
+
+        <!-- Tipo A: Desempenho e Sistemas -->
+        <div class="type-exp-box" style="border-left: 4px solid var(--accent-cyan);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--accent-cyan); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-server"></i> Tipo A: Desempenho, Escalabilidade &amp; Redes (Sistemas, Backend, IoT, Streaming)
+            </h4>
+            <span class="metric-badge">Projetos: JifTV, RasPorta, D20Hub, Acervo MAGE 3D</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Indicado para testar tempo de resposta, latência de rede, sobrecarga de hardware (CPU/RAM) e capacidade de atender múltiplos acessos simultâneos.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; margin-bottom: 1rem;">
+            <div style="background: var(--chip-bg); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <strong style="font-size: 0.82rem; color: var(--text-main);"><i class="fa-solid fa-stopwatch text-cyan"></i> Métricas Principais:</strong>
+              <ul style="font-size: 0.78rem; color: var(--text-muted); margin: 0.4rem 0 0 1rem;">
+                <li><strong>Latência (ms):</strong> Tempo entre envio do pacote e confirmação.</li>
+                <li><strong>Throughput / Vazão:</strong> Requisições por segundo ou frames por segundo (FPS).</li>
+                <li><strong>Consumo de Recursos:</strong> % de CPU e MB de RAM ocupados.</li>
+              </ul>
+            </div>
+            <div style="background: var(--chip-bg); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <strong style="font-size: 0.82rem; color: var(--text-main);"><i class="fa-solid fa-toolbox text-amber"></i> Ferramentas Recomendadas:</strong>
+              <ul style="font-size: 0.78rem; color: var(--text-muted); margin: 0.4rem 0 0 1rem;">
+                <li>Python com biblioteca <code>time.perf_counter()</code> e <code>psutil</code>.</li>
+                <li>Navegador: Aba <em>Network</em> e <em>Performance</em> do DevTools.</li>
+                <li>Testes de carga: Apache Bench (<code>ab</code>), k6 ou scripts assíncronos.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Snippet Python de Medição -->
+          <div class="code-box-header">
+            <span><i class="fa-brands fa-python text-green"></i> benchmark_desempenho.py (Script de exemplo para coleta automatizada)</span>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('pySnippetBenchmark')"><i class="fa-solid fa-copy"></i> Copiar Código</button>
+          </div>
+          <pre class="code-box-content" id="pySnippetBenchmark"><code>import time
+import statistics
+
+def medir_tempo_execucao(funcao_alvo, num_repeticoes=10):
+    amostras_ms = []
+    print(f"Iniciando experimento com {num_repeticoes} repetições...")
+    
+    for i in range(1, num_repeticoes + 1):
+        inicio = time.perf_counter()
+        funcao_alvo()  # Executa a rota, consulta ao banco ou requisição
+        fim = time.perf_counter()
+        
+        tempo_ms = (fim - inicio) * 1000
+        amostras_ms.append(tempo_ms)
+        print(f"  Ensaio #{i:02d}: {tempo_ms:.2f} ms")
+        time.sleep(0.1)  # Intervalo de estabilização
+        
+    media = statistics.mean(amostras_ms)
+    desvio = statistics.stdev(amostras_ms)
+    
+    print("-" * 40)
+    print(f"Média: {media:.2f} ms | Desvio Padrão: ±{desvio:.2f} ms")
+    print(f"Mínimo: {min(amostras_ms):.2f} ms | Máximo: {max(amostras_ms):.2f} ms")
+    return amostras_ms</code></pre>
+        </div>
+
+        <!-- Tipo B: Precisão, Acurácia e Calibração -->
+        <div class="type-exp-box" style="border-left: 4px solid var(--accent-amber);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--accent-amber); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-bullseye"></i> Tipo B: Precisão, Acurácia &amp; Sensores (IA, Visão Computacional, IoT)
+            </h4>
+            <span class="metric-badge" style="border-color: rgba(245, 158, 11, 0.4); color: var(--accent-amber);">Projetos: ChatBot Secretaria, Estação Meteorológica, RasPorta</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Indicado para verificar a taxa de acerto de modelos de Inteligência Artificial, reconhecimento biométrico ou fidelidade de leitura de sensores ambientais contra um padrão-ouro (<em>Ground Truth</em>).
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem;">
+            <div style="background: var(--chip-bg); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <strong style="font-size: 0.82rem; color: var(--text-main);"><i class="fa-solid fa-square-root-variable text-amber"></i> Fórmulas &amp; Métricas:</strong>
+              <ul style="font-size: 0.78rem; color: var(--text-muted); margin: 0.4rem 0 0 1rem;">
+                <li><strong>Acurácia (%):</strong> $	ext{Acertos} / 	ext{Total de Perguntas} 	imes 100$.</li>
+                <li><strong>Erro Médio Absoluto (MAE):</strong> Desvio médio das temperaturas lidas vs referência.</li>
+                <li><strong>Taxa de Falsa Rejeição (FRR %):</strong> Quantas vezes o usuário legítimo foi bloqueado na fechadura.</li>
+              </ul>
+            </div>
+            <div style="background: var(--chip-bg); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <strong style="font-size: 0.82rem; color: var(--text-main);"><i class="fa-solid fa-clipboard-check text-green"></i> Como Montar o Benchmark:</strong>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.4rem 0 0 0;">
+                Crie uma planilha de teste fixa com <strong>30 a 50 casos de teste</strong> previamente respondidos por humanos (gabarito). Submeta o sistema a esse mesmo conjunto e compute os acertos.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipo C: Usabilidade e Experiência do Usuário -->
+        <div class="type-exp-box" style="border-left: 4px solid var(--ifsc-green);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--ifsc-green-light); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-users"></i> Tipo C: Usabilidade, IHC &amp; Avaliação com Voluntários (Jogos, Web, Extensão)
+            </h4>
+            <span class="metric-badge" style="border-color: rgba(34, 197, 94, 0.4); color: var(--ifsc-green-light);">Projetos: SMC Hardware, Curso Popular, Música e Atenção, Scout Vôlei</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Indicado para projetos educacionais, jogos ou ferramentas em que o valor principal é a interação humana, facilidade de uso ou eficácia do aprendizado.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.8rem; margin-bottom: 1rem;">
+            <div style="background: var(--chip-bg); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <strong style="font-size: 0.82rem; color: var(--text-main);"><i class="fa-solid fa-stopwatch-20 text-green"></i> Métricas Objetivas (Observáveis):</strong>
+              <ul style="font-size: 0.78rem; color: var(--text-muted); margin: 0.4rem 0 0 1rem;">
+                <li><strong>Tempo na Tarefa (Time on Task):</strong> Segundos que o voluntário leva para concluir a missão (ex.: montar placa-mãe).</li>
+                <li><strong>Taxa de Conclusão Sem Ajuda (%):</strong> Quantos conseguiram sem pedir auxílio do pesquisador.</li>
+                <li><strong>Contagem de Erros:</strong> Quantas peças tentou encaixar no slot errado.</li>
+              </ul>
+            </div>
+            <div style="background: var(--chip-bg); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <strong style="font-size: 0.82rem; color: var(--text-main);"><i class="fa-solid fa-star-half-stroke text-amber"></i> Métrica Subjetiva Padrão: Escala SUS (0 a 100)</strong>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.4rem 0 0 0;">
+                O <em>System Usability Scale (SUS)</em> é o padrão internacional aceito em artigos científicos. São 10 perguntas em escala de 1 a 5. Uma pontuação acima de <strong>68 pontos</strong> indica boa usabilidade.
+              </p>
+            </div>
+          </div>
+
+          <!-- Questionário SUS Expandível -->
+          <details style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">
+            <summary style="font-size: 0.82rem; font-weight: 600; color: var(--ifsc-green-light); cursor: pointer;">
+              <i class="fa-solid fa-list-ol"></i> Ver as 10 Perguntas Padrão do Questionário SUS para aplicar aos seus voluntários
+            </summary>
+            <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted); line-height: 1.6;">
+              <p>Os voluntários respondem de 1 (Discordo Totalmente) a 5 (Concordo Totalmente):</p>
+              <ol style="margin-left: 1.2rem; margin-top: 0.4rem;">
+                <li>Eu acho que gostaria de usar este sistema com frequência.</li>
+                <li>Eu achei o sistema desnecessariamente complexo.</li>
+                <li>Eu achei o sistema fácil de usar.</li>
+                <li>Eu acho que precisaria de ajuda de uma pessoa com conhecimentos técnicos para usar este sistema.</li>
+                <li>Eu achei que as várias funções deste sistema estavam bem integradas.</li>
+                <li>Eu achei que havia muita inconsistência neste sistema.</li>
+                <li>Eu imagino que a maioria das pessoas aprenderia a usar este sistema muito rapidamente.</li>
+                <li>Eu achei o sistema muito pesado/desconfortável de usar.</li>
+                <li>Eu me senti muito confiante usando o sistema.</li>
+                <li>Eu precisei aprender uma série de coisas novas antes de conseguir usar o sistema.</li>
+              </ol>
+            </div>
+          </details>
+        </div>
+
+      </div>
+
+      <!-- MÓDULO 4: ROTEIROS EXPERIMENTAIS CUSTOMIZADOS PARA OS 10 PROJETOS -->
+      <div class="guide-box" id="exp-modulo-4">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3><i class="fa-solid fa-list-check text-amber"></i> Módulo 4: Roteiros Experimentais Prontos para os 10 Projetos da Turma INF-2024</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">
+              Encontre o card da sua equipe abaixo. Cada roteiro define a pergunta científica, as variáveis, a tabela de dados brutos e o gráfico resultante esperado para o artigo.
+            </p>
+          </div>
+          
+          <!-- Filtro de Categorias -->
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button class="exp-subnav-btn active" onclick="filterExpCards('all', this)">Todos (10)</button>
+            <button class="exp-subnav-btn" onclick="filterExpCards('sistemas', this)">Sistemas &amp; Redes</button>
+            <button class="exp-subnav-btn" onclick="filterExpCards('sensores-ia', this)">Sensores &amp; IA</button>
+            <button class="exp-subnav-btn" onclick="filterExpCards('usabilidade', this)">Usabilidade &amp; Educação</button>
+          </div>
+        </div>
+
+        <!-- PROJETO 1 -->
+        <div class="project-exp-card" data-exp-cat="usabilidade">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #01</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">SMC: Montagem Virtual de Computadores</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Lucas Pacheco, Bernardo, Henrique Cardoso • <strong>Godot Engine</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(34, 197, 94, 0.4); color: var(--ifsc-green-light);"><i class="fa-solid fa-gamepad"></i> Usabilidade &amp; IHC</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--ifsc-green); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O simulador virtual em Godot reduz o tempo de montagem e a incidência de erros de posicionamento de peças em comparação ao estudo teórico por apostilas?"</em><br>
+            <strong>Hipótese:</strong> Estudantes que praticam 3 rodadas no simulador diminuem em pelo menos 50% o tempo de montagem e cometem menos de 2 erros nas fases avançadas.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Número de tentativas consecutivas (Rodadas 1, 2 e 3).</li>
+                <li><strong>Dependente:</strong> Tempo de conclusão (segundos) e Quantidade de erros (tentativas de encaixe incorreto).</li>
+                <li><strong>Controle:</strong> Mesma configuração de PC virtual (processador, cooler, memórias, placa de vídeo).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Recrutar 10 voluntários (estudantes do 1º ano da INF 25). Cada voluntário joga a fase de montagem 3 vezes seguidas. O jogo grava automaticamente em log ou na tela o tempo decorrido e os erros.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tabela de Exemplo e Gráfico SVG -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Voluntário</th><th>Rodada 1 (s)</th><th>Rodada 2 (s)</th><th>Rodada 3 (s)</th><th>Erros (R1 / R3)</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>V01 (Iniciante)</td><td>380 s</td><td>210 s</td><td>135 s</td><td>7 / 1</td></tr>
+                  <tr><td>V02 (Iniciante)</td><td>420 s</td><td>245 s</td><td>150 s</td><td>9 / 2</td></tr>
+                  <tr><td>V03 (Médio)</td><td>290 s</td><td>180 s</td><td>110 s</td><td>4 / 0</td></tr>
+                  <tr style="font-weight: 700; color: var(--ifsc-green-light);"><td>Média da Turma</td><td>363 ± 65 s</td><td>211 ± 32 s</td><td>131 ± 20 s</td><td>6.6 / 1.0</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-line"></i> Gráfico Resultante: Curva de Aprendizado (Tempo Médio em Segundos)</span>
+              <!-- SVG Chart -->
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Y Labels -->
+                <text x="32" y="30" fill="#94a3b8" font-size="9" text-anchor="end">400s</text>
+                <text x="32" y="75" fill="#94a3b8" font-size="9" text-anchor="end">200s</text>
+                <text x="32" y="120" fill="#94a3b8" font-size="9" text-anchor="end">0s</text>
+                <!-- X Labels -->
+                <text x="90" y="136" fill="#94a3b8" font-size="10" text-anchor="middle">Rodada 1</text>
+                <text x="180" y="136" fill="#94a3b8" font-size="10" text-anchor="middle">Rodada 2</text>
+                <text x="270" y="136" fill="#94a3b8" font-size="10" text-anchor="middle">Rodada 3</text>
+                <!-- Trend line -->
+                <polyline points="90,38 180,78 270,98" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+                <!-- Dots -->
+                <circle cx="90" cy="38" r="5" fill="#4ade80"/>
+                <circle cx="180" cy="78" r="5" fill="#4ade80"/>
+                <circle cx="270" cy="98" r="5" fill="#4ade80"/>
+                <!-- Point values -->
+                <text x="90" y="28" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">363s</text>
+                <text x="180" y="68" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">211s</text>
+                <text x="270" y="88" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">131s (-64%)</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 2 -->
+        <div class="project-exp-card" data-exp-cat="sistemas">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #02</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">JifTV: Streaming Adaptativo de Jogos</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Rodrigo, Eluney, João, Anderson • <strong>Docker, OBS, Nginx-RTMP, Cloudflare</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(6, 182, 212, 0.4); color: var(--accent-cyan);"><i class="fa-solid fa-network-wired"></i> Redes &amp; Desempenho</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-cyan); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O pipeline de streaming adaptativo (HLS) mantém a reprodução contínua (sem re-buffering) e latência inferior a 3 segundos quando submetido a quedas bruscas de largura de banda?"</em><br>
+            <strong>Hipótese:</strong> A transição automática entre os perfis 1080p, 720p e 360p estabiliza a transmissão mesmo com limitação de banda a 1,5 Mbps.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Largura de banda imposta no cliente (10 Mbps, 4 Mbps, 1.5 Mbps simulada no DevTools).</li>
+                <li><strong>Dependente:</strong> Latência de reprodução (ms), tempo de travamento/buffering (s), uso de CPU no servidor Nginx (%).</li>
+                <li><strong>Controle:</strong> Vídeo de origem com 60 FPS gravado de uma partida oficial dos JIFs.</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Transmitir uma partida gravada de 5 minutos. Conectar 3 clientes simultâneos aplicando throttling de rede no navegador (aba <em>Network -> Throttling</em>: Fast 3G, Slow 3G, No Throttling). Monitorar os eventos <code>waiting</code> do elemento <code>&lt;video&gt;</code>.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Perfil de Rede</th><th>Resolução Selecionada</th><th>Latência Média</th><th>Eventos de Buffer</th><th>Consumo CPU Server</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Rede Local (Sem limite)</td><td>1080p @ 4500 kbps</td><td>1.850 ms</td><td>0 travamentos</td><td>12.4%</td></tr>
+                  <tr><td>4G Estável (5 Mbps)</td><td>720p @ 2200 kbps</td><td>2.120 ms</td><td>0 travamentos</td><td>14.1%</td></tr>
+                  <tr><td>3G Restrito (1.5 Mbps)</td><td>360p @ 800 kbps</td><td>2.680 ms</td><td>1 travamento (0.8s)</td><td>15.8%</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-simple"></i> Gráfico Resultante: Latência de Entrega vs. Perfil de Conexão</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Bars -->
+                <rect x="70" y="55" width="45" height="65" fill="#06b6d4" rx="4"/>
+                <rect x="160" y="46" width="45" height="74" fill="#3b82f6" rx="4"/>
+                <rect x="250" y="28" width="45" height="92" fill="#f59e0b" rx="4"/>
+                <!-- Labels -->
+                <text x="92" y="47" fill="#06b6d4" font-size="10" font-weight="700" text-anchor="middle">1.85s</text>
+                <text x="182" y="38" fill="#3b82f6" font-size="10" font-weight="700" text-anchor="middle">2.12s</text>
+                <text x="272" y="20" fill="#f59e0b" font-size="10" font-weight="700" text-anchor="middle">2.68s</text>
+                <text x="92" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Sem Limite</text>
+                <text x="182" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">4G (5 Mbps)</text>
+                <text x="272" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">3G (1.5 Mbps)</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 3 -->
+        <div class="project-exp-card" data-exp-cat="usabilidade">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #03</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">Curso Popular de Informática para o Trabalhador</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Pietro, Artur, Lucas Sehn • <strong>Extensão &amp; Inclusão Digital</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(168, 85, 247, 0.4); color: var(--accent-purple);"><i class="fa-solid fa-graduation-cap"></i> Extensão &amp; Educação</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-purple); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"Uma oficina prática de 4 encontros baseada em tarefas da vida real aumenta significativamente a autonomia digital de trabalhadores na criação de documentos e envio de e-mails profissionais?"</em><br>
+            <strong>Hipótese:</strong> A taxa de acertos na realização independente de 5 tarefas básicas de informática salta de menos de 35% no diagnóstico inicial para mais de 80% na avaliação final.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Momento da aplicação (Pré-teste na Aula 1 vs. Pós-teste na Aula 4).</li>
+                <li><strong>Dependente:</strong> Pontuação no checklist prático de 5 tarefas (0 a 100%) e Escore de Autoeficácia Percebida.</li>
+                <li><strong>Controle:</strong> Mesmo roteiro de avaliação (criar pasta, redigir ofício no Google Docs, anexar PDF em e-mail).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Aplicar um teste prático de 15 minutos na primeira aula com 10 participantes da comunidade. Repetir exatamente o mesmo teste prático ao final do curso. Registrar se cada tarefa foi concluída de forma: Autônoma (2 pts), Com Ajuda (1 pt) ou Incompleta (0 pt).
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Tarefa Prática</th><th>Acertos Pré-Oficina</th><th>Acertos Pós-Oficina</th><th>Ganho Relativo</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1. Criar e nomear pastas no Drive</td><td>4 / 10 (40%)</td><td>10 / 10 (100%)</td><td>+60%</td></tr>
+                  <tr><td>2. Formatar texto (negrito/alinhamento)</td><td>5 / 10 (50%)</td><td>9 / 10 (90%)</td><td>+40%</td></tr>
+                  <tr><td>3. Exportar documento em PDF</td><td>2 / 10 (20%)</td><td>8 / 10 (80%)</td><td>+60%</td></tr>
+                  <tr><td>4. Anexar arquivo e enviar e-mail</td><td>3 / 10 (30%)</td><td>9 / 10 (90%)</td><td>+60%</td></tr>
+                  <tr style="font-weight: 700; color: var(--accent-purple);"><td>Média Global de Autonomia</td><td>35.0%</td><td>90.0%</td><td>+55.0 pontos</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-column"></i> Gráfico Resultante: Comparativo Pré vs. Pós Oficina</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Paired Bars -->
+                <!-- T1 -->
+                <rect x="65" y="80" width="18" height="40" fill="#64748b" rx="2"/>
+                <rect x="85" y="20" width="18" height="100" fill="#a855f7" rx="2"/>
+                <!-- T2 -->
+                <rect x="135" y="70" width="18" height="50" fill="#64748b" rx="2"/>
+                <rect x="155" y="30" width="18" height="90" fill="#a855f7" rx="2"/>
+                <!-- T3 -->
+                <rect x="205" y="100" width="18" height="20" fill="#64748b" rx="2"/>
+                <rect x="225" y="40" width="18" height="80" fill="#a855f7" rx="2"/>
+                <!-- T4 -->
+                <rect x="275" y="90" width="18" height="30" fill="#64748b" rx="2"/>
+                <rect x="295" y="30" width="18" height="90" fill="#a855f7" rx="2"/>
+                <!-- X labels -->
+                <text x="84" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Pastas</text>
+                <text x="154" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Formatação</text>
+                <text x="224" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">PDF</text>
+                <text x="294" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Anexo</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 4 -->
+        <div class="project-exp-card" data-exp-cat="sensores-ia">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #04</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">RasPorta: Fechadura Automática Biométrica</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Petrus, Martin, Felipe • <strong>Raspberry Pi, Python, Flask, SQLite</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;"><i class="fa-solid fa-fingerprint"></i> Biometria &amp; Hardware</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid #ef4444; padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O leitor biométrico integrado ao Raspberry Pi aciona o relé mecânico em menos de 1,5 segundo e com taxa de falsa rejeição (FRR) abaixo de 5% em uso contínuo?"</em><br>
+            <strong>Hipótese:</strong> O algoritmo de correspondência biométrica mantém resposta instantânea (&lt; 1.200 ms) sem travar o loop de eventos do Flask.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Tipo de dedo (dedo cadastrado em posição correta, dedo cadastrado rotacionado a 45°, dedo não cadastrado).</li>
+                <li><strong>Dependente:</strong> Tempo de processamento biométrico (ms) e Taxa de Falsa Rejeição (FRR %).</li>
+                <li><strong>Controle:</strong> Mesmo sensor óptico, mesma fonte de alimentação de 5V 3A no Raspberry Pi.</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Cadastrar 3 usuários (com polegar e indicador). Realizar <strong>50 tentativas consecutivas</strong> de desbloqueio com dedos válidos e <strong>20 tentativas</strong> com dedos não cadastrados. O script Python grava no SQLite o timestamp exato do toque e da resposta do relé.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Cenário de Teste</th><th>Tentativas</th><th>Sucessos</th><th>Tempo Médio</th><th>Taxa de Falha</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Dedo Cadastrado (Posição Normal)</td><td>30</td><td>29</td><td>890 ± 110 ms</td><td>3.3% (FRR)</td></tr>
+                  <tr><td>Dedo Cadastrado (Inclinado 45°)</td><td>20</td><td>18</td><td>1.140 ± 195 ms</td><td>10.0% (FRR)</td></tr>
+                  <tr><td>Dedo Não Cadastrado (Intruso)</td><td>20</td><td>0 (bloqueado)</td><td>780 ± 85 ms</td><td>0.0% (FAR - Perfeito)</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #f87171; margin-bottom: 0.5rem;"><i class="fa-solid fa-stopwatch"></i> Gráfico Resultante: Distribuição do Tempo de Autenticação (ms)</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Threshold line (1.500 ms) -->
+                <line x1="40" y1="45" x2="320" y2="45" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,4"/>
+                <text x="315" y="40" fill="#ef4444" font-size="8" text-anchor="end">Meta Máxima: 1.500 ms</text>
+                <!-- Bars -->
+                <rect x="80" y="70" width="50" height="50" fill="#22c55e" rx="4"/>
+                <rect x="180" y="58" width="50" height="62" fill="#f59e0b" rx="4"/>
+                <text x="105" y="62" fill="#22c55e" font-size="10" font-weight="700" text-anchor="middle">890 ms</text>
+                <text x="205" y="50" fill="#f59e0b" font-size="10" font-weight="700" text-anchor="middle">1.140 ms</text>
+                <text x="105" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Normal</text>
+                <text x="205" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Inclinado 45°</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 5 -->
+        <div class="project-exp-card" data-exp-cat="sistemas">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #05</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">D20Hub: Gerenciador de Fichas de RPG em Tempo Real</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Nicolas, Eduardo, Henrique Gama • <strong>WebSockets, Django/Flask, SQLite</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(6, 182, 212, 0.4); color: var(--accent-cyan);"><i class="fa-solid fa-bolt"></i> WebSockets &amp; Concorrência</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-cyan); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O mecanismo de broadcast via WebSockets consegue sincronizar as rolagens de dados e alterações de status com latência inferior a 100 ms em salas com até 16 jogadores simultâneos?"</em><br>
+            <strong>Hipótese:</strong> A sincronização full-duplex de eventos JSON leves mantém latência praticamente constante (&lt; 60 ms) sem sobrecarregar a memória do servidor.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Quantidade de clientes conectados simultaneamente na mesma sala (1, 4, 8, 16 clientes).</li>
+                <li><strong>Dependente:</strong> Latência de broadcast (ms do envio pelo mestre até o recebimento por todos os jogadores) e Uso de RAM do servidor (MB).</li>
+                <li><strong>Controle:</strong> Tamanho fixo do payload JSON (rolagem de d20 com 128 bytes).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Criar um script em Python que abre 16 conexões WebSockets simultâneas na mesma sala. Disparar 50 mensagens de teste por cenário e registrar o tempo de retorno de cada mensagem no cliente receptor.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Clientes na Sala</th><th>Latência Média</th><th>Percentil 95 (P95)</th><th>Uso de Memória RAM</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1 Jogador</td><td>24.2 ± 3.1 ms</td><td>29.0 ms</td><td>48.2 MB</td></tr>
+                  <tr><td>4 Jogadores</td><td>31.8 ± 4.5 ms</td><td>38.5 ms</td><td>52.1 MB</td></tr>
+                  <tr><td>8 Jogadores</td><td>46.5 ± 7.2 ms</td><td>58.0 ms</td><td>59.4 MB</td></tr>
+                  <tr><td>16 Jogadores</td><td>78.1 ± 12.0 ms</td><td>96.2 ms</td><td>74.8 MB</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-line"></i> Gráfico Resultante: Escalabilidade de Latência (ms vs Conexões)</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <polyline points="70,105 130,98 200,82 280,50" fill="none" stroke="#06b6d4" stroke-width="3"/>
+                <circle cx="70" cy="105" r="4" fill="#38bdf8"/>
+                <circle cx="130" cy="98" r="4" fill="#38bdf8"/>
+                <circle cx="200" cy="82" r="4" fill="#38bdf8"/>
+                <circle cx="280" cy="50" r="4" fill="#38bdf8"/>
+                <text x="70" y="95" fill="#38bdf8" font-size="9" text-anchor="middle">24ms</text>
+                <text x="130" y="88" fill="#38bdf8" font-size="9" text-anchor="middle">32ms</text>
+                <text x="200" y="72" fill="#38bdf8" font-size="9" text-anchor="middle">47ms</text>
+                <text x="280" y="40" fill="#38bdf8" font-size="9" text-anchor="middle">78ms</text>
+                <text x="70" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">1 user</text>
+                <text x="130" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">4 users</text>
+                <text x="200" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">8 users</text>
+                <text x="280" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">16 users</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 6 -->
+        <div class="project-exp-card" data-exp-cat="sistemas">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #06</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">Acervo MAGE 3D: Digitalização do Museu de Arqueologia</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Raul, Pedro H, Augusto, Maria Cecília • <strong>Polycam, Blender, WebGL</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(6, 182, 212, 0.4); color: var(--accent-cyan);"><i class="fa-solid fa-cube"></i> Computação Gráfica &amp; Web</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-cyan); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"Qual a taxa de compressão e simplificação poligonal ideal (decimate) para reduzir o peso dos modelos 3D do acervo mantendo taxa estável de 60 FPS na web?"</em><br>
+            <strong>Hipótese:</strong> Reduzir a malha de 1,2 milhão para 120 mil triângulos diminui o arquivo em 85% sem perda perceptível de detalhes arqueológicos.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Nível de simplificação poligonal (Alta resolução 100%, Média 30%, Otimizada Web 10%).</li>
+                <li><strong>Dependente:</strong> Tamanho do arquivo GLB (MB), Tempo de carregamento na página (segundos) e FPS na rotação do objeto.</li>
+                <li><strong>Controle:</strong> Mesmo artefato arqueológico (ex.: peça de cerâmica sambaqui).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Exportar o mesmo artefato em 3 arquivos (.glb). Carregar cada versão no navegador e medir via DevTools o tempo de download sob rede simulada de 10 Mbps e o contador de FPS (<code>requestAnimationFrame</code>).
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Versão do Modelo</th><th>Vértices / Faces</th><th>Tamanho (.glb)</th><th>Tempo de Carga</th><th>FPS Médio</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Bruta (Polycam)</td><td>1.250.000</td><td>68.4 MB</td><td>14.2 s</td><td>28 FPS (Gargalo)</td></tr>
+                  <tr><td>Intermediária</td><td>350.000</td><td>18.1 MB</td><td>3.8 s</td><td>52 FPS</td></tr>
+                  <tr><td>Otimizada (Recomendada)</td><td>95.000</td><td>4.2 MB</td><td>0.9 s</td><td>60 FPS (Fluido)</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-column"></i> Gráfico Resultante: Tamanho do Arquivo (MB) vs FPS</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <rect x="70" y="30" width="45" height="90" fill="#ef4444" rx="4"/>
+                <rect x="160" y="80" width="45" height="40" fill="#f59e0b" rx="4"/>
+                <rect x="250" y="105" width="45" height="15" fill="#22c55e" rx="4"/>
+                <text x="92" y="24" fill="#ef4444" font-size="9" font-weight="700" text-anchor="middle">68.4 MB (28 FPS)</text>
+                <text x="182" y="74" fill="#f59e0b" font-size="9" font-weight="700" text-anchor="middle">18.1 MB (52 FPS)</text>
+                <text x="272" y="99" fill="#22c55e" font-size="9" font-weight="700" text-anchor="middle">4.2 MB (60 FPS)</text>
+                <text x="92" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Bruto</text>
+                <text x="182" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Médio</text>
+                <text x="272" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Otimizado</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 7 -->
+        <div class="project-exp-card" data-exp-cat="usabilidade">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #07</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">Música, Jogo e Atenção: Jogo Educacional em Pygame</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Luisa Narvaz • <strong>Python, Pygame, Raspberry Pi</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(34, 197, 94, 0.4); color: var(--ifsc-green-light);"><i class="fa-solid fa-brain"></i> Cognição &amp; Interação</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--ifsc-green); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O feedback auditivo ritmado estimula uma redução no tempo de reação e na taxa de impulsividade (toques antecipados) ao longo das fases do jogo?"</em><br>
+            <strong>Hipótese:</strong> O tempo de reação dos voluntários diminui em média 120 ms entre a Fase 1 e a Fase 3 acompanhado por aumento de acurácia.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Nível de complexidade rítmica (Fase 1 Lenta, Fase 2 Média, Fase 3 Rápida).</li>
+                <li><strong>Dependente:</strong> Tempo de Reação em milissegundos (medido com <code>pygame.time.get_ticks()</code>) e Quantidade de erros/antecipações.</li>
+                <li><strong>Controle:</strong> Mesmo dispositivo de entrada (mesmo teclado ou botão físico do Raspberry).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Testar com 8 voluntários do câmpus. O jogo gera um arquivo <code>resultados.csv</code> ao final da sessão registrando o tempo exato de cada resposta a cada estímulo sonoro/visual.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Fase do Jogo</th><th>Estímulos Apresentados</th><th>Tempo Médio Reação</th><th>Taxa de Acertos</th><th>Toques Antecipados</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Fase 1 (Ritmo Lento)</td><td>20 notas</td><td>485 ± 42 ms</td><td>82.5%</td><td>4 erros</td></tr>
+                  <tr><td>Fase 2 (Ritmo Moderado)</td><td>20 notas</td><td>410 ± 35 ms</td><td>88.0%</td><td>2 erros</td></tr>
+                  <tr><td>Fase 3 (Ritmo Rápido)</td><td>20 notas</td><td>345 ± 28 ms</td><td>94.5%</td><td>1 erro</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--ifsc-green-light); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-line"></i> Gráfico Resultante: Evolução do Tempo de Reação (ms)</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <polyline points="80,45 180,68 280,88" fill="none" stroke="#22c55e" stroke-width="3"/>
+                <circle cx="80" cy="45" r="4" fill="#4ade80"/>
+                <circle cx="180" cy="68" r="4" fill="#4ade80"/>
+                <circle cx="280" cy="88" r="4" fill="#4ade80"/>
+                <text x="80" y="35" fill="#4ade80" font-size="9" font-weight="700" text-anchor="middle">485 ms</text>
+                <text x="180" y="58" fill="#4ade80" font-size="9" font-weight="700" text-anchor="middle">410 ms</text>
+                <text x="280" y="78" fill="#4ade80" font-size="9" font-weight="700" text-anchor="middle">345 ms (-28%)</text>
+                <text x="80" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Fase 1</text>
+                <text x="180" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Fase 2</text>
+                <text x="280" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Fase 3</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 8 -->
+        <div class="project-exp-card" data-exp-cat="sensores-ia">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #08</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">Estação Meteorológica de Baixo Custo no Câmpus</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Beatriz, Laura, Oriana, Sophie, Victória • <strong>Raspberry Pi, BME280, Python, SQLite</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(245, 158, 11, 0.4); color: var(--accent-amber);"><i class="fa-solid fa-cloud-sun-rain"></i> IoT &amp; Calibração</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-amber); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O sensor BME280 de baixo custo conectado via I2C ao Raspberry Pi apresenta acurácia compatível com uma estação meteorológica oficial de referência durante 24 horas ininterruptas de amostragem?"</em><br>
+            <strong>Hipótese:</strong> O Erro Médio Absoluto (MAE) é inferior a ±0,7°C em temperatura e ±3,5% em umidade relativa, validando o projeto para fins pedagógicos.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Horário do dia (amostragens minuto a minuto durante 24h).</li>
+                <li><strong>Dependente:</strong> Temperatura (°C), Umidade Relativa (%), Pressão Atmosférica (hPa) e Erro Médio Absoluto (MAE).</li>
+                <li><strong>Controle:</strong> Local físico no câmpus com abrigo meteorológico ventilado.</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Programar um serviço Python (systemd) para ler o sensor a cada 60 segundos por 24 horas (1.440 leituras). Exportar a série temporal da estação oficial do INMET ou do câmpus e calcular o desvio par a par.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Grandeza Medida</th><th>Leituras Totais</th><th>Média Sensor BME280</th><th>Média Estação Referência</th><th>Erro Absoluto (MAE)</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Temperatura (°C)</td><td>1.440</td><td>21.85 ± 3.4 °C</td><td>21.40 ± 3.2 °C</td><td>0.45 °C (Excelente)</td></tr>
+                  <tr><td>Umidade Relativa (%)</td><td>1.440</td><td>76.2 ± 8.1%</td><td>74.1 ± 7.8%</td><td>2.1% (Excelente)</td></tr>
+                  <tr><td>Pressão (hPa)</td><td>1.440</td><td>1014.2 ± 2.1 hPa</td><td>1013.8 ± 2.0 hPa</td><td>0.4 hPa</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-line"></i> Gráfico Resultante: Sobreposição Temporal 24h (BME280 vs Referência)</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Line 1: Reference (blue) -->
+                <path d="M 40,80 Q 110,40 180,60 T 320,90" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                <!-- Line 2: BME280 (amber) -->
+                <path d="M 40,78 Q 110,38 180,59 T 320,87" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3"/>
+                <!-- Legend -->
+                <line x1="180" y1="20" x2="210" y2="20" stroke="#3b82f6" stroke-width="2"/>
+                <text x="215" y="23" fill="#3b82f6" font-size="8">Estação Oficial</text>
+                <line x1="265" y1="20" x2="295" y2="20" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3"/>
+                <text x="300" y="23" fill="#f59e0b" font-size="8">BME280 (PI)</text>
+                <text x="40" y="136" fill="#94a3b8" font-size="8">00:00</text>
+                <text x="110" y="136" fill="#94a3b8" font-size="8">06:00</text>
+                <text x="180" y="136" fill="#94a3b8" font-size="8">12:00</text>
+                <text x="250" y="136" fill="#94a3b8" font-size="8">18:00</text>
+                <text x="320" y="136" fill="#94a3b8" font-size="8">24:00</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 9 -->
+        <div class="project-exp-card" data-exp-cat="usabilidade">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #09</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">Scout de Vôlei: Aquisição e Análise Estatística de Partidas</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Nathan, João Contreira, Pedro E • <strong>TypeScript, Python, Web App</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(34, 197, 94, 0.4); color: var(--ifsc-green-light);"><i class="fa-solid fa-volleyball"></i> Esporte &amp; Usabilidade</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--ifsc-green); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"O aplicativo Scout reduz o tempo de registro de ralis e a taxa de omissão de lances quando comparado à prancheta física de papel durante uma partida de voleibol?"</em><br>
+            <strong>Hipótese:</strong> O app reduz em mais de 60% o tempo de consolidação do relatório de jogo e diminui pela metade os erros de registro.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Método de registro (App Scout vs Prancheta de Papel da Federação).</li>
+                <li><strong>Dependente:</strong> Tempo médio para registrar um ponto/rali (segundos), taxa de omissões (%) e tempo para gerar o relatório final do set (minutos).</li>
+                <li><strong>Controle:</strong> Mesma gravação de vídeo de 1 set oficial de voleibol (25 pontos).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Dois anotadores assistem ao mesmo vídeo do set de vôlei: um usa o app Scout no tablet e o outro usa a planilha de papel. Cronometrar o tempo de consolidação e auditar as omissões contra o vídeo gravado.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Métrica Avaliada</th><th>Prancheta de Papel</th><th>Aplicativo Scout Digital</th><th>Ganho Técnico</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Tempo de Registro por Rali</td><td>4.8 ± 1.2 s</td><td>1.9 ± 0.4 s</td><td>-60.4% de tempo</td></tr>
+                  <tr><td>Lances Omitidos no Set</td><td>5 omissões (11%)</td><td>1 omissão (2.2%)</td><td>-80% de erros</td></tr>
+                  <tr><td>Tempo p/ Gerar Relatório do Set</td><td>18 min (cálculo manual)</td><td>Instantâneo (0.2 s)</td><td>Praticamente imediato</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--ifsc-green-light); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-bar"></i> Gráfico Resultante: Tempo de Registro e Geração de Relatório</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <rect x="80" y="40" width="45" height="80" fill="#64748b" rx="4"/>
+                <rect x="190" y="90" width="45" height="30" fill="#22c55e" rx="4"/>
+                <text x="102" y="32" fill="#94a3b8" font-size="9" font-weight="700" text-anchor="middle">4.8s (Papel)</text>
+                <text x="212" y="82" fill="#22c55e" font-size="9" font-weight="700" text-anchor="middle">1.9s (App)</text>
+                <text x="102" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Prancheta Papel</text>
+                <text x="212" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">App Scout PI</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJETO 10 -->
+        <div class="project-exp-card" data-exp-cat="sensores-ia">
+          <div class="project-exp-header">
+            <div>
+              <span class="proj-id-badge">PROJETO #10</span>
+              <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: var(--text-main); margin-top: 0.2rem;">ChatBot de Atendimento Virtual da Secretaria Acadêmica</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-users"></i> Cauã, Enzo, Ariane • <strong>LM Studio, PyTorch, Python, LLM Local</strong></span>
+            </div>
+            <span class="metric-badge" style="border-color: rgba(245, 158, 11, 0.4); color: var(--accent-amber);"><i class="fa-solid fa-robot"></i> Inteligência Artificial &amp; NLP</span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-amber); padding: 0.75rem; border-radius: 4px; font-size: 0.82rem; margin-bottom: 0.75rem;">
+            <strong>Pergunta de Pesquisa:</strong> <em>"Um modelo LLM local (quantizado em 4 bits via LM Studio) alcança acurácia acima de 80% em respostas da secretaria acadêmica com velocidade superior a 15 tokens/segundo?"</em><br>
+            <strong>Hipótese:</strong> O uso de RAG (busca documental do regulamento acadêmico do IFSC) eleva a precisão do chatbot de 55% para mais de 85% sem alucinações críticas de datas e prazos.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; font-size: 0.8rem;">
+            <div>
+              <strong>Variáveis &amp; Métricas:</strong>
+              <ul style="color: var(--text-muted); margin: 0.3rem 0 0 1.2rem;">
+                <li><strong>Independente:</strong> Arquitetura do ChatBot (LLM Puro sem documentos vs LLM com RAG / Contexto do IFSC).</li>
+                <li><strong>Dependente:</strong> Acurácia das respostas (avaliada contra gabarito da secretaria), Latência do primeiro token (ms) e Throughput (tokens/s).</li>
+                <li><strong>Controle:</strong> Banco de 30 perguntas idênticas (ex.: jubilamento, atestado médico, aproveitamento de estudos).</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Protocolo de Coleta:</strong>
+              <p style="color: var(--text-muted); margin: 0.3rem 0 0 0;">
+                Elaborar um benchmark com 30 perguntas reais. Executar o script Python de automação que envia as perguntas para a API do LM Studio. Medir o tempo de resposta e submeter as saídas para conferência cega contra o gabarito.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Exemplo de Dados Brutos Coletados:</span>
+              <table class="matrix-sample-table" style="margin-top: 0.4rem; font-size: 0.75rem;">
+                <thead>
+                  <tr><th>Configuração do Modelo</th><th>Acurácia Gabarito</th><th>Tempo 1º Token</th><th>Geração (tokens/s)</th><th>Alucinações Críticas</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>LLM Base (Sem RAG)</td><td>16 / 30 (53.3%)</td><td>1.120 ms</td><td>18.4 tok/s</td><td>8 alucinações (prazos errados)</td></tr>
+                  <tr><td>LLM + RAG Regulamento IFSC</td><td>26 / 30 (86.7%)</td><td>1.450 ms</td><td>16.8 tok/s</td><td>1 alucinação leve</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-box">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-column"></i> Gráfico Resultante: Acurácia Comparativa (% de Acertos)</span>
+              <svg width="340" height="150" viewBox="0 0 340 150">
+                <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <rect x="80" y="65" width="45" height="55" fill="#ef4444" rx="4"/>
+                <rect x="190" y="32" width="45" height="88" fill="#22c55e" rx="4"/>
+                <text x="102" y="55" fill="#ef4444" font-size="10" font-weight="700" text-anchor="middle">53.3%</text>
+                <text x="212" y="24" fill="#22c55e" font-size="10" font-weight="700" text-anchor="middle">86.7% (+33%)</text>
+                <text x="102" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Base (Sem RAG)</text>
+                <text x="212" y="136" fill="#94a3b8" font-size="9" text-anchor="middle">Com RAG (IFSC)</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MÓDULO 5: TEMPLATE LATEX PARA O OVERLEAF & CHECKLIST -->
+      <div class="guide-box" id="exp-modulo-5">
+        <h3><i class="fa-solid fa-file-lines text-purple"></i> Módulo 5: Ficha de Experimento &amp; Template LaTeX para o Overleaf</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+          Copie o trecho abaixo diretamente para o seu arquivo <code>main.tex</code> no Overleaf para redigir a seção de <strong>Metodologia e Resultados</strong>:
+        </p>
+
+        <div class="code-box-header">
+          <span><i class="fa-solid fa-file-code text-cyan"></i> snippet_artigo_experimento.tex (Template para Overleaf / SBC / SEPEI)</span>
+          <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('latexSnippetExp')"><i class="fa-solid fa-copy"></i> Copiar LaTeX</button>
+        </div>
+        <pre class="code-box-content" id="latexSnippetExp"><code>\section{Metodologia Experimental}
+Para avaliar empiricamente a eficácia da solução proposta, realizou-se um experimento com foco em [usabilidade / desempenho / precisão]. 
+
+A hipótese investigada estabelece que [descreva a hipótese com o número esperado]. Para tanto, definiram-se as seguintes variáveis:
+\begin{itemize}
+    \item \textbf{Variável Independente:} [ex.: 1, 4, 8 e 16 conexões simultâneas];
+    \item \textbf{Variável Dependente:} [ex.: latência em milissegundos e uso de CPU];
+    \item \textbf{Controle:} [ex.: hardware fixo com processador X e rede Y].
+\end{itemize}
+
+O protocolo de ensaios consistiu em [descrever o passo a passo da coleta, número de repetições ou voluntários].
+
+\section{Resultados e Discussões}
+Os dados coletados ao longo dos ensaios foram organizados na Tabela~\ref{tab:resultados_exp}.
+
+\begin{table}[htbp]
+\centering
+\caption{Resultados obtidos nos ensaios experimentais.}
+\label{tab:resultados_exp}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Cenário de Teste} & \textbf{Média} & \textbf{Desvio Padrão} & \textbf{Taxa de Sucesso} \\ \hline
+Cenário A & 363,2 ms & $\pm$ 32,1 ms & 95\% \\ \hline
+Cenário B & 211,5 ms & $\pm$ 18,4 ms & 98\% \\ \hline
+Cenário C & 131,0 ms & $\pm$ 14,2 ms & 100\% \\ \hline
+\end{tabular}
+\end{table}
+
+Conforme ilustrado na Figura~\ref{fig:grafico_exp}, observa-se uma redução consistente de [X\%] na métrica analisada...</code></pre>
+
+        <div style="background: var(--chip-bg); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; margin-top: 1.2rem;">
+          <h4 style="font-size: 0.92rem; color: var(--text-main); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fa-solid fa-circle-check text-green"></i> Checklist de Autoavaliação antes de atualizar a Planilha Oficial:
+          </h4>
+          <ul style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-left: 1.2rem;">
+            <li>[ ] A minha descrição de experimento possui uma <strong>métrica numérica</strong> (ms, %, FPS, SUS, KB, etc.)?</li>
+            <li>[ ] O teste foi executado com <strong>múltiplas repetições</strong> (ou múltiplos voluntários) e possui cálculo de média?</li>
+            <li>[ ] Os dados brutos foram salvos em uma planilha ou arquivo <code>.csv</code> dentro do repositório no GitHub?</li>
+            <li>[ ] O gráfico resultante possui <strong>título, eixos rotulados com unidade de medida e legenda clara</strong>?</li>
+            <li>[ ] O texto do artigo explica o que o gráfico significa em vez de apenas inseri-lo solto na página?</li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
   <!-- Modal Project Deep View -->
@@ -3846,6 +5178,38 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
 
     // Run on load
     window.onload = initDashboard;
+  
+    // Experiments Category Filter Function
+    function filterExpCards(cat, btn) {
+      if (btn && btn.parentElement) {
+        btn.parentElement.querySelectorAll('.exp-subnav-btn').forEach(b => {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+      }
+
+      const cards = document.querySelectorAll('.project-exp-card');
+      cards.forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-exp-cat') === cat) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Code and LaTeX Copy Helper
+    function copyCode(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const text = el.innerText || el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copiado com sucesso para a área de transferência!');
+      }).catch(err => {
+        console.error('Erro ao copiar: ', err);
+      });
+    }
+
   </script>
 </body>
 </html>
