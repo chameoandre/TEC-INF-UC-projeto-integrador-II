@@ -528,29 +528,253 @@
       color: #042f14;
     }
 
-    /* Projects Grid */
+    /* Projects Grid & Expandable Cards */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 1.4rem;
+      align-items: start;
     }
     .project-card {
       background: var(--bg-card);
       backdrop-filter: blur(14px);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 1.4rem;
+      padding: 1.3rem;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      transition: var(--transition);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.2s ease;
       box-shadow: var(--shadow-glass);
+      position: relative;
     }
     .project-card:hover {
-      border-color: var(--ifsc-green-light);
+      border-color: var(--border-glow);
       background: var(--bg-card-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+    .project-card.expanded {
+      border-color: var(--ifsc-green);
+      box-shadow: 0 12px 35px rgba(22, 163, 74, 0.16);
+      background: var(--bg-card-hover);
+    }
+
+    .project-card-header {
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+    }
+    .project-card-header:hover .proj-title {
+      color: var(--ifsc-green-light);
+    }
+
+    .card-toggle-indicator {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .project-card-header:hover .card-toggle-indicator {
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+      background: rgba(34, 197, 94, 0.12);
+    }
+
+    .card-quick-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.6rem 0 0.85rem 0;
+    }
+    .quick-meta-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .quick-meta-pill.green {
+      background: rgba(34, 197, 94, 0.14);
+      color: var(--ifsc-green-light);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .quick-meta-pill.amber {
+      background: rgba(245, 158, 11, 0.14);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .quick-meta-pill.cyan {
+      background: rgba(6, 182, 212, 0.14);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .expand-trigger-btn {
+      width: 100%;
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      padding: 0.45rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      margin-top: 0.75rem;
+      transition: var(--transition);
+    }
+    .expand-trigger-btn:hover {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+    }
+    .project-card.expanded .expand-trigger-btn {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+    }
+    .expand-icon {
+      transition: transform 0.3s ease;
+      font-size: 0.75rem;
+    }
+    .project-card.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Collapsible Body Content */
+    .project-collapsible-content {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      animation: fadeInCardContent 0.28s ease;
+    }
+    .project-card.expanded .project-collapsible-content {
+      display: block;
+    }
+    @keyframes fadeInCardContent {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-obj-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-left: 3px solid var(--accent-cyan);
+      padding: 0.6rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 0.85rem;
+    }
+    .card-obj-box strong {
+      color: var(--text-main);
+    }
+
+    .card-extra-section {
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.8rem;
+    }
+    .card-extra-title {
+      font-weight: 700;
+      color: var(--text-main);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .card-extra-text {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .card-expanded-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .btn-collapse-card {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: var(--transition);
+    }
+    .btn-collapse-card:hover {
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    /* Cards view toggle controls */
+    .cards-view-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin: 1rem 0 1.2rem 0;
+      padding: 0.65rem 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      flex-wrap: wrap;
+    }
+    .cards-view-info {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cards-view-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-toggle-all {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+    .btn-toggle-all:hover {
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+      background: rgba(34, 197, 94, 0.12);
     }
 
     .project-top {
@@ -2268,6 +2492,21 @@
           <button class="pill" onclick="setFilter('exps-pendentes', this)"><i class="fa-solid fa-hourglass-half text-amber"></i> Experimentos a Definir</button>
           <button class="pill" onclick="setFilter('overleaf-ok', this)"><i class="fa-solid fa-check text-green"></i> Overleaf OK</button>
           <button class="pill" onclick="setFilter('overleaf-privado', this)"><i class="fa-solid fa-lock text-amber"></i> Link Privado (403)</button>
+        </div>
+      </div>
+
+      <!-- Cards View Toggle Controls -->
+      <div class="cards-view-controls">
+        <div class="cards-view-info">
+          <i class="fa-solid fa-table-cells-large" style="color: var(--ifsc-green-light);"></i> <span>Cards expansíveis: clique em qualquer card ou no botão para abrir os experimentos e detalhes</span>
+        </div>
+        <div class="cards-view-buttons">
+          <button class="btn-toggle-all" onclick="expandAllCards(true)" title="Expandir o conteúdo de todos os cards da lista">
+            <i class="fa-solid fa-angles-down"></i> Expandir Todos
+          </button>
+          <button class="btn-toggle-all" onclick="expandAllCards(false)" title="Recolher todos os cards para visão compacta">
+            <i class="fa-solid fa-angles-up"></i> Recolher Todos
+          </button>
         </div>
       </div>
 
@@ -5197,15 +5436,65 @@ Conforme ilustrado na Figura~\ref{fig:grafico_exp}, observa-se uma redução con
 
         const card = document.createElement('div');
         card.className = 'project-card';
+        card.id = `project-card-${p.id}`;
         card.innerHTML = `
-          <div>
+          <!-- Cabeçalho Clicável do Card -->
+          <div class="project-card-header" onclick="toggleProjectCard(${p.id})">
             <div class="project-top">
-              <span class="proj-id-badge">PI #${p.id.toString().padStart(2, '0')}</span>
-              ${badgeHtml}
+              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                <span class="proj-id-badge">PI #${p.id.toString().padStart(2, '0')}</span>
+                ${badgeHtml}
+                <span class="badge-count" style="font-size: 0.72rem; font-weight: 700; background: ${completedCount === 4 ? 'rgba(34, 197, 94, 0.18)' : 'rgba(245, 158, 11, 0.18)'}; color: ${completedCount === 4 ? 'var(--ifsc-green-light)' : 'var(--accent-amber)'};">
+                  ${completedCount === 4 ? '<i class="fa-solid fa-circle-check"></i> 4/4 Exps' : `<i class="fa-solid fa-flask"></i> ${completedCount}/4 Exps`}
+                </span>
+              </div>
+              <div class="card-toggle-indicator" title="Clique para expandir/recolher">
+                <i class="fa-solid fa-chevron-down expand-icon"></i>
+              </div>
             </div>
 
             <h3 class="proj-title" style="margin-bottom: 0.25rem;">${p.title}</h3>
-            <div class="proj-team" style="margin-bottom: 0.85rem;"><i class="fa-solid fa-user-group"></i> ${p.team}</div>
+            <div class="proj-team" style="margin-bottom: 0.65rem;"><i class="fa-solid fa-user-group"></i> ${p.team}</div>
+
+            <!-- Mini resumo de status no modo compacto -->
+            <div class="card-quick-meta">
+              <span class="quick-meta-pill ${isRelPendente ? 'amber' : 'green'}">
+                <i class="fa-solid ${isRelPendente ? 'fa-triangle-exclamation' : 'fa-check'}"></i> Trab. Relacionados: ${isRelPendente ? 'Pendente' : 'OK'}
+              </span>
+              <span class="quick-meta-pill cyan">
+                <i class="fa-solid fa-microchip"></i> ${p.techs.slice(0, 2).join(', ')}${p.techs.length > 2 ? ' +' + (p.techs.length - 2) : ''}
+              </span>
+            </div>
+          </div>
+
+          <!-- Links de Acesso Rápido Externo (não disparam o toggle do card) -->
+          <div class="proj-links" style="margin-top: 0.2rem;">
+            <a href="${p.github}" target="_blank" class="link-btn ${!p.github ? 'disabled' : ''}" title="Repositório GitHub" onclick="event.stopPropagation();">
+              <i class="fa-brands fa-github"></i> Git
+            </a>
+            <a href="${p.overleaf}" target="_blank" class="link-btn ${!p.overleaf ? 'disabled' : ''}" title="Artigo Overleaf" onclick="event.stopPropagation();">
+              <i class="fa-solid fa-file-code"></i> Overleaf
+            </a>
+            <a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama Visual" onclick="event.stopPropagation();">
+              <i class="fa-solid fa-diagram-project"></i> Canva
+            </a>
+            <button onclick="openModal(${p.id}); event.stopPropagation();" class="link-btn" title="Ficha Completa em Janela Modal" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: var(--ifsc-green);">
+              <i class="fa-solid fa-eye"></i> Detalhes
+            </button>
+          </div>
+
+          <!-- Botão Gatilho de Expansão Visual -->
+          <button class="expand-trigger-btn" onclick="toggleProjectCard(${p.id}, event)">
+            <span>Ver Experimentos & Conteúdos</span>
+            <i class="fa-solid fa-chevron-down expand-icon"></i>
+          </button>
+
+          <!-- CONTEÚDO EXPANSÍVEL (REVELADO AO CLICAR) -->
+          <div class="project-collapsible-content">
+            <!-- Objetivo -->
+            <div class="card-obj-box">
+              <i class="fa-solid fa-bullseye text-cyan"></i> <strong>Objetivo:</strong> ${p.objective || 'Definição de escopo em andamento.'}
+            </div>
 
             <!-- Bloco Foco: Trabalhos Relacionados & 4 Experimentos -->
             <div class="card-focus-block">
@@ -5223,26 +5512,69 @@ Conforme ilustrado na Figura~\ref{fig:grafico_exp}, observa-se uma redução con
                 </ul>
               </div>
             </div>
-          </div>
 
-          <div style="margin-top: 1rem;">
-            <div class="proj-links">
-              <a href="${p.github}" target="_blank" class="link-btn ${!p.github ? 'disabled' : ''}" title="Repositório GitHub">
-                <i class="fa-brands fa-github"></i> Git
-              </a>
-              <a href="${p.overleaf}" target="_blank" class="link-btn ${!p.overleaf ? 'disabled' : ''}" title="Artigo Overleaf">
-                <i class="fa-solid fa-file-code"></i> Overleaf
-              </a>
-              <a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama Visual">
-                <i class="fa-solid fa-diagram-project"></i> Canva
-              </a>
-              <button onclick="openModal(${p.id})" class="link-btn" title="Ficha Completa" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: var(--ifsc-green);">
-                <i class="fa-solid fa-eye"></i> Detalhes
+            <!-- Tecnologias Completas -->
+            <div class="card-extra-section">
+              <div class="card-extra-title"><i class="fa-solid fa-code text-cyan"></i> Stack Tecnológica</div>
+              <div class="proj-techs" style="margin-bottom: 0;">
+                ${p.techs.map(t => `<span class="tech-chip">${t}</span>`).join('')}
+              </div>
+            </div>
+
+            ${p.advances ? `
+              <div class="card-extra-section">
+                <div class="card-extra-title"><i class="fa-solid fa-forward text-green"></i> Avanços Recentes</div>
+                <div class="card-extra-text">${p.advances}</div>
+              </div>
+            ` : ''}
+
+            ${p.nextSteps ? `
+              <div class="card-extra-section">
+                <div class="card-extra-title"><i class="fa-solid fa-list-check text-amber"></i> Próximos Passos</div>
+                <div class="card-extra-text">${p.nextSteps}</div>
+              </div>
+            ` : ''}
+
+            <!-- Rodapé da Expansão -->
+            <div class="card-expanded-footer">
+              <button class="btn-collapse-card" onclick="toggleProjectCard(${p.id}, event)">
+                <i class="fa-solid fa-chevron-up"></i> Recolher Card
+              </button>
+              <button onclick="openModal(${p.id}); event.stopPropagation();" class="link-btn" style="padding: 0.4rem 0.85rem; flex-direction: row; gap: 0.4rem; background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: var(--ifsc-green);">
+                <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Ficha Completa
               </button>
             </div>
           </div>
         `;
         container.appendChild(card);
+      });
+    }
+
+    // Toggle individual project card expansion
+    function toggleProjectCard(id, event) {
+      if (event) event.stopPropagation();
+      const card = document.getElementById('project-card-' + id);
+      if (!card) return;
+      const isExpanded = card.classList.toggle('expanded');
+      
+      const btnSpan = card.querySelector('.expand-trigger-btn span');
+      if (btnSpan) {
+        btnSpan.textContent = isExpanded ? 'Recolher Conteúdos' : 'Ver Experimentos & Conteúdos';
+      }
+    }
+
+    // Expand or collapse all cards at once
+    function expandAllCards(shouldExpand) {
+      document.querySelectorAll('.project-card').forEach(card => {
+        if (shouldExpand) {
+          card.classList.add('expanded');
+          const btnSpan = card.querySelector('.expand-trigger-btn span');
+          if (btnSpan) btnSpan.textContent = 'Recolher Conteúdos';
+        } else {
+          card.classList.remove('expanded');
+          const btnSpan = card.querySelector('.expand-trigger-btn span');
+          if (btnSpan) btnSpan.textContent = 'Ver Experimentos & Conteúdos';
+        }
       });
     }
 
