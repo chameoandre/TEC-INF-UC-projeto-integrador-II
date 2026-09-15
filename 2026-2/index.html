@@ -1548,6 +1548,242 @@
 
   
     /* ==========================================================================
+       HUB DIDÁTICO DE CONTEÚDOS & AULAS PRÁTICAS (MODULAR CARDS)
+       ========================================================================== */
+    .pedagogical-hub-section {
+      margin-bottom: 2rem;
+    }
+    .pedagogical-hub-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1.1rem;
+    }
+    .pedagogical-hub-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0;
+    }
+    .pedagogical-hub-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0.25rem 0 0 0;
+    }
+    .pedagogical-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.15rem;
+    }
+    .pedagogical-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-glass);
+      transition: var(--transition);
+    }
+    .pedagogical-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-glow);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    }
+    .pedagogical-card.featured-green {
+      border-top: 4px solid var(--ifsc-green);
+    }
+    .pedagogical-card.featured-purple {
+      border-top: 4px solid var(--accent-purple);
+    }
+    .pedagogical-card.featured-amber {
+      border-top: 4px solid var(--accent-amber);
+    }
+    .pedagogical-card.featured-cyan {
+      border-top: 4px solid var(--accent-cyan);
+    }
+    .pedagogical-card.featured-future {
+      border: 1px dashed var(--border-color);
+      background: rgba(0, 0, 0, 0.15);
+      opacity: 0.88;
+    }
+    .pedagogical-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      margin-bottom: 0.85rem;
+    }
+    .pedagogical-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .pedagogical-icon.green {
+      background: rgba(34, 197, 94, 0.16);
+      color: var(--ifsc-green-light);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+    .pedagogical-icon.purple {
+      background: rgba(168, 85, 247, 0.16);
+      color: var(--accent-purple);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+    .pedagogical-icon.amber {
+      background: rgba(245, 158, 11, 0.16);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .pedagogical-icon.cyan {
+      background: rgba(6, 182, 212, 0.16);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+    }
+    .pedagogical-icon.future {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-muted);
+      border: 1px dashed rgba(148, 163, 184, 0.35);
+    }
+    .pedagogical-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-bottom: 0.35rem;
+    }
+    .pedagogical-badge.green {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--ifsc-green-light);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .pedagogical-badge.purple {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .pedagogical-badge.amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .pedagogical-badge.cyan {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .pedagogical-badge.future {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-muted);
+      border: 1px dashed rgba(148, 163, 184, 0.3);
+    }
+    .pedagogical-card h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.08rem;
+      color: var(--text-main);
+      margin: 0 0 0.35rem 0;
+      line-height: 1.3;
+    }
+    .pedagogical-card p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.48;
+      margin: 0 0 1.1rem 0;
+      flex-grow: 1;
+    }
+    .pedagogical-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.85rem;
+      margin-top: auto;
+    }
+    .pedagogical-deliverable {
+      font-size: 0.74rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .pedagogical-deliverable strong {
+      color: var(--text-main);
+    }
+    .btn-card-action {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn-card-action.green {
+      background: var(--ifsc-green);
+      color: #ffffff;
+    }
+    .btn-card-action.green:hover {
+      background: #15803d;
+      transform: scale(1.02);
+    }
+    .btn-card-action.purple {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+    .btn-card-action.purple:hover {
+      background: #7e22ce;
+      transform: scale(1.02);
+    }
+    .btn-card-action.amber {
+      background: var(--accent-amber);
+      color: #000000;
+    }
+    .btn-card-action.amber:hover {
+      background: #d97706;
+      color: #ffffff;
+      transform: scale(1.02);
+    }
+    .btn-card-action.cyan {
+      background: rgba(6, 182, 212, 0.18);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    .btn-card-action.cyan:hover {
+      background: var(--accent-cyan);
+      color: #000000;
+      transform: scale(1.02);
+    }
+    .btn-card-action.future {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+    .btn-card-action.future:hover {
+      border-color: var(--ifsc-green);
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
        ESTILOS EXCLUSIVOS: GUIA DE EXPERIMENTOS CIENTÍFICOS
        ========================================================================== */
     .exp-subnav {
@@ -1768,12 +2004,26 @@
     </div>
 
     <div class="header-actions">
-      <button class="btn btn-primary" onclick="switchTab('experimentos-cientificos')" style="background: linear-gradient(135deg, #16a34a, #0d9488); border: none;" title="Acessar o Guia Completo de Experimentos Científicos">
-        <i class="fa-solid fa-flask-vial"></i> Guia de Experimentos
+      <!-- Botões de Aulas em Destaque -->
+      <button class="btn btn-primary" onclick="switchTab('trabalhos-relacionados')" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); border: none;" title="Acessar Aula Prática: Seção de Trabalhos Relacionados">
+        <i class="fa-solid fa-graduation-cap"></i> Aula: Trabalhos Relacionados
       </button>
-      <button class="btn btn-primary" onclick="switchTab('avancos-pendencias')" title="Raio-X de Avanços e Pendências para a Profª Karyna">
-        <i class="fa-solid fa-clipboard-check"></i> Raio-X da Aula de Hoje
+
+      <button class="btn btn-primary" onclick="switchTab('experimentos-cientificos')" style="background: linear-gradient(135deg, #16a34a, #0d9488); border: none;" title="Acessar Aula Prática: Metodologia & Experimentos Científicos">
+        <i class="fa-solid fa-flask-vial"></i> Aula: Experimentos Científicos
       </button>
+
+      <button class="btn btn-outline" onclick="switchTab('avancos-pendencias')" style="border-color: var(--accent-cyan); color: var(--accent-cyan);" title="Raio-X de Avanços e Atendimento de Bancada">
+        <i class="fa-solid fa-clipboard-check"></i> Raio-X da Aula
+      </button>
+
+      <button class="btn btn-outline" onclick="switchTab('cotb-2027')" style="border-color: var(--accent-amber); color: var(--accent-amber);" title="Ver Chamada e Prazos do Computer on the Beach 2027">
+        <i class="fa-solid fa-umbrella-beach"></i> COTB 2027 (15/11)
+      </button>
+
+      <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" class="btn btn-outline" title="Abrir Planilha Google Sheets Oficial">
+        <i class="fa-solid fa-table"></i> Planilha Oficial
+      </a>
 
       <!-- Live Sync Button -->
       <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar dados mais recentes da planilha Google Sheets">
@@ -1784,17 +2034,6 @@
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">
         <i class="fa-solid fa-sun" id="themeIcon"></i>
       </button>
-
-      <button class="btn btn-outline" onclick="switchTab('cotb-2027')" style="border-color: var(--accent-amber); color: var(--accent-amber);" title="Ver Chamada e Prazos do Computer on the Beach 2027">
-        <i class="fa-solid fa-umbrella-beach"></i> COTB 2027 (15/11)
-      </button>
-
-      <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" class="btn btn-outline">
-        <i class="fa-solid fa-table"></i> Planilha Oficial
-      </a>
-      <button class="btn btn-primary" onclick="switchTab('trabalhos-relacionados')">
-        <i class="fa-solid fa-graduation-cap"></i> Aula: Trabalhos Relacionados
-      </button>
     </div>
   </header>
 
@@ -1803,14 +2042,20 @@
     <button class="tab-btn active" onclick="switchTab('projetos')">
       <i class="fa-solid fa-cubes"></i> Painel dos 10 Projetos <span class="badge-count">10</span>
     </button>
+    <button class="tab-btn" onclick="switchTab('trabalhos-relacionados')">
+      <i class="fa-solid fa-graduation-cap" style="color: var(--accent-purple);"></i> Aula: Trabalhos Relacionados
+    </button>
+    <button class="tab-btn" onclick="switchTab('experimentos-cientificos')">
+      <i class="fa-solid fa-flask-vial" style="color: var(--ifsc-green-light);"></i> Aula: Experimentos Científicos <span class="badge-count" style="background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.3);">4 Exps</span>
+    </button>
     <button class="tab-btn" onclick="switchTab('cotb-2027')">
       <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Computer on the Beach 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">Submissão 15/11</span>
     </button>
+    <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
+      <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Aula (Pauta)
+    </button>
     <button class="tab-btn" onclick="switchTab('timeline')">
       <i class="fa-solid fa-timeline"></i> Timeline de Atividades & Aulas
-    </button>
-    <button class="tab-btn" onclick="switchTab('trabalhos-relacionados')">
-      <i class="fa-solid fa-graduation-cap"></i> Aula: Trabalhos Relacionados
     </button>
     <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
       <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">4 alertas</span>
@@ -1833,6 +2078,128 @@
           <div class="meta-tag"><i class="fa-solid fa-users"></i> Total: <strong>10 Projetos Ativos</strong></div>
           <div class="meta-tag"><i class="fa-solid fa-microchip"></i> Foco: <strong>Refatoração & Experimentos</strong></div>
           <div class="meta-tag"><i class="fa-solid fa-pen-nib"></i> Escrita: <strong>Artigo ACM / Overleaf</strong></div>
+        </div>
+      </div>
+
+      <!-- HUB DIDÁTICO DE CONTEÚDOS & AULAS PRÁTICAS (CARDS MODULARES) -->
+      <div class="pedagogical-hub-section">
+        <div class="pedagogical-hub-header">
+          <div>
+            <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--ifsc-green-light);"></i> Central Pedagógica: Aulas Práticas, Metodologia & Conteúdos</h3>
+            <p>Acesse rapidamente as aulas práticas, roteiros metodológicos e chamadas científicas produzidos para a disciplina:</p>
+          </div>
+        </div>
+
+        <div class="pedagogical-hub-grid">
+          <!-- Card 1: Aula Trabalhos Relacionados -->
+          <div class="pedagogical-card featured-purple">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon purple">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge purple">Aula Prática 1 • Escrita</span>
+                <h4>Aula: Trabalhos Relacionados</h4>
+              </div>
+            </div>
+            <p>Busca de artigos correlatos no Google Scholar/Scielo, elaboração do Quadro Comparativo e redação científica no Overleaf com conectivos de contraste.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-file-pen" style="color: var(--accent-purple);"></i> <span>Entregável: <strong>\section{Trabalhos Relacionados}</strong></span>
+              </div>
+              <button class="btn-card-action purple" onclick="switchTab('trabalhos-relacionados')">
+                Acessar Aula <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Aula Experimentos Científicos -->
+          <div class="pedagogical-card featured-green">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon green">
+                <i class="fa-solid fa-flask-vial"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge green">Aula Prática 2 • Metodologia</span>
+                <h4>Aula: Experimentos Científicos</h4>
+              </div>
+            </div>
+            <p>Formulação de hipóteses, isolamento de variáveis (independentes, dependentes e de controle), medição de grandezas quantitativas e roteiros dos 10 projetos.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-chart-line" style="color: var(--ifsc-green-light);"></i> <span>Entregável: <strong>4 Experimentos & Gráficos</strong></span>
+              </div>
+              <button class="btn-card-action green" onclick="switchTab('experimentos-cientificos')">
+                Acessar Aula <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Chamada COTB 2027 -->
+          <div class="pedagogical-card featured-amber">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon amber">
+                <i class="fa-solid fa-umbrella-beach"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge amber">Evento Alvo • 15/11</span>
+                <h4>Computer on the Beach 2027</h4>
+              </div>
+            </div>
+            <p>18ª edição em Floripa. Diretrizes de submissão no JEMS da SBC, modelos de artigos (2 a 6 págs), revisão duplo-cega e cronograma de submissão.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-calendar-check" style="color: var(--accent-amber);"></i> <span>Deadline: <strong>15 de Novembro</strong></span>
+              </div>
+              <button class="btn-card-action amber" onclick="switchTab('cotb-2027')">
+                Ver Guia COTB <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Raio-X & Atendimentos -->
+          <div class="pedagogical-card featured-cyan">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon cyan">
+                <i class="fa-solid fa-clipboard-check"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge cyan">Gestão Docente & Pauta</span>
+                <h4>Raio-X da Aula & Atendimentos</h4>
+              </div>
+            </div>
+            <p>Painel de diagnóstico semanal para conduzir os atendimentos de bancada, celebrar conquistas técnicas recentes e destravar gargalos nos artigos.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> <span>Pauta: <strong>Atendimento de Bancada</strong></span>
+              </div>
+              <button class="btn-card-action cyan" onclick="switchTab('avancos-pendencias')">
+                Abrir Raio-X <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 5: Slot Modular para Futuros Conteúdos -->
+          <div class="pedagogical-card featured-future">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon future">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge future">Módulos Futuros</span>
+                <h4>Próximos Conteúdos da UC</h4>
+              </div>
+            </div>
+            <p>Espaço reservado para as próximas etapas pedagógicas da turma: análise e discussão de resultados, confecção de slides do pitch e pôster da SNCT.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-clock-rotate-left"></i> <span>Cronograma: <strong>Semestral</strong></span>
+              </div>
+              <button class="btn-card-action future" onclick="switchTab('timeline')">
+                Ver Cronograma <i class="fa-solid fa-timeline"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -3194,13 +3561,13 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
     </section>
 
   
-    <!-- TAB: GUIA DE EXPERIMENTOS CIENTÍFICOS -->
+    <!-- TAB: AULA EXPERIMENTOS CIENTÍFICOS -->
     <section id="tab-experimentos-cientificos" class="tab-content">
 
       <!-- Hero Banner -->
       <div class="hero-banner">
         <div class="hero-info">
-          <h2>Guia Prático: Metodologia &amp; Experimentos Científicos em Computação</h2>
+          <h2>Aula Prática: Metodologia &amp; Experimentos Científicos em Computação</h2>
           <p>Como transformar o seu projeto de software e hardware em um trabalho científico de verdade: formulando hipóteses, isolando variáveis, medindo grandezas empíricas, coletando dados brutos e construindo gráficos para o artigo (SEPEI &amp; COTB 2027).</p>
         </div>
         <div class="hero-meta">
