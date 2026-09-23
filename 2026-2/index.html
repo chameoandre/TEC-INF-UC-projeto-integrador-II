@@ -1580,6 +1580,10 @@
       border-color: rgba(6, 182, 212, 0.35);
       background: linear-gradient(135deg, rgba(6, 182, 212, 0.06), var(--bg-card));
     }
+    .pending-kpi-card.alert-green {
+      border-color: rgba(34, 197, 94, 0.35);
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.06), var(--bg-card));
+    }
     .pending-kpi-header {
       display: flex;
       justify-content: space-between;
@@ -3687,10 +3691,10 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           <p>Sumário executivo sincronizado diretamente da planilha oficial do Google Sheets. Instrumento de diagnóstico rápido para conduzir os atendimentos de bancada na aula de hoje, celebrar conquistas técnicas recentes e cobrar com firmeza a resolução dos gargalos que travam o paper para o <strong>Computer on the Beach (COTB 2027)</strong>.</p>
         </div>
         <div class="hero-meta">
-          <div class="meta-tag"><i class="fa-solid fa-bolt text-green"></i> Avanços: <strong>4 Equipes</strong></div>
-          <div class="meta-tag"><i class="fa-solid fa-lock text-amber"></i> Overleaf 403: <strong>4 Projetos</strong></div>
-          <div class="meta-tag"><i class="fa-solid fa-flask-vial text-cyan"></i> Exp. Zerados: <strong>2 Projetos</strong></div>
-          <div class="meta-tag"><i class="fa-solid fa-umbrella-beach text-amber"></i> Prazo COTB: <strong>15/11/2026</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-bolt text-green"></i> Avanços: <strong>8 Equipes Ativas</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-lock-open text-green"></i> Overleaf Público: <strong>8 / 10 Projetos</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-flask-vial text-cyan"></i> 4 Experimentos: <strong>5 Equipes (50%)</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-circle-check text-green"></i> Exp. Zerados: <strong>0 Projetos (100% Iniciados)</strong></div>
         </div>
       </div>
 
@@ -3699,7 +3703,7 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
           <div>
             <h3><i class="fa-solid fa-trophy text-amber"></i> 1. Vitrine de Avanços Recentes Detectados na Planilha</h3>
-            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Projetos que registraram atualizações significativas nas últimas edições da planilha oficial:</p>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Projetos que registraram entregas técnicas e conceituais de alto impacto nas últimas edições da planilha oficial:</p>
           </div>
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--ifsc-green); background: rgba(34, 197, 94, 0.12); padding: 0.3rem 0.7rem; border-radius: 20px; border: 1px solid rgba(34, 197, 94, 0.3);">
             <i class="fa-solid fa-circle-check"></i> Sincronizado com Google Sheets
@@ -3708,63 +3712,123 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
 
         <div class="advances-grid">
           
-          <!-- Card Luisa -->
+          <!-- Card SMC -->
           <div class="advance-card">
             <div>
-              <span class="advance-card-badge"><i class="fa-solid fa-star"></i> MARCO CRÍTICO CONCLUÍDO (4/4 EXP)</span>
-              <h4>#07 Música, Jogo e Atenção</h4>
-              <div class="advance-team"><i class="fa-solid fa-user"></i> Luisa Narvaz</div>
+              <span class="advance-card-badge"><i class="fa-solid fa-microchip"></i> COMPATIBILIDADE 100% & NOVO HUD (4/4 EXP)</span>
+              <h4>#01 SMC: Montagem de PCs</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Lucas Pacheco, Bernardo, Henrique Cardoso</div>
               <div class="advance-desc">
-                <strong>Avanço Detectado:</strong> Luisa preencheu e detalhou os <strong>Experimentos 3 e 4</strong> que estavam pendentes! Agora possui o ciclo experimental completo: Exp 3 (geração de ID automático, versão em espanhol, melhoria visual) e Exp 4 (coleta e análise de dados, relatórios de acertos/erros).
+                <strong>Avanços Detectados:</strong> Equipe concluiu 100% o sistema de compatibilidade de peças no Godot; reformulou integralmente o HUD para visual polido final; desenhou <strong>15 novos sprites</strong> e adicionou <strong>11 novas peças</strong> com injeção padronizada. Cadastrou Overleaf público de leitura e definiu os <strong>4 Experimentos</strong>!
               </div>
             </div>
             <div class="advance-impact">
-              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> O Exp 4 é exatamente a fonte dos dados e gráficos para a Seção de Resultados do paper!
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Simulador pronto para a aplicação do experimento pedagógico com turmas de manutenção.
+            </div>
+          </div>
+
+          <!-- Card JifTV -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-server"></i> DOMÍNIO JIFTV.ORG & SERVIDOR NO IFSC (4/4 EXP)</span>
+              <h4>#02 JifTV Streaming Adaptativo</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Rodrigo, Eluney, João, Anderson</div>
+              <div class="advance-desc">
+                <strong>Avanços Detectados:</strong> Compra e registro do domínio oficial <code>jiftv.org</code> (+ 2 subdomínios); montagem e configuração física de servidor dedicado no IFSC Garopaba; Overleaf público ativo; e preenchimento integral dos <strong>4 Experimentos</strong> (Live local, ABR adaptativo 480p-2160p 4K, Docker container e auto-gravação).
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Saiu de 0 para 4 experimentos! Métricas de bitrate adaptativo e latência prontas para o paper.
+            </div>
+          </div>
+
+          <!-- Card Scout -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-mobile-screen-button"></i> APP BETA FUNCIONAL & ESCALA SUS (4/4 EXP)</span>
+              <h4>#09 Scout de Vôlei</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Nathan, João Contreira, Pedro E.</div>
+              <div class="advance-desc">
+                <strong>Avanços Detectados:</strong> <strong>Aplicativo Beta em pleno funcionamento prático!</strong> Cadastrou 3 Trabalhos Relacionados com citação e ano (Calixto 2016, Marques Jr 2017, Barili et al. 2018); ativou Overleaf público de leitura; e estruturou os <strong>4 Experimentos</strong> com voluntários (8-15), métricas de tempo (s), precisão (%) e avaliação de usabilidade pela <strong>Escala SUS (0-100)</strong>.
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Rigor metodológico de referência na turma. Protocolo de testes pronto para gráficos e tabelas.
+            </div>
+          </div>
+
+          <!-- Card Luisa -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-music"></i> MÚSICA FASE 1 & RIGOR EXPERIMENTAL COMPLETO</span>
+              <h4>#07 Música, Jogo e Atenção</h4>
+              <div class="advance-team"><i class="fa-solid fa-user"></i> Luisa Narvaz</div>
+              <div class="advance-desc">
+                <strong>Avanços Detectados:</strong> Trilha musical da Fase 1 implementada no Pygame; código totalmente modularizado com imports; 4 artigos correlatos cadastrados (2015 a 2025); redefinição metodológica exemplar dos <strong>4 Experimentos</strong> isolando <strong>Variáveis Independentes, Dependentes e de Controle</strong>; e encaminhamento ao <strong>Comitê de Ética em Pesquisa (CEP)</strong>.
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Modelo padrão-ouro de desenho científico para a Seção de Metodologia e Resultados.
+            </div>
+          </div>
+
+          <!-- Card RasPorta -->
+          <div class="advance-card">
+            <div>
+              <span class="advance-card-badge"><i class="fa-solid fa-fingerprint"></i> HARDWARE ADQUIRIDO & FLASK + SQLITE ATIVOS</span>
+              <h4>#04 RasPorta: Fechadura Biométrica</h4>
+              <div class="advance-team"><i class="fa-solid fa-users"></i> Petrus, Martin, Felipe</div>
+              <div class="advance-desc">
+                <strong>Avanços Detectados:</strong> Aquisição dos equipamentos físicos (Raspberry Pi, sistema de LEDs, adaptador HDMI); criação e modelagem do <strong>Banco SQLite</strong> e servidor <strong>Flask</strong> funcional; e <strong>Experimento 1 validado</strong> com vídeo gravado no YouTube demonstrando o acionamento do LED via digital.
+              </div>
+            </div>
+            <div class="advance-impact">
+              <i class="fa-solid fa-triangle-exclamation text-amber"></i> <strong>Ação Imediata:</strong> Converter o link Overleaf (/project/) para Share Link público de leitura e detalhar Exp 2 a 4.
             </div>
           </div>
 
           <!-- Card Estação -->
           <div class="advance-card">
             <div>
-              <span class="advance-card-badge"><i class="fa-solid fa-database"></i> NOVO OVERLEAF & EXP 3 CADASTRADO</span>
+              <span class="advance-card-badge"><i class="fa-solid fa-cloud-sun-rain"></i> BANCO SQLITE & EXP 1 CALIBRADO COM SUCESSO</span>
               <h4>#08 Estação Meteorológica</h4>
               <div class="advance-team"><i class="fa-solid fa-users"></i> Beatriz, Laura, Oriana, Sophie, Victória</div>
               <div class="advance-desc">
-                <strong>Avanço Detectado:</strong> Equipe cadastrou novo link do Overleaf e definiu o <strong>Experimento 3 ("Elaboração do banco de dados")</strong> para garantir armazenamento contínuo e telemetria estável do sensor climático BME280 no Raspberry Pi.
+                <strong>Avanços Detectados:</strong> Estruturação do banco de dados SQLite e testes iniciais de telemetria IoT; <strong>Experimento 1 concluído com sucesso</strong> (montagem da estação, primeiros ajustes e calibramentos no sensor climático BME280 efetuados); 2 artigos correlatos com ano cadastrados; e link público de leitura do Overleaf regularizado!
               </div>
             </div>
             <div class="advance-impact">
-              <i class="fa-solid fa-lock text-amber"></i> <strong>Atenção Karyna:</strong> O novo link do Overleaf é privado (/project/). Solicitar troca para Share Link de leitura.
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Dados meteorológicos reais sendo gravados para gerar séries temporais de temperatura e pressão.
             </div>
           </div>
 
           <!-- Card D20Hub -->
           <div class="advance-card">
             <div>
-              <span class="advance-card-badge"><i class="fa-solid fa-code-branch"></i> REPOSITÓRIO GIT ATUALIZADO</span>
+              <span class="advance-card-badge"><i class="fa-solid fa-dice-d20"></i> TELA PERSONAGENS 80% & CRUD COMPLETO</span>
               <h4>#05 D20Hub: Gerenciador de RPG</h4>
               <div class="advance-team"><i class="fa-solid fa-users"></i> Nicolas, Eduardo, Henrique Gama</div>
               <div class="advance-desc">
-                <strong>Avanço Detectado:</strong> URL do repositório corrigida para <code>github.com/Nicolas0413/d20hub</code>. Projeto com backend e frontend bastante maduros (Django, TypeScript, WebSockets) e tela de personagens em 80%.
+                <strong>Avanços Detectados:</strong> Tela de personagens com 80% de conclusão; segurança do projeto adequada aos padrões GitHub; operação CRUD de fichas finalizada; lógica do banco de dados concluída; e artigo corrigido para submissão no SEPEI. Projeto com <strong>4 Experimentos</strong> estruturados e Overleaf 100% público.
               </div>
             </div>
             <div class="advance-impact">
-              <i class="fa-solid fa-vial"></i> <strong>Impacto COTB:</strong> Todos os 4 experimentos estão estruturados. Focar no teste de latência e escala SUS.
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Rodar testes de latência de WebSockets e questionário de usabilidade SUS.
             </div>
           </div>
 
           <!-- Card ChatBot -->
           <div class="advance-card">
             <div>
-              <span class="advance-card-badge"><i class="fa-solid fa-robot"></i> REPOSITÓRIO OFICIAL REGULARIZADO</span>
+              <span class="advance-card-badge"><i class="fa-solid fa-robot"></i> SALA DE PESQUISA & METODOLOGIA LOCAL LM STUDIO</span>
               <h4>#10 ChatBot Secretaria Acadêmica</h4>
               <div class="advance-team"><i class="fa-solid fa-users"></i> Cauã, Enzo, Ariane</div>
               <div class="advance-desc">
-                <strong>Avanço Detectado:</strong> Repositório do GitHub sincronizado para o repositório oficial ativo mantido pela aluna Ariane (<code>github.com/Ary-u/IFSC-chatbot</code>), centralizando as rotinas de IA e LM Studio.
+                <strong>Avanços Detectados:</strong> Liberação e acesso formal à sala de pesquisa do IFSC; estruturação inicial da metodologia com LM Studio e PyTorch; repositório GitHub oficial sincronizado; e link de leitura público do Overleaf cadastrado e verificado.
               </div>
             </div>
             <div class="advance-impact">
-              <i class="fa-solid fa-triangle-exclamation text-amber"></i> <strong>Pendência Restante:</strong> Preencher a coluna "Objetivo" que está vazia e gravar o Pitch.
+              <i class="fa-solid fa-triangle-exclamation text-amber"></i> <strong>Pendências Restantes:</strong> Gravar o Pitch Vídeo, preencher o campo "Objetivo" e detalhar os Experimentos 1, 3 e 4.
             </div>
           </div>
 
@@ -3773,45 +3837,45 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
 
       <!-- BLOCO 2: INDICADORES EXECUTIVOS DE PENDÊNCIAS -->
       <div class="guide-box" style="margin-bottom: 2rem;">
-        <h3><i class="fa-solid fa-triangle-exclamation text-amber"></i> 2. Raio-X Quantitativo das Pendências na Turma</h3>
-        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">Visão consolidada dos gargalos que a equipe docente precisa zerar com os estudantes:</p>
+        <h3><i class="fa-solid fa-chart-pie text-cyan"></i> 2. Raio-X Quantitativo das Entregas & Gargalos da Turma</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">Visão consolidada do progresso técnico e dos gargalos prioritários que a equipe docente precisa zerar com os estudantes:</p>
 
         <div class="pending-kpi-grid">
           
-          <div class="pending-kpi-card alert-red">
+          <div class="pending-kpi-card alert-green">
             <div class="pending-kpi-header">
-              <span class="pending-kpi-title">Overleaf Inacessível</span>
-              <i class="fa-solid fa-lock text-red"></i>
+              <span class="pending-kpi-title">Overleaf 100% Público</span>
+              <i class="fa-solid fa-lock-open text-green"></i>
             </div>
-            <div class="pending-kpi-val" style="color: var(--ifsc-red);">6 / 10</div>
-            <div class="pending-kpi-sub"><strong>4 Links Privados (403)</strong> + <strong>2 Não Informados</strong>. Impede revisão do texto pelos professores.</div>
-          </div>
-
-          <div class="pending-kpi-card alert-amber">
-            <div class="pending-kpi-header">
-              <span class="pending-kpi-title">Pitch Vídeo Pendente</span>
-              <i class="fa-solid fa-video text-amber"></i>
-            </div>
-            <div class="pending-kpi-val" style="color: var(--accent-amber);">3 / 10</div>
-            <div class="pending-kpi-sub">Grupos <strong>#03 (Curso Popular)</strong>, <strong>#06 (Acervo MAGE)</strong> e <strong>#10 (ChatBot)</strong> sem link de vídeo.</div>
+            <div class="pending-kpi-val" style="color: var(--ifsc-green);">8 / 10</div>
+            <div class="pending-kpi-sub"><strong>80% da turma com link de leitura ativo!</strong> Apenas grupos <strong>#03</strong> e <strong>#04</strong> com link interno (/project/) a converter.</div>
           </div>
 
           <div class="pending-kpi-card alert-cyan">
             <div class="pending-kpi-header">
-              <span class="pending-kpi-title">Gargalo de Experimentos</span>
+              <span class="pending-kpi-title">Ciclo 4 Experimentos</span>
               <i class="fa-solid fa-flask-vial text-cyan"></i>
             </div>
-            <div class="pending-kpi-val" style="color: var(--accent-cyan);">8 / 10</div>
-            <div class="pending-kpi-sub"><strong>#02 (JifTV)</strong> e <strong>#04 (RasPorta)</strong> com 0/4 experimentos! Outros 6 com desenho parcial.</div>
+            <div class="pending-kpi-val" style="color: var(--accent-cyan);">5 / 10</div>
+            <div class="pending-kpi-sub"><strong>5 grupos fecharam os 4 exps</strong> (#01, #02, #05, #07, #09). Outros 5 iniciaram com sucesso (<strong>0 grupos zerados!</strong>).</div>
+          </div>
+
+          <div class="pending-kpi-card alert-amber">
+            <div class="pending-kpi-header">
+              <span class="pending-kpi-title">Pitch Vídeo Cadastrado</span>
+              <i class="fa-solid fa-video text-amber"></i>
+            </div>
+            <div class="pending-kpi-val" style="color: var(--accent-amber);">7 / 10</div>
+            <div class="pending-kpi-sub">7 grupos com links no YouTube. Pendentes: <strong>#06 (MAGE)</strong> e <strong>#10 (ChatBot)</strong> sem link; <strong>#03</strong> ajustar permissão do Drive.</div>
           </div>
 
           <div class="pending-kpi-card alert-purple">
             <div class="pending-kpi-header">
-              <span class="pending-kpi-title">Coluna COTB (Paper 4)</span>
-              <i class="fa-solid fa-umbrella-beach text-purple"></i>
+              <span class="pending-kpi-title">Trabalhos Relacionados</span>
+              <i class="fa-solid fa-book-bookmark text-purple"></i>
             </div>
-            <div class="pending-kpi-val" style="color: var(--accent-purple);">0 / 10</div>
-            <div class="pending-kpi-sub">Nenhum grupo registrou ainda a versão/link específico do COTB 2027 na coluna 15 da planilha.</div>
+            <div class="pending-kpi-val" style="color: var(--accent-purple);">3 / 10</div>
+            <div class="pending-kpi-sub">Grupos <strong>#07</strong>, <strong>#08</strong> e <strong>#09</strong> formataram com ano/autores. Grupos #01, #04, #06 e #10 precisam preencher na planilha.</div>
           </div>
 
         </div>
@@ -3826,7 +3890,7 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           </div>
         </div>
 
-                <table class="matrix-sample-table">
+        <table class="matrix-sample-table">
           <thead>
             <tr>
               <th style="width: 45px;">ID</th>
@@ -3841,37 +3905,41 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           <tbody>
             
             <!-- P1 -->
-            <tr>
+            <tr style="background: rgba(34, 197, 94, 0.03);">
               <td><strong>#01</strong></td>
               <td>
                 <strong style="color: var(--text-main);">SMC: Montagem de PCs</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Lucas P., Bernardo, Henrique C.</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir 2-3 artigos com ano na coluna 8</div></td>
               <td style="font-size: 0.78rem;">
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Protótipo: Peças drag & drop<br>
-                <span style="color: var(--text-dim);">Exp 2 a 4: Pendentes</span>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Peças drag & drop (Godot)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Sprites e compatibilidade 100%<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Peças secundárias e interações<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Modo jogar e tutorial docente
               </td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Não Informado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td><strong style="color: var(--ifsc-red);">Criar Overleaf no padrão SBC/COTB</strong>; inserir artigos correlatos com ano na coluna 8; planejar Exp 2 (teste pedagógico).</td>
+              <td><strong style="color: var(--ifsc-green);">Parabenizar pelos 4 Experimentos e Overleaf ativo!</strong> Inserir artigos correlatos com ano na coluna 8; estruturar protocolo de teste com alunos no Exp 4.</td>
             </tr>
 
             <!-- P2 -->
-            <tr style="background: rgba(239, 68, 68, 0.04);">
+            <tr style="background: rgba(34, 197, 94, 0.03);">
               <td><strong>#02</strong></td>
               <td>
                 <strong style="color: var(--text-main);">JifTV Streaming Adaptativo</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Rodrigo, Eluney, João, Anderson</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Overleaf Vinculado</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Listar títulos e anos no campo</div></td>
               <td style="font-size: 0.78rem;">
-                <span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 Experimentos</span><br>
-                <span style="color: var(--text-dim); font-style: italic;">Nenhum experimento definido</span>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Transmissão local ao vivo<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Streaming adaptativo 480p-2160p 4K<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Servidor em Docker container<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Gravação automática e frontend
               </td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Não Informado</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Cadastrar Overleaf; inserir artigos correlatos com ano; definir Exp 1 (latência RTT) e Exp 2 (bitrate sob perda de pacotes).</td>
+              <td><strong style="color: var(--ifsc-green);">Parabenizar pelo domínio jiftv.org e 4 Experimentos!</strong> Finalizar configuração do servidor no IFSC e iniciar medições de bitrate e RTT para o paper.</td>
             </tr>
 
             <!-- P3 -->
@@ -3881,50 +3949,50 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Curso Popular de Informática</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Pietro, Artur, Lucas S.</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Docs Vinculado</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir títulos e anos no campo</div></td>
               <td style="font-size: 0.78rem;">
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Curso experimental de ferramentas<br>
-                <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Oficina de ferramentas acadêmicas<br>
+                <span style="color: var(--text-dim);">Exp 2 a 4: Pendentes</span>
               </td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
-              <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
-              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; inserir 2-3 artigos com ano na coluna 8; desenhar métricas de avaliação pré/pós oficina piloto.</td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (/project/)</span></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> Link Restrito</span></td>
+              <td>Trocar Overleaf para Share Link público de leitura; liberar acesso ao vídeo do pitch; estruturar Exp 2 (avaliação de retenção pré/pós oficina).</td>
             </tr>
 
             <!-- P4 -->
-            <tr style="background: rgba(239, 68, 68, 0.04);">
+            <tr>
               <td><strong>#04</strong></td>
               <td>
                 <strong style="color: var(--text-main);">RasPorta: Fechadura Biométrica</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Petrus, Martin, Felipe</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir artigos de IoT/biometria com ano</div></td>
               <td style="font-size: 0.78rem;">
-                <span class="pending-status-pill danger"><i class="fa-solid fa-triangle-exclamation"></i> 0 de 4 Experimentos</span><br>
-                <span style="color: var(--text-dim); font-style: italic;">Nenhum experimento definido</span>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Acionamento de LED via digital (Vídeo gravado)<br>
+                <span style="color: var(--text-dim);">Exp 2 a 4: Pendentes</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
-              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td><strong style="color: var(--ifsc-red);">Urgência Máxima:</strong> Trocar link Overleaf para público (Share Link); inserir artigos com ano; definir Exp 1 (tempo de leitura biometria) e Exp 2 (tempo de acionamento relé).</td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (/project/)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK (Exp 1 ativo)</span></td>
+              <td>Trocar Overleaf para Share Link público de leitura; parabenizar pelo banco SQLite e Flask funcional; definir Exp 2 (tempo de resposta do relé) e Exp 3 (estabilidade do banco).</td>
             </tr>
 
             <!-- P5 -->
-            <tr>
+            <tr style="background: rgba(34, 197, 94, 0.03);">
               <td><strong>#05</strong></td>
               <td>
                 <strong style="color: var(--text-main);">D20Hub: Gerenciador de RPG</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Nicolas, Eduardo, Henrique G.</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> Docs Vinculado</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir títulos e anos no campo</div></td>
               <td style="font-size: 0.78rem;">
                 <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Tela principal e poderes<br>
                 <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Banco de dados e autenticação<br>
                 <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Salas para interação<br>
                 <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Internacionalização (ES/EN)
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td>Trocar Overleaf para público (Share Link); inserir artigos de RPG/WebSockets com ano na coluna 8; transformar protótipos em testes de latência e escala SUS.</td>
+              <td>Parabenizar pela tela de personagens em 80% e CRUD finalizado; converter protótipos em testes formais de latência de WebSockets e escala SUS.</td>
             </tr>
 
             <!-- P6 -->
@@ -3934,69 +4002,71 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">Acervo MAGE 3D</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Raul, Pedro H., Augusto, Maria C.</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir artigos de fotogrametria com ano</div></td>
               <td style="font-size: 0.78rem;">
                 <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Geração de visualização 3D<br>
                 <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
               </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
-              <td>Gravar e colar <strong>Pitch Vídeo</strong>; inserir artigos de fotogrametria com ano; definir Exp 1 (tempo de fotogrametria por item) e Exp 3 (compressão vs malha).</td>
+              <td>Gravar e colar link do <strong>Pitch Vídeo</strong>; inserir artigos correlatos com ano na coluna 8; definir Exp 1 (tempo de fotogrametria por item) e Exp 3 (compressão vs malha 3D).</td>
             </tr>
 
             <!-- P7 -->
-            <tr style="background: rgba(34, 197, 94, 0.04);">
+            <tr style="background: rgba(34, 197, 94, 0.05);">
               <td><strong>#07</strong></td>
               <td>
                 <strong style="color: var(--text-main);">Música, Jogo e Atenção</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Luisa Narvaz</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 4 Artigos com Ano</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">2015, 2018, 2024, 2025</div></td>
               <td style="font-size: 0.78rem;">
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Menu e inclusão de dados<br>
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Respostas, sons e acertos/erros<br>
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> ID automático, espanhol, ícones<br>
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Coleta/análise e relatórios
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Menu e usuários (VI/VD/VC)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Sons e relatórios (VI/VD/VC)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> ID automático e idiomas (VI/VD/VC)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Testes e estatística (VI/VD/VC)
               </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td><strong style="color: var(--ifsc-green);">Parabenizar Luisa pelos 4 Experimentos!</strong> Inserir artigos correlatos de jogos musicais e cognição com ano na coluna 8; rodar coleta do Exp 4.</td>
+              <td><strong style="color: var(--ifsc-green);">Parabenizar pelo rigor metodológico exemplar!</strong> Apoiar no protocolo do Comitê de Ética em Pesquisa (CEP) e na coleta de dados do Exp 4.</td>
             </tr>
 
             <!-- P8 -->
-            <tr>
+            <tr style="background: rgba(34, 197, 94, 0.03);">
               <td><strong>#08</strong></td>
               <td>
                 <strong style="color: var(--text-main);">Estação Meteorológica</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Beatriz, Laura, Oriana, Sophie, Victória</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 2 Artigos com Ano</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">2015 e 2021</div></td>
               <td style="font-size: 0.78rem;">
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Obtenção de dados no Raspberry<br>
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Testes e calibramento sensores<br>
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Elaboração do banco de dados<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Leituras e calibração (Concluído!)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Banco SQLite e IoT (Em andamento)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Leituras e margem de erro (Em andamento)<br>
                 <span style="color: var(--text-dim);">Exp 4: Pendente</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td>Trocar novo link do Overleaf para modo público (Share Link); inserir artigos correlatos de estações IoT com ano; definir Exp 4 (estabilidade de coleta 48h).</td>
+              <td><strong style="color: var(--ifsc-green);">Parabenizar pelo Overleaf público e calibração do Exp 1!</strong> Estruturar o Exp 4 (estabilidade de telemetria em 48h ininterruptas).</td>
             </tr>
 
             <!-- P9 -->
-            <tr>
+            <tr style="background: rgba(34, 197, 94, 0.05);">
               <td><strong>#09</strong></td>
               <td>
                 <strong style="color: var(--text-main);">Scout de Vôlei</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Nathan, João C., Pedro E.</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 3 Artigos com Ano</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Calixto 2016, Marques Jr 2017, Barili 2018</div></td>
               <td style="font-size: 0.78rem;">
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Banco de dados e typescript<br>
-                <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 1:</span> Cadastro (tempo, erros, 8-15 vol.)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> Registro da partida (tempo e precisão)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 3:</span> Desempenho BD (latência em ms)<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 4:</span> Usabilidade e Escala SUS (0-100)
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-lock"></i> Privado (403)</span></td>
+              <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> OK</span></td>
-              <td>Trocar Overleaf para público (Share Link); inserir artigos de estatística esportiva com ano; cadastrar Exp 1 (tempo por lance no Web App vs papel).</td>
+              <td><strong style="color: var(--ifsc-green);">Parabenizar pelo App Beta e metodologia exemplar com SUS!</strong> Apoiar na aplicação dos testes com voluntários para geração dos gráficos de resultados.</td>
             </tr>
 
             <!-- P10 -->
@@ -4006,14 +4076,14 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
                 <strong style="color: var(--text-main);">ChatBot Secretaria Acadêmica</strong><br>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Cauã, Enzo, Ariane</span>
               </td>
-              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir título e ano dos trabalhos</div></td>
+              <td><span class="pending-status-pill warn"><i class="fa-solid fa-triangle-exclamation"></i> PENDENTE</span><div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Inserir 2-3 artigos com ano na coluna 8</div></td>
               <td style="font-size: 0.78rem;">
-                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> API servidor local LM Studio<br>
+                <span style="color: var(--ifsc-green); font-weight: 700;">Exp 2:</span> API local LM Studio (Estruturado)<br>
                 <span style="color: var(--text-dim);">Exp 1, 3 e 4: Pendentes</span>
               </td>
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
-              <td>Preencher o campo <strong>Objetivo</strong> na planilha (vazio); gravar Pitch Vídeo; inserir artigos de LLMs locais com ano; cadastrar Exp 1 (acurácia) e Exp 3 (latência).</td>
+              <td>Gravar e colar o <strong>Pitch Vídeo</strong>; preencher campo "Objetivo" na planilha; estruturar Exp 1 (taxa de acertos/acurácia) e Exp 3 (tempo de resposta do modelo local).</td>
             </tr>
 
           </tbody>
