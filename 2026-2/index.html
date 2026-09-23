@@ -2203,6 +2203,180 @@
       height: auto;
     }
 
+    /* Variantes Azul: Aula Expressão de Resultados */
+    .pedagogical-card.featured-blue {
+      border-top: 4px solid var(--accent-blue);
+    }
+    .pedagogical-icon.blue {
+      background: rgba(59, 130, 246, 0.16);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+    .pedagogical-badge.blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .btn-card-action.blue {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+    }
+    .btn-card-action.blue:hover {
+      background: linear-gradient(135deg, #0369a1, #1d4ed8);
+      transform: scale(1.02);
+    }
+
+    /* ==========================================================================
+       ESTILOS EXCLUSIVOS: AULA EXPRESSÃO DE RESULTADOS, TABELAS & GRÁFICOS
+       ========================================================================== */
+    .chart-type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1.2rem 0;
+    }
+    .chart-type-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
+    }
+    .chart-type-card:hover {
+      border-color: var(--accent-blue);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transform: translateY(-2px);
+    }
+    .chart-type-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      width: fit-content;
+      margin-bottom: 0.6rem;
+      font-family: 'Fira Code', monospace;
+    }
+    .chart-type-badge.bar {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .chart-type-badge.line {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--ifsc-green-light);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .chart-type-badge.scatter {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .chart-type-badge.boxplot {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .chart-type-badge.table {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .gallery-tab-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+      background: var(--bg-surface);
+      padding: 0.6rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+    .gallery-tab-btn {
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--text-muted);
+      padding: 0.45rem 0.95rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: var(--transition);
+    }
+    .gallery-tab-btn:hover, .gallery-tab-btn.active {
+      background: rgba(59, 130, 246, 0.18);
+      border-color: var(--accent-blue);
+      color: #93c5fd;
+    }
+
+    .gallery-chart-pane {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      animation: fadeIn 0.25s ease;
+    }
+    .gallery-chart-pane.active {
+      display: block;
+    }
+
+    /* SBC Table Preview Styles */
+    .sbc-table-preview {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.82rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .sbc-table-preview th {
+      border-top: 2px solid var(--text-main);
+      border-bottom: 1px solid var(--text-main);
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .sbc-table-preview td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+    .sbc-table-preview tr:last-child td {
+      border-bottom: 2px solid var(--text-main);
+    }
+    [data-theme="light"] .sbc-table-preview td {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .table-anti-pattern {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.8rem;
+      border: 2px solid #ef4444;
+    }
+    .table-anti-pattern th, .table-anti-pattern td {
+      border: 1px solid #ef4444;
+      padding: 0.5rem;
+      text-align: center;
+      background: rgba(239, 68, 68, 0.05);
+    }
+    .table-anti-pattern th {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
   </style>
 </head>
 <body>
@@ -2235,6 +2409,10 @@
 
       <button class="btn btn-primary" onclick="switchTab('experimentos-cientificos')" style="background: linear-gradient(135deg, #16a34a, #0d9488); border: none;" title="Acessar Aula Prática: Metodologia & Experimentos Científicos">
         <i class="fa-solid fa-flask-vial"></i> Aula: Experimentos Científicos
+      </button>
+
+      <button class="btn btn-primary" onclick="switchTab('expressao-resultados')" style="background: linear-gradient(135deg, #0284c7, #2563eb); border: none;" title="Acessar Aula Prática: Expressão de Resultados, Tabelas & Gráficos">
+        <i class="fa-solid fa-chart-pie"></i> Aula: Expressão de Resultados
       </button>
 
       <button class="btn btn-outline" onclick="switchTab('avancos-pendencias')" style="border-color: var(--accent-cyan); color: var(--accent-cyan);" title="Raio-X de Avanços e Atendimento de Bancada">
@@ -2270,7 +2448,10 @@
       <i class="fa-solid fa-graduation-cap" style="color: var(--accent-purple);"></i> Aula: Trabalhos Relacionados
     </button>
     <button class="tab-btn" onclick="switchTab('experimentos-cientificos')">
-      <i class="fa-solid fa-flask-vial" style="color: var(--ifsc-green-light);"></i> Aula: Experimentos Científicos <span class="badge-count" style="background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.3);">4 Exps</span>
+      <i class="fa-solid fa-flask-vial" style="color: var(--ifsc-green-light);"></i> Aula: Experimentos Científicos <span class="badge-count" style="background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.3);">Metodologia</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('expressao-resultados')">
+      <i class="fa-solid fa-chart-pie" style="color: #60a5fa;"></i> Aula: Expressão de Resultados & Gráficos <span class="badge-count" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">Gráficos & Tabelas</span>
     </button>
     <button class="tab-btn" onclick="switchTab('cotb-2027')">
       <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Computer on the Beach 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">Submissão 15/11</span>
@@ -2359,7 +2540,29 @@
             </div>
           </div>
 
-          <!-- Card 3: Chamada COTB 2027 -->
+          <!-- Card 3: Aula Expressão de Resultados, Tabelas & Gráficos -->
+          <div class="pedagogical-card featured-blue">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon blue">
+                <i class="fa-solid fa-chart-pie"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge blue">Aula Prática 3 • Dados &amp; Gráficos</span>
+                <h4>Expressão de Resultados &amp; Gráficos</h4>
+              </div>
+            </div>
+            <p>Guia de decisão visual para escolher o tipo de gráfico (barras, linhas, dispersão, boxplot), regras de ouro para tabelas limpas padrão SBC/ABNT (booktabs) e redação crítica da discussão dos dados no LaTeX.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-chart-column" style="color: #60a5fa;"></i> <span>Entregável: <strong>\section{Resultados e Discussão}</strong></span>
+              </div>
+              <button class="btn-card-action blue" onclick="switchTab('expressao-resultados')">
+                Acessar Aula <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Chamada COTB 2027 -->
           <div class="pedagogical-card featured-amber">
             <div class="pedagogical-card-top">
               <div class="pedagogical-icon amber">
@@ -2381,7 +2584,7 @@
             </div>
           </div>
 
-          <!-- Card 4: Raio-X & Atendimentos -->
+          <!-- Card 5: Raio-X & Atendimentos -->
           <div class="pedagogical-card featured-cyan">
             <div class="pedagogical-card-top">
               <div class="pedagogical-icon cyan">
@@ -2399,28 +2602,6 @@
               </div>
               <button class="btn-card-action cyan" onclick="switchTab('avancos-pendencias')">
                 Abrir Raio-X <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Card 5: Slot Modular para Futuros Conteúdos -->
-          <div class="pedagogical-card featured-future">
-            <div class="pedagogical-card-top">
-              <div class="pedagogical-icon future">
-                <i class="fa-solid fa-layer-group"></i>
-              </div>
-              <div>
-                <span class="pedagogical-badge future">Módulos Futuros</span>
-                <h4>Próximos Conteúdos da UC</h4>
-              </div>
-            </div>
-            <p>Espaço reservado para as próximas etapas pedagógicas da turma: análise e discussão de resultados, confecção de slides do pitch e pôster da SNCT.</p>
-            <div class="pedagogical-card-footer">
-              <div class="pedagogical-deliverable">
-                <i class="fa-solid fa-clock-rotate-left"></i> <span>Cronograma: <strong>Semestral</strong></span>
-              </div>
-              <button class="btn-card-action future" onclick="switchTab('timeline')">
-                Ver Cronograma <i class="fa-solid fa-timeline"></i>
               </button>
             </div>
           </div>
@@ -4998,6 +5179,879 @@ Conforme ilustrado na Figura~\ref{fig:grafico_exp}, observa-se uma redução con
 
     </section>
 
+    <!-- TAB: AULA EXPRESSÃO DE RESULTADOS, TABELAS & GRÁFICOS -->
+    <section id="tab-expressao-resultados" class="tab-content">
+
+      <!-- Hero Banner -->
+      <div class="hero-banner" style="background: linear-gradient(135deg, rgba(2, 132, 199, 0.16) 0%, rgba(37, 99, 235, 0.1) 50%, rgba(15, 23, 18, 0.5) 100%); border-color: rgba(59, 130, 246, 0.3);">
+        <div class="hero-info">
+          <h2>Aula Prática: Expressão de Resultados, Tabelas &amp; Gráficos Científicos</h2>
+          <p>Como transformar medições numéricas em evidências científicas irrefutáveis para o seu artigo (COTB 2027 &amp; SEPEI): seleção inteligente do tipo de gráfico, regras de ouro para tabelas limpas no padrão SBC/ABNT (booktabs) e redação crítica da discussão dos achados.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-users"></i> Turma: <strong>INF-2024 (Artigo Científico)</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-chart-pie"></i> Foco: <strong>Gráficos Vetoriais &amp; Tabelas SBC</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-file-lines"></i> Seção: <strong>\section{Resultados e Discussão}</strong></div>
+        </div>
+      </div>
+
+      <!-- Quick Subnav Index -->
+      <div class="exp-subnav">
+        <a href="#res-modulo-1" class="exp-subnav-btn"><i class="fa-solid fa-sitemap text-cyan"></i> 1. Matriz de Decisão: Qual Gráfico Usar?</a>
+        <a href="#res-modulo-2" class="exp-subnav-btn"><i class="fa-solid fa-chart-column" style="color: #60a5fa;"></i> 2. Galeria Interativa: Os 5 Gráficos da Computação</a>
+        <a href="#res-modulo-3" class="exp-subnav-btn"><i class="fa-solid fa-table text-green"></i> 3. Anatomia da Tabela Científica (ABNT / SBC)</a>
+        <a href="#res-modulo-4" class="exp-subnav-btn"><i class="fa-solid fa-triangle-exclamation text-red"></i> 4. Os 6 Pecados Capitais nos Artigos</a>
+        <a href="#res-modulo-5" class="exp-subnav-btn"><i class="fa-solid fa-pen-nib text-amber"></i> 5. Redação da Discussão dos Dados no LaTeX</a>
+      </div>
+
+      <!-- MÓDULO 1: MATRIZ DE DECISÃO -->
+      <div class="guide-box" id="res-modulo-1">
+        <div style="margin-bottom: 1.2rem;">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem;">
+            <i class="fa-solid fa-sitemap text-cyan"></i> Módulo 1: A Matriz de Decisão — Como Escolher o Gráfico Certo para Meus Dados?
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.35rem;">
+            O erro mais comum em bancas de TCC e revisões da SBC é escolher o gráfico pelo aspecto estético e não pela <strong>natureza matemática das variáveis</strong>. Utilize a matriz abaixo para determinar exatamente qual formato representa seus dados com fidelidade:
+          </p>
+        </div>
+
+        <div class="chart-type-grid">
+
+          <!-- Card 1: Barras/Colunas -->
+          <div class="chart-type-card">
+            <div>
+              <span class="chart-type-badge bar"><i class="fa-solid fa-chart-simple"></i> Colunas / Barras</span>
+              <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem;">Comparação entre Grupos ou Condições Discretas</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Ideal para contrastar valores numéricos agregados (médias, totais, taxas) entre categorias independentes.
+              </p>
+              <div style="font-size: 0.76rem; background: var(--chip-bg); padding: 0.6rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cyan); margin-bottom: 0.6rem;">
+                <strong>Estrutura dos Dados:</strong><br>
+                • <strong>Eixo X:</strong> Categoria Nominal/Discreta (ex.: <em>Base vs. RAG</em>, <em>Papel vs. App</em>, <em>Novato vs. Veterano</em>)<br>
+                • <strong>Eixo Y:</strong> Métrica contínua (ex.: Tempo em ms, Taxa de Acerto %, Escala SUS 0-100)
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--accent-cyan);">
+              <i class="fa-solid fa-bullseye"></i> <strong>Exemplos na Turma:</strong> JifTV (3G vs 4G), ChatBot (com/sem RAG), Scout Vôlei (Papel vs App).
+            </div>
+          </div>
+
+          <!-- Card 2: Linhas / Séries Temporais -->
+          <div class="chart-type-card">
+            <div>
+              <span class="chart-type-badge line"><i class="fa-solid fa-chart-line"></i> Linha / Curvas Contínuas</span>
+              <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem;">Evolução Temporal &amp; Séries Sequenciais</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Ideal para demonstrar tendências, curvas de aprendizado, aceleração, estabilização ou degradação ao longo de uma escala ordenada contínua.
+              </p>
+              <div style="font-size: 0.76rem; background: var(--chip-bg); padding: 0.6rem; border-radius: var(--radius-sm); border-left: 3px solid var(--ifsc-green); margin-bottom: 0.6rem;">
+                <strong>Estrutura dos Dados:</strong><br>
+                • <strong>Eixo X:</strong> Variável Contínua / Ordinal (ex.: <em>Tempo em Horas</em>, <em>Número de Conexões: 1, 4, 8, 16</em>, <em>Tentativas: R1, R2, R3</em>)<br>
+                • <strong>Eixo Y:</strong> Grandeza monitorada (ex.: Temperatura °C, Latência ms, Erros cometidos)
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--ifsc-green-light);">
+              <i class="fa-solid fa-bullseye"></i> <strong>Exemplos na Turma:</strong> Estação Meteorológica (24h), D20Hub (latência vs clientes), SMC (aprendizado por rodada).
+            </div>
+          </div>
+
+          <!-- Card 3: Dispersão / Scatter Plot -->
+          <div class="chart-type-card">
+            <div>
+              <span class="chart-type-badge scatter"><i class="fa-solid fa-braille"></i> Dispersão (Scatter Plot)</span>
+              <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem;">Correlação &amp; Análise de Compromisso (Trade-off)</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Ideal para investigar se o aumento de uma variável afeta a outra (positiva ou negativamente) e identificar o "ponto ótimo" de operação do sistema.
+              </p>
+              <div style="font-size: 0.76rem; background: var(--chip-bg); padding: 0.6rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-amber); margin-bottom: 0.6rem;">
+                <strong>Estrutura dos Dados:</strong><br>
+                • <strong>Eixo X:</strong> Variável Numérica Contínua A (ex.: <em>Tamanho do Modelo 3D em MB</em>)<br>
+                • <strong>Eixo Y:</strong> Variável Numérica Contínua B (ex.: <em>Taxa de Quadros por Segundo - FPS</em>)
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--accent-amber);">
+              <i class="fa-solid fa-bullseye"></i> <strong>Exemplos na Turma:</strong> Acervo MAGE 3D (Tamanho MB vs FPS), ChatBot (Tokens/s vs Acurácia).
+            </div>
+          </div>
+
+          <!-- Card 4: Boxplot -->
+          <div class="chart-type-card">
+            <div>
+              <span class="chart-type-badge boxplot"><i class="fa-solid fa-sliders"></i> Boxplot (Diagrama de Caixas)</span>
+              <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem;">Distribuição Estatística, Quartis &amp; Outliers</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Essencial quando a média isolada esconde a realidade. Mostra a mediana, 1º e 3º quartis, e picos discrepantes (outliers) que prejudicam a experiência do usuário.
+              </p>
+              <div style="font-size: 0.76rem; background: var(--chip-bg); padding: 0.6rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-purple); margin-bottom: 0.6rem;">
+                <strong>Estrutura dos Dados:</strong><br>
+                • <strong>Eixo X:</strong> Condições experimentais ou módulos<br>
+                • <strong>Eixo Y:</strong> Distribuição de centenas de amostras (mínimo, 25%, mediana, 75%, máximo e outliers)
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--accent-purple);">
+              <i class="fa-solid fa-bullseye"></i> <strong>Exemplos na Turma:</strong> RasPorta (variação do tempo biométrico), JifTV (jitter de pacotes HLS).
+            </div>
+          </div>
+
+          <!-- Card 5: Tabela Científica -->
+          <div class="chart-type-card">
+            <div>
+              <span class="chart-type-badge table"><i class="fa-solid fa-table-list"></i> Tabela Científica (ABNT/SBC)</span>
+              <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem;">Síntese Multimétrica &amp; Valores Numéricos Exatos</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Obrigatória quando o artigo precisa confrontar múltiplas grandezas com unidades diferentes (ms, %, MB, FPS) de forma detalhada e auditável.
+              </p>
+              <div style="font-size: 0.76rem; background: var(--chip-bg); padding: 0.6rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-blue); margin-bottom: 0.6rem;">
+                <strong>Estrutura dos Dados:</strong><br>
+                • <strong>Linhas:</strong> Cenários de teste ou versões avaliadas<br>
+                • <strong>Colunas:</strong> Métricas distintas com unidades entre colchetes (ex.: <em>Tempo Médio [ms]</em>, <em>Desvio [±ms]</em>, <em>CPU [%]</em>, <em>RAM [MB]</em>)
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: #60a5fa;">
+              <i class="fa-solid fa-bullseye"></i> <strong>Regra de Ouro:</strong> Nunca repita na tabela exatamente o mesmo dado que já está expresso em um gráfico!
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MÓDULO 2: GALERIA INTERATIVA DOS 5 TIPOS -->
+      <div class="guide-box" id="res-modulo-2">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem;">
+              <i class="fa-solid fa-chart-column" style="color: #60a5fa;"></i> Módulo 2: Galeria Interativa com Gráficos SVG &amp; Scripts de Geração
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.25rem;">
+              Clique nas abas abaixo para visualizar exemplos reais de gráficos científicos, entender a estrutura de dados necessária e copiar os códigos em Python (Matplotlib) e LaTeX para o Overleaf:
+            </p>
+          </div>
+        </div>
+
+        <!-- Abas da Galeria -->
+        <div class="gallery-tab-nav">
+          <button class="gallery-tab-btn active" onclick="switchGalleryChart('barras', this)">
+            <i class="fa-solid fa-chart-simple text-cyan"></i> 1. Colunas com Barras de Erro (Desvio Padrão)
+          </button>
+          <button class="gallery-tab-btn" onclick="switchGalleryChart('linhas', this)">
+            <i class="fa-solid fa-chart-line text-green"></i> 2. Linhas &amp; Séries Temporais Sobrepostas
+          </button>
+          <button class="gallery-tab-btn" onclick="switchGalleryChart('dispersao', this)">
+            <i class="fa-solid fa-braille text-amber"></i> 3. Dispersão (Trade-off &amp; Fronteira Ótima)
+          </button>
+          <button class="gallery-tab-btn" onclick="switchGalleryChart('boxplot', this)">
+            <i class="fa-solid fa-sliders text-purple"></i> 4. Boxplot Estatístico (Outliers)
+          </button>
+          <button class="gallery-tab-btn" onclick="switchGalleryChart('tabela', this)">
+            <i class="fa-solid fa-table-list" style="color: #60a5fa;"></i> 5. Tabela Comparativa SBC (booktabs)
+          </button>
+        </div>
+
+        <!-- PANE 1: COLUNAS COM DESVIO PADRÃO -->
+        <div class="gallery-chart-pane active" id="pane-barras">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--accent-cyan); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-chart-simple"></i> Exemplo: Colunas Agrupadas com Barras de Erro (&plusmn; Desvio Padrão)
+            </h4>
+            <span class="metric-badge">Caso de Uso: Comparação entre Cenários com Múltiplos Ensaios</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Em computação, <strong>nunca apresente colunas sem barras de erro</strong> quando os testes envolverem repetições ou voluntários. A barra de erro indica a estabilidade ou ruído do sistema.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-bottom: 1.2rem;">
+            <!-- Visual SVG -->
+            <div class="chart-box" style="background: rgba(0,0,0,0.4); border-color: rgba(6, 182, 212, 0.3);">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.6rem;">
+                <i class="fa-solid fa-eye"></i> Visualização Renderizada (Exemplo: Latência Média vs. Perfil de Rede)
+              </span>
+              <svg width="360" height="180" viewBox="0 0 360 180">
+                <line x1="50" y1="20" x2="50" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="50" y1="140" x2="340" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Grid lines -->
+                <line x1="50" y1="100" x2="340" y2="100" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <line x1="50" y1="60" x2="340" y2="60" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <!-- Y Labels -->
+                <text x="42" y="24" fill="#94a3b8" font-size="9" text-anchor="end">3.000 ms</text>
+                <text x="42" y="64" fill="#94a3b8" font-size="9" text-anchor="end">2.000 ms</text>
+                <text x="42" y="104" fill="#94a3b8" font-size="9" text-anchor="end">1.000 ms</text>
+                <text x="42" y="144" fill="#94a3b8" font-size="9" text-anchor="end">0 ms</text>
+                <!-- Bar 1: Rede Local (1850ms) -->
+                <rect x="80" y="66" width="55" height="74" fill="#06b6d4" rx="3"/>
+                <!-- Error bar 1 (1850 +- 150) -->
+                <line x1="107" y1="60" x2="107" y2="72" stroke="#ffffff" stroke-width="1.5"/>
+                <line x1="102" y1="60" x2="112" y2="60" stroke="#ffffff" stroke-width="1.5"/>
+                <line x1="102" y1="72" x2="112" y2="72" stroke="#ffffff" stroke-width="1.5"/>
+                <text x="107" y="52" fill="#06b6d4" font-size="9" font-weight="700" text-anchor="middle">1.850 &plusmn; 150</text>
+                <!-- Bar 2: 4G Estável (2120ms) -->
+                <rect x="175" y="55" width="55" height="85" fill="#3b82f6" rx="3"/>
+                <!-- Error bar 2 (2120 +- 210) -->
+                <line x1="202" y1="46" x2="202" y2="64" stroke="#ffffff" stroke-width="1.5"/>
+                <line x1="197" y1="46" x2="207" y2="46" stroke="#ffffff" stroke-width="1.5"/>
+                <line x1="197" y1="64" x2="207" y2="64" stroke="#ffffff" stroke-width="1.5"/>
+                <text x="202" y="38" fill="#3b82f6" font-size="9" font-weight="700" text-anchor="middle">2.120 &plusmn; 210</text>
+                <!-- Bar 3: 3G Limitado (2680ms) -->
+                <rect x="270" y="33" width="55" height="107" fill="#f59e0b" rx="3"/>
+                <!-- Error bar 3 (2680 +- 380) -->
+                <line x1="297" y1="18" x2="297" y2="48" stroke="#ffffff" stroke-width="1.5"/>
+                <line x1="292" y1="18" x2="302" y2="18" stroke="#ffffff" stroke-width="1.5"/>
+                <line x1="292" y1="48" x2="302" y2="48" stroke="#ffffff" stroke-width="1.5"/>
+                <text x="297" y="12" fill="#f59e0b" font-size="9" font-weight="700" text-anchor="middle">2.680 &plusmn; 380</text>
+                <!-- X Labels -->
+                <text x="107" y="156" fill="#94a3b8" font-size="9" text-anchor="middle">Rede Local (Wi-Fi)</text>
+                <text x="202" y="156" fill="#94a3b8" font-size="9" text-anchor="middle">4G Móvel (5 Mbps)</text>
+                <text x="297" y="156" fill="#94a3b8" font-size="9" text-anchor="middle">3G Restrito (1.5 Mbps)</text>
+                <text x="202" y="172" fill="#64748b" font-size="8" text-anchor="middle">Perfil de Conexão Emulado</text>
+              </svg>
+            </div>
+
+            <!-- Dados & Requisitos -->
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.8rem;">
+              <strong style="color: var(--text-main); display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-list-check text-cyan"></i> Como estruturar os dados na planilha:</strong>
+              <table class="matrix-sample-table" style="font-size: 0.74rem;">
+                <thead>
+                  <tr><th>Cenário (Eixo X)</th><th>Repetições</th><th>Média (ms)</th><th>Desvio Padrão (&plusmn;s)</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Rede Local</td><td>10 ensaios</td><td>1850.4</td><td>150.2</td></tr>
+                  <tr><td>4G Móvel</td><td>10 ensaios</td><td>2120.1</td><td>210.5</td></tr>
+                  <tr><td>3G Restrito</td><td>10 ensaios</td><td>2680.8</td><td>380.1</td></tr>
+                </tbody>
+              </table>
+              <div style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
+                <i class="fa-solid fa-lightbulb text-amber"></i> <strong>Dica Pedagógica:</strong> A altura da coluna representa a média (`mean`) e a linha em "I" desenha o desvio padrão (`yerr=desvios`). Isso comprova aos revisores que os testes foram repetidos cientificamente!
+              </div>
+            </div>
+          </div>
+
+          <!-- Snippet Python -->
+          <div class="code-box-header">
+            <span><i class="fa-brands fa-python text-green"></i> script_grafico_barras_sbc.py (Código pronto para salvar em PDF de alta qualidade)</span>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('pySnippetBar')"><i class="fa-solid fa-copy"></i> Copiar Código Python</button>
+          </div>
+          <pre class="code-box-content" id="pySnippetBar"><code>import matplotlib.pyplot as plt
+
+# 1. Dados coletados no experimento
+cenarios = ['Rede Local', '4G Móvel (5 Mbps)', '3G Restrito (1.5 Mbps)']
+medias_ms = [1850.4, 2120.1, 2680.8]
+desvios_ms = [150.2, 210.5, 380.1]
+
+# 2. Configurações tipográficas para artigo científico (Duas colunas SBC)
+plt.rcParams.update({'font.size': 10, 'font.family': 'serif'})
+fig, ax = plt.subplots(figsize=(6, 3.5))
+
+# 3. Desenho das barras com barra de erro (yerr) e tampa (capsize)
+barras = ax.bar(cenarios, medias_ms, yerr=desvios_ms, capsize=5, color=['#0284c7', '#2563eb', '#d97706'], edgecolor='black', linewidth=0.8)
+
+# 4. Rótulos rigorosos com unidades de medida
+ax.set_ylabel('Latência Média de Reprodução [ms]')
+ax.set_xlabel('Cenário de Conectividade')
+ax.set_ylim(0, 3200)
+ax.grid(axis='y', linestyle='--', alpha=0.5)
+
+# 5. Exportar em PDF vetorial para o Overleaf (não perde qualidade ao dar zoom!)
+plt.tight_layout()
+plt.savefig('grafico_latencia_jiftv.pdf', dpi=300)
+plt.show()</code></pre>
+        </div>
+
+        <!-- PANE 2: SÉRIES TEMPORAIS -->
+        <div class="gallery-chart-pane" id="pane-linhas">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--ifsc-green-light); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-chart-line"></i> Exemplo: Gráfico de Linhas com Séries Temporais Sobrepostas
+            </h4>
+            <span class="metric-badge" style="border-color: rgba(34, 197, 94, 0.4); color: var(--ifsc-green-light);">Caso de Uso: Acompanhamento Temporal Contínuo &amp; Calibração</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Ideal para projetos de sensores e IoT (como a <strong>Estação Meteorológica</strong>) ou curvas de escalabilidade de requisições. Permite ao leitor comparar visualmente o sinal medido contra a estação de referência oficial ao longo do tempo.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-bottom: 1.2rem;">
+            <div class="chart-box" style="background: rgba(0,0,0,0.4); border-color: rgba(34, 197, 94, 0.3);">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--ifsc-green-light); margin-bottom: 0.6rem;">
+                <i class="fa-solid fa-eye"></i> Visualização Renderizada (Temperatura BME280 vs Referência INMET durante 24h)
+              </span>
+              <svg width="360" height="180" viewBox="0 0 360 180">
+                <line x1="50" y1="20" x2="50" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="50" y1="140" x2="340" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Y labels -->
+                <text x="42" y="30" fill="#94a3b8" font-size="9" text-anchor="end">28 °C</text>
+                <text x="42" y="65" fill="#94a3b8" font-size="9" text-anchor="end">24 °C</text>
+                <text x="42" y="100" fill="#94a3b8" font-size="9" text-anchor="end">20 °C</text>
+                <text x="42" y="140" fill="#94a3b8" font-size="9" text-anchor="end">16 °C</text>
+                <!-- Curve 1: INMET Reference (Solid Blue) -->
+                <path d="M 50,115 Q 100,125 140,85 T 220,38 T 290,75 T 340,110" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+                <!-- Curve 2: BME280 Raspberry (Dashed Green) -->
+                <path d="M 50,112 Q 100,122 140,88 T 220,41 T 290,78 T 340,113" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,3"/>
+                <!-- Legend inside box -->
+                <rect x="60" y="24" width="130" height="34" fill="rgba(0,0,0,0.6)" rx="4" stroke="rgba(255,255,255,0.1)"/>
+                <line x1="68" y1="35" x2="90" y2="35" stroke="#3b82f6" stroke-width="2.5"/>
+                <text x="96" y="38" fill="#e2e8f0" font-size="8">Estação INMET (Ref.)</text>
+                <line x1="68" y1="48" x2="90" y2="48" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,3"/>
+                <text x="96" y="51" fill="#e2e8f0" font-size="8">Sensor BME280 (PI)</text>
+                <!-- X Labels -->
+                <text x="50" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">00h</text>
+                <text x="120" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">06h</text>
+                <text x="195" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">12h</text>
+                <text x="270" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">18h</text>
+                <text x="340" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">24h</text>
+                <text x="195" y="172" fill="#64748b" font-size="8" text-anchor="middle">Horário de Amostragem (24 horas ininterruptas)</text>
+              </svg>
+            </div>
+
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.8rem;">
+              <strong style="color: var(--text-main); display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-code-branch text-green"></i> Regras de Ouro para Gráficos de Linha:</strong>
+              <ul style="color: var(--text-muted); line-height: 1.5; padding-left: 1.1rem;">
+                <li><strong>Diferenciação além da cor:</strong> Nunca use apenas cores para distinguir as curvas (uma pode ser linha contínua, outra tracejada ou com marcadores circulares `o` e quadrados `s`). Isso garante legibilidade mesmo em impressões em preto e branco!</li>
+                <li><strong>Eixo temporal contínuo:</strong> Mantenha os intervalos de tempo rigorosamente equidistantes (ex.: amostras de 10 em 10 minutos).</li>
+                <li><strong>Cálculo do Erro Médio Absoluto (MAE):</strong> No texto do artigo, reporte a distância média vertical entre as duas curvas: $\text{MAE} = \frac{1}{n} \sum |y_{\text{sensor}} - y_{\text{ref}}|$.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="code-box-header">
+            <span><i class="fa-brands fa-python text-green"></i> script_serie_temporal_sbc.py (Geração de série com duas curvas e legenda)</span>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('pySnippetLine')"><i class="fa-solid fa-copy"></i> Copiar Código Python</button>
+          </div>
+          <pre class="code-box-content" id="pySnippetLine"><code>import matplotlib.pyplot as plt
+import numpy as np
+
+# 1. Simulação das 24 horas (amostras horárias)
+horas = list(range(0, 25))
+temp_inmet = [19.2, 18.5, 17.9, 17.4, 18.0, 19.5, 22.1, 25.3, 27.4, 28.1, 27.8, 26.2, 24.1, 22.3, 20.8, 19.5, 19.2, 18.8, 18.4, 18.1, 17.8, 17.5, 17.2, 17.0, 16.9]
+# Sensor com ruído e leve desvio térmico (+0.4°C)
+temp_bme280 = [t + 0.35 + np.random.normal(0, 0.15) for t in temp_inmet]
+
+# 2. Configuração do gráfico científico
+plt.figure(figsize=(7, 3.8))
+plt.plot(horas, temp_inmet, label='Estação Oficial INMET', color='#1d4ed8', linewidth=2)
+plt.plot(horas, temp_bme280, label='Sensor BME280 (Proposto)', color='#16a34a', linestyle='--', linewidth=1.8, marker='o', markersize=3)
+
+plt.xlabel('Horário do Dia [Horas]')
+plt.ylabel('Temperatura do Ar [°C]')
+plt.xticks(np.arange(0, 25, 3))
+plt.grid(True, linestyle=':', alpha=0.6)
+plt.legend(loc='upper right', frameon=True)
+plt.tight_layout()
+plt.savefig('grafico_serie_temporal_bme280.pdf', dpi=300)
+plt.show()</code></pre>
+        </div>
+
+        <!-- PANE 3: DISPERSÃO (TRADE-OFF) -->
+        <div class="gallery-chart-pane" id="pane-dispersao">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--accent-amber); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-braille"></i> Exemplo: Gráfico de Dispersão (Scatter Plot) — Trade-off &amp; Fronteira de Eficiência
+            </h4>
+            <span class="metric-badge" style="border-color: rgba(245, 158, 11, 0.4); color: var(--accent-amber);">Caso de Uso: Tamanho de Modelo vs. FPS / Acurácia vs. Latência</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Gráficos de dispersão mostram o **compromisso (*trade-off*)** entre duas métricas antagônicas: por exemplo, no projeto **Acervo MAGE 3D**, quanto maior a complexidade poligonal do modelo, maior o peso do arquivo (MB) e menor a taxa de quadros (FPS).
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-bottom: 1.2rem;">
+            <div class="chart-box" style="background: rgba(0,0,0,0.4); border-color: rgba(245, 158, 11, 0.3);">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.6rem;">
+                <i class="fa-solid fa-eye"></i> Visualização Renderizada (Tamanho GLB em MB vs FPS de Renderização WebGL)
+              </span>
+              <svg width="360" height="180" viewBox="0 0 360 180">
+                <line x1="50" y1="20" x2="50" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="50" y1="140" x2="340" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Threshold 60 FPS -->
+                <line x1="50" y1="40" x2="340" y2="40" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,3"/>
+                <text x="335" y="35" fill="#22c55e" font-size="8" text-anchor="end">Meta: 60 FPS (Fluido)</text>
+                <!-- Y labels -->
+                <text x="42" y="44" fill="#94a3b8" font-size="9" text-anchor="end">60 FPS</text>
+                <text x="42" y="80" fill="#94a3b8" font-size="9" text-anchor="end">45 FPS</text>
+                <text x="42" y="115" fill="#94a3b8" font-size="9" text-anchor="end">30 FPS</text>
+                <text x="42" y="144" fill="#94a3b8" font-size="9" text-anchor="end">0 FPS</text>
+                <!-- Points -->
+                <!-- P1: 4.2 MB -> 60 FPS (Green) -->
+                <circle cx="90" cy="40" r="6" fill="#22c55e"/>
+                <text x="90" y="28" fill="#22c55e" font-size="8" font-weight="700" text-anchor="middle">4.2 MB (60 FPS)</text>
+                <!-- P2: 18 MB -> 52 FPS (Yellow) -->
+                <circle cx="170" cy="62" r="6" fill="#f59e0b"/>
+                <text x="170" y="54" fill="#f59e0b" font-size="8" font-weight="700" text-anchor="middle">18.1 MB (52 FPS)</text>
+                <!-- P3: 35 MB -> 41 FPS (Orange) -->
+                <circle cx="240" cy="88" r="6" fill="#ea580c"/>
+                <text x="240" y="80" fill="#ea580c" font-size="8" font-weight="700" text-anchor="middle">35.0 MB (41 FPS)</text>
+                <!-- P4: 68 MB -> 28 FPS (Red) -->
+                <circle cx="310" cy="118" r="6" fill="#ef4444"/>
+                <text x="310" y="110" fill="#ef4444" font-size="8" font-weight="700" text-anchor="middle">68.4 MB (28 FPS)</text>
+                <!-- X labels -->
+                <text x="90" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">5 MB</text>
+                <text x="170" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">20 MB</text>
+                <text x="240" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">40 MB</text>
+                <text x="310" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">70 MB</text>
+                <text x="195" y="172" fill="#64748b" font-size="8" text-anchor="middle">Tamanho do Arquivo GLB [MB]</text>
+              </svg>
+            </div>
+
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.8rem;">
+              <strong style="color: var(--text-main); display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-bullseye text-amber"></i> O que discutir no texto do artigo:</strong>
+              <p style="color: var(--text-muted); font-size: 0.78rem; line-height: 1.5;">
+                O gráfico de dispersão não apenas mostra dados, ele <strong>justifica uma decisão de engenharia</strong> perante os revisores. No texto, a equipe escreve:<br>
+                <em>"Observa-se que a versão otimizada com 4,2 MB alcança o teto estável de 60 FPS nos navegadores dos voluntários, enquanto a versão bruta (68,4 MB) sofre quedas drásticas para 28 FPS, inviabilizando a experiência em dispositivos móveis."</em>
+              </p>
+            </div>
+          </div>
+
+          <div class="code-box-header">
+            <span><i class="fa-brands fa-python text-green"></i> script_dispersao_tradeoff_sbc.py (Scatter plot com anotações de pontos)</span>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('pySnippetScatter')"><i class="fa-solid fa-copy"></i> Copiar Código Python</button>
+          </div>
+          <pre class="code-box-content" id="pySnippetScatter"><code>import matplotlib.pyplot as plt
+
+# 1. Dados experimentais (Tamanho em MB vs FPS atingido)
+tamanhos_mb = [4.2, 18.1, 35.0, 68.4]
+taxas_fps = [60.0, 52.4, 41.2, 28.0]
+rotulos = ['Otimizado (10%)', 'Médio (30%)', 'Intermediário (50%)', 'Bruto (Polycam)']
+
+# 2. Configuração do Scatter Plot
+plt.figure(figsize=(6.5, 3.8))
+cores = ['#16a34a', '#f59e0b', '#ea580c', '#dc2626']
+plt.scatter(tamanhos_mb, taxas_fps, color=cores, s=80, edgecolors='black', zorder=5)
+
+# Linha de tendência/meta
+plt.axhline(y=60, color='#16a34a', linestyle='--', linewidth=1, label='Meta: 60 FPS')
+
+# Anotações dos nomes dos arquivos
+for i, txt in enumerate(rotulos):
+    plt.annotate(f"{txt}\n({tamanhos_mb[i]}MB, {taxas_fps[i]}fps)", 
+                 (tamanhos_mb[i], taxas_fps[i]), 
+                 textcoords="offset points", xytext=(0, 10), ha='center', fontsize=8)
+
+plt.xlabel('Tamanho do Modelo 3D Exportado [MB]')
+plt.ylabel('Taxa Média de Quadros por Segundo [FPS]')
+plt.ylim(15, 70)
+plt.xlim(0, 80)
+plt.grid(True, linestyle=':', alpha=0.5)
+plt.legend(loc='lower left')
+plt.tight_layout()
+plt.savefig('grafico_dispersao_mage3d.pdf', dpi=300)
+plt.show()</code></pre>
+        </div>
+
+        <!-- PANE 4: BOXPLOT -->
+        <div class="gallery-chart-pane" id="pane-boxplot">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: var(--accent-purple); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-sliders"></i> Exemplo: Boxplot Estatístico — Variabilidade, Quartis &amp; Outliers
+            </h4>
+            <span class="metric-badge" style="border-color: rgba(168, 85, 247, 0.4); color: var(--accent-purple);">Caso de Uso: Análise de Latência Sob Concorrência Severa</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+            O Boxplot é amplamente elogiado em artigos científicos porque sintetiza <strong>5 métricas estatísticas em um único desenho</strong>: o valor mínimo, o primeiro quartil (Q1 - 25%), a mediana (Q2 - 50%), o terceiro quartil (Q3 - 75%) e os pontos discrepantes (<em>outliers</em>).
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-bottom: 1.2rem;">
+            <div class="chart-box" style="background: rgba(0,0,0,0.4); border-color: rgba(168, 85, 247, 0.3);">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 0.6rem;">
+                <i class="fa-solid fa-eye"></i> Visualização Renderizada (D20Hub: Latência de Mensagens WebSockets)
+              </span>
+              <svg width="360" height="180" viewBox="0 0 360 180">
+                <line x1="50" y1="20" x2="50" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <line x1="50" y1="140" x2="340" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <!-- Y labels -->
+                <text x="42" y="24" fill="#94a3b8" font-size="9" text-anchor="end">120 ms</text>
+                <text x="42" y="55" fill="#94a3b8" font-size="9" text-anchor="end">90 ms</text>
+                <text x="42" y="85" fill="#94a3b8" font-size="9" text-anchor="end">60 ms</text>
+                <text x="42" y="115" fill="#94a3b8" font-size="9" text-anchor="end">30 ms</text>
+                <text x="42" y="144" fill="#94a3b8" font-size="9" text-anchor="end">0 ms</text>
+
+                <!-- Box 1: 1 Jogador (Mediana ~24ms) -->
+                <line x1="90" y1="108" x2="90" y2="128" stroke="#a855f7" stroke-width="1.5"/>
+                <rect x="75" y="112" width="30" height="12" fill="rgba(168,85,247,0.25)" stroke="#a855f7" stroke-width="1.5"/>
+                <line x1="75" y1="117" x2="105" y2="117" stroke="#ffffff" stroke-width="2"/>
+
+                <!-- Box 2: 4 Jogadores (Mediana ~32ms) -->
+                <line x1="160" y1="98" x2="160" y2="122" stroke="#a855f7" stroke-width="1.5"/>
+                <rect x="145" y="103" width="30" height="15" fill="rgba(168,85,247,0.25)" stroke="#a855f7" stroke-width="1.5"/>
+                <line x1="145" y1="109" x2="175" y2="109" stroke="#ffffff" stroke-width="2"/>
+
+                <!-- Box 3: 8 Jogadores (Mediana ~47ms) -->
+                <line x1="230" y1="80" x2="230" y2="110" stroke="#a855f7" stroke-width="1.5"/>
+                <rect x="215" y="86" width="30" height="20" fill="rgba(168,85,247,0.25)" stroke="#a855f7" stroke-width="1.5"/>
+                <line x1="215" y1="94" x2="245" y2="94" stroke="#ffffff" stroke-width="2"/>
+
+                <!-- Box 4: 16 Jogadores (Mediana ~78ms + Outliers) -->
+                <line x1="300" y1="52" x2="300" y2="92" stroke="#a855f7" stroke-width="1.5"/>
+                <rect x="285" y="60" width="30" height="26" fill="rgba(168,85,247,0.25)" stroke="#a855f7" stroke-width="1.5"/>
+                <line x1="285" y1="71" x2="315" y2="71" stroke="#ffffff" stroke-width="2"/>
+                <!-- Outliers for 16 users -->
+                <circle cx="300" cy="38" r="3" fill="#ef4444"/>
+                <circle cx="300" cy="28" r="3" fill="#ef4444"/>
+                <text x="310" y="32" fill="#ef4444" font-size="7">Outliers (Picos)</text>
+
+                <!-- X labels -->
+                <text x="90" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">1 Jogador</text>
+                <text x="160" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">4 Jogadores</text>
+                <text x="230" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">8 Jogadores</text>
+                <text x="300" y="156" fill="#94a3b8" font-size="8" text-anchor="middle">16 Jogadores</text>
+                <text x="195" y="172" fill="#64748b" font-size="8" text-anchor="middle">Carga de Conexões Concorrentes</text>
+              </svg>
+            </div>
+
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.8rem;">
+              <strong style="color: var(--text-main); display: block; margin-bottom: 0.5rem;"><i class="fa-solid fa-info-circle text-purple"></i> Como Ler o Boxplot:</strong>
+              <ul style="color: var(--text-muted); line-height: 1.5; padding-left: 1.1rem; font-size: 0.78rem;">
+                <li><strong>Linha Branca Central:</strong> É a <em>Mediana</em> (50% dos testes foram mais rápidos que esse valor).</li>
+                <li><strong>Altura da Caixa:</strong> Intervalo Interquartil (IQR). Caixas "baixas" indicam que o sistema é muito previsível; caixas "altas" indicam oscilação.</li>
+                <li><strong>Pontos Vermelhos Isolados:</strong> São os <em>Outliers</em>. Revelam picos de latência ocasionados por garbage collection, concorrência de thread ou buffer de rede.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="code-box-header">
+            <span><i class="fa-brands fa-python text-green"></i> script_boxplot_sbc.py (Geração de boxplot com Seaborn / Matplotlib)</span>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('pySnippetBoxplot')"><i class="fa-solid fa-copy"></i> Copiar Código Python</button>
+          </div>
+          <pre class="code-box-content" id="pySnippetBoxplot"><code>import matplotlib.pyplot as plt
+import numpy as np
+
+# 1. Conjunto com 50 amostras brutas coletadas por cenário
+np.random.seed(42)
+dados_1_user = np.random.normal(24, 3, 50)
+dados_4_users = np.random.normal(32, 4.5, 50)
+dados_8_users = np.random.normal(47, 7, 50)
+# No teste de 16 users, injetamos picos reais de latência (outliers)
+dados_16_users = np.concatenate([np.random.normal(78, 10, 46), [112, 118, 125, 130]])
+
+dados = [dados_1_user, dados_4_users, dados_8_users, dados_16_users]
+labels = ['1 Jogador', '4 Jogadores', '8 Jogadores', '16 Jogadores']
+
+# 2. Desenho do Boxplot Científico
+plt.figure(figsize=(6.5, 3.8))
+box = plt.boxplot(dados, labels=labels, patch_artist=True, showmeans=False,
+                  boxprops=dict(facecolor='#a855f7', color='#581c87', alpha=0.3),
+                  medianprops=dict(color='#7e22ce', linewidth=2),
+                  flierprops=dict(marker='o', markerfacecolor='#dc2626', markersize=5))
+
+plt.ylabel('Latência de Envio e Broadcast [ms]')
+plt.xlabel('Volume de Clientes Concorrentes na Mesma Sala')
+plt.grid(axis='y', linestyle=':', alpha=0.6)
+plt.tight_layout()
+plt.savefig('boxplot_latencia_d20hub.pdf', dpi=300)
+plt.show()</code></pre>
+        </div>
+
+        <!-- PANE 5: TABELA COMPARATIVA SBC -->
+        <div class="gallery-chart-pane" id="pane-tabela">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.4rem;">
+            <h4 style="color: #60a5fa; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-table-list"></i> Exemplo: Tabela Científica Padrão SBC com o Pacote <code>booktabs</code>
+            </h4>
+            <span class="metric-badge" style="border-color: rgba(59, 130, 246, 0.4); color: #60a5fa;">Caso de Uso: Apresentação de Métricas Finais Multidimensionais</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Apresentar uma tabela limpa e profissional no padrão da Sociedade Brasileira de Computação (SBC) transmite rigor metodológico imediato aos avaliadores do congresso.
+          </p>
+
+          <!-- Tabela Renderizada -->
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.2rem; margin-bottom: 1.2rem;">
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">
+              Tabela 1. Comparativo de desempenho e consumo de recursos entre as configurações avaliadas.
+            </div>
+            
+            <table class="sbc-table-preview">
+              <thead>
+                <tr>
+                  <th>Configuração Avaliada</th>
+                  <th>Acurácia [%]</th>
+                  <th>Tempo do 1º Token [ms]</th>
+                  <th>Vazão [tokens/s]</th>
+                  <th>RAM / VRAM [GB]</th>
+                  <th>Taxa de Falha [%]</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LLM Base Puro (Sem RAG)</td>
+                  <td>53,3 &plusmn; 4,2</td>
+                  <td>1.120 &plusmn; 85</td>
+                  <td>18,4 &plusmn; 1,1</td>
+                  <td>4,2 / 3,8</td>
+                  <td>26,7%</td>
+                </tr>
+                <tr>
+                  <td>LLM + RAG (Regulamento IFSC)</td>
+                  <td><strong>86,7 &plusmn; 2,8</strong></td>
+                  <td>1.450 &plusmn; 95</td>
+                  <td>16,8 &plusmn; 0,9</td>
+                  <td>4,8 / 4,1</td>
+                  <td><strong>3,3%</strong></td>
+                </tr>
+                <tr>
+                  <td>Ganho Relativo Obtido</td>
+                  <td><span style="color: var(--ifsc-green-light); font-weight: 700;">+33,4 p.p.</span></td>
+                  <td>+29,4% (Sobrecarga)</td>
+                  <td>-8,6%</td>
+                  <td>+12,5%</td>
+                  <td><span style="color: var(--ifsc-green-light); font-weight: 700;">-87,6%</span></td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 0.4rem;">
+              <em>Fonte: Dados obtidos empiricamente pelos autores (2026). Valores expressos como Média &plusmn; Desvio Padrão sobre 30 ensaios.</em>
+            </div>
+          </div>
+
+          <div class="code-box-header">
+            <span><i class="fa-solid fa-file-code text-cyan"></i> snippet_tabela_booktabs_sbc.tex (Código LaTeX pronto para copiar para o Overleaf)</span>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('latexSnippetTable')"><i class="fa-solid fa-copy"></i> Copiar Código LaTeX</button>
+          </div>
+          <pre class="code-box-content" id="latexSnippetTable"><code>% Lembre-se de adicionar no preâmbulo do seu main.tex: \usepackage{booktabs}
+\begin{table}[htbp]
+\centering
+\caption{Comparativo de desempenho e acurácia entre as arquiteturas avaliadas.}
+\label{tab:comparativo_modelos}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Configuração Avaliada} & \textbf{Acurácia [\%]} & \textbf{1º Token [ms]} & \textbf{Vazão [tok/s]} & \textbf{RAM [GB]} & \textbf{Falha [\%]} \\
+\midrule
+LLM Base (Sem RAG)         & $53{,}3 \pm 4{,}2$ & $1.120 \pm 85$ & $18{,}4 \pm 1{,}1$ & 4,2 & 26,7\% \\
+LLM + RAG (Regulamento IFSC) & $\mathbf{86{,}7 \pm 2{,}8}$ & $1.450 \pm 95$ & $16{,}8 \pm 0{,}9$ & 4,8 & $\mathbf{3{,}3\%}$ \\
+\midrule
+\textit{Ganho Relativo}     & \textbf{+33,4 p.p.} & +29,4\% & -8,6\% & +12,5\% & \textbf{-87,6\%} \\
+\bottomrule
+\end{tabular}
+\vspace{0.15cm}
+\footnotesize{\newline \textit{Fonte: Elaborada pelos autores com base em 30 ensaios experimentais (2026).}}
+\end{table}</code></pre>
+        </div>
+
+      </div>
+
+      <!-- MÓDULO 3: A ANATOMIA DA TABELA CIENTÍFICA -->
+      <div class="guide-box" id="res-modulo-3">
+        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-table text-green"></i> Módulo 3: A Anatomia da Tabela Científica Perfeita (ABNT / SBC)
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+          Veja lado a lado a diferença entre o que o estudante comum entrega e o que uma publicação de alto nível exige:
+        </p>
+
+        <div class="exp-compare-grid">
+
+          <div class="compare-card wrong">
+            <div class="compare-card-title text-red">
+              <i class="fa-solid fa-xmark"></i> O Jeito Errado (Estilo "Planilha Pesada de Excel")
+            </div>
+            
+            <table class="table-anti-pattern">
+              <tr><th>TESTE</th><th>RESULTADO 1</th><th>RESULTADO 2</th></tr>
+              <tr><td>Cenário A</td><td>380 ms</td><td>82%</td></tr>
+              <tr><td>Cenário B</td><td>210 ms</td><td>94%</td></tr>
+            </table>
+
+            <div style="font-size: 0.78rem; color: #fca5a5; line-height: 1.5; margin-top: 0.5rem;">
+              <strong>Por que está errado segundo as normas acadêmicas?</strong><br>
+              • ❌ Linhas verticais pretas poluem a visão e são terminantemente proibidas nas normas do IBGE/ABNT.<br>
+              • ❌ Sem indicação de desvio padrão ($\pm$). Dá a entender que foi medido apenas uma única vez.<br>
+              • ❌ Cabeçalhos genéricos ("RESULTADO 1") sem a unidade de medida clara entre colchetes.<br>
+              • ❌ Título posicionado na parte inferior (em tabelas, o título fica OBRIGATORIAMENTE no topo).
+            </div>
+          </div>
+
+          <div class="compare-card correct">
+            <div class="compare-card-title text-green">
+              <i class="fa-solid fa-check"></i> O Jeito Correto (Padrão SBC / Pacote <code>booktabs</code>)
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-main); font-weight: 700; margin-bottom: 0.2rem;">
+              Tabela 2. Medições consolidadas de tempo de resposta e acurácia.
+            </div>
+            <table class="sbc-table-preview" style="font-size: 0.75rem;">
+              <thead>
+                <tr><th>Cenário de Teste</th><th>Tempo de Resposta [ms]</th><th>Acurácia [%]</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Cenário A (Baseline)</td><td>380,2 &plusmn; 24,1</td><td>82,5 &plusmn; 3,0</td></tr>
+                <tr><td>Cenário B (Otimizado)</td><td><strong>210,5 &plusmn; 12,8</strong></td><td><strong>94,1 &plusmn; 1,8</strong></td></tr>
+              </tbody>
+            </table>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem;"><em>Fonte: Autores (2026).</em></div>
+
+            <div style="font-size: 0.78rem; color: #86efac; line-height: 1.5;">
+              <strong>Por que é o padrão recomendado?</strong><br>
+              • ✅ Apenas 3 linhas horizontais elegantes (`\toprule`, `\midrule`, `\bottomrule`).<br>
+              • ✅ Nenhuma linha vertical: a respiração visual facilita a leitura dos dados.<br>
+              • ✅ Média e desvio padrão explícitos e valores ótimos destacados em negrito.<br>
+              • ✅ Título e numeração sequencial no topo da tabela.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MÓDULO 4: OS 6 PECADOS CAPITAIS -->
+      <div class="guide-box" id="res-modulo-4">
+        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-triangle-exclamation text-red"></i> Módulo 4: Os 6 Pecados Capitais na Expressão de Resultados
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+          Revise este checklist antes de gerar os gráficos finais e inserir as figuras no Overleaf:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+          
+          <div style="background: var(--bg-surface); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 1rem; border-top: 3px solid var(--ifsc-red);">
+            <strong style="color: #f87171; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-chart-pie"></i> 1. O Gráfico de Pizza ("Pie Chart")
+            </strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.45;">
+              O cérebro humano tem dificuldade em calcular ângulos e fatias 3D. <strong>Evite gráficos de pizza</strong> em artigos de computação, especialmente se houver mais de 3 fatias. <em>Substitua por barras horizontais ordenadas!</em>
+            </p>
+          </div>
+
+          <div style="background: var(--bg-surface); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 1rem; border-top: 3px solid var(--ifsc-red);">
+            <strong style="color: #f87171; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-arrows-split-up-and-left"></i> 2. Eixo Y Truncado sem Zero
+            </strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.45;">
+              Em gráficos de barras, cortar o eixo Y (por exemplo, iniciar o eixo em 95 em vez de 0) exagera visualmente diferenças minúsculas e é considerado desonestidade científica. <em>O eixo Y de barras deve sempre iniciar em 0!</em>
+            </p>
+          </div>
+
+          <div style="background: var(--bg-surface); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 1rem; border-top: 3px solid var(--ifsc-red);">
+            <strong style="color: #f87171; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-heading"></i> 3. Título Gigante Dentro da Imagem
+            </strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.45;">
+              Nunca coloque <code>plt.title("Gráfico da Latência")</code> em gráficos de artigo. O título pertence EXCLUSIVAMENTE ao comando <code>\caption{...}</code> do LaTeX. Colocar na imagem desperdiça espaço precioso na página.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-surface); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 1rem; border-top: 3px solid var(--ifsc-red);">
+            <strong style="color: #f87171; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-ruler-combined"></i> 4. Eixo sem Unidade de Medida
+            </strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.45;">
+              Rotular o eixo simplesmente como "Tempo" ou "Custo" é reprovação certa. Especifique SEMPRE a unidade: <em>"Tempo de Processamento [ms]"</em>, <em>"Consumo de Memória [MB]"</em> ou <em>"Taxa de Acertos [%]"</em>.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-surface); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 1rem; border-top: 3px solid var(--ifsc-red);">
+            <strong style="color: #f87171; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-magnifying-glass-minus"></i> 5. Fontes Microscópicas nas Legendas
+            </strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.45;">
+              Ao reduzir o gráfico para caber na largura de uma coluna do template SBC (`\columnwidth`), os textos dos eixos ficam ilegíveis. No Python, use sempre <code>plt.rcParams['font.size'] = 10</code> ou superior.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-surface); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 1rem; border-top: 3px solid var(--ifsc-red);">
+            <strong style="color: #f87171; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-ghost"></i> 6. A "Figura Órfã" no Texto
+            </strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.45;">
+              O gráfico NÃO fala sozinho! Nenhuma figura pode aparecer solta no artigo sem ser citada (<code>Figura~\ref{fig:X}</code>) e discutida criticamente no corpo dos parágrafos adjacentes.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MÓDULO 5: REDAÇÃO DA DISCUSSÃO DOS DADOS -->
+      <div class="guide-box" id="res-modulo-5">
+        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-pen-nib text-amber"></i> Módulo 5: Como Redigir a "Discussão dos Resultados" no LaTeX
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+          A estrutura de um parágrafo científico perfeito de resultados segue a <strong>Fórmula dos 4 Passos</strong>:
+        </p>
+
+        <div class="step-card-grid" style="margin-bottom: 1.4rem;">
+          <div class="step-card">
+            <div class="step-badge-num" style="background: var(--accent-blue);">1</div>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Localização &amp; Apresentação</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">
+              Cite explicitamente o elemento visual:<br>
+              <em>"A Figura 2 ilustra o comportamento da latência..."</em>
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num" style="background: var(--ifsc-green);">2</div>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Evidência Numérica</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">
+              Destaque os números, médias e ganhos relativos:<br>
+              <em>"...comprovando uma redução de 64% entre R1 (363s) e R3 (131s)..."</em>
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num" style="background: var(--accent-amber);">3</div>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Explicação Técnica Causal</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">
+              Explique o PORQUÊ do número:<br>
+              <em>"...tal ganho decorre da curva de fixação visual dos componentes..."</em>
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-num" style="background: var(--accent-purple);">4</div>
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Validação da Hipótese</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">
+              Conclua sobre a pergunta científica:<br>
+              <em>"...o que valida satisfatoriamente a Hipótese H1."</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- Tabela de Conectivos -->
+        <h4 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.6rem;">
+          <i class="fa-solid fa-spell-check text-cyan"></i> Tabela de Conectivos Acadêmicos Recomendados para a Seção:
+        </h4>
+        <table class="matrix-sample-table" style="font-size: 0.78rem; margin-bottom: 1.2rem;">
+          <thead>
+            <tr><th>Função no Texto</th><th>Conectivos e Expressões Recomendadas</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Apresentar a Figura / Tabela</strong></td>
+              <td><em>"Conforme ilustrado na Figura~\ref{...}", "Como evidenciado na Tabela~\ref{...}", "Os dados dispostos na Figura~\ref{...} revelam que..."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Destacar Tendências e Ganhos</strong></td>
+              <td><em>"Nota-se uma redução consistente de X%", "Observou-se uma correlação positiva entre...", "Verifica-se um acréscimo estatisticamente relevante..."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Contrastar Cenários</strong></td>
+              <td><em>"Em contrapartida,", "Por outro lado,", "Diferentemente do comportamento observado na baseline,", "Enquanto o Cenário A registrou X, o Cenário B..."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Explicar a Razão Técnica (Causalidade)</strong></td>
+              <td><em>"Esse comportamento é atribuído a...", "Tal decréscimo justifica-se pela adoção do mecanismo de...", "Esse gargalo decorre da saturação de..."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Confirmar a Hipótese</strong></td>
+              <td><em>"Desse modo, corrobora-se a hipótese inicial...", "Esses achados sustentam a proposição de que...", "Confirmando a expectativa estabelecida na Seção~\ref{...}"</em></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Template LaTeX de Inclusão de Figura -->
+        <div class="code-box-header">
+          <span><i class="fa-solid fa-file-code text-cyan"></i> snippet_figura_latex_sbc.tex (Como inserir a figura e referenciá-la no Overleaf)</span>
+          <button class="btn btn-outline" style="padding: 0.15rem 0.5rem; font-size: 0.7rem;" onclick="copyCode('latexSnippetFig')"><i class="fa-solid fa-copy"></i> Copiar Código LaTeX</button>
+        </div>
+        <pre class="code-box-content" id="latexSnippetFig"><code>\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\columnwidth]{figuras/grafico_latencia_jiftv.pdf}
+\caption{Latência média de entrega do fluxo de vídeo sob diferentes perfis de conectividade emulados.}
+\label{fig:latencia_jiftv}
+\end{figure}
+
+% Exemplo de parágrafo no texto do artigo:
+A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência de entrega sob três perfis de conectividade emulados. Observa-se que, no cenário de rede local sem restrições, o atraso manteve-se em $1.850 \pm 150$~ms. Ao submeter o cliente à emulação de 3G restrito (1,5~Mbps), a latência média elevou-se para $2.680 \pm 380$~ms, representando um acréscimo de 44,8\%. Esse comportamento decorre da comutação dinâmica do perfil HLS para a resolução 360p, que priorizou a continuidade da reprodução sem a ocorrência de travamentos (\textit{re-buffering}). Tais evidências empíricas confirmam a eficácia da abordagem adaptativa proposta.</code></pre>
+
+      </div>
+
+    </section>
+
   </main>
 
   <!-- Modal Project Deep View -->
@@ -5962,6 +7016,16 @@ Conforme ilustrado na Figura~\ref{fig:grafico_exp}, observa-se uma redução con
           card.style.display = 'none';
         }
       });
+    }
+
+    // Chart Gallery Switcher (Aula Expressão de Resultados)
+    function switchGalleryChart(chartType, btn) {
+      document.querySelectorAll('.gallery-chart-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.gallery-tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const pane = document.getElementById('pane-' + chartType);
+      if (pane) pane.classList.add('active');
+      if (btn) btn.classList.add('active');
     }
 
     // Code and LaTeX Copy Helper
