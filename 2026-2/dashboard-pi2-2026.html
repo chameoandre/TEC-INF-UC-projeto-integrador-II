@@ -1843,6 +1843,49 @@
       background: rgba(0, 0, 0, 0.15);
       opacity: 0.88;
     }
+    .card-clipart-box {
+      width: 100%;
+      height: 95px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.9rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: var(--transition);
+      background: rgba(0, 0, 0, 0.15);
+    }
+    .pedagogical-card:hover .card-clipart-box {
+      transform: translateY(-2px);
+    }
+    .card-clipart-box.purple {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.16) 0%, rgba(79, 70, 229, 0.08) 100%);
+      border-color: rgba(168, 85, 247, 0.28);
+    }
+    .card-clipart-box.green {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.16) 0%, rgba(13, 148, 136, 0.08) 100%);
+      border-color: rgba(34, 197, 94, 0.28);
+    }
+    .card-clipart-box.blue {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.16) 0%, rgba(37, 99, 235, 0.08) 100%);
+      border-color: rgba(59, 130, 246, 0.28);
+    }
+    .card-clipart-box.amber {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%);
+      border-color: rgba(245, 158, 11, 0.28);
+    }
+    .card-clipart-box.cyan {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.16) 0%, rgba(8, 145, 178, 0.08) 100%);
+      border-color: rgba(6, 182, 212, 0.28);
+    }
+    .card-clipart-box svg {
+      width: 100%;
+      height: 100%;
+      max-height: 85px;
+      display: block;
+    }
     .pedagogical-card-top {
       display: flex;
       align-items: flex-start;
@@ -2432,19 +2475,6 @@
     </div>
 
     <div class="header-actions">
-      <!-- Botões de Aulas em Destaque -->
-      <button class="btn btn-primary" onclick="switchTab('trabalhos-relacionados')" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); border: none;" title="Acessar Aula Prática: Seção de Trabalhos Relacionados">
-        <i class="fa-solid fa-graduation-cap"></i> Aula: Trabalhos Relacionados
-      </button>
-
-      <button class="btn btn-primary" onclick="switchTab('experimentos-cientificos')" style="background: linear-gradient(135deg, #16a34a, #0d9488); border: none;" title="Acessar Aula Prática: Metodologia & Experimentos Científicos">
-        <i class="fa-solid fa-flask-vial"></i> Aula: Experimentos Científicos
-      </button>
-
-      <button class="btn btn-primary" onclick="switchTab('expressao-resultados')" style="background: linear-gradient(135deg, #0284c7, #2563eb); border: none;" title="Acessar Aula Prática: Expressão de Resultados, Tabelas & Gráficos">
-        <i class="fa-solid fa-chart-pie"></i> Aula: Expressão de Resultados
-      </button>
-
       <button class="btn btn-outline" onclick="switchTab('avancos-pendencias')" style="border-color: var(--accent-cyan); color: var(--accent-cyan);" title="Raio-X de Avanços e Atendimento de Bancada">
         <i class="fa-solid fa-clipboard-check"></i> Raio-X da Aula
       </button>
@@ -2515,6 +2545,42 @@
                 <h4>Aula: Trabalhos Relacionados</h4>
               </div>
             </div>
+
+            <!-- Clipart Representativo 1 -->
+            <div class="card-clipart-box purple">
+              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="42" r="30" fill="rgba(168, 85, 247, 0.12)" />
+                <circle cx="230" cy="42" r="28" fill="rgba(99, 102, 241, 0.12)" />
+                <path d="M 65 42 Q 140 18 215 42" stroke="rgba(168, 85, 247, 0.3)" stroke-width="2" stroke-dasharray="4 4" />
+                <path d="M 75 52 Q 140 68 205 50" stroke="rgba(99, 102, 241, 0.25)" stroke-width="1.5" stroke-dasharray="3 3" />
+                <!-- Livro Aberto -->
+                <path d="M 32 32 C 45 28 65 30 75 35 L 75 62 C 65 57 45 55 32 59 Z" fill="#3b0764" stroke="#a855f7" stroke-width="1.5" />
+                <path d="M 118 32 C 105 28 85 30 75 35 L 75 62 C 85 57 105 55 118 59 Z" fill="#2e1065" stroke="#a855f7" stroke-width="1.5" />
+                <path d="M 36 38 C 47 34 63 36 72 40 L 72 58 C 63 54 47 52 36 55 Z" fill="#f8fafc" />
+                <path d="M 114 38 C 103 34 87 36 78 40 L 78 58 C 87 54 103 52 114 55 Z" fill="#f1f5f9" />
+                <line x1="42" y1="44" x2="66" y2="44" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+                <line x1="42" y1="48" x2="64" y2="48" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" />
+                <line x1="42" y1="52" x2="58" y2="52" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" />
+                <line x1="84" y1="44" x2="108" y2="44" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+                <line x1="84" y1="48" x2="104" y2="48" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" />
+                <line x1="84" y1="52" x2="98" y2="52" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M 75 35 L 75 56 L 79 53 L 83 56 L 83 35 Z" fill="#ec4899" />
+                <!-- Lupa de Busca Científica -->
+                <circle cx="140" cy="38" r="16" fill="rgba(147, 51, 234, 0.25)" stroke="#c084fc" stroke-width="2.5" />
+                <circle cx="140" cy="38" r="12" fill="rgba(255, 255, 255, 0.15)" />
+                <path d="M 134 35 Q 140 31 146 35" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
+                <line x1="152" y1="49" x2="165" y2="62" stroke="#c084fc" stroke-width="3.5" stroke-linecap="round" />
+                <!-- Paper & Citação -->
+                <rect x="180" y="24" width="70" height="42" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" />
+                <rect x="186" y="30" width="38" height="6" rx="3" fill="#a5b4fc" />
+                <rect x="186" y="40" width="58" height="4" rx="2" fill="#6366f1" opacity="0.6" />
+                <rect x="186" y="48" width="48" height="4" rx="2" fill="#6366f1" opacity="0.6" />
+                <rect x="186" y="55" width="30" height="4" rx="2" fill="#6366f1" opacity="0.4" />
+                <rect x="218" y="18" width="42" height="15" rx="7.5" fill="#7c3aed" stroke="#c084fc" stroke-width="1" />
+                <text x="239" y="29" font-family="'Outfit', sans-serif" font-size="8.5" font-weight="700" fill="#ffffff" text-anchor="middle">\cite[1]</text>
+              </svg>
+            </div>
+
             <p>Busca de artigos no Google Scholar/Scielo, elaboração do Quadro Comparativo e redação científica no Overleaf com conectivos de contraste.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
@@ -2537,6 +2603,49 @@
                 <h4>Aula: Experimentos Científicos</h4>
               </div>
             </div>
+
+            <!-- Clipart Representativo 2 -->
+            <div class="card-clipart-box green">
+              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="65" cy="45" r="32" fill="rgba(34, 197, 94, 0.12)" />
+                <circle cx="215" cy="40" r="30" fill="rgba(13, 148, 136, 0.12)" />
+                <!-- Tubo/Frasco Erlenmeyer -->
+                <path d="M 58 20 L 72 20 L 72 32 L 86 58 C 89 63 85 68 79 68 L 51 68 C 45 68 41 63 44 58 L 58 32 Z" fill="#064e3b" stroke="#22c55e" stroke-width="2" />
+                <path d="M 48 54 Q 65 51 82 54 L 84 59 C 85 64 82 66 78 66 L 52 66 C 48 66 45 64 46 59 Z" fill="#22c55e" />
+                <line x1="56" y1="20" x2="74" y2="20" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="56" y1="42" x2="62" y2="42" stroke="#86efac" stroke-width="1.5" />
+                <line x1="54" y1="48" x2="62" y2="48" stroke="#86efac" stroke-width="1.5" />
+                <line x1="50" y1="54" x2="60" y2="54" stroke="#86efac" stroke-width="1.5" />
+                <circle cx="60" cy="50" r="2.5" fill="#bbf7d0" opacity="0.8" />
+                <circle cx="68" cy="44" r="2" fill="#bbf7d0" opacity="0.7" />
+                <circle cx="64" cy="30" r="3" fill="#4ade80" opacity="0.8" />
+                <circle cx="66" cy="14" r="2" fill="#22c55e" opacity="0.9" />
+                <!-- Chip de Computação -->
+                <rect x="115" y="24" width="46" height="42" rx="6" fill="#065f46" stroke="#34d399" stroke-width="1.5" />
+                <rect x="123" y="32" width="30" height="26" rx="4" fill="#022c22" stroke="#10b981" stroke-width="1" />
+                <circle cx="138" cy="45" r="5" fill="#34d399" />
+                <line x1="123" y1="21" x2="123" y2="24" stroke="#34d399" stroke-width="2" />
+                <line x1="131" y1="21" x2="131" y2="24" stroke="#34d399" stroke-width="2" />
+                <line x1="139" y1="21" x2="139" y2="24" stroke="#34d399" stroke-width="2" />
+                <line x1="147" y1="21" x2="147" y2="24" stroke="#34d399" stroke-width="2" />
+                <line x1="123" y1="66" x2="123" y2="69" stroke="#34d399" stroke-width="2" />
+                <line x1="131" y1="66" x2="131" y2="69" stroke="#34d399" stroke-width="2" />
+                <line x1="139" y1="66" x2="139" y2="69" stroke="#34d399" stroke-width="2" />
+                <line x1="147" y1="66" x2="147" y2="69" stroke="#34d399" stroke-width="2" />
+                <!-- Trilha de Conexão -->
+                <path d="M 87 56 H 115" stroke="#10b981" stroke-width="2" stroke-dasharray="3 3" />
+                <path d="M 161 45 H 188" stroke="#14b8a6" stroke-width="2" stroke-dasharray="3 3" />
+                <!-- Mostrador de Métrica -->
+                <circle cx="218" cy="45" r="24" fill="#134e4a" stroke="#2dd4bf" stroke-width="2" />
+                <circle cx="218" cy="45" r="19" fill="#042f2e" />
+                <path d="M 204 45 A 14 14 0 0 1 232 45" stroke="#5eead4" stroke-width="2.5" stroke-dasharray="3 4" fill="none" />
+                <line x1="218" y1="45" x2="228" y2="34" stroke="#facc15" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="218" cy="45" r="3.5" fill="#facc15" />
+                <rect x="200" y="55" width="36" height="12" rx="4" fill="#0d9488" />
+                <text x="218" y="64" font-family="'Outfit', sans-serif" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">METRICS</text>
+              </svg>
+            </div>
+
             <p>Formulação de hipóteses, isolamento de variáveis (independentes, dependentes e de controle), medição empírica e roteiros dos 10 projetos.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
@@ -2559,6 +2668,45 @@
                 <h4>Aula: Expressão de Resultados</h4>
               </div>
             </div>
+
+            <!-- Clipart Representativo 3 -->
+            <div class="card-clipart-box blue">
+              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="85" cy="42" r="35" fill="rgba(59, 130, 246, 0.12)" />
+                <circle cx="205" cy="42" r="30" fill="rgba(14, 165, 233, 0.12)" />
+                <!-- Gráfico de Barras -->
+                <line x1="30" y1="68" x2="135" y2="68" stroke="#334155" stroke-width="1.5" />
+                <line x1="30" y1="18" x2="30" y2="68" stroke="#334155" stroke-width="1.5" />
+                <line x1="26" y1="35" x2="135" y2="35" stroke="rgba(51, 65, 85, 0.4)" stroke-width="1" stroke-dasharray="2 2" />
+                <line x1="26" y1="52" x2="135" y2="52" stroke="rgba(51, 65, 85, 0.4)" stroke-width="1" stroke-dasharray="2 2" />
+                <rect x="42" y="48" width="16" height="20" rx="2" fill="#0284c7" stroke="#38bdf8" stroke-width="1" />
+                <rect x="68" y="32" width="16" height="36" rx="2" fill="#2563eb" stroke="#60a5fa" stroke-width="1" />
+                <rect x="94" y="20" width="16" height="48" rx="2" fill="#4f46e5" stroke="#818cf8" stroke-width="1" />
+                <!-- Curva de Tendência -->
+                <path d="M 50 44 Q 76 28 102 16" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                <circle cx="50" cy="44" r="3.5" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
+                <circle cx="76" cy="28" r="3.5" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+                <circle cx="102" cy="16" r="3.5" fill="#ffffff" stroke="#4f46e5" stroke-width="2" />
+                <!-- Tabela ABNT/SBC e Pizza -->
+                <rect x="150" y="20" width="105" height="48" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+                <rect x="150" y="20" width="105" height="14" rx="5" fill="#1e293b" />
+                <line x1="150" y1="34" x2="255" y2="34" stroke="#60a5fa" stroke-width="1.5" />
+                <line x1="150" y1="67" x2="255" y2="67" stroke="#60a5fa" stroke-width="1.5" />
+                <rect x="158" y="25" width="22" height="4" rx="2" fill="#93c5fd" />
+                <rect x="188" y="25" width="26" height="4" rx="2" fill="#93c5fd" />
+                <rect x="222" y="25" width="22" height="4" rx="2" fill="#93c5fd" />
+                <rect x="158" y="40" width="18" height="3" rx="1.5" fill="#64748b" />
+                <rect x="188" y="40" width="22" height="3" rx="1.5" fill="#38bdf8" />
+                <rect x="222" y="40" width="18" height="3" rx="1.5" fill="#4ade80" />
+                <rect x="158" y="52" width="20" height="3" rx="1.5" fill="#64748b" />
+                <rect x="188" y="52" width="20" height="3" rx="1.5" fill="#38bdf8" />
+                <rect x="222" y="52" width="24" height="3" rx="1.5" fill="#4ade80" />
+                <circle cx="240" cy="18" r="11" fill="#1e3a8a" stroke="#60a5fa" stroke-width="1.5" />
+                <path d="M 240 18 L 240 7 A 11 11 0 0 1 251 18 Z" fill="#38bdf8" />
+                <path d="M 240 18 L 251 18 A 11 11 0 0 1 240 29 Z" fill="#2563eb" />
+              </svg>
+            </div>
+
             <p>Matriz de decisão para escolha de gráficos (barras, linhas, dispersão, boxplot), regras para tabelas SBC (booktabs) e redação crítica dos dados.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
@@ -2581,6 +2729,38 @@
                 <h4>Computer on the Beach 2027</h4>
               </div>
             </div>
+
+            <!-- Clipart Representativo 4 -->
+            <div class="card-clipart-box amber">
+              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Sol e Oceano -->
+                <circle cx="75" cy="40" r="22" fill="#fbbf24" opacity="0.9" />
+                <path d="M 15 54 C 40 50 65 56 95 53 C 120 50 145 54 165 52 L 165 72 L 15 72 Z" fill="#0369a1" opacity="0.7" />
+                <path d="M 15 59 C 45 56 75 62 105 58 C 130 55 150 60 165 58 L 165 72 L 15 72 Z" fill="#0284c7" />
+                <path d="M 40 64 C 60 62 80 64 100 63" stroke="#e0f2fe" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                <!-- Coqueiro -->
+                <path d="M 145 70 Q 148 50 140 32" stroke="#78350f" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 140 32 Q 120 25 112 35" stroke="#15803d" stroke-width="3" stroke-linecap="round" />
+                <path d="M 140 32 Q 130 18 136 12" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
+                <path d="M 140 32 Q 155 18 162 24" stroke="#15803d" stroke-width="3" stroke-linecap="round" />
+                <path d="M 140 32 Q 160 34 165 44" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
+                <!-- Guarda-sol e Laptop -->
+                <path d="M 30 52 L 44 26 L 58 52 Z" fill="#ea580c" stroke="#f97316" stroke-width="1.5" />
+                <path d="M 37 39 L 51 39" stroke="#ffedd5" stroke-width="1.5" />
+                <line x1="44" y1="26" x2="44" y2="65" stroke="#78350f" stroke-width="2" />
+                <rect x="62" y="58" width="22" height="4" rx="1.5" fill="#f97316" opacity="0.6" />
+                <rect x="65" y="48" width="16" height="11" rx="2" fill="#0f172a" stroke="#cbd5e1" stroke-width="1" />
+                <rect x="67" y="50" width="12" height="7" rx="1" fill="#38bdf8" />
+                <!-- Selo do Evento COTB -->
+                <rect x="180" y="16" width="85" height="52" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" />
+                <rect x="180" y="16" width="85" height="16" rx="8" fill="#78350f" />
+                <text x="222" y="28" font-family="'Outfit', sans-serif" font-size="8.5" font-weight="800" fill="#fde68a" text-anchor="middle">COTB 2027 • SBC</text>
+                <text x="222" y="44" font-family="'Outfit', sans-serif" font-size="11" font-weight="800" fill="#ffffff" text-anchor="middle">FLORIPA</text>
+                <rect x="190" y="50" width="65" height="13" rx="4" fill="#d97706" />
+                <text x="222" y="60" font-family="'Outfit', sans-serif" font-size="8" font-weight="800" fill="#ffffff" text-anchor="middle">DEADLINE 15/11</text>
+              </svg>
+            </div>
+
             <p>18ª edição em Floripa. Diretrizes de submissão no JEMS da SBC, modelos de artigos (2 a 6 págs), revisão duplo-cega e cronograma de submissão.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
@@ -2603,6 +2783,42 @@
                 <h4>Raio-X da Aula &amp; Atendimentos</h4>
               </div>
             </div>
+
+            <!-- Clipart Representativo 5 -->
+            <div class="card-clipart-box cyan">
+              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="70" cy="42" r="32" fill="rgba(6, 182, 212, 0.12)" />
+                <circle cx="210" cy="42" r="30" fill="rgba(20, 184, 166, 0.12)" />
+                <!-- Prancheta de Diagnóstico -->
+                <rect x="36" y="16" width="56" height="56" rx="6" fill="#083344" stroke="#06b6d4" stroke-width="1.8" />
+                <rect x="52" y="12" width="24" height="8" rx="3" fill="#0e7490" stroke="#22d3ee" stroke-width="1.2" />
+                <circle cx="64" cy="16" r="2" fill="#ecfeff" />
+                <circle cx="48" cy="30" r="4.5" fill="#15803d" />
+                <path d="M 45.5 30 L 47.5 32 L 51 28.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <rect x="56" y="28" width="26" height="4" rx="2" fill="#67e8f9" />
+                <circle cx="48" cy="43" r="4.5" fill="#15803d" />
+                <path d="M 45.5 43 L 47.5 45 L 51 41.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <rect x="56" y="41" width="24" height="4" rx="2" fill="#67e8f9" />
+                <circle cx="48" cy="56" r="4.5" fill="#0e7490" />
+                <path d="M 45.5 56 L 47.5 58 L 51 54.5" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <rect x="56" y="54" width="20" height="4" rx="2" fill="#38bdf8" />
+                <!-- Linha de Pulso Diagnóstico -->
+                <path d="M 100 45 L 118 45 L 124 25 L 132 65 L 138 36 L 144 52 L 148 45 L 165 45" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="165" cy="45" r="3" fill="#67e8f9" />
+                <!-- Semáforo e Mentoria de Bancada -->
+                <rect x="180" y="22" width="22" height="46" rx="11" fill="#042f2e" stroke="#14b8a6" stroke-width="1.5" />
+                <circle cx="191" cy="31" r="5" fill="#22c55e" />
+                <circle cx="191" cy="45" r="5" fill="#f59e0b" opacity="0.4" />
+                <circle cx="191" cy="59" r="5" fill="#ef4444" opacity="0.3" />
+                <rect x="212" y="24" width="56" height="42" rx="6" fill="#155e75" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="226" cy="36" r="5" fill="#a5f3fc" />
+                <circle cx="240" cy="36" r="5" fill="#38bdf8" />
+                <circle cx="254" cy="36" r="5" fill="#22d3ee" />
+                <rect x="220" y="47" width="40" height="11" rx="3" fill="#0891b2" />
+                <text x="240" y="55" font-family="'Outfit', sans-serif" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">BANCADA</text>
+              </svg>
+            </div>
+
             <p>Painel de diagnóstico semanal para conduzir os atendimentos de bancada, celebrar conquistas técnicas recentes e destravar gargalos nos artigos.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
@@ -4095,31 +4311,6 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
 
           </tbody>
         </table>
-      </div>
-
-      <!-- BLOCO 4: ROTEIRO PEDAGÓGICO DE INTERVENÇÃO -->
-      <div class="guide-box">
-        <h3><i class="fa-solid fa-person-chalkboard text-cyan"></i> 4. Roteiro Prático de Condução da Aula para a Profª Karyna</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Estrutura pedagógica recomendada para os 80-90 minutos de atendimento em laboratório:</p>
-
-        <div class="teaching-grid">
-          
-          <div class="teaching-card">
-            <strong><i class="fa-solid fa-1 text-green"></i> 1. Abertura & Alinhamento (15 min)</strong>
-            <p>Projetar este painel na tela. Parabenizar publicamente os avanços de <strong>Luisa (#07)</strong> e <strong>Estação (#08)</strong>. Demonstrar na prática o problema do <em>Erro 403</em> do Overleaf privado (como clicar em Share -> Turn on link sharing).</p>
-          </div>
-
-          <div class="teaching-card">
-            <strong><i class="fa-solid fa-2 text-amber"></i> 2. Foco de Choque nas Bancadas (45 min)</strong>
-            <p>Atender prioritariamente os grupos <strong>#02 (JifTV)</strong> e <strong>#04 (RasPorta)</strong> para ajudá-los a formular ao menos 2 experimentos com métricas numéricas antes de saírem da aula. Em seguida, orientar os grupos <strong>#03, #06 e #10</strong> a gravarem o Pitch.</p>
-          </div>
-
-          <div class="teaching-card">
-            <strong><i class="fa-solid fa-3 text-cyan"></i> 3. Preparação para o COTB 2027 (20 min)</strong>
-            <p>Apresentar os prazos do COTB (submissão até 15/11 via JEMS SBC). Orientar as equipes a criarem o documento do paper no padrão SBC duplamente cego (anônimo) e registrarem o link na <strong>Coluna 15 da planilha</strong>.</p>
-          </div>
-
-        </div>
       </div>
 
     </section>
