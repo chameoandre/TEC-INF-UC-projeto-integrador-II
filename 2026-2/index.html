@@ -1022,6 +1022,140 @@
       gap: 0.35rem;
     }
 
+    /* Destaque da Etapa Atual (Experimentos) */
+    .badge-current-stage {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: linear-gradient(135deg, #16a34a, #0d9488);
+      color: #ffffff;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.55);
+      animation: pulseStageGlow 2.4s infinite;
+      vertical-align: middle;
+      border: 1px solid rgba(134, 239, 172, 0.4);
+    }
+    @keyframes pulseStageGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 22px rgba(34, 197, 94, 0.85); transform: scale(1.02); }
+    }
+    .timeline-item.active.current-stage .timeline-dot {
+      background: #16a34a;
+      color: #ffffff;
+      border-color: #86efac;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+      transform: scale(1.15);
+    }
+    .timeline-item.active.current-stage .timeline-card {
+      border: 2px solid #22c55e;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.16) 0%, rgba(13, 148, 136, 0.09) 60%, var(--bg-card) 100%);
+      box-shadow: 0 8px 32px rgba(34, 197, 94, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+    .timeline-item.active.current-stage .timeline-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #22c55e, #14b8a6, #3b82f6);
+    }
+
+    /* Divisor de Ciclo Letivo 2026 vs Pós-Semestre 2027 */
+    .timeline-cycle-divider {
+      position: relative;
+      margin: 3.2rem 0 1.8rem -2.5rem;
+      text-align: center;
+    }
+    .timeline-cycle-divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0, rgba(255, 255, 255, 0.15) 6px, transparent 6px, transparent 12px);
+    }
+    .timeline-cycle-divider span {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+    .timeline-optional-notice {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1.2rem;
+      margin: 0 0 2rem 0;
+      font-size: 0.83rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    /* Itens Pós-Semestre 2027 com Sombreado Menor e Atenuados */
+    .timeline-item.post-semester {
+      opacity: 0.58;
+      filter: saturate(0.65);
+      transition: var(--transition);
+      margin-bottom: 1.8rem;
+    }
+    .timeline-item.post-semester:hover {
+      opacity: 0.92;
+      filter: saturate(1);
+    }
+    .timeline-item.post-semester .timeline-dot {
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(255, 255, 255, 0.22);
+      color: var(--text-dim);
+      box-shadow: none;
+    }
+    .timeline-item.post-semester .timeline-card {
+      background: rgba(15, 23, 42, 0.38);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+      backdrop-filter: blur(6px);
+    }
+    .timeline-item.post-semester .timeline-title {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    .timeline-item.post-semester .timeline-date {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: 600;
+    }
+    .timeline-item.post-semester .deliv-tag {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-dim);
+    }
+    .timeline-item.post-semester .callout-box {
+      opacity: 0.8;
+      box-shadow: none;
+    }
+
     /* Guide & Audit Tabs */
     .guide-box {
       background: var(--bg-card);
@@ -2718,61 +2852,7 @@
             </div>
           </div>
 
-          <!-- Card 4: Chamada COTB 2027 -->
-          <div class="pedagogical-card featured-amber">
-            <div class="pedagogical-card-top">
-              <div class="pedagogical-icon amber">
-                <i class="fa-solid fa-umbrella-beach"></i>
-              </div>
-              <div>
-                <span class="pedagogical-badge amber">Evento Alvo • 15/11</span>
-                <h4>Computer on the Beach 2027</h4>
-              </div>
-            </div>
-
-            <!-- Clipart Representativo 4 -->
-            <div class="card-clipart-box amber">
-              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Sol e Oceano -->
-                <circle cx="75" cy="40" r="22" fill="#fbbf24" opacity="0.9" />
-                <path d="M 15 54 C 40 50 65 56 95 53 C 120 50 145 54 165 52 L 165 72 L 15 72 Z" fill="#0369a1" opacity="0.7" />
-                <path d="M 15 59 C 45 56 75 62 105 58 C 130 55 150 60 165 58 L 165 72 L 15 72 Z" fill="#0284c7" />
-                <path d="M 40 64 C 60 62 80 64 100 63" stroke="#e0f2fe" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
-                <!-- Coqueiro -->
-                <path d="M 145 70 Q 148 50 140 32" stroke="#78350f" stroke-width="4.5" stroke-linecap="round" />
-                <path d="M 140 32 Q 120 25 112 35" stroke="#15803d" stroke-width="3" stroke-linecap="round" />
-                <path d="M 140 32 Q 130 18 136 12" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
-                <path d="M 140 32 Q 155 18 162 24" stroke="#15803d" stroke-width="3" stroke-linecap="round" />
-                <path d="M 140 32 Q 160 34 165 44" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
-                <!-- Guarda-sol e Laptop -->
-                <path d="M 30 52 L 44 26 L 58 52 Z" fill="#ea580c" stroke="#f97316" stroke-width="1.5" />
-                <path d="M 37 39 L 51 39" stroke="#ffedd5" stroke-width="1.5" />
-                <line x1="44" y1="26" x2="44" y2="65" stroke="#78350f" stroke-width="2" />
-                <rect x="62" y="58" width="22" height="4" rx="1.5" fill="#f97316" opacity="0.6" />
-                <rect x="65" y="48" width="16" height="11" rx="2" fill="#0f172a" stroke="#cbd5e1" stroke-width="1" />
-                <rect x="67" y="50" width="12" height="7" rx="1" fill="#38bdf8" />
-                <!-- Selo do Evento COTB -->
-                <rect x="180" y="16" width="85" height="52" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" />
-                <rect x="180" y="16" width="85" height="16" rx="8" fill="#78350f" />
-                <text x="222" y="28" font-family="'Outfit', sans-serif" font-size="8.5" font-weight="800" fill="#fde68a" text-anchor="middle">COTB 2027 • SBC</text>
-                <text x="222" y="44" font-family="'Outfit', sans-serif" font-size="11" font-weight="800" fill="#ffffff" text-anchor="middle">FLORIPA</text>
-                <rect x="190" y="50" width="65" height="13" rx="4" fill="#d97706" />
-                <text x="222" y="60" font-family="'Outfit', sans-serif" font-size="8" font-weight="800" fill="#ffffff" text-anchor="middle">DEADLINE 15/11</text>
-              </svg>
-            </div>
-
-            <p>18ª edição em Floripa. Diretrizes de submissão no JEMS da SBC, modelos de artigos (2 a 6 págs), revisão duplo-cega e cronograma de submissão.</p>
-            <div class="pedagogical-card-footer">
-              <div class="pedagogical-deliverable">
-                <i class="fa-solid fa-calendar-check" style="color: var(--accent-amber);"></i> <span>Deadline: <strong>15 de Novembro</strong></span>
-              </div>
-              <button class="btn-card-action amber" onclick="switchTab('cotb-2027')">
-                Ver Guia COTB <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Card 5: Raio-X & Atendimentos -->
+          <!-- Card 4: Raio-X & Atendimentos -->
           <div class="pedagogical-card featured-cyan">
             <div class="pedagogical-card-top">
               <div class="pedagogical-icon cyan">
@@ -2784,7 +2864,7 @@
               </div>
             </div>
 
-            <!-- Clipart Representativo 5 -->
+            <!-- Clipart Representativo 4 -->
             <div class="card-clipart-box cyan">
               <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="70" cy="42" r="32" fill="rgba(6, 182, 212, 0.12)" />
@@ -2826,6 +2906,60 @@
               </div>
               <button class="btn-card-action cyan" onclick="switchTab('avancos-pendencias')">
                 Abrir Raio-X <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 5: Chamada COTB 2027 -->
+          <div class="pedagogical-card featured-amber">
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon amber">
+                <i class="fa-solid fa-umbrella-beach"></i>
+              </div>
+              <div>
+                <span class="pedagogical-badge amber">Evento Alvo • 15/11</span>
+                <h4>Computer on the Beach 2027</h4>
+              </div>
+            </div>
+
+            <!-- Clipart Representativo 5 -->
+            <div class="card-clipart-box amber">
+              <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Sol e Oceano -->
+                <circle cx="75" cy="40" r="22" fill="#fbbf24" opacity="0.9" />
+                <path d="M 15 54 C 40 50 65 56 95 53 C 120 50 145 54 165 52 L 165 72 L 15 72 Z" fill="#0369a1" opacity="0.7" />
+                <path d="M 15 59 C 45 56 75 62 105 58 C 130 55 150 60 165 58 L 165 72 L 15 72 Z" fill="#0284c7" />
+                <path d="M 40 64 C 60 62 80 64 100 63" stroke="#e0f2fe" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                <!-- Coqueiro -->
+                <path d="M 145 70 Q 148 50 140 32" stroke="#78350f" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 140 32 Q 120 25 112 35" stroke="#15803d" stroke-width="3" stroke-linecap="round" />
+                <path d="M 140 32 Q 130 18 136 12" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
+                <path d="M 140 32 Q 155 18 162 24" stroke="#15803d" stroke-width="3" stroke-linecap="round" />
+                <path d="M 140 32 Q 160 34 165 44" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
+                <!-- Guarda-sol e Laptop -->
+                <path d="M 30 52 L 44 26 L 58 52 Z" fill="#ea580c" stroke="#f97316" stroke-width="1.5" />
+                <path d="M 37 39 L 51 39" stroke="#ffedd5" stroke-width="1.5" />
+                <line x1="44" y1="26" x2="44" y2="65" stroke="#78350f" stroke-width="2" />
+                <rect x="62" y="58" width="22" height="4" rx="1.5" fill="#f97316" opacity="0.6" />
+                <rect x="65" y="48" width="16" height="11" rx="2" fill="#0f172a" stroke="#cbd5e1" stroke-width="1" />
+                <rect x="67" y="50" width="12" height="7" rx="1" fill="#38bdf8" />
+                <!-- Selo do Evento COTB -->
+                <rect x="180" y="16" width="85" height="52" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" />
+                <rect x="180" y="16" width="85" height="16" rx="8" fill="#78350f" />
+                <text x="222" y="28" font-family="'Outfit', sans-serif" font-size="8.5" font-weight="800" fill="#fde68a" text-anchor="middle">COTB 2027 • SBC</text>
+                <text x="222" y="44" font-family="'Outfit', sans-serif" font-size="11" font-weight="800" fill="#ffffff" text-anchor="middle">FLORIPA</text>
+                <rect x="190" y="50" width="65" height="13" rx="4" fill="#d97706" />
+                <text x="222" y="60" font-family="'Outfit', sans-serif" font-size="8" font-weight="800" fill="#ffffff" text-anchor="middle">DEADLINE 15/11</text>
+              </svg>
+            </div>
+
+            <p>18ª edição em Floripa. Diretrizes de submissão no JEMS da SBC, modelos de artigos (2 a 6 págs), revisão duplo-cega e cronograma de submissão.</p>
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="fa-solid fa-calendar-check" style="color: var(--accent-amber);"></i> <span>Deadline: <strong>15 de Novembro</strong></span>
+              </div>
+              <button class="btn-card-action amber" onclick="switchTab('cotb-2027')">
+                Ver Guia COTB <i class="fa-solid fa-arrow-right"></i>
               </button>
             </div>
           </div>
@@ -3046,157 +3180,194 @@
           </div>
         </div>
 
-        <!-- Marco 6: AULA ATUAL (01/09) -->
-        <div class="timeline-item active">
-          <div class="timeline-dot"><i class="fa-solid fa-star"></i></div>
+        <!-- Marco 6: Concluído (01/09) -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-check"></i></div>
           <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title">Criação da seção trabalhos relacionados & Regularização Overleaf</div>
+                <div class="timeline-title">Criação da Seção Trabalhos Relacionados & Regularização Overleaf</div>
                 <div class="timeline-instructor"><i class="fa-solid fa-user-graduate"></i> Profª. Karina (com suporte de dashboard do Prof. André)</div>
               </div>
-              <span class="timeline-date">01/09/2026 (Aula Atual)</span>
+              <span class="timeline-date" style="background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.25);">01/09/2026 (Concluído)</span>
             </div>
             <div class="timeline-body">
-              <p><strong>Pauta da Aula:</strong> 1) Ajuste imediato dos links de leitura aberta do Overleaf (Share Link). 2) Pesquisa de 2 a 3 artigos correlatos. 3) Preenchimento do Quadro Comparativo e redação da seção de Trabalhos Relacionados no Overleaf com conectivos de contraste.</p>
+              <p><strong>Pauta Realizada:</strong> 1) Ajuste dos links de leitura aberta do Overleaf (Share Link). 2) Pesquisa de artigos correlatos no Google Scholar/Scielo. 3) Preenchimento do Quadro Comparativo e redação da seção de Trabalhos Relacionados no Overleaf com conectivos de contraste.</p>
               <div class="timeline-deliverables">
-                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green);"><i class="fa-solid fa-link"></i> Link Overleaf Público Atualizado</span>
-                <span class="deliv-tag" style="border-color: var(--accent-cyan); color: var(--accent-cyan);"><i class="fa-solid fa-table-columns"></i> Quadro Comparativo de Trabalhos</span>
-                <span class="deliv-tag" style="border-color: var(--accent-amber); color: var(--accent-amber);"><i class="fa-solid fa-pen-fancy"></i> 2-3 Parágrafos no Overleaf</span>
+                <span class="deliv-tag"><i class="fa-solid fa-link"></i> Link Overleaf Público</span>
+                <span class="deliv-tag"><i class="fa-solid fa-table-columns"></i> Quadro Comparativo</span>
+                <span class="deliv-tag"><i class="fa-solid fa-pen-fancy"></i> Seção Trabalhos Relacionados</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Marco 7: Futuro -->
-        <div class="timeline-item future">
-          <div class="timeline-dot"><i class="fa-solid fa-flask"></i></div>
+        <!-- Marco 7: ETAPA ATUAL (EXPERIMENTOS CIENTÍFICOS) -->
+        <div class="timeline-item active current-stage">
+          <div class="timeline-dot"><i class="fa-solid fa-flask-vial"></i></div>
           <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title">Sprint de Execução, Micro-Experimentos & Coleta de Dados</div>
+                <div class="timeline-title" style="color: var(--ifsc-green-light); display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                  <i class="fa-solid fa-flask-vial"></i> Sprint de Execução: Metodologia, Experimentos & Coleta de Dados
+                  <span class="badge-current-stage"><i class="fa-solid fa-spinner fa-spin"></i> ETAPA ATUAL • EM ANDAMENTO</span>
+                </div>
                 <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Prof. André Moraes & Profª. Karina</div>
               </div>
-              <span class="timeline-date">Setembro / Outubro 2026</span>
+              <span class="timeline-date" style="background: rgba(34, 197, 94, 0.2); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.45); font-weight: 800;">
+                <i class="fa-solid fa-calendar-day"></i> Setembro / Outubro 2026 (Foco Atual)
+              </span>
             </div>
             <div class="timeline-body">
-              <p>Coleta de dados experimentais (Exp 1 a 4), testes com usuários/sensores, geração de gráficos comparativos para a Seção de Resultados e consolidação da fundamentação teórica orientada ao Computer on the Beach 2027.</p>
+              <div class="callout-box" style="background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.4); margin-bottom: 0.85rem; padding: 0.85rem;">
+                <i class="fa-solid fa-circle-play" style="color: var(--ifsc-green-light); font-size: 1.25rem;"></i>
+                <div>
+                  <strong style="color: var(--ifsc-green-light); font-size: 0.92rem;">Fase em Andamento nas Aulas de Laboratório:</strong>
+                  <p style="font-size: 0.84rem; color: var(--text-main); margin-top: 0.25rem; line-height: 1.45;">
+                    Os grupos estão concentrados no planejamento e execução dos <strong>4 experimentos científicos de bancada</strong>: formulação clara de hipóteses, isolamento rigoroso de variáveis (independentes, dependentes e de controle) e medição empírica de métricas operacionais com equipamentos e protótipos.
+                  </p>
+                </div>
+              </div>
+
+              <p>Condução de testes empíricos nos protótipos (sensores IoT, latência de rede, tempo de resposta, consumo de memória, precisão de modelos e usabilidade de interface), alimentando os dados primários para a futura Seção de Resultados.</p>
+              
               <div class="timeline-deliverables">
-                <span class="deliv-tag"><i class="fa-solid fa-chart-line"></i> Gráficos Experimentais</span>
-                <span class="deliv-tag"><i class="fa-solid fa-code-commit"></i> Commits/PRs no GitHub</span>
-                <span class="deliv-tag"><i class="fa-solid fa-file-waveform"></i> Seção de Resultados no Overleaf</span>
+                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green-light); font-weight: 700;"><i class="fa-solid fa-flask"></i> 4 Experimentos Detalhados</span>
+                <span class="deliv-tag" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;"><i class="fa-solid fa-gauge-high"></i> Coleta de Métricas Numéricas</span>
+                <span class="deliv-tag" style="border-color: var(--accent-purple); color: #c084fc;"><i class="fa-solid fa-sliders"></i> Isolamento de Variáveis</span>
+                <span class="deliv-tag"><i class="fa-solid fa-code-commit"></i> Commits/Protótipos no GitHub</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Marco 8: Submissão COTB 2027 (100% Gratuita) -->
-        <div class="timeline-item future" style="border-left-color: var(--ifsc-green);">
-          <div class="timeline-dot" style="background: var(--ifsc-green); color: #fff; border-color: var(--ifsc-green); box-shadow: 0 0 14px var(--ifsc-green-glow);"><i class="fa-solid fa-paper-plane"></i></div>
-          <div class="timeline-card" style="border-color: rgba(34, 197, 94, 0.45); background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, var(--bg-card) 100%);">
+        <!-- Marco 8: Expressão de Resultados & Fechamento dos Artigos -->
+        <div class="timeline-item future">
+          <div class="timeline-dot"><i class="fa-solid fa-chart-pie"></i></div>
+          <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title" style="color: var(--ifsc-green-light);"><i class="fa-solid fa-bullhorn"></i> Etapa 1: Submissão do Artigo — COTB 2027 (100% Gratuita)</div>
-                <div class="timeline-instructor"><i class="fa-solid fa-upload"></i> Submissão Eletrônica via JEMS / SBC</div>
+                <div class="timeline-title">Expressão de Resultados, Gráficos Comparativos & Banca Interna IFSC</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Profª. Karina & Prof. André Moraes</div>
               </div>
-              <span class="timeline-date" style="background: rgba(34, 197, 94, 0.2); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.4); font-weight: 800;">Deadline: 15/11/2026</span>
+              <span class="timeline-date">Outubro / Novembro 2026</span>
+            </div>
+            <div class="timeline-body">
+              <p>Tratamento visual dos dados coletados: confecção de gráficos técnicos (barras com desvio padrão, dispersão, boxplot), diagramação de tabelas no padrão SBC (pacote <em>booktabs</em>), redação analítica da discussão e ensaio da apresentação oral perante a banca interna do IFSC.</p>
+              <div class="timeline-deliverables">
+                <span class="deliv-tag"><i class="fa-solid fa-chart-column"></i> Gráficos dos Experimentos</span>
+                <span class="deliv-tag"><i class="fa-solid fa-table"></i> Tabelas Técnicas SBC</span>
+                <span class="deliv-tag"><i class="fa-solid fa-file-waveform"></i> Seção de Resultados no Overleaf</span>
+                <span class="deliv-tag"><i class="fa-solid fa-person-chalkboard"></i> Pré-Banca / Pitch de Avaliação</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco 9: SUBMISSÃO DO ARTIGO CIENTÍFICO (ÚLTIMO ITEM DO SEMESTRE LETIVO 2026) -->
+        <div class="timeline-item future" style="border-left-color: var(--ifsc-green);">
+          <div class="timeline-dot" style="background: var(--ifsc-green); color: #fff; border-color: var(--ifsc-green); box-shadow: 0 0 16px var(--ifsc-green-glow);"><i class="fa-solid fa-paper-plane"></i></div>
+          <div class="timeline-card" style="border: 2px solid rgba(34, 197, 94, 0.6); background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, var(--bg-card) 100%);">
+            <div class="timeline-header">
+              <div>
+                <div class="timeline-title" style="color: var(--ifsc-green-light);"><i class="fa-solid fa-flag-checkered"></i> Submissão do Artigo Científico — Marco Final do Semestre Letivo 2026</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-upload"></i> Submissão Eletrônica via JEMS SBC / Entrega Curricular Final PI-II</div>
+              </div>
+              <span class="timeline-date" style="background: rgba(34, 197, 94, 0.25); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.5); font-weight: 800;">
+                Deadline: 15/11/2026 (Até Dez/2026)
+              </span>
             </div>
             <div class="timeline-body">
               <div class="callout-box" style="background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.4); margin-bottom: 0.85rem; padding: 0.85rem;">
                 <i class="fa-solid fa-circle-check" style="color: var(--ifsc-green-light); font-size: 1.25rem;"></i>
                 <div>
-                  <strong style="color: var(--ifsc-green-light); font-size: 0.92rem;">Não há pagamento nesta fase! Submissão R$ 0,00</strong>
+                  <strong style="color: var(--ifsc-green-light); font-size: 0.92rem;">Último Entregável Obrigatório do Semestre (Submissão 100% Gratuita • R$ 0,00):</strong>
                   <p style="font-size: 0.83rem; color: var(--text-main); margin-top: 0.25rem; line-height: 1.45;">
-                    A submissão de artigos científicos para avaliação por pares é <strong>totalmente gratuita</strong>. Nenhum grupo ou estudante paga nada para submeter. O único compromisso é ter o <strong>artigo pronto e formatado em PDF</strong> no modelo oficial SBC, sem nomes de autores nem identificação do IFSC (avaliação duplamente cega).
+                    A submissão do artigo encerra o ciclo obrigatório de aulas de 2026. A submissão via sistema JEMS da SBC é <strong>totalmente gratuita</strong>, sem custo algum para as alunas, alunos ou grupos. O único compromisso exigido para concluir o semestre é o <strong>manuscrito finalizado e formatado em PDF</strong> no modelo oficial SBC, duplamente cego (sem identificação de autores nem IFSC).
                   </p>
                 </div>
               </div>
-              <p>Envio dos artigos da turma no sistema JEMS (prazo limite: <strong>15/11/2026</strong>). As equipes submetem nas modalidades <strong>Artigo Completo (até 6 páginas)</strong> ou <strong>Resumo Estendido (2 a 3 páginas)</strong>.</p>
+              <p>Envio oficial dos artigos nas modalidades <strong>Artigo Completo (até 6 páginas)</strong> ou <strong>Resumo Estendido (2 a 3 páginas)</strong>. Com esta entrega, todos os estudantes concluem as obrigações pedagógicas regulares da unidade curricular de Projeto Integrador II no ano letivo de 2026.</p>
               <div class="timeline-deliverables">
-                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green-light); font-weight: 700;"><i class="fa-solid fa-check-double"></i> Submissão Gratuita (R$ 0,00)</span>
-                <span class="deliv-tag" style="border-color: var(--accent-amber); color: var(--accent-amber); font-weight: 700;"><i class="fa-solid fa-hourglass-end"></i> Prazo Final: 15/11/2026</span>
+                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green-light); font-weight: 800;"><i class="fa-solid fa-check-double"></i> Submissão Gratuita (R$ 0,00)</span>
+                <span class="deliv-tag" style="border-color: var(--accent-amber); color: var(--accent-amber); font-weight: 700;"><i class="fa-solid fa-hourglass-end"></i> Prazo Limite: 15/11/2026</span>
                 <span class="deliv-tag"><i class="fa-solid fa-user-secret"></i> PDF 100% Anônimo (Double-Blind)</span>
                 <span class="deliv-tag"><i class="fa-solid fa-upload"></i> Submissão no JEMS SBC</span>
+                <span class="deliv-tag" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;"><i class="fa-solid fa-graduation-cap"></i> Conclusão das Aulas do Semestre</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Marco 9: Encerramento Curricular PI-II -->
-        <div class="timeline-item future">
-          <div class="timeline-dot"><i class="fa-solid fa-award"></i></div>
+        <!-- DIVISOR VISUAL: ENCERRAMENTO DAS AULAS REGULARES DE 2026 -->
+        <div class="timeline-cycle-divider">
+          <span><i class="fa-solid fa-calendar-xmark"></i> Encerramento das Aulas Regulares do Semestre (Dezembro/2026)</span>
+        </div>
+
+        <div class="timeline-optional-notice">
+          <i class="fa-solid fa-circle-info" style="color: var(--accent-amber); font-size: 1.35rem; flex-shrink: 0;"></i>
+          <div>
+            <strong style="color: var(--text-muted); font-size: 0.88rem;">Desdobramentos em 2027 (Opcional / Atividade de Extensão Científica):</strong>
+            <p style="margin: 0.2rem 0 0; color: var(--text-dim); font-size: 0.82rem; line-height: 1.45;">
+              As aulas regulares da disciplina ocorrem somente até <strong>Dezembro/2026</strong>. As etapas abaixo referem-se ao calendário de <strong>2027</strong> e são <strong>opcionais</strong>, destinadas exclusivamente aos grupos que obtiverem aceite no evento e decidirem, voluntariamente com os professores orientadores, prosseguir com correções, registro e viagem de apresentação.
+            </p>
+          </div>
+        </div>
+
+        <!-- Marco 10: Notificação de Aceite do COTB (OPCIONAL 2027 - Sombreado Menor) -->
+        <div class="timeline-item post-semester">
+          <div class="timeline-dot"><i class="fa-solid fa-envelope-open-text"></i></div>
           <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title">Encerramento Curricular PI-II, Artigo Final & Banca IFSC</div>
-                <div class="timeline-instructor"><i class="fa-solid fa-chalkboard-user"></i> Banca Docente IFSC Garopaba</div>
+                <div class="timeline-title"><i class="fa-solid fa-envelope-open-text"></i> Etapa Pós-Semestre: Resultado dos Revisores (Notificação de Aceite) • Opcional</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-magnifying-glass-chart"></i> Comitê Científico de Avaliadores do COTB (SBC)</div>
               </div>
-              <span class="timeline-date">Novembro / Dezembro 2026</span>
+              <span class="timeline-date">16/02/2027 (Pós-Semestre)</span>
             </div>
             <div class="timeline-body">
-              <p>Revisão cega cruzada entre os grupos da turma, padronização final das referências BibTeX, fechamento da avaliação escolar do PI-II e apresentação do pitch oral perante a banca examinadora do IFSC.</p>
+              <p>Divulgação dos pareceres técnicos da banca revisora do evento no sistema JEMS (Aceito, Aceito com Ressalvas ou Rejeitado). Cada equipe inscrita receberá os comentários detalhados dos especialistas para aprimoramento do trabalho.</p>
               <div class="timeline-deliverables">
-                <span class="deliv-tag"><i class="fa-solid fa-file-pdf"></i> Artigo Final PI-II</span>
-                <span class="deliv-tag"><i class="fa-solid fa-person-chalkboard"></i> Pitch / Defesa Oral</span>
-                <span class="deliv-tag"><i class="fa-solid fa-box-archive"></i> Repositório GitHub Congelado</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Marco 10: Notificação de Aceite do COTB -->
-        <div class="timeline-item future" style="border-left-color: var(--accent-cyan);">
-          <div class="timeline-dot" style="background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan);"><i class="fa-solid fa-envelope-open-text"></i></div>
-          <div class="timeline-card" style="border-color: rgba(6, 182, 212, 0.45); background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, var(--bg-card) 100%);">
-            <div class="timeline-header">
-              <div>
-                <div class="timeline-title" style="color: var(--accent-cyan);"><i class="fa-solid fa-envelope-open-text"></i> Etapa 2: Resultado dos Revisores (Notificação de Aceite)</div>
-                <div class="timeline-instructor"><i class="fa-solid fa-magnifying-glass-chart"></i> Comitê Científico de Avaliadores do COTB</div>
-              </div>
-              <span class="timeline-date" style="background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.4); font-weight: 800;">16/02/2027</span>
-            </div>
-            <div class="timeline-body">
-              <p>Divulgação dos pareceres técnicos da banca revisora do evento no sistema JEMS (Aceito, Aceito com Ressalvas ou Rejeitado). Cada equipe receberá os comentários detalhados dos especialistas para aprimoramento do trabalho.</p>
-              <div class="timeline-deliverables">
-                <span class="deliv-tag" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;"><i class="fa-solid fa-bell"></i> Notificação Oficial: 16/02/2027</span>
+                <span class="deliv-tag"><i class="fa-solid fa-bell"></i> Notificação Oficial: 16/02/2027</span>
                 <span class="deliv-tag"><i class="fa-solid fa-comments"></i> Pareceres dos Revisores no JEMS</span>
+                <span class="deliv-tag"><i class="fa-solid fa-circle-question"></i> Participação Opcional</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Marco 11: Pós-Aprovação (Apenas se Aceito) -->
-        <div class="timeline-item future" style="border-left-color: var(--accent-amber);">
-          <div class="timeline-dot" style="background: var(--accent-amber); color: #000; border-color: var(--accent-amber);"><i class="fa-solid fa-hotel"></i></div>
-          <div class="timeline-card" style="border-color: rgba(245, 158, 11, 0.5); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, var(--bg-card) 100%);">
+        <!-- Marco 11: Pós-Aprovação, Registro & Apresentação (OPCIONAL 2027 - Sombreado Menor) -->
+        <div class="timeline-item post-semester">
+          <div class="timeline-dot"><i class="fa-solid fa-hotel"></i></div>
+          <div class="timeline-card">
             <div class="timeline-header">
               <div>
-                <div class="timeline-title" style="color: #fbbf24;"><i class="fa-solid fa-flag-checkered"></i> Etapa 3: Pós-Aprovação (Somente Artigos Aceitos) — Correções, Registro & Apresentação</div>
-                <div class="timeline-instructor"><i class="fa-solid fa-location-dot"></i> Florianópolis/SC • Hotel Praia Brava</div>
+                <div class="timeline-title"><i class="fa-solid fa-flag-checkered"></i> Etapa Pós-Semestre: Pós-Aprovação (Apenas Artigos Aceitos) — Correções, Registro & Apresentação</div>
+                <div class="timeline-instructor"><i class="fa-solid fa-location-dot"></i> Florianópolis/SC • Hotel Praia Brava (COTB 2027)</div>
               </div>
-              <span class="timeline-date" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 800;">Fevereiro a Abril 2027</span>
+              <span class="timeline-date">Fevereiro a Abril 2027 (Opcional)</span>
             </div>
             <div class="timeline-body">
-              <div class="callout-box" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.35); margin-bottom: 0.9rem; padding: 0.85rem;">
-                <i class="fa-solid fa-circle-info text-amber" style="font-size: 1.25rem;"></i>
+              <div class="callout-box" style="background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.12); margin-bottom: 0.85rem; padding: 0.85rem;">
+                <i class="fa-solid fa-circle-info" style="color: var(--text-dim); font-size: 1.2rem;"></i>
                 <div>
-                  <strong style="color: var(--accent-amber); font-size: 0.92rem;">Etapas exclusivas para os trabalhos aceitos:</strong>
-                  <p style="font-size: 0.83rem; color: var(--text-main); margin-top: 0.25rem; line-height: 1.45;">
-                    O pagamento e os ajustes finais <strong>só acontecem após a aprovação formal</strong>. Nenhum valor é devido antes do resultado.
+                  <strong style="color: var(--text-muted); font-size: 0.9rem;">Etapas voluntárias exclusivas para artigos aceitos:</strong>
+                  <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 0.2rem; line-height: 1.45;">
+                    O pagamento e os ajustes finais <strong>só acontecem após a aprovação formal</strong>. A participação não é obrigatória para aprovação em PI-II (semestre encerrado em Dez/2026).
                   </p>
                 </div>
               </div>
 
-              <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.45;">
-                <div><strong style="color: var(--text-main);"><i class="fa-solid fa-1 text-cyan"></i> Correções & Camera-Ready (até 07/03/2027):</strong> O grupo revisa o artigo aplicando as sugestões dos pareceristas, remove a anonimização e insere nomes dos alunos e filiação IFSC.</div>
-                <div><strong style="color: var(--text-main);"><i class="fa-solid fa-2 text-amber"></i> Inscrição / Registro no Evento (até 26/02/2027):</strong> Pagamento da taxa de inscrição do apresentador para garantir a publicação do artigo nos Anais da SBC. <em>(O IFSC e os professores orientarão os grupos sobre os editais de apoio financeiro e auxílio à participação discente em eventos).</em></div>
-                <div><strong style="color: var(--text-main);"><i class="fa-solid fa-3 text-green"></i> Apresentação Presencial (13 a 17/04/2027):</strong> Apresentação oral (artigos completos) ou pôster interativo (resumos estendidos) no Hotel Praia Brava em Florianópolis.</div>
+              <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.83rem; color: var(--text-dim); line-height: 1.45;">
+                <div><strong style="color: var(--text-muted);"><i class="fa-solid fa-1"></i> Correções & Camera-Ready (até 07/03/2027):</strong> Desanonimização do manuscrito e inclusão de autores e filiação IFSC.</div>
+                <div><strong style="color: var(--text-muted);"><i class="fa-solid fa-2"></i> Inscrição / Registro no Evento (até 26/02/2027):</strong> Taxa de inscrição com suporte/orientação institucional sobre editais de auxílio discente do IFSC.</div>
+                <div><strong style="color: var(--text-muted);"><i class="fa-solid fa-3"></i> Apresentação Presencial (13 a 17/04/2027):</strong> Sessão oral ou pôster no Hotel Praia Brava em Florianópolis.</div>
               </div>
 
-              <div class="timeline-deliverables" style="margin-top: 1rem;">
+              <div class="timeline-deliverables" style="margin-top: 0.9rem;">
                 <span class="deliv-tag"><i class="fa-solid fa-receipt"></i> Registro no Evento (26/02/2027)</span>
                 <span class="deliv-tag"><i class="fa-solid fa-file-circle-check"></i> Envio Camera-Ready (07/03/2027)</span>
-                <span class="deliv-tag" style="border-color: var(--ifsc-green); color: var(--ifsc-green); font-weight: 700;"><i class="fa-solid fa-microphone-lines"></i> Apresentação Presencial (13-17/04/2027)</span>
+                <span class="deliv-tag"><i class="fa-solid fa-microphone-lines"></i> Apresentação Presencial (13-17/04/2027)</span>
               </div>
             </div>
           </div>
