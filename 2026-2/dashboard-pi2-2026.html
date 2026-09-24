@@ -1941,6 +1941,7 @@
       border-top: 1px solid var(--border-color);
       padding-top: 0.85rem;
       margin-top: auto;
+      flex-wrap: wrap;
     }
     .pedagogical-deliverable {
       font-size: 0.74rem;
@@ -1948,6 +1949,8 @@
       display: flex;
       align-items: center;
       gap: 0.35rem;
+      flex: 1 1 auto;
+      min-width: 0;
     }
     .pedagogical-deliverable strong {
       color: var(--text-main);
@@ -1965,6 +1968,29 @@
       transition: var(--transition);
       white-space: nowrap;
       text-decoration: none;
+      flex-shrink: 0;
+    }
+    .btn-back-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 0.85rem;
+      text-decoration: none;
+    }
+    .btn-back-hub:hover {
+      background: var(--chip-bg);
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green-light);
+      transform: translateX(-3px);
     }
     .btn-card-action.green {
       background: var(--ifsc-green);
@@ -2448,26 +2474,17 @@
     <button class="tab-btn active" onclick="switchTab('projetos')">
       <i class="fa-solid fa-cubes"></i> Painel dos 10 Projetos <span class="badge-count">10</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('trabalhos-relacionados')">
-      <i class="fa-solid fa-graduation-cap" style="color: var(--accent-purple);"></i> Aula: Trabalhos Relacionados
-    </button>
-    <button class="tab-btn" onclick="switchTab('experimentos-cientificos')">
-      <i class="fa-solid fa-flask-vial" style="color: var(--ifsc-green-light);"></i> Aula: Experimentos Científicos <span class="badge-count" style="background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green-light); border: 1px solid rgba(34, 197, 94, 0.3);">Metodologia</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('expressao-resultados')">
-      <i class="fa-solid fa-chart-pie" style="color: #60a5fa;"></i> Aula: Expressão de Resultados & Gráficos <span class="badge-count" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">Gráficos & Tabelas</span>
+    <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
+      <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Turma (Pauta)
     </button>
     <button class="tab-btn" onclick="switchTab('cotb-2027')">
       <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Computer on the Beach 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">Submissão 15/11</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
-      <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Aula (Pauta)
     </button>
     <button class="tab-btn" onclick="switchTab('timeline')">
       <i class="fa-solid fa-timeline"></i> Timeline de Atividades & Aulas
     </button>
     <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
-      <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">4 alertas</span>
+      <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">2 alertas</span>
     </button>
   </nav>
 
@@ -2476,26 +2493,13 @@
 
     <!-- TAB 1: PROJETOS -->
     <section id="tab-projetos" class="tab-content active">
-      
-      <!-- Hero Banner -->
-      <div class="hero-banner">
-        <div class="hero-info">
-          <h2>Acompanhamento Executivo da Turma INF-2024</h2>
-          <p>Visão unificada do estágio de desenvolvimento, tecnologias empregadas, links de documentação científica e entregáveis práticos do 2º semestre (2026-2).</p>
-        </div>
-        <div class="hero-meta">
-          <div class="meta-tag"><i class="fa-solid fa-users"></i> Total: <strong>10 Projetos Ativos</strong></div>
-          <div class="meta-tag"><i class="fa-solid fa-microchip"></i> Foco: <strong>Refatoração & Experimentos</strong></div>
-          <div class="meta-tag"><i class="fa-solid fa-pen-nib"></i> Escrita: <strong>Artigo ACM / Overleaf</strong></div>
-        </div>
-      </div>
 
       <!-- HUB DIDÁTICO DE CONTEÚDOS & AULAS PRÁTICAS (CARDS MODULARES) -->
-      <div class="pedagogical-hub-section">
+      <div class="pedagogical-hub-section" style="margin-top: 0.5rem;">
         <div class="pedagogical-hub-header">
           <div>
-            <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--ifsc-green-light);"></i> Central Pedagógica: Aulas Práticas, Metodologia & Conteúdos</h3>
-            <p>Acesse rapidamente as aulas práticas, roteiros metodológicos e chamadas científicas produzidos para a disciplina:</p>
+            <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--ifsc-green-light);"></i> Central Pedagógica: Aulas Práticas, Metodologia &amp; Conteúdos</h3>
+            <p>Acesse as aulas práticas, roteiros metodológicos, dados experimentais e chamadas científicas da disciplina:</p>
           </div>
         </div>
 
@@ -2511,10 +2515,10 @@
                 <h4>Aula: Trabalhos Relacionados</h4>
               </div>
             </div>
-            <p>Busca de artigos correlatos no Google Scholar/Scielo, elaboração do Quadro Comparativo e redação científica no Overleaf com conectivos de contraste.</p>
+            <p>Busca de artigos no Google Scholar/Scielo, elaboração do Quadro Comparativo e redação científica no Overleaf com conectivos de contraste.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
-                <i class="fa-solid fa-file-pen" style="color: var(--accent-purple);"></i> <span>Entregável: <strong>\section{Trabalhos Relacionados}</strong></span>
+                <i class="fa-solid fa-file-pen" style="color: var(--accent-purple);"></i> <span>Entregável: <strong>Trabalhos Relacionados</strong></span>
               </div>
               <button class="btn-card-action purple" onclick="switchTab('trabalhos-relacionados')">
                 Acessar Aula <i class="fa-solid fa-arrow-right"></i>
@@ -2533,10 +2537,10 @@
                 <h4>Aula: Experimentos Científicos</h4>
               </div>
             </div>
-            <p>Formulação de hipóteses, isolamento de variáveis (independentes, dependentes e de controle), medição de grandezas quantitativas e roteiros dos 10 projetos.</p>
+            <p>Formulação de hipóteses, isolamento de variáveis (independentes, dependentes e de controle), medição empírica e roteiros dos 10 projetos.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
-                <i class="fa-solid fa-chart-line" style="color: var(--ifsc-green-light);"></i> <span>Entregável: <strong>4 Experimentos & Gráficos</strong></span>
+                <i class="fa-solid fa-chart-line" style="color: var(--ifsc-green-light);"></i> <span>Entregável: <strong>4 Experimentos &amp; Dados</strong></span>
               </div>
               <button class="btn-card-action green" onclick="switchTab('experimentos-cientificos')">
                 Acessar Aula <i class="fa-solid fa-arrow-right"></i>
@@ -2552,13 +2556,13 @@
               </div>
               <div>
                 <span class="pedagogical-badge blue">Aula Prática 3 • Dados &amp; Gráficos</span>
-                <h4>Expressão de Resultados &amp; Gráficos</h4>
+                <h4>Aula: Expressão de Resultados</h4>
               </div>
             </div>
-            <p>Guia de decisão visual para escolher o tipo de gráfico (barras, linhas, dispersão, boxplot), regras de ouro para tabelas limpas padrão SBC/ABNT (booktabs) e redação crítica da discussão dos dados no LaTeX.</p>
+            <p>Matriz de decisão para escolha de gráficos (barras, linhas, dispersão, boxplot), regras para tabelas SBC (booktabs) e redação crítica dos dados.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
-                <i class="fa-solid fa-chart-column" style="color: #60a5fa;"></i> <span>Entregável: <strong>\section{Resultados e Discussão}</strong></span>
+                <i class="fa-solid fa-chart-column" style="color: #60a5fa;"></i> <span>Entregável: <strong>Resultados &amp; Discussão</strong></span>
               </div>
               <button class="btn-card-action blue" onclick="switchTab('expressao-resultados')">
                 Acessar Aula <i class="fa-solid fa-arrow-right"></i>
@@ -2595,14 +2599,14 @@
                 <i class="fa-solid fa-clipboard-check"></i>
               </div>
               <div>
-                <span class="pedagogical-badge cyan">Gestão Docente & Pauta</span>
-                <h4>Raio-X da Aula & Atendimentos</h4>
+                <span class="pedagogical-badge cyan">Gestão Docente &amp; Pauta</span>
+                <h4>Raio-X da Aula &amp; Atendimentos</h4>
               </div>
             </div>
             <p>Painel de diagnóstico semanal para conduzir os atendimentos de bancada, celebrar conquistas técnicas recentes e destravar gargalos nos artigos.</p>
             <div class="pedagogical-card-footer">
               <div class="pedagogical-deliverable">
-                <i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> <span>Pauta: <strong>Atendimento de Bancada</strong></span>
+                <i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> <span>Pauta: <strong>Atendimento Bancada</strong></span>
               </div>
               <button class="btn-card-action cyan" onclick="switchTab('avancos-pendencias')">
                 Abrir Raio-X <i class="fa-solid fa-arrow-right"></i>
@@ -2990,6 +2994,9 @@
     <section id="tab-trabalhos-relacionados" class="tab-content">
       <div class="hero-banner">
         <div class="hero-info">
+          <button class="btn-back-hub" onclick="switchTab('projetos')">
+            <i class="fa-solid fa-arrow-left"></i> Voltar ao Painel dos Projetos
+          </button>
           <h2>Aula Prática: Seção de Trabalhos Relacionados</h2>
           <p>Roteiro interativo de pesquisa bibliográfica, identificação de diferenciais frente ao estado da arte, redação científica no Overleaf e estruturação do Quadro Comparativo para os 10 projetos da turma INF-2024.</p>
         </div>
@@ -4124,6 +4131,9 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
       <!-- Hero Banner -->
       <div class="hero-banner">
         <div class="hero-info">
+          <button class="btn-back-hub" onclick="switchTab('projetos')">
+            <i class="fa-solid fa-arrow-left"></i> Voltar ao Painel dos Projetos
+          </button>
           <h2>Aula Prática: Metodologia &amp; Experimentos Científicos em Computação</h2>
           <p>Como transformar o seu projeto de software e hardware em um trabalho científico de verdade: formulando hipóteses, isolando variáveis, medindo grandezas empíricas, coletando dados brutos e construindo gráficos para o artigo (SEPEI &amp; COTB 2027).</p>
         </div>
@@ -5255,6 +5265,9 @@ Conforme ilustrado na Figura~\ref{fig:grafico_exp}, observa-se uma redução con
       <!-- Hero Banner -->
       <div class="hero-banner" style="background: linear-gradient(135deg, rgba(2, 132, 199, 0.16) 0%, rgba(37, 99, 235, 0.1) 50%, rgba(15, 23, 18, 0.5) 100%); border-color: rgba(59, 130, 246, 0.3);">
         <div class="hero-info">
+          <button class="btn-back-hub" onclick="switchTab('projetos')">
+            <i class="fa-solid fa-arrow-left"></i> Voltar ao Painel dos Projetos
+          </button>
           <h2>Aula Prática: Expressão de Resultados, Tabelas &amp; Gráficos Científicos</h2>
           <p>Como transformar medições numéricas em evidências científicas irrefutáveis para o seu artigo (COTB 2027 &amp; SEPEI): seleção inteligente do tipo de gráfico, regras de ouro para tabelas limpas no padrão SBC/ABNT (booktabs) e redação crítica da discussão dos achados.</p>
         </div>
