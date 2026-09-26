@@ -134,7 +134,47 @@ def parse_projects(csv_text):
                     "cotbStatus": paper4_col.replace("\n", " ").strip() if paper4_col else "Pendente"
                 })
 
-    print(f"[+] Total de projetos extraídos: {len(projects)}")
+    # Se o projeto 11 (Joel Jorge - Atendimento Domiciliar) não estiver na planilha online, incluir/preservar a entrada
+    has_joel = any(p["id"] == 11 or "Joel" in p.get("team", "") for p in projects)
+    if not has_joel:
+        projects.append({
+            "id": 11,
+            "title": "Plano de Atendimento Domiciliar — Artigo Científico Individual",
+            "team": "Joel Jorge Teixeira Filho",
+            "objective": "Desenvolvimento individual de pesquisa e redação de artigo científico no formato SBC adaptado para atendimento pedagógico domiciliar amparado por laudo médico.",
+            "github": "",
+            "overleaf": "",
+            "overleafStatus": "pendente",
+            "canva": "https://drive.google.com/drive/folders/1mSPjqJ0mF2bXyLc2lwCU3AdrASHG8Vm5",
+            "pitch": "",
+            "relatedWorks": "M1 (Até 15/10): Mapeamento de 4 Trabalhos Relacionados no Google Scholar / SBC Open Lib",
+            "techs": [
+                "Atendimento Domiciliar",
+                "Pesquisa Científica",
+                "LaTeX / SBC"
+            ],
+            "advances": "Dossiê pedagógico estruturado (26/09). Carta de orientações e cronograma de 4 marcos elaborados pelos docentes André e Nauber.",
+            "nextSteps": "Marco M1: Definição do tema e busca dos 4 trabalhos relacionados. Envio do link do Overleaf individual.",
+            "difficulties": "Acompanhamento assíncrono à distância devido ao afastamento por laudo de saúde.",
+            "observations": "Pasta compartilhada com Coordenação e CP ativa no Google Drive. Semestre de conclusão de curso 2026-2.",
+            "experiments": {
+                "exp1": "Marco M1 (15/10): Tema & 4 Trabalhos Relacionados",
+                "exp2": "Marco M2 (31/10): Introdução & Metodologia de Pesquisa",
+                "exp3": "Marco M3 (20/11): Experimentos/Simulações & Discussão",
+                "exp4": "Marco M4 (05/12): Artigo Completo Finalizado (Formato SBC)"
+            },
+            "experimentResults": {
+                "exp1": "Planejado",
+                "exp2": "Planejado",
+                "exp3": "Planejado",
+                "exp4": "Planejado"
+            },
+            "paperStatus": "Em estruturação (Overleaf individual)",
+            "cotbStatus": "Pendente",
+            "isDomiciliar": True
+        })
+
+    print(f"[+] Total de projetos extraídos/consolidados: {len(projects)}")
     return projects
 
 def update_html_files(projects):

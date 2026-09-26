@@ -3031,7 +3031,8 @@
           <input type="text" id="searchInput" placeholder="Buscar por título, estudante, tecnologia ou palavra-chave..." oninput="filterProjects()">
         </div>
                 <div class="filter-pills">
-          <button class="pill active" onclick="setFilter('all', this)">Todos (10)</button>
+          <button class="pill active" onclick="setFilter('all', this)">Todos (11)</button>
+          <button class="pill" onclick="setFilter('domiciliar', this)" style="border-color: rgba(168, 85, 247, 0.4);"><i class="fa-solid fa-house-user" style="color: #c084fc;"></i> Atend. Domiciliar (Joel)</button>
           <button class="pill" onclick="setFilter('exps-completos', this)"><i class="fa-solid fa-circle-check text-green"></i> Experimentos 4/4</button>
           <button class="pill" onclick="setFilter('exps-pendentes', this)"><i class="fa-solid fa-hourglass-half text-amber"></i> Experimentos a Definir</button>
           <button class="pill" onclick="setFilter('overleaf-ok', this)"><i class="fa-solid fa-check text-green"></i> Overleaf OK</button>
@@ -6885,6 +6886,42 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     },
     "paperStatus": "https://pt.overleaf.com/read/prjxfzftqqgc#ab94e4",
     "cotbStatus": "Pendente"
+  },
+  {
+    "id": 11,
+    "title": "Plano de Atendimento Domiciliar — Artigo Científico Individual",
+    "team": "Joel Jorge Teixeira Filho",
+    "objective": "Desenvolvimento individual de pesquisa e redação de artigo científico no formato SBC adaptado para atendimento pedagógico domiciliar amparado por laudo médico.",
+    "github": "",
+    "overleaf": "",
+    "overleafStatus": "pendente",
+    "canva": "https://drive.google.com/drive/folders/1mSPjqJ0mF2bXyLc2lwCU3AdrASHG8Vm5",
+    "pitch": "",
+    "relatedWorks": "M1 (Até 15/10): Mapeamento de 4 Trabalhos Relacionados no Google Scholar / SBC Open Lib",
+    "techs": [
+      "Atendimento Domiciliar",
+      "Pesquisa Científica",
+      "LaTeX / SBC"
+    ],
+    "advances": "Dossiê pedagógico estruturado (26/09). Carta de orientações e cronograma de 4 marcos elaborados pelos docentes André e Nauber.",
+    "nextSteps": "Marco M1: Definição do tema e busca dos 4 trabalhos relacionados. Envio do link do Overleaf individual.",
+    "difficulties": "Acompanhamento assíncrono à distância devido ao afastamento por laudo de saúde.",
+    "observations": "Pasta compartilhada com Coordenação e CP ativa no Google Drive. Semestre de conclusão de curso 2026-2.",
+    "experiments": {
+      "exp1": "Marco M1 (15/10): Tema & 4 Trabalhos Relacionados",
+      "exp2": "Marco M2 (31/10): Introdução & Metodologia de Pesquisa",
+      "exp3": "Marco M3 (20/11): Experimentos/Simulações & Discussão",
+      "exp4": "Marco M4 (05/12): Artigo Completo Finalizado (Formato SBC)"
+    },
+    "experimentResults": {
+      "exp1": "Planejado",
+      "exp2": "Planejado",
+      "exp3": "Planejado",
+      "exp4": "Planejado"
+    },
+    "paperStatus": "Em estruturação (Overleaf individual)",
+    "cotbStatus": "Pendente",
+    "isDomiciliar": true
   }
 ];
 
@@ -6912,6 +6949,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         if (!matchesSearch) return false;
 
         if (currentFilter === 'all') return true;
+        if (currentFilter === 'domiciliar') return p.isDomiciliar || p.id === 11 || (p.team && p.team.includes('Joel'));
         if (currentFilter === 'overleaf-ok') return p.overleafStatus === 'ok';
         if (currentFilter === 'overleaf-privado') return p.overleafStatus === 'privado';
         if (currentFilter === 'exps-completos') {
@@ -6947,7 +6985,9 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
 
       filtered.forEach(p => {
         let badgeHtml = '';
-        if (p.overleafStatus === 'ok') {
+        if (p.isDomiciliar || p.id === 11 || (p.team && p.team.includes('Joel'))) {
+          badgeHtml = `<span class="proj-overleaf-badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4);"><i class="fa-solid fa-house-user"></i> Atendimento Domiciliar</span>`;
+        } else if (p.overleafStatus === 'ok') {
           badgeHtml = `<span class="proj-overleaf-badge ok"><i class="fa-solid fa-circle-check"></i> Overleaf OK</span>`;
         } else if (p.overleafStatus === 'privado') {
           badgeHtml = `<span class="proj-overleaf-badge privado"><i class="fa-solid fa-lock"></i> Link Privado (403)</span>`;
@@ -7267,7 +7307,10 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         let statusBadge = '';
         let actionTxt = '';
 
-        if (p.overleafStatus === 'ok') {
+        if (p.isDomiciliar || p.id === 11 || (p.team && p.team.includes('Joel'))) {
+          statusBadge = '<span class="proj-overleaf-badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4);"><i class="fa-solid fa-house-user"></i> Atend. Domiciliar</span>';
+          actionTxt = '<span style="color: #c084fc; font-size: 0.8rem; font-weight: 600;">Plano individual em 4 marcos estruturado. Overleaf em preparação.</span>';
+        } else if (p.overleafStatus === 'ok') {
           statusBadge = '<span class="proj-overleaf-badge ok"><i class="fa-solid fa-check"></i> 100% Funcional (Público)</span>';
           actionTxt = '<span style="color: var(--ifsc-green); font-size: 0.8rem; font-weight: 600;">Pronto para leitura e correção.</span>';
         } else if (p.overleafStatus === 'privado') {
@@ -7293,13 +7336,14 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       });
 
       // Recalculate KPIs
+      const totalProjs = projectsData.length;
       const okCount = projectsData.filter(p => p.overleafStatus === 'ok').length;
       const privadoCount = projectsData.filter(p => p.overleafStatus === 'privado').length;
       const pendenteCount = projectsData.filter(p => p.overleafStatus === 'pendente').length;
 
-      document.getElementById('kpi-overleaf-ok').innerText = `${okCount} / 10`;
-      document.getElementById('kpi-overleaf-privado').innerText = `${privadoCount} / 10`;
-      document.getElementById('kpi-overleaf-pendente').innerText = `${pendenteCount} / 10`;
+      document.getElementById('kpi-overleaf-ok').innerText = `${okCount} / ${totalProjs}`;
+      document.getElementById('kpi-overleaf-privado').innerText = `${privadoCount} / ${totalProjs}`;
+      document.getElementById('kpi-overleaf-pendente').innerText = `${pendenteCount} / ${totalProjs}`;
       document.getElementById('badge-overleaf-alert').innerText = `${privadoCount} alertas`;
     }
 
@@ -7339,7 +7383,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         const cleanCols = cols.map(c => c.replace(/^"|"$/g, '').trim());
         
         const firstCol = cleanCols[0];
-        if (/^[1-9]|10$/.test(firstCol)) {
+        if (/^([1-9]|10|11)$/.test(firstCol)) {
           const id = parseInt(firstCol, 10);
           const proj = projectsData.find(p => p.id === id);
           if (proj) {
