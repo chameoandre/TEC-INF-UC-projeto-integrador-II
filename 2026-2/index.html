@@ -7081,9 +7081,14 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
             <a href="${p.overleaf}" target="_blank" class="link-btn ${!p.overleaf ? 'disabled' : ''}" title="Artigo Overleaf" onclick="event.stopPropagation();">
               <i class="fa-solid fa-file-code"></i> Overleaf
             </a>
-            <a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama Visual" onclick="event.stopPropagation();">
-              <i class="fa-solid fa-diagram-project"></i> Canva
-            </a>
+            ${p.canva && p.canva.includes('drive.google.com')
+              ? `<a href="${p.canva}" target="_blank" class="link-btn" title="Pasta Compartilhada no Google Drive (Atendimento Domiciliar CP)" onclick="event.stopPropagation();" style="background: rgba(66, 133, 244, 0.15); border-color: rgba(66, 133, 244, 0.35); color: #60a5fa;">
+                   <i class="fa-brands fa-google-drive"></i> Drive CP
+                 </a>`
+              : `<a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama Visual" onclick="event.stopPropagation();">
+                   <i class="fa-solid fa-diagram-project"></i> Canva
+                 </a>`
+            }
             <button onclick="openModal(${p.id}); event.stopPropagation();" class="link-btn" title="Ficha Completa em Janela Modal" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: var(--ifsc-green);">
               <i class="fa-solid fa-eye"></i> Detalhes
             </button>
@@ -7284,7 +7289,9 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--border-color);">
           ${p.github ? `<a href="${p.github}" target="_blank" class="btn btn-outline"><i class="fa-brands fa-github"></i> GitHub</a>` : ''}
           ${p.overleaf ? `<a href="${p.overleaf}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-file-code"></i> Abrir Overleaf</a>` : ''}
-          ${p.canva ? `<a href="${p.canva}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-diagram-project"></i> Diagrama / Canva</a>` : ''}
+          ${p.canva ? (p.canva.includes('drive.google.com') 
+            ? `<a href="${p.canva}" target="_blank" class="btn btn-outline" style="border-color: #60a5fa; color: #60a5fa;"><i class="fa-brands fa-google-drive"></i> Pasta Drive (Atend. Domiciliar)</a>`
+            : `<a href="${p.canva}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-diagram-project"></i> Diagrama / Canva</a>`) : ''}
           ${p.pitch ? `<a href="${p.pitch}" target="_blank" class="btn btn-outline"><i class="fa-brands fa-youtube"></i> Pitch Vídeo</a>` : ''}
         </div>
       `;
