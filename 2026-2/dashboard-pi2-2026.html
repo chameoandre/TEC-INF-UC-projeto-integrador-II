@@ -4159,11 +4159,19 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
               <h4>#07 Música, Jogo e Atenção</h4>
               <div class="advance-team"><i class="fa-solid fa-user"></i> Luisa Narvaz</div>
               <div class="advance-desc">
-                <strong>Avanços Detectados:</strong> Trilha musical da Fase 1 implementada no Pygame; código totalmente modularizado com imports; 4 artigos correlatos cadastrados (2015 a 2025); redefinição metodológica exemplar dos <strong>4 Experimentos</strong> isolando <strong>Variáveis Independentes, Dependentes e de Controle</strong>; e encaminhamento ao <strong>Comitê de Ética em Pesquisa (CEP)</strong>.
+                <strong>Avanços Detectados:</strong> Trilha musical da Fase 1 implementada no Pygame; código totalmente modularizado com imports; 4 artigos correlatos cadastrados (2015 a 2025); redefinição metodológica exemplar dos <strong>4 Experimentos</strong> isolando <strong>Variáveis Independentes, Dependentes e de Controle</strong>; encaminhamento ao <strong>Comitê de Ética em Pesquisa (CEP)</strong>; e <strong>dois artigos científicos aprovados (COTB 2026 e WebMedia 2026 - SBC/UFLA)</strong>!
+              </div>
+              <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a href="https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/" target="_blank" class="link-btn" style="background: var(--ifsc-green); color: #ffffff; text-decoration: none; padding: 0.35rem 0.75rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                  <i class="fa-solid fa-chart-line"></i> Dashboard da Luísa
+                </a>
+                <a href="https://webmedia.org.br/2026/?page_id=38" target="_blank" class="link-btn" style="background: #7c3aed; color: #ffffff; text-decoration: none; padding: 0.35rem 0.75rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                  <i class="fa-solid fa-trophy"></i> WebMedia 2026 (Aprovado!)
+                </a>
               </div>
             </div>
-            <div class="advance-impact">
-              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB:</strong> Modelo padrão-ouro de desenho científico para a Seção de Metodologia e Resultados.
+            <div class="advance-impact" style="margin-top: 0.8rem;">
+              <i class="fa-solid fa-bullseye"></i> <strong>Impacto COTB & WebMedia:</strong> Modelo padrão-ouro de desenho científico e destaque de publicações nacionais na turma.
             </div>
           </div>
 
@@ -6759,6 +6767,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     "team": "Luisa Narvaz",
     "objective": "Jogo educacional que traz jogo como música para crianças com dificuldade de atenção, que apresentem dificuldade no âmbito escolar.",
     "github": "https://github.com/luisablankenburg08/jogo_pygame.git",
+    "dashboard": "https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/",
     "overleaf": "https://www.overleaf.com/6454824882bzkstctzwfgm#3098c7",
     "overleafStatus": "ok",
     "canva": "https://drive.google.com/drive/folders/1gkIR48RiBaHfomWznYDienqCqdkxJvj6?usp=drive_link",
@@ -7075,6 +7084,12 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
 
           <!-- Links de Acesso Rápido Externo (não disparam o toggle do card) -->
           <div class="proj-links" style="margin-top: 0.2rem;">
+            ${p.dashboard
+              ? `<a href="${p.dashboard}" target="_blank" class="link-btn" title="Abrir Dashboard da Aluna" onclick="event.stopPropagation();" style="background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.5); color: var(--ifsc-green); font-weight: 700;">
+                   <i class="fa-solid fa-chart-line"></i> Dashboard
+                 </a>`
+              : ''
+            }
             <a href="${p.github}" target="_blank" class="link-btn ${!p.github ? 'disabled' : ''}" title="Repositório GitHub" onclick="event.stopPropagation();">
               <i class="fa-brands fa-github"></i> Git
             </a>
