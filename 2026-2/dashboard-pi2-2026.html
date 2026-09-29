@@ -2636,7 +2636,7 @@
   <!-- Navigation Tabs -->
   <nav class="nav-tabs-bar">
     <button class="tab-btn active" onclick="switchTab('projetos')">
-      <i class="fa-solid fa-cubes"></i> Painel dos 10 Projetos <span class="badge-count">10</span>
+      <i class="fa-solid fa-cubes"></i> Painel de Projetos <span class="badge-count">11</span>
     </button>
     <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
       <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Turma (Pauta)
@@ -2989,11 +2989,11 @@
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-header">
-            <span class="kpi-title">Projetos Ativos</span>
+            <span class="kpi-title">Projetos Acompanhados</span>
             <div class="kpi-icon green"><i class="fa-solid fa-cubes"></i></div>
           </div>
-          <div class="kpi-val">10</div>
-          <div class="kpi-sub">31 estudantes envolvidos</div>
+          <div class="kpi-val" id="kpi-total-projs">11</div>
+          <div class="kpi-sub">10 equipes + 1 plano domiciliar</div>
         </div>
 
         <div class="kpi-card">
@@ -4487,6 +4487,28 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
               <td><span class="pending-status-pill ok"><i class="fa-solid fa-check"></i> 100% Público</span></td>
               <td><span class="pending-status-pill danger"><i class="fa-solid fa-xmark"></i> Falta</span></td>
               <td>Gravar e colar o <strong>Pitch Vídeo</strong>; preencher campo "Objetivo" na planilha; estruturar Exp 1 (taxa de acertos/acurácia) e Exp 3 (tempo de resposta do modelo local).</td>
+            </tr>
+
+            <!-- P11 (Atendimento Domiciliar) -->
+            <tr style="background: rgba(168, 85, 247, 0.04);">
+              <td><strong>#11</strong></td>
+              <td>
+                <strong style="color: var(--text-main);">Plano Domiciliar: Artigo Individual</strong><br>
+                <span style="font-size: 0.78rem; color: #c084fc;"><i class="fa-solid fa-house-user"></i> Joel Jorge Teixeira Filho</span>
+              </td>
+              <td>
+                <span class="pending-status-pill" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);"><i class="fa-solid fa-calendar-check"></i> Marco M1</span>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">Mapear 4 artigos (Até 15/10)</div>
+              </td>
+              <td style="font-size: 0.78rem;">
+                <span style="color: #c084fc; font-weight: 700;">M1 (15/10):</span> Tema & 4 Trab. Relacionados<br>
+                <span style="color: #c084fc; font-weight: 700;">M2 (31/10):</span> Introdução & Metodologia SBC<br>
+                <span style="color: #c084fc; font-weight: 700;">M3 (20/11):</span> Experimentos/Simulações<br>
+                <span style="color: #c084fc; font-weight: 700;">M4 (05/12):</span> Artigo Completo Finalizado
+              </td>
+              <td><span class="pending-status-pill" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);"><i class="fa-solid fa-file-lines"></i> Em Estruturação</span></td>
+              <td><span class="pending-status-pill ok" style="background: rgba(66, 133, 244, 0.15); color: #60a5fa; border: 1px solid rgba(66, 133, 244, 0.3);"><i class="fa-brands fa-google-drive"></i> Drive CP</span></td>
+              <td><strong style="color: #c084fc;">Acompanhamento Pedagógico Domiciliar (Prof. André, Prof. Nauber, Coordenação e CP).</strong> Acompanhar cumprimento assíncrono do Marco M1 até 15/10 e criação do Overleaf individual.</td>
             </tr>
 
           </tbody>
@@ -6597,7 +6619,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       "DOCKEROBS STUDIONGINXCLOUDFAREFIREBASE"
     ],
     "advances": "COMPRA DE DOMÍNIO (JIFTV.ORG)AQUISIÇÃO DE 2 SUBDOMÍNIOSMONTAGEM DE SERVIDOR NO IFSC",
-    "nextSteps": "FINALIZAR SERVIDORRESOLVER REDEAVANÇAR NA DOCUMENTAÇÃO",
+    "nextSteps": "TERMINAR O SITEAVANÇAR NA DOCUMENTAÇÃO",
     "difficulties": "SISTEMA OPERACIONAL [LINUX]",
     "observations": "",
     "experiments": {
@@ -6655,8 +6677,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     "team": "Petrus, Martin, Felipe",
     "objective": "Criar uma fechadura automática controlada por biometria",
     "github": "https://github.com/petrusgunder/projeto-rasptraca",
-    "overleaf": "https://www.overleaf.com/project/6aa99c8cad93cca40cf532b7",
-    "overleafStatus": "privado",
+    "overleaf": "https://www.overleaf.com/read/qhcpsjdctzbx#29d0ce",
+    "overleafStatus": "ok",
     "canva": "https://canva.link/5plpzei3nxzsiia",
     "pitch": "https://youtu.be/qFKXWlbp3Lg?is=MBFXBiiwa3I0iXKO",
     "relatedWorks": "PENDENTE",
@@ -6666,7 +6688,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       "SQLiteFLASK"
     ],
     "advances": "Aquisição da maioria dos equipamentos [raspberry],Sistema de LeDs para Raspberry,Adaptador HDMI,Criação do Banco de Dados do projetoCRIAÇÃO DE UMA TABELA PARA DIVISÃO DAS TAREFASFUNCIONAMENTO DO FLASK",
-    "nextSteps": "COLOCAR O SITE NO ARESPERAR CHEGAR O MICROSD PARA FAZER O RASPBERRY FUNCIONARTestar equipamentos noRaspberry,Efetivar o funcionamento do Banco no Raspberry.",
+    "nextSteps": "COLOCAR O SITE NO ARCOMPRAR O LEITOR DE CODIGOD E BARRAS",
     "difficulties": "EFETIVAR A REORGANIZAÇÃO DAS TAREFAS",
     "observations": "",
     "experiments": {
@@ -6767,7 +6789,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     "team": "Luisa Narvaz",
     "objective": "Jogo educacional que traz jogo como música para crianças com dificuldade de atenção, que apresentem dificuldade no âmbito escolar.",
     "github": "https://github.com/luisablankenburg08/jogo_pygame.git",
-    "overleaf": "https://www.overleaf.com/6454824882bzkstctzwfgm#3098c7",
+    "overleaf": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
     "overleafStatus": "ok",
     "canva": "https://drive.google.com/drive/folders/1gkIR48RiBaHfomWznYDienqCqdkxJvj6?usp=drive_link",
     "pitch": "https://youtu.be/Wm4SfQHkzHI?si=lWNC7QELy9D_ZZpT",
@@ -6782,10 +6804,10 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     "difficulties": "CONHECIMENTO LIMITADO NO PYGAME,VALIDAR PROTOCOLO DE TESTES",
     "observations": "",
     "experiments": {
-      "exp1": "Como estava: Protótipo: menu principal, inclusão de dados dos jogadores, interface gráficaComo ficou:Espera-se que o menu principal seja capaz de direcionar o jogador para a página de  solicitação do nome, da idade e da série do usuário, de modo a gravar as informações no arquivo dados.json. A variável independente corresponde à quantidade de usuários que podem ser armazenados no json. As variáveis dependentes correspondem à maneira como os dados são gravados (correta ou incorretamente) e o tempo que o sistema leva para gravá-los . A variável de controle permanece sendo o mesmo jogo (arquivo principal) gravando diversos usuários.",
-      "exp2": "Como estava:Protótipo: registro de respostas, inserção dos sons das atividades, relatório com acertos e errosComo ficou:Espera-se que o sistema permita que os ícones correspondentes possam emitir os sons das fases, apenas quando selecionados para isso, além de registrar corretamente as respostas dadas pelos usuários após o fim de cada atividade. Ao final, o jogo deve gerar e apresentar o relatório geral do jogador. A variável independente corresponde à quantidade de respostas que o sistema permite receber. As variáveis dependentes correspondem à maneira como as respostas são gravadas no arquivo (correta ou incorretamente); o tempo que o sistema leva para gravá-las; a contagem de respostas certas e erradas; e a veracidade das informações contidas no relatório. Quanto aos sons, os botões devem responder corretamente às solicitações de ativar/desativar os sons. As variáveis de controle são o jogo (arquivo principal) gravando diversas respostas e gerando diferentes relatórios; os sons utilizados em cada fase permanecerão iguais.",
-      "exp3": "Como estava:Protótipo: geração de ID automático, versão em espanhol, melhoramento dos íconesComo ficou:Espera-se que o sistema seja capaz de gerar IDs automáticos para cada jogador, além de trazer ícones mais rebuscados e permitir aos usuários escolherem uma versão na língua espanhola se assim desejarem. As variáveis independentes correspondem à quantidade de IDs que o sistema consegue gerar e a responsividade do sistema com a troca de idiomas e novos ícones gráficos. As variáveis dependentes correspondem à maneira como o ID gerado se conecta com os dados dos usuários e suas respostas; o tempo que o sistema leva para responder à troca de idioma; e o tamanho dos arquivos (em mB) utilizando novos ícones gráficos. A variável de controle corresponde ao jogo (arquivo principal) gerando diferentes IDs automaticamente.",
-      "exp4": "Como estava:Protótipo: realização de testes experimentais, coleta e análise de dados, geração de relatóriosComo ficou:Espera-se que a realização de testes experimentais permitam a análise consistente das respostas concedidas pelos usuários. A partir disso, pretende-se gerar relatórios por meio de ferramentas estatísticas para a observação dos resultados consolidados a curto prazo. As variáveis independentes correspondem ao número de jogadores em cada sessão e o ambiente de execução do jogo (Desktop e Raspberry Pi). As variáveis dependentes correspondem ao tempo de resposta, a porcentagem de acertos e erros e o desempenho dos usuários ao longo das fases. A variável de controle corresponde ao jogo (arquivo principal) permitindo sua execução diversas vezes tanto no Desktop quanto no Raspberry Pi."
+      "exp1": "Espera-se que o menu principal seja capaz de direcionar o jogador para a página de  solicitação do nome, da idade e da série do usuário, de modo a gravar as informações no arquivo dados.json. A variável independente corresponde à quantidade de usuários que podem ser armazenados no json. As variáveis dependentes correspondem à maneira como os dados são gravados (correta ou incorretamente) e o tempo que o sistema leva para gravá-los . A variável de controle permanece sendo o mesmo jogo (arquivo principal) gravando diversos usuários.",
+      "exp2": "Espera-se que o sistema permita que os ícones correspondentes possam emitir os sons das fases, apenas quando selecionados para isso, além de registrar corretamente as respostas dadas pelos usuários após o fim de cada atividade. Ao final, o jogo deve gerar e apresentar o relatório geral do jogador. A variável independente corresponde à quantidade de respostas que o sistema permite receber. As variáveis dependentes correspondem à maneira como as respostas são gravadas no arquivo (correta ou incorretamente); o tempo que o sistema leva para gravá-las; a contagem de respostas certas e erradas; e a veracidade das informações contidas no relatório. Quanto aos sons, os botões devem responder corretamente às solicitações de ativar/desativar os sons. As variáveis de controle são o jogo (arquivo principal) gravando diversas respostas e gerando diferentes relatórios; os sons utilizados em cada fase permanecerão iguais.",
+      "exp3": "Espera-se que o sistema seja capaz de gerar IDs automáticos para cada jogador, além de trazer ícones mais rebuscados e permitir aos usuários escolherem uma versão na língua espanhola se assim desejarem. As variáveis independentes correspondem à quantidade de IDs que o sistema consegue gerar e a responsividade do sistema com a troca de idiomas e novos ícones gráficos. As variáveis dependentes correspondem à maneira como o ID gerado se conecta com os dados dos usuários e suas respostas; o tempo que o sistema leva para responder à troca de idioma; e o tamanho dos arquivos (em mB) utilizando novos ícones gráficos. A variável de controle corresponde ao jogo (arquivo principal) gerando diferentes IDs automaticamente.",
+      "exp4": "Espera-se que a realização de testes experimentais permitam a análise consistente das respostas concedidas pelos usuários. A partir disso, pretende-se gerar relatórios por meio de ferramentas estatísticas para a observação dos resultados consolidados a curto prazo. As variáveis independentes correspondem ao número de jogadores em cada sessão e o ambiente de execução do jogo (Desktop e Raspberry Pi). As variáveis dependentes correspondem ao tempo de resposta, a porcentagem de acertos e erros e o desempenho dos usuários ao longo das fases. A variável de controle corresponde ao jogo (arquivo principal) permitindo sua execução diversas vezes tanto no Desktop quanto no Raspberry Pi."
     },
     "experimentResults": {
       "exp1": "Apresentação COTB 2026",
@@ -6794,7 +6816,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       "exp4": ""
     },
     "paperStatus": "https://www.overleaf.com/8957817833dgcvkfgzwqgg#a9207e",
-    "cotbStatus": "Pendente"
+    "cotbStatus": "Pendente",
+    "dashboard": "https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/"
   },
   {
     "id": 8,
@@ -7024,11 +7047,13 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
                <div class="card-rel-content">${relRaw}</div>
              </div>`;
 
-        // 4 Experimentos: puxando os títulos dos que já foram feitos
+        // 4 Experimentos: puxando os títulos e resultados dos que já foram feitos
         const exps = p.experiments || {};
+        const expResults = p.experimentResults || {};
         const expItems = [1, 2, 3, 4].map(num => {
           const key = 'exp' + num;
           const val = (exps[key] || 'PENDENTE').trim();
+          const resVal = (expResults[key] || '').trim();
           const isDone = val && val.toUpperCase() !== 'PENDENTE';
           return `
             <li class="card-exp-item ${isDone ? 'ok' : 'pendente'}">
@@ -7038,6 +7063,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
                   ? `<i class="fa-solid fa-circle-check text-green" style="font-size: 0.75rem; margin-right: 0.25rem;"></i> <strong>${val}</strong>`
                   : `<span style="color: var(--text-dim); font-style: italic;">Pendente (Definir título do experimento)</span>`
                 }
+                ${resVal ? `<div class="card-exp-result" style="font-size: 0.76rem; color: var(--ifsc-green); margin-top: 0.25rem; font-weight: normal; background: rgba(34, 197, 94, 0.08); padding: 0.25rem 0.5rem; border-radius: 4px; border-left: 2px solid var(--ifsc-green);"><i class="fa-solid fa-square-poll-vertical"></i> <strong>Resultado:</strong> ${resVal}</div>` : ''}
               </span>
             </li>
           `;
@@ -7271,20 +7297,24 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         <!-- Pipeline 4 Experimentos no Modal -->
         <div style="margin-bottom: 1.2rem;">
           <h4 style="font-size: 0.82rem; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-            <i class="fa-solid fa-flask-vial"></i> Título dos 4 Experimentos
+            <i class="fa-solid fa-flask-vial"></i> Título dos 4 Experimentos & Resultados
           </h4>
           <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.82rem;">
             <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp1 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
               <strong>Exp 1:</strong> ${p.experiments.exp1}
+              ${p.experimentResults && p.experimentResults.exp1 ? `<div style="margin-top: 0.35rem; color: var(--ifsc-green); font-size: 0.8rem;"><i class="fa-solid fa-square-poll-vertical"></i> <strong>Resultado Registrado:</strong> ${p.experimentResults.exp1}</div>` : ''}
             </div>
             <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp2 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
               <strong>Exp 2:</strong> ${p.experiments.exp2}
+              ${p.experimentResults && p.experimentResults.exp2 ? `<div style="margin-top: 0.35rem; color: var(--ifsc-green); font-size: 0.8rem;"><i class="fa-solid fa-square-poll-vertical"></i> <strong>Resultado Registrado:</strong> ${p.experimentResults.exp2}</div>` : ''}
             </div>
             <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp3 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
               <strong>Exp 3:</strong> ${p.experiments.exp3}
+              ${p.experimentResults && p.experimentResults.exp3 ? `<div style="margin-top: 0.35rem; color: var(--ifsc-green); font-size: 0.8rem;"><i class="fa-solid fa-square-poll-vertical"></i> <strong>Resultado Registrado:</strong> ${p.experimentResults.exp3}</div>` : ''}
             </div>
             <div style="background: var(--chip-bg); padding: 0.65rem 0.8rem; border-radius: 6px; border-left: 3px solid ${p.experiments.exp4 !== 'PENDENTE' ? 'var(--ifsc-green)' : 'var(--border-color)'};">
               <strong>Exp 4:</strong> ${p.experiments.exp4}
+              ${p.experimentResults && p.experimentResults.exp4 ? `<div style="margin-top: 0.35rem; color: var(--ifsc-green); font-size: 0.8rem;"><i class="fa-solid fa-square-poll-vertical"></i> <strong>Resultado Registrado:</strong> ${p.experimentResults.exp4}</div>` : ''}
             </div>
           </div>
         </div>
@@ -7435,12 +7465,22 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
             // Col 8: Trabalhos Relacionados
             if (cleanCols[8]) proj.relatedWorks = cleanCols[8];
 
-            // Cols 9 a 16: Experimentos
+            // Cols 9 a 16: Experimentos (Títulos e Resultados)
             proj.experiments = proj.experiments || {};
             if (cleanCols[9]) proj.experiments.exp1 = cleanCols[9];
             if (cleanCols[11]) proj.experiments.exp2 = cleanCols[11];
             if (cleanCols[13]) proj.experiments.exp3 = cleanCols[13];
             if (cleanCols[15]) proj.experiments.exp4 = cleanCols[15];
+
+            proj.experimentResults = proj.experimentResults || {};
+            if (cleanCols[10]) proj.experimentResults.exp1 = cleanCols[10];
+            if (cleanCols[12]) proj.experimentResults.exp2 = cleanCols[12];
+            if (cleanCols[14]) proj.experimentResults.exp3 = cleanCols[14];
+            if (cleanCols[16]) proj.experimentResults.exp4 = cleanCols[16];
+
+            if (proj.id === 7 || (proj.team && proj.team.includes('Luisa'))) {
+              proj.dashboard = "https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/";
+            }
 
             // Bloco de status (cols 21, 22, 23)
             if (cleanCols[21]) proj.advances = cleanCols[21];

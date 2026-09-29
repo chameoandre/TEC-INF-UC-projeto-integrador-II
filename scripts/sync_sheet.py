@@ -40,7 +40,7 @@ def parse_projects(csv_text):
         first_col = row[0].strip()
         if first_col.isdigit():
             proj_id = int(first_col)
-            if 1 <= proj_id <= 10:
+            if 1 <= proj_id <= 25:
                 title = row[1].strip() if len(row) > 1 else ""
                 team = row[2].strip() if len(row) > 2 else ""
                 objective = row[3].strip() if len(row) > 3 else ""
@@ -102,7 +102,7 @@ def parse_projects(csv_text):
                 if not tech_list:
                     tech_list = ["Documentação", "Pesquisa"]
 
-                projects.append({
+                proj_entry = {
                     "id": proj_id,
                     "title": title,
                     "team": team,
@@ -132,7 +132,12 @@ def parse_projects(csv_text):
                     },
                     "paperStatus": paper1_col.replace("\n", " ").strip() if paper1_col else "Planejamento",
                     "cotbStatus": paper4_col.replace("\n", " ").strip() if paper4_col else "Pendente"
-                })
+                }
+
+                if proj_id == 7 or "Luisa" in team:
+                    proj_entry["dashboard"] = "https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/"
+
+                projects.append(proj_entry)
 
     # Se o projeto 11 (Joel Jorge - Atendimento Domiciliar) não estiver na planilha online, incluir/preservar a entrada
     has_joel = any(p["id"] == 11 or "Joel" in p.get("team", "") for p in projects)
