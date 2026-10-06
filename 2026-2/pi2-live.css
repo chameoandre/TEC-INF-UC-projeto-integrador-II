@@ -1,0 +1,114 @@
+/* PI-II — login, modal de registros, linha do tempo e Raio-X calculado.
+   Usa as variáveis de tema já definidas no index.html. */
+
+/* Textos vindos da planilha mantêm as quebras de linha digitadas */
+.card-extra-text, .card-rel-content, .card-exp-result, .card-obj-box { white-space: pre-line; overflow-wrap: anywhere; }
+
+/* ---------- Área de login no cabeçalho ---------- */
+#pi2-auth { display: flex; align-items: center; gap: 0.5rem; }
+.pi2-user-chip {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.7rem 0.3rem 0.35rem;
+  border: 1px solid var(--border-color); border-radius: 999px; background: var(--chip-bg);
+  color: var(--text-main); font-size: 0.8rem; font-weight: 600;
+}
+.pi2-user-chip img, .pi2-avatar {
+  width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex: none;
+  background: var(--ifsc-green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
+}
+.pi2-role { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ifsc-green-light); }
+.pi2-role.pendente { color: var(--accent-amber); }
+.pi2-linkbtn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; padding: 0.2rem 0.3rem; }
+.pi2-linkbtn:hover { color: var(--text-main); text-decoration: underline; }
+
+/* ---------- Complementos nos cards ---------- */
+.link-btn.pi2-registrar { background: rgba(6, 182, 212, 0.14); border-color: rgba(6, 182, 212, 0.4); color: var(--accent-cyan); cursor: pointer; }
+.quick-meta-pill.pi2-recencia { border: 1px solid var(--chip-border); }
+.quick-meta-pill.pi2-recencia.parado { color: var(--ifsc-red); border-color: rgba(239, 68, 68, 0.4); }
+.pi2-fonte { font-size: 0.76rem; color: var(--text-dim); margin-left: 0.6rem; }
+
+/* ---------- Linha do tempo ---------- */
+.pi2-timeline { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
+.pi2-item {
+  border: 1px solid var(--chip-border); border-left: 3px solid var(--ifsc-green); border-radius: var(--radius-sm);
+  background: var(--chip-bg); padding: 0.6rem 0.75rem;
+}
+.pi2-item.tipo-experimento { border-left-color: var(--accent-cyan); }
+.pi2-item.tipo-artigo { border-left-color: var(--accent-purple); }
+.pi2-item.tipo-dificuldade { border-left-color: var(--accent-amber); }
+.pi2-item.tipo-legado { border-left-color: var(--text-dim); opacity: 0.85; }
+.pi2-item-head { display: flex; flex-wrap: wrap; gap: 0.4rem 0.7rem; align-items: baseline; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 0.3rem; }
+.pi2-item-head strong { color: var(--text-main); font-size: 0.76rem; }
+.pi2-tag { font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.64rem; color: var(--ifsc-green-light); }
+.pi2-item-text { color: var(--text-muted); font-size: 0.82rem; line-height: 1.45; white-space: pre-line; overflow-wrap: anywhere; }
+.pi2-item a { color: var(--accent-cyan); font-size: 0.76rem; overflow-wrap: anywhere; }
+.pi2-devolutiva {
+  margin-top: 0.5rem; padding: 0.45rem 0.6rem; border-radius: 6px; background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3); color: var(--text-main); font-size: 0.8rem; white-space: pre-line;
+}
+.pi2-devolutiva small { display: block; color: var(--accent-purple); font-weight: 700; margin-bottom: 0.15rem; }
+.pi2-item-actions { display: flex; gap: 0.3rem; margin-top: 0.4rem; }
+.pi2-vazio { color: var(--text-dim); font-size: 0.82rem; font-style: italic; padding: 0.4rem 0; }
+.pi2-secao-titulo { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ---------- Modal e formulários ---------- */
+#pi2Modal { z-index: 1100; }
+#pi2Modal .modal-container { max-width: 680px; }
+.pi2-modal-title { font-family: 'Outfit', sans-serif; font-size: 1.3rem; color: var(--text-main); margin: 0 2.5rem 0.25rem 0; }
+.pi2-modal-sub { color: var(--text-muted); font-size: 0.85rem; margin: 0 0 1.2rem; }
+.pi2-form { display: flex; flex-direction: column; gap: 0.9rem; }
+.pi2-field { display: flex; flex-direction: column; gap: 0.3rem; }
+.pi2-field label { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
+.pi2-field .pi2-hint { font-size: 0.74rem; color: var(--text-dim); }
+.pi2-field input, .pi2-field textarea, .pi2-field select {
+  width: 100%; padding: 0.6rem 0.75rem; font: inherit; font-size: 0.88rem; color: var(--text-main);
+  background: var(--input-bg); border: 1px solid var(--input-border); border-radius: var(--radius-sm);
+}
+.pi2-field textarea { min-height: 5.5rem; resize: vertical; line-height: 1.45; }
+.pi2-field textarea.pi2-curto { min-height: 3.2rem; }
+.pi2-field input:focus-visible, .pi2-field textarea:focus-visible, .pi2-field select:focus-visible,
+.pi2-btn:focus-visible, .pi2-linkbtn:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+.pi2-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.pi2-contador { align-self: flex-end; font-size: 0.72rem; color: var(--text-dim); }
+.pi2-erro { color: var(--ifsc-red); font-size: 0.84rem; font-weight: 600; min-height: 1.1rem; }
+.pi2-actions { display: flex; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.3rem; }
+.pi2-btn {
+  padding: 0.6rem 1.1rem; border-radius: var(--radius-sm); font: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--border-color); background: var(--chip-bg); color: var(--text-main);
+}
+.pi2-btn.primario { background: var(--ifsc-green); border-color: var(--ifsc-green); color: #fff; }
+.pi2-btn.perigo { color: var(--ifsc-red); border-color: rgba(239, 68, 68, 0.4); }
+.pi2-btn.mini { padding: 0.25rem 0.6rem; font-size: 0.72rem; }
+.pi2-btn:disabled { opacity: 0.55; cursor: progress; }
+.pi2-fieldset { border: 1px solid var(--chip-border); border-radius: var(--radius-sm); padding: 0.8rem; display: flex; flex-direction: column; gap: 0.7rem; }
+.pi2-fieldset legend { font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan); padding: 0 0.4rem; }
+.pi2-google-btn { display: flex; justify-content: center; min-height: 44px; margin: 0.5rem 0 1rem; }
+.pi2-table-wrap { overflow-x: auto; }
+.pi2-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.pi2-table th, .pi2-table td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--chip-border); color: var(--text-muted); vertical-align: top; }
+.pi2-table th { color: var(--text-main); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.pi2-h { font-size: 0.95rem; color: var(--text-main); margin: 1.2rem 0 0.5rem; }
+
+/* ---------- Raio-X calculado ---------- */
+#pi2-raiox { margin-bottom: 2rem; }
+#pi2-raiox .kpi-grid { margin-bottom: 1rem; }
+.pi2-raiox-cols { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; }
+.pi2-aviso-fixo {
+  margin-bottom: 1.25rem; padding: 0.7rem 1rem; border-radius: var(--radius-sm); font-size: 0.84rem;
+  background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.35); color: var(--text-main);
+}
+.pi2-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.84rem; color: var(--text-muted); }
+.pi2-lista strong { color: var(--text-main); }
+
+@media (max-width: 720px) {
+  .pi2-row, .pi2-raiox-cols { grid-template-columns: 1fr; }
+  .pi2-user-chip .pi2-nome { display: none; }
+}
+
+/* Cabeçalho cabe no celular (os alunos registram pelo telefone) */
+@media (max-width: 900px) {
+  header { flex-wrap: wrap; row-gap: 0.75rem; }
+  .header-actions { flex-wrap: wrap; justify-content: flex-start; max-width: 100%; }
+  .nav-tabs-bar { max-width: 100%; overflow-x: auto; }
+  #pi2Modal .modal-container, #projectModal .modal-container { padding: 1.25rem; }
+  .modal-overlay { padding: 0.75rem; }
+}

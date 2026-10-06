@@ -13,6 +13,8 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <link rel="stylesheet" href="pi2-live.css">
+
   <style>
     /* ==========================================================================
        THEME VARIABLES: DARK & LIGHT MODE
@@ -2617,12 +2619,11 @@
         <i class="fa-solid fa-umbrella-beach"></i> COTB 2027 (15/11)
       </button>
 
-      <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ" target="_blank" class="btn btn-outline" title="Abrir Planilha Google Sheets Oficial">
-        <i class="fa-solid fa-table"></i> Planilha Oficial
-      </a>
+      <!-- Login Google (preenchido por pi2-live.js) -->
+      <div id="pi2-auth"></div>
 
       <!-- Live Sync Button -->
-      <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar dados mais recentes da planilha Google Sheets">
+      <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar os dados mais recentes">
         <i class="fa-solid fa-rotate" id="liveSyncIcon"></i> Sincronizar
       </button>
 
@@ -3043,7 +3044,7 @@
       <!-- Cards View Toggle Controls -->
       <div class="cards-view-controls">
         <div class="cards-view-info">
-          <i class="fa-solid fa-table-cells-large" style="color: var(--ifsc-green-light);"></i> <span>Cards expansíveis: clique em qualquer card ou no botão para abrir os experimentos e detalhes</span>
+          <i class="fa-solid fa-table-cells-large" style="color: var(--ifsc-green-light);"></i> <span>Cards expansíveis: clique em qualquer card ou no botão para abrir os experimentos e detalhes</span><span class="pi2-fonte" id="pi2-fonte"></span>
         </div>
         <div class="cards-view-buttons">
           <button class="btn-toggle-all" onclick="expandAllCards(true)" title="Expandir o conteúdo de todos os cards da lista">
@@ -4083,7 +4084,7 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
         <div class="hero-info">
           <div class="today-callout-badge"><i class="fa-solid fa-chalkboard-user"></i> PAINEL PEDAGÓGICO DE SALA DE AULA • PROFª KARYNA & PROF. ANDRÉ</div>
           <h2 style="color: var(--text-main);"><i class="fa-solid fa-clipboard-check text-green"></i> Raio-X de Avanços & Pendências da Turma INF-2024</h2>
-          <p>Sumário executivo sincronizado diretamente da planilha oficial do Google Sheets. Instrumento de diagnóstico rápido para conduzir os atendimentos de bancada na aula de hoje, celebrar conquistas técnicas recentes e cobrar com firmeza a resolução dos gargalos que travam o paper para o <strong>Computer on the Beach (COTB 2027)</strong>.</p>
+          <p>Sumário executivo da turma: os indicadores do topo são calculados dos dados a cada carregamento. Instrumento de diagnóstico rápido para conduzir os atendimentos de bancada na aula de hoje, celebrar conquistas técnicas recentes e cobrar com firmeza a resolução dos gargalos que travam o paper para o <strong>Computer on the Beach (COTB 2027)</strong>.</p>
         </div>
         <div class="hero-meta">
           <div class="meta-tag"><i class="fa-solid fa-bolt text-green"></i> Avanços: <strong>8 Equipes Ativas</strong></div>
@@ -4094,6 +4095,7 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
       </div>
 
       <!-- BLOCO 1: AVANÇOS RECENTES DETECTADOS -->
+      <div class="pi2-aviso-fixo"><i class="fa-solid fa-circle-info"></i> Os blocos 1 a 3 abaixo são uma análise docente <strong>redigida em 23/09/2026</strong> e não se atualizam sozinhos. Para a situação de hoje, use o quadro acima.</div>
       <div class="guide-box" style="margin-bottom: 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
           <div>
@@ -4101,7 +4103,7 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
             <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Projetos que registraram entregas técnicas e conceituais de alto impacto nas últimas edições da planilha oficial:</p>
           </div>
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--ifsc-green); background: rgba(34, 197, 94, 0.12); padding: 0.3rem 0.7rem; border-radius: 20px; border: 1px solid rgba(34, 197, 94, 0.3);">
-            <i class="fa-solid fa-circle-check"></i> Sincronizado com Google Sheets
+            <i class="fa-solid fa-pen"></i> Texto redigido em 23/09
           </span>
         </div>
 
@@ -6569,7 +6571,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       }
     }
 
-    // Full Data parsed from the official Google Sheet
+    // Cópia dos dados gravada pelo scripts/sync_sheet.py (reserva para quando a leitura ao vivo falhar)
+    window.PI2_BAKED_AT = "29/09/2026";
     const projectsData = [
   {
     "id": 1,
@@ -7398,105 +7401,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       document.getElementById('badge-overleaf-alert').innerText = `${privadoCount} alertas`;
     }
 
-    // Live Sync Directly from Google Sheets CSV
-    async function liveSyncFromSheet() {
-      const btn = document.getElementById('liveSyncBtn');
-      const icon = document.getElementById('liveSyncIcon');
-      
-      icon.className = 'fa-solid fa-spinner fa-spin';
-      btn.disabled = true;
-
-      try {
-        const url = 'https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ/export?format=csv&t=' + Date.now();
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Status HTTP: ' + res.status);
-        const csvText = await res.text();
-        
-        parseCsvAndUpdate(csvText);
-        showToast('Planilha sincronizada ao vivo com sucesso!', 'success');
-      } catch (err) {
-        console.warn('Falha ao baixar CSV ao vivo:', err);
-        showToast('Não foi possível conectar ao Google Sheets diretamente. Exibindo dados locais.', 'warning');
-      } finally {
-        icon.className = 'fa-solid fa-rotate';
-        btn.disabled = false;
-      }
-    }
-
-    // Parse CSV Text from Google Sheets in JS
-    function parseCsvAndUpdate(csvText) {
-      const lines = csvText.split(/\r?\n/);
-      let updatedCount = 0;
-
-      lines.forEach(line => {
-        const cols = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
-        if (cols.length < 5) return;
-        const cleanCols = cols.map(c => c.replace(/^"|"$/g, '').trim());
-        
-        const firstCol = cleanCols[0];
-        if (/^([1-9]|10|11)$/.test(firstCol)) {
-          const id = parseInt(firstCol, 10);
-          const proj = projectsData.find(p => p.id === id);
-          if (proj) {
-            if (cleanCols[1]) proj.title = cleanCols[1];
-            if (cleanCols[2]) proj.team = cleanCols[2];
-            if (cleanCols[3]) proj.objective = cleanCols[3];
-            if (cleanCols[4]) proj.github = cleanCols[4];
-
-            // Overleaf (cols 5, 20, 17)
-            let ovUrl = '';
-            for (const cIdx of [5, 20, 17]) {
-              if (cleanCols[cIdx] && cleanCols[cIdx].includes('overleaf.com')) {
-                const m = cleanCols[cIdx].match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
-                if (m) { ovUrl = m[0]; break; }
-              }
-            }
-            if (ovUrl) {
-              proj.overleaf = ovUrl;
-              proj.overleafStatus = ovUrl.includes('/project/') ? 'privado' : 'ok';
-            } else {
-              proj.overleaf = '';
-              proj.overleafStatus = 'pendente';
-            }
-
-            if (cleanCols[6] && cleanCols[6].toUpperCase() !== 'PENDENTE') proj.canva = cleanCols[6];
-            if (cleanCols[7] && cleanCols[7].toUpperCase() !== 'PENDENTE') proj.pitch = cleanCols[7];
-            
-            // Col 8: Trabalhos Relacionados
-            if (cleanCols[8]) proj.relatedWorks = cleanCols[8];
-
-            // Cols 9 a 16: Experimentos (Títulos e Resultados)
-            proj.experiments = proj.experiments || {};
-            if (cleanCols[9]) proj.experiments.exp1 = cleanCols[9];
-            if (cleanCols[11]) proj.experiments.exp2 = cleanCols[11];
-            if (cleanCols[13]) proj.experiments.exp3 = cleanCols[13];
-            if (cleanCols[15]) proj.experiments.exp4 = cleanCols[15];
-
-            proj.experimentResults = proj.experimentResults || {};
-            if (cleanCols[10]) proj.experimentResults.exp1 = cleanCols[10];
-            if (cleanCols[12]) proj.experimentResults.exp2 = cleanCols[12];
-            if (cleanCols[14]) proj.experimentResults.exp3 = cleanCols[14];
-            if (cleanCols[16]) proj.experimentResults.exp4 = cleanCols[16];
-
-            if (proj.id === 7 || (proj.team && proj.team.includes('Luisa'))) {
-              proj.dashboard = "https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/";
-            }
-
-            // Bloco de status (cols 21, 22, 23)
-            if (cleanCols[21]) proj.advances = cleanCols[21];
-            if (cleanCols[22]) proj.nextSteps = cleanCols[22];
-            if (cleanCols[23]) proj.difficulties = cleanCols[23];
-
-            updatedCount++;
-          }
-        }
-      });
-
-      if (updatedCount > 0) {
-        renderProjects();
-        renderAuditTable();
-      }
-    }
+    // A sincronização ao vivo (API ou CSV da planilha) fica em pi2-live.js.
 
     // Toast Notification Utility
     function showToast(msg, type = 'success') {
@@ -7591,5 +7496,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     }
 
   </script>
+  <script src="pi2-config.js"></script>
+  <script src="pi2-live.js"></script>
 </body>
 </html>
