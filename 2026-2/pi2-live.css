@@ -112,3 +112,36 @@
   #pi2Modal .modal-container, #projectModal .modal-container { padding: 1.25rem; }
   .modal-overlay { padding: 0.75rem; }
 }
+
+/* ---------- Painel de notas (pi2-notas.js) ---------- */
+#pi2Modal .modal-container.pi2-largo { max-width: 1120px; }
+.pi2-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+.pi2-tab { background: none; border: 0; border-bottom: 3px solid transparent; color: var(--text-muted); font: inherit; font-weight: 700; font-size: 0.88rem; padding: 0.55rem 0.8rem; cursor: pointer; }
+.pi2-tab[aria-selected="true"] { color: var(--text-main); border-bottom-color: var(--ifsc-green); }
+.pi2-tab:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+.pi2-grade th, .pi2-grade td { text-align: center; white-space: nowrap; }
+.pi2-grade th:first-child, .pi2-grade td:first-child { text-align: left; white-space: normal; min-width: 11rem; }
+.pi2-grade th small { display: block; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--text-dim); }
+.pi2-grade tr.pi2-grupo td { background: var(--chip-bg); color: var(--text-main); font-weight: 700; text-align: left; }
+.pi2-celula { min-width: 4.6rem; padding: 0.35rem 0.5rem; border-radius: 6px; border: 1px solid var(--chip-border); background: var(--input-bg); color: var(--text-main); font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer; }
+.pi2-celula small { display: block; font-weight: 600; font-size: 0.66rem; color: var(--text-dim); }
+.pi2-celula.vazia { color: var(--text-dim); font-weight: 500; }
+.pi2-celula small.sit-no_prazo { color: var(--ifsc-green-light); }
+.pi2-celula small.sit-atrasado { color: var(--accent-amber); }
+.pi2-celula small.sit-nao_entregue { color: var(--ifsc-red); }
+.pi2-celula:hover, .pi2-celula:focus-visible { border-color: var(--accent-cyan); outline: none; }
+.pi2-grade input[type=text], .pi2-grade input[type=email] { width: 100%; min-width: 4rem; padding: 0.35rem 0.45rem; font: inherit; font-size: 0.82rem; color: var(--text-main); background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; }
+.pi2-grade input.pi2-num { width: 4.2rem; text-align: center; font-variant-numeric: tabular-nums; }
+.pi2-grade input.pi2-nome { min-width: 10rem; }
+.pi2-grade input.pi2-email { min-width: 12rem; }
+.pi2-final { font-weight: 800; color: var(--text-main); font-variant-numeric: tabular-nums; }
+.pi2-selo { display: inline-block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.45rem; border-radius: 999px; border: 1px solid var(--chip-border); color: var(--text-dim); }
+.pi2-selo.pub { color: var(--ifsc-green-light); border-color: rgba(34, 197, 94, 0.45); }
+.pi2-selo.parcial { color: var(--accent-amber); border-color: rgba(245, 158, 11, 0.45); }
+.pi2-formula { font-size: 0.84rem; color: var(--text-muted); background: var(--chip-bg); border: 1px solid var(--chip-border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; margin-bottom: 1rem; }
+.pi2-formula strong { color: var(--text-main); }
+.pi2-evidencias { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem; }
+.pi2-pesos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+.pi2-barra-acoes { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 0.8rem 0; }
+.pi2-fallback { width: 100%; min-height: 8rem; font-family: 'Fira Code', monospace; font-size: 0.75rem; }
+@media (max-width: 720px) { .pi2-pesos { grid-template-columns: 1fr 1fr; } }

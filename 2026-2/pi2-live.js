@@ -21,7 +21,8 @@
     token: null,
     perfil: null,     // dados do token (nome, foto, exp)
     fonte: 'cópia salva no site',
-    atualizadoEm: null
+    atualizadoEm: null,
+    ganchosAuth: []   // funções chamadas ao redesenhar a área de login: f(elemento, usuario)
   };
   window.PI2 = PI2;
 
@@ -361,6 +362,7 @@ function linhasParaProjetos(linhas) {
       (u.status !== 'ativo' ? '<button class="pi2-linkbtn" type="button" id="pi2-btn-solicitar">Solicitar acesso</button>' : '') +
       '<button class="pi2-linkbtn" type="button" id="pi2-btn-sair">Sair</button>';
     $('#pi2-btn-sair').onclick = PI2.sair;
+    PI2.ganchosAuth.forEach(function (f) { f(el, u); });
     if ($('#pi2-btn-painel')) $('#pi2-btn-painel').onclick = abrirPainel;
     if ($('#pi2-btn-solicitar')) $('#pi2-btn-solicitar').onclick = abrirSolicitacao;
   }
@@ -381,8 +383,9 @@ function linhasParaProjetos(linhas) {
     $('.modal-close', div).onclick = fecharModal;
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && div.classList.contains('open')) { e.stopImmediatePropagation(); fecharModal(); } }, true);
   }
-  function abrirModal(html) {
+  function abrirModal(html, largo) {
     garantirModal();
+    $('#pi2Modal .modal-container').classList.toggle('pi2-largo', !!largo);
     $('#pi2ModalCorpo').innerHTML = html;
     $('#pi2Modal').classList.add('open');
     var foco = $('#pi2ModalCorpo [autofocus], #pi2ModalCorpo textarea, #pi2ModalCorpo input, #pi2ModalCorpo select');
@@ -835,6 +838,11 @@ function linhasParaProjetos(linhas) {
   // ------------------------------------------------------------------
   // Partida
   // ------------------------------------------------------------------
+  // Utilitários compartilhados com os outros módulos (pi2-notas.js).
+  PI2.interno = { esc: esc, urlSegura: urlSegura, $: $, $$: $$, api: api, aviso: aviso, abrirModal: abrirModal, fecharModal: fecharModal,
+    cabecalho: cabecalho, aoEnviar: aoEnviar, ehDocente: ehDocente, doisDigitos: doisDigitos, dataBr: dataBr, haQuanto: haQuanto,
+    projetoBruto: projetoBruto, registrosDo: registrosDo, pendente: pendente };
+
   // 1) Escapa imediatamente a cópia salva no HTML, antes do primeiro desenho.
   PI2.bruto = JSON.parse(JSON.stringify(projectsData));
   reescapar();

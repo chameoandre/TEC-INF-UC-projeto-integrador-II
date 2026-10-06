@@ -130,7 +130,15 @@ function doPost(e) {
       decidirAcesso: decidirAcesso_,
       salvarMembro: salvarMembro_,
       devolutiva: devolutiva_,
-      ocultar: ocultar_
+      ocultar: ocultar_,
+      notasPainel: estadoNotasDocente_,
+      salvarPesos: salvarPesos_,
+      salvarQuesito: salvarQuesito_,
+      lancarNota: lancarNota_,
+      salvarAlunos: salvarAlunos_,
+      importarAlunos: importarAlunos_,
+      publicarNotas: publicarNotas_,
+      minhasNotas: minhasNotas_
     };
     var fn = acoes[req.acao];
     if (!fn) throw new Error('Ação desconhecida.');
@@ -498,6 +506,350 @@ function novoId_() { return Utilities.getUuid().slice(0, 13); }
 
 function hash_(s) {
   return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, s)).slice(0, 40);
+}
+
+// ====================================================================
+// NOTAS — quesitos, alunos, lançamentos, pesos, publicação e nota final.
+// Tudo fica na planilha de controle (privada). Nada daqui sai no GET público.
+//
+// Nota final do aluno = média ponderada de quatro componentes:
+//   Entregas      média ponderada dos quesitos (nota do grupo, ou do aluno se o quesito for individual)
+//   Participação  0 a 10, por aluno
+//   Frequência    percentual de presença / 10, por aluno
+//   Pontualidade  10 × (entregas no prazo ÷ entregas com situação marcada), pelo grupo
+// Componente ainda sem dado fica fora da conta e a nota aparece como "parcial".
+// ====================================================================
+
+var CAB_QUESITOS = ['id', 'nome', 'peso', 'prazo', 'escopo', 'publicado', 'ativo'];
+var CAB_ALUNOS = ['id', 'nome', 'projeto', 'email', 'participacao', 'frequencia', 'ativo'];
+var CAB_NOTAS = ['quesito', 'alvo', 'nota', 'situacao', 'comentario', 'docente', 'data'];
+var CAB_CONFIG = ['chave', 'valor'];
+var CAB_NOTAS_HIST = ['data', 'docente', 'item', 'alvo', 'de', 'para'];
+var COMPONENTES = ['entregas', 'participacao', 'frequencia', 'pontualidade'];
+var PESOS_PADRAO = { entregas: 60, participacao: 15, frequencia: 10, pontualidade: 15 };
+var SITUACOES = ['', 'no_prazo', 'atrasado', 'nao_entregue'];
+var QUESITOS_INICIAIS = ['Submissão SNCT (FEPE)', 'Paper SEPEI', 'Trabalhos relacionados',
+  'Experimentos (4 definidos e com resultados)', 'Pitch em vídeo', 'Diagrama do projeto', 'Submissão COTB'];
+
+/** Abre (ou cria) uma aba de notas. As células são texto puro, para a planilha não reformatar números e datas. */
+function abaNotas_(nome, cabecalho) {
+  var ss = controle_();
+  var aba = ss.getSheetByName(nome);
+  if (!aba) {
+    aba = ss.insertSheet(nome);
+    aba.getRange(1, 1, aba.getMaxRows(), cabecalho.length).setNumberFormat('@');
+    aba.getRange(1, 1, 1, cabecalho.length).setValues([cabecalho]).setFontWeight('bold');
+    aba.setFrozenRows(1);
+  }
+  return aba;
+}
+
+/** Converte "7,5" ou "7.5" em número; vazio ou inválido vira null. */
+function num_(v) {
+  var s = String(v == null ? '' : v).trim().replace(',', '.');
+  if (s === '') return null;
+  var n = Number(s);
+  return isNaN(n) ? null : n;
+}
+
+function lerConfigNotas_() {
+  var linhas = lerAba_(abaNotas_('config', CAB_CONFIG));
+  var cfg = {};
+  linhas.forEach(function (l) { cfg[l.chave] = l.valor; });
+  var pesos = {};
+  COMPONENTES.forEach(function (c) {
+    var v = num_(cfg['peso_' + c]);
+    pesos[c] = v === null ? PESOS_PADRAO[c] : v;
+  });
+  return { pesos: pesos, finalPublicado: cfg.final_publicado === 'sim', semeado: cfg.quesitos_semeados === 'sim' };
+}
+
+function gravarConfig_(chave, valor) {
+  var aba = abaNotas_('config', CAB_CONFIG);
+  var linhas = lerAba_(aba);
+  for (var i = 0; i < linhas.length; i++) {
+    if (linhas[i].chave === chave) { aba.getRange(i + 2, 2).setValue(String(valor)); return; }
+  }
+  aba.appendRow([chave, String(valor)]);
+}
+
+function lerEstadoNotas_() {
+  var cfg = lerConfigNotas_();
+  var abaQ = abaNotas_('quesitos', CAB_QUESITOS);
+  if (!cfg.semeado) {
+    if (abaQ.getLastRow() < 2) {
+      QUESITOS_INICIAIS.forEach(function (nome, i) { abaQ.appendRow(['q' + (i + 1), nome, '1', '', 'grupo', '', 'sim']); });
+    }
+    gravarConfig_('quesitos_semeados', 'sim');
+  }
+  var quesitos = lerAba_(abaQ).map(function (q, i) {
+    return { linha: i + 2, id: String(q.id), nome: String(q.nome), peso: num_(q.peso) || 0, prazo: String(q.prazo || ''),
+      escopo: q.escopo === 'individual' ? 'individual' : 'grupo', publicado: q.publicado === 'sim', ativo: q.ativo !== 'nao' };
+  });
+  var alunos = lerAba_(abaNotas_('alunos', CAB_ALUNOS)).map(function (a, i) {
+    return { linha: i + 2, id: String(a.id), nome: String(a.nome), projeto: Number(a.projeto) || 0, email: String(a.email || '').toLowerCase().trim(),
+      participacao: num_(a.participacao), frequencia: num_(a.frequencia), ativo: a.ativo !== 'nao' };
+  });
+  var notas = {};
+  lerAba_(abaNotas_('notas', CAB_NOTAS)).forEach(function (n, i) {
+    notas[n.quesito + '|' + n.alvo] = { linha: i + 2, quesito: String(n.quesito), alvo: String(n.alvo), nota: num_(n.nota),
+      situacao: SITUACOES.indexOf(n.situacao) >= 0 ? n.situacao : '', comentario: String(n.comentario || ''),
+      docente: String(n.docente || ''), data: String(n.data || '') };
+  });
+  return { pesos: cfg.pesos, finalPublicado: cfg.finalPublicado, quesitos: quesitos, alunos: alunos, notas: notas };
+}
+
+/** Nota efetiva de um lançamento: "não entregue" sem nota digitada vale zero. */
+function notaEfetiva_(l) {
+  if (!l) return null;
+  if (l.nota !== null) return l.nota;
+  return l.situacao === 'nao_entregue' ? 0 : null;
+}
+
+function arred_(n) { return n === null ? null : Math.round((n + 1e-9) * 100) / 100; }
+
+/** Calcula os quatro componentes e a nota final de um aluno. `soPublicados` restringe aos quesitos publicados. */
+function calcularAluno_(estado, aluno, soPublicados) {
+  var somaPeso = 0, somaNota = 0, avaliados = 0, total = 0, comSituacao = 0, noPrazo = 0;
+  estado.quesitos.forEach(function (q) {
+    if (!q.ativo || q.peso <= 0) return;
+    if (soPublicados && !q.publicado) return;
+    total++;
+    var alvo = q.escopo === 'individual' ? 'A' + aluno.id : 'P' + aluno.projeto;
+    var l = estado.notas[q.id + '|' + alvo];
+    var n = notaEfetiva_(l);
+    if (n !== null) { somaPeso += q.peso; somaNota += q.peso * n; avaliados++; }
+    if (l && l.situacao) { comSituacao++; if (l.situacao === 'no_prazo') noPrazo++; }
+  });
+  var comp = {
+    entregas: somaPeso > 0 ? somaNota / somaPeso : null,
+    participacao: aluno.participacao,
+    frequencia: aluno.frequencia === null ? null : Math.max(0, Math.min(100, aluno.frequencia)) / 10,
+    pontualidade: comSituacao > 0 ? 10 * noPrazo / comSituacao : null
+  };
+  var pesoUsado = 0, soma = 0, faltando = [];
+  COMPONENTES.forEach(function (c) {
+    if (estado.pesos[c] <= 0) return;
+    if (comp[c] === null) { faltando.push(c); return; }
+    pesoUsado += estado.pesos[c]; soma += estado.pesos[c] * comp[c];
+  });
+  return {
+    id: aluno.id, nome: aluno.nome, projeto: aluno.projeto,
+    entregas: arred_(comp.entregas), participacao: arred_(comp.participacao), frequencia: arred_(comp.frequencia),
+    pontualidade: arred_(comp.pontualidade), final: pesoUsado > 0 ? arred_(soma / pesoUsado) : null,
+    quesitosAvaliados: avaliados, quesitosTotal: total, faltando: faltando,
+    parcial: faltando.length > 0 || avaliados < total
+  };
+}
+
+/** Estado completo para o painel docente. */
+function estadoNotasDocente_(usuario) {
+  exigirDocente_(usuario);
+  var e = lerEstadoNotas_();
+  var membros = lerAba_(controle_().getSheetByName('membros')).filter(function (m) { return m.papel !== 'docente'; })
+    .map(function (m) { return { email: String(m.email).toLowerCase(), nome: m.nome, projetos: String(m.projetos), status: m.status }; });
+  return { notas: {
+    pesos: e.pesos, finalPublicado: e.finalPublicado,
+    quesitos: e.quesitos.map(function (q) { return { id: q.id, nome: q.nome, peso: q.peso, prazo: q.prazo, escopo: q.escopo, publicado: q.publicado, ativo: q.ativo }; }),
+    alunos: e.alunos.map(function (a) { return { id: a.id, nome: a.nome, projeto: a.projeto, email: a.email, participacao: a.participacao, frequencia: a.frequencia, ativo: a.ativo }; }),
+    lancamentos: Object.keys(e.notas).map(function (k) { var n = e.notas[k]; return { quesito: n.quesito, alvo: n.alvo, nota: n.nota, situacao: n.situacao, comentario: n.comentario, docente: nomeCurto_(n.docente), data: n.data }; }),
+    fechamento: e.alunos.filter(function (a) { return a.ativo; }).map(function (a) { return calcularAluno_(e, a, false); }),
+    membros: membros
+  } };
+}
+
+function historicoNotas_(usuario, linhas) {
+  if (!linhas.length) return;
+  var aba = abaNotas_('notas_historico', CAB_NOTAS_HIST);
+  var agora = new Date().toISOString();
+  var dados = linhas.map(function (l) { return [agora, usuario.email, seguro_(l[0]), seguro_(l[1]), seguro_(l[2]), seguro_(l[3])]; });
+  aba.getRange(aba.getLastRow() + 1, 1, dados.length, CAB_NOTAS_HIST.length).setValues(dados);
+}
+
+function notaValida_(v, rotulo, max) {
+  var n = num_(v);
+  if (n === null) {
+    if (String(v == null ? '' : v).trim() !== '') throw new Error(rotulo + ': valor inválido.');
+    return null;
+  }
+  if (n < 0 || n > max) throw new Error(rotulo + ': use um valor de 0 a ' + max + '.');
+  return Math.round(n * 100) / 100;
+}
+
+function txt_(n) { return n === null || n === undefined ? '' : String(n); }
+
+function salvarPesos_(usuario, req) {
+  exigirDocente_(usuario);
+  var p = req.pesos || {}, soma = 0, novos = {};
+  COMPONENTES.forEach(function (c) {
+    var v = notaValida_(p[c], 'Peso de ' + c, 100);
+    if (v === null) throw new Error('Informe o peso de ' + c + '.');
+    novos[c] = v; soma += v;
+  });
+  if (Math.abs(soma - 100) > 0.01) throw new Error('Os quatro pesos precisam somar 100. A soma atual é ' + soma + '.');
+  return comTrava_(function () {
+    var antes = lerConfigNotas_().pesos, hist = [];
+    COMPONENTES.forEach(function (c) {
+      if (antes[c] !== novos[c]) { gravarConfig_('peso_' + c, novos[c]); hist.push(['peso ' + c, '', antes[c], novos[c]]); }
+    });
+    historicoNotas_(usuario, hist);
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+function salvarQuesito_(usuario, req) {
+  exigirDocente_(usuario);
+  var nome = texto_(req.nome, 120);
+  if (!nome) throw new Error('Dê um nome à avaliação.');
+  var peso = notaValida_(req.peso, 'Peso', 1000);
+  if (peso === null || peso <= 0) throw new Error('Informe um peso maior que zero.');
+  var prazo = texto_(req.prazo, 10);
+  if (prazo && !/^\d{4}-\d{2}-\d{2}$/.test(prazo)) throw new Error('Prazo inválido.');
+  var escopo = req.escopo === 'individual' ? 'individual' : 'grupo';
+  return comTrava_(function () {
+    var e = lerEstadoNotas_(), aba = abaNotas_('quesitos', CAB_QUESITOS);
+    var atual = e.quesitos.filter(function (q) { return q.id === String(req.id || ''); })[0];
+    if (req.id && !atual) throw new Error('Avaliação não encontrada.');
+    if (atual) {
+      if (atual.escopo !== escopo && Object.keys(e.notas).some(function (k) { return e.notas[k].quesito === atual.id; })) {
+        throw new Error('Esta avaliação já tem notas lançadas; não é possível trocar entre grupo e individual.');
+      }
+      aba.getRange(atual.linha, 2, 1, 4).setValues([[seguro_(nome), txt_(peso), prazo, escopo]]);
+      aba.getRange(atual.linha, 7).setValue(req.ativo === false ? 'nao' : 'sim');
+      historicoNotas_(usuario, [['avaliação ' + atual.id, '', atual.nome + ' (peso ' + atual.peso + (atual.ativo ? '' : ', inativa') + ')', nome + ' (peso ' + peso + (req.ativo === false ? ', inativa' : '') + ')']]);
+    } else {
+      var id = 'q' + novoId_().replace(/-/g, '').slice(0, 8);
+      aba.appendRow([id, seguro_(nome), txt_(peso), prazo, escopo, '', 'sim']);
+      historicoNotas_(usuario, [['avaliação ' + id, '', '', nome + ' (peso ' + peso + ')']]);
+    }
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+function lancarNota_(usuario, req) {
+  exigirDocente_(usuario);
+  var nota = notaValida_(req.nota, 'Nota', 10);
+  var situacao = SITUACOES.indexOf(req.situacao) >= 0 ? req.situacao : '';
+  var comentario = texto_(req.comentario, CONFIG.MAX_CAMPO);
+  var alvo = String(req.alvo || '');
+  return comTrava_(function () {
+    var e = lerEstadoNotas_();
+    var q = e.quesitos.filter(function (x) { return x.id === String(req.quesito); })[0];
+    if (!q) throw new Error('Avaliação não encontrada.');
+    if (q.escopo === 'grupo') {
+      if (!/^P\d+$/.test(alvo)) throw new Error('Esta avaliação é lançada por grupo.');
+    } else if (!e.alunos.some(function (a) { return 'A' + a.id === alvo; })) throw new Error('Aluno não encontrado.');
+    var aba = abaNotas_('notas', CAB_NOTAS);
+    var atual = e.notas[q.id + '|' + alvo];
+    var linha = [q.id, alvo, txt_(nota), situacao, seguro_(comentario), usuario.nome, new Date().toISOString()];
+    if (atual) aba.getRange(atual.linha, 1, 1, linha.length).setValues([linha]);
+    else aba.appendRow(linha);
+    var de = atual ? txt_(atual.nota) + (atual.situacao ? ' / ' + atual.situacao : '') : '';
+    var para = txt_(nota) + (situacao ? ' / ' + situacao : '');
+    if (de !== para || (atual ? atual.comentario : '') !== comentario) historicoNotas_(usuario, [[q.nome, alvo, de, para]]);
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+/** Grava vários alunos de uma vez (cadastro, e-mail, participação, frequência). */
+function salvarAlunos_(usuario, req) {
+  exigirDocente_(usuario);
+  var lista = req.alunos || [];
+  if (!lista.length) throw new Error('Nada para salvar.');
+  return comTrava_(function () {
+    var e = lerEstadoNotas_(), aba = abaNotas_('alunos', CAB_ALUNOS), hist = [];
+    var emails = {};
+    e.alunos.forEach(function (a) { if (a.email) emails[a.email] = a.id; });
+    lista.forEach(function (d) {
+      var atual = e.alunos.filter(function (a) { return a.id === String(d.id || ''); })[0];
+      if (d.id && !atual) throw new Error('Aluno não encontrado.');
+      var nome = texto_(d.nome, 120);
+      if (!nome) throw new Error('Há um aluno sem nome.');
+      var projeto = Number(d.projeto);
+      if (!(projeto >= 1 && projeto <= 99)) throw new Error(nome + ': informe o número do projeto.');
+      var email = String(d.email || '').toLowerCase().trim();
+      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error(nome + ': e-mail inválido.');
+      var id = atual ? atual.id : 'a' + novoId_().replace(/-/g, '').slice(0, 8);
+      if (email && emails[email] && emails[email] !== id) throw new Error(nome + ': este e-mail já está ligado a outro aluno.');
+      if (atual && atual.email && atual.email !== email) delete emails[atual.email];
+      if (email) emails[email] = id;
+      var part = notaValida_(d.participacao, nome + ' — participação', 10);
+      var freq = notaValida_(d.frequencia, nome + ' — frequência (%)', 100);
+      var linha = [id, seguro_(nome), String(projeto), email, txt_(part), txt_(freq), d.ativo === false ? 'nao' : 'sim'];
+      if (atual) {
+        aba.getRange(atual.linha, 1, 1, linha.length).setValues([linha]);
+        if (atual.participacao !== part) hist.push(['participação', 'A' + id + ' ' + nome, txt_(atual.participacao), txt_(part)]);
+        if (atual.frequencia !== freq) hist.push(['frequência', 'A' + id + ' ' + nome, txt_(atual.frequencia), txt_(freq)]);
+        if (atual.projeto !== projeto) hist.push(['projeto', 'A' + id + ' ' + nome, atual.projeto, projeto]);
+      } else {
+        aba.appendRow(linha);
+        hist.push(['aluno cadastrado', 'A' + id + ' ' + nome, '', 'projeto ' + projeto]);
+      }
+    });
+    historicoNotas_(usuario, hist);
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+/** Importa a lista da turma: uma linha por aluno, no formato "Nome; número do projeto". */
+function importarAlunos_(usuario, req) {
+  exigirDocente_(usuario);
+  var linhas = String(req.texto || '').split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+  if (!linhas.length) throw new Error('Cole a lista com uma linha por aluno.');
+  var novos = [];
+  linhas.forEach(function (l, i) {
+    var m = /^(.*?)[;\t,]\s*#?(\d{1,2})\s*$/.exec(l);
+    if (!m || !m[1].trim()) throw new Error('Linha ' + (i + 1) + ' fora do formato "Nome; número do projeto": ' + l.slice(0, 60));
+    novos.push({ nome: m[1].trim(), projeto: Number(m[2]) });
+  });
+  var e = lerEstadoNotas_();
+  var chave = function (nome, projeto) { return nome.toLowerCase().replace(/\s+/g, ' ') + '|' + projeto; };
+  var existentes = {};
+  e.alunos.forEach(function (a) { existentes[chave(a.nome, a.projeto)] = true; });
+  var inserir = novos.filter(function (n) {
+    var k = chave(n.nome, n.projeto);
+    if (existentes[k]) return false;
+    existentes[k] = true; return true;
+  });
+  if (!inserir.length) { var r0 = estadoNotasDocente_(usuario); r0.importados = 0; return r0; }
+  var r = salvarAlunos_(usuario, { alunos: inserir });
+  r.importados = inserir.length;
+  return r;
+}
+
+function publicarNotas_(usuario, req) {
+  exigirDocente_(usuario);
+  var publicar = !!req.publicar;
+  return comTrava_(function () {
+    if (req.final) {
+      gravarConfig_('final_publicado', publicar ? 'sim' : 'nao');
+      historicoNotas_(usuario, [['publicação', 'nota final', '', publicar ? 'publicada' : 'recolhida']]);
+    } else {
+      var e = lerEstadoNotas_();
+      var q = e.quesitos.filter(function (x) { return x.id === String(req.quesito); })[0];
+      if (!q) throw new Error('Avaliação não encontrada.');
+      abaNotas_('quesitos', CAB_QUESITOS).getRange(q.linha, 6).setValue(publicar ? 'sim' : '');
+      historicoNotas_(usuario, [['publicação', q.nome, '', publicar ? 'publicada' : 'recolhida']]);
+    }
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+/** Visão do aluno: só as próprias notas, e só o que já foi publicado. */
+function minhasNotas_(usuario) {
+  var e = lerEstadoNotas_();
+  var aluno = e.alunos.filter(function (a) { return a.ativo && a.email && a.email === usuario.email; })[0];
+  if (!aluno) return { minhas: { vinculado: false } };
+  var avaliacoes = [];
+  e.quesitos.forEach(function (q) {
+    if (!q.ativo || !q.publicado) return;
+    var l = e.notas[q.id + '|' + (q.escopo === 'individual' ? 'A' + aluno.id : 'P' + aluno.projeto)];
+    avaliacoes.push({ nome: q.nome, peso: q.peso, prazo: q.prazo, escopo: q.escopo, nota: notaEfetiva_(l),
+      situacao: l ? l.situacao : '', comentario: l ? l.comentario : '' });
+  });
+  var out = { vinculado: true, nome: aluno.nome, projeto: aluno.projeto, avaliacoes: avaliacoes, finalPublicado: e.finalPublicado };
+  if (e.finalPublicado) { out.final = calcularAluno_(e, aluno, false); out.pesos = e.pesos; }
+  return { minhas: out };
 }
 
 // ====================================================================
