@@ -138,6 +138,9 @@ function doPost(e) {
       salvarAlunos: salvarAlunos_,
       importarAlunos: importarAlunos_,
       publicarNotas: publicarNotas_,
+      abrirPares: abrirPares_,
+      salvarRegra: salvarRegra_,
+      avaliarParticipacao: avaliarParticipacao_,
       minhasNotas: minhasNotas_
     };
     var fn = acoes[req.acao];
@@ -513,14 +516,19 @@ function hash_(s) {
 // Tudo fica na planilha de controle (privada). Nada daqui sai no GET público.
 //
 // Nota final do aluno = média ponderada de quatro componentes:
-//   Entregas      média ponderada dos quesitos (nota do grupo, ou do aluno se o quesito for individual)
-//   Participação  0 a 10, por aluno
+//   Entregas      média ponderada dos quesitos. Em quesito de grupo, a nota do aluno é a nota do grupo
+//                 multiplicada pelo fator de participação dele naquela atividade (ver fatorParticipacao_).
+//                 Em quesito individual, é a nota lançada para o aluno.
+//   Participação  0 a 10, por aluno: o valor digitado na aba Alunos ou, se vazio, a média das
+//                 participações por atividade definidas pelo docente
 //   Frequência    percentual de presença / 10, por aluno
 //   Pontualidade  10 × (entregas no prazo ÷ entregas com situação marcada), pelo grupo
 // Componente ainda sem dado fica fora da conta e a nota aparece como "parcial".
 // ====================================================================
 
-var CAB_QUESITOS = ['id', 'nome', 'peso', 'prazo', 'escopo', 'publicado', 'ativo'];
+var CAB_QUESITOS = ['id', 'nome', 'peso', 'prazo', 'escopo', 'publicado', 'ativo', 'pares'];
+var CAB_PARTICIPACAO = ['quesito', 'aluno', 'valor', 'docente', 'data'];
+var CAB_PARES = ['quesito', 'avaliador', 'avaliado', 'valor', 'comentario', 'data'];
 var CAB_ALUNOS = ['id', 'nome', 'projeto', 'email', 'participacao', 'frequencia', 'ativo'];
 var CAB_NOTAS = ['quesito', 'alvo', 'nota', 'situacao', 'comentario', 'docente', 'data'];
 var CAB_CONFIG = ['chave', 'valor'];
@@ -528,6 +536,8 @@ var CAB_NOTAS_HIST = ['data', 'docente', 'item', 'alvo', 'de', 'para'];
 var COMPONENTES = ['entregas', 'participacao', 'frequencia', 'pontualidade'];
 var PESOS_PADRAO = { entregas: 60, participacao: 15, frequencia: 10, pontualidade: 15 };
 var SITUACOES = ['', 'no_prazo', 'atrasado', 'nao_entregue'];
+var REGRAS = ['faixas', 'proporcional', 'amortecida'];
+var FAIXAS_PADRAO = { cheiaMin: 8, mediaMin: 5, mediaPct: 80, baixaPct: 50 };
 var QUESITOS_INICIAIS = ['Submissão SNCT (FEPE)', 'Paper SEPEI', 'Trabalhos relacionados',
   'Experimentos (4 definidos e com resultados)', 'Pitch em vídeo', 'Diagrama do projeto', 'Submissão COTB'];
 
@@ -540,6 +550,12 @@ function abaNotas_(nome, cabecalho) {
     aba.getRange(1, 1, aba.getMaxRows(), cabecalho.length).setNumberFormat('@');
     aba.getRange(1, 1, 1, cabecalho.length).setValues([cabecalho]).setFontWeight('bold');
     aba.setFrozenRows(1);
+  } else {
+    var topo = aba.getRange(1, 1, 1, cabecalho.length);
+    if (topo.getDisplayValues()[0].join('|') !== cabecalho.join('|')) {
+      aba.getRange(1, 1, aba.getMaxRows(), cabecalho.length).setNumberFormat('@');
+      topo.setValues([cabecalho]).setFontWeight('bold');
+    }
   }
   return aba;
 }
@@ -561,7 +577,10 @@ function lerConfigNotas_() {
     var v = num_(cfg['peso_' + c]);
     pesos[c] = v === null ? PESOS_PADRAO[c] : v;
   });
-  return { pesos: pesos, finalPublicado: cfg.final_publicado === 'sim', semeado: cfg.quesitos_semeados === 'sim' };
+  var faixas = {};
+  Object.keys(FAIXAS_PADRAO).forEach(function (k) { var v = num_(cfg['faixa_' + k]); faixas[k] = v === null ? FAIXAS_PADRAO[k] : v; });
+  return { pesos: pesos, finalPublicado: cfg.final_publicado === 'sim', semeado: cfg.quesitos_semeados === 'sim',
+    regra: REGRAS.indexOf(cfg.regra_participacao) >= 0 ? cfg.regra_participacao : 'faixas', faixas: faixas };
 }
 
 function gravarConfig_(chave, valor) {
@@ -584,7 +603,7 @@ function lerEstadoNotas_() {
   }
   var quesitos = lerAba_(abaQ).map(function (q, i) {
     return { linha: i + 2, id: String(q.id), nome: String(q.nome), peso: num_(q.peso) || 0, prazo: String(q.prazo || ''),
-      escopo: q.escopo === 'individual' ? 'individual' : 'grupo', publicado: q.publicado === 'sim', ativo: q.ativo !== 'nao' };
+      escopo: q.escopo === 'individual' ? 'individual' : 'grupo', publicado: q.publicado === 'sim', ativo: q.ativo !== 'nao', pares: q.pares === 'sim' };
   });
   var alunos = lerAba_(abaNotas_('alunos', CAB_ALUNOS)).map(function (a, i) {
     return { linha: i + 2, id: String(a.id), nome: String(a.nome), projeto: Number(a.projeto) || 0, email: String(a.email || '').toLowerCase().trim(),
@@ -596,7 +615,15 @@ function lerEstadoNotas_() {
       situacao: SITUACOES.indexOf(n.situacao) >= 0 ? n.situacao : '', comentario: String(n.comentario || ''),
       docente: String(n.docente || ''), data: String(n.data || '') };
   });
-  return { pesos: cfg.pesos, finalPublicado: cfg.finalPublicado, quesitos: quesitos, alunos: alunos, notas: notas };
+  var partic = {};
+  lerAba_(abaNotas_('participacao', CAB_PARTICIPACAO)).forEach(function (l, i) {
+    partic[l.quesito + '|' + l.aluno] = { linha: i + 2, valor: num_(l.valor) };
+  });
+  var pares = lerAba_(abaNotas_('avaliacoes_pares', CAB_PARES)).map(function (l, i) {
+    return { linha: i + 2, quesito: String(l.quesito), avaliador: String(l.avaliador), avaliado: String(l.avaliado), valor: num_(l.valor), comentario: String(l.comentario || '') };
+  });
+  return { pesos: cfg.pesos, finalPublicado: cfg.finalPublicado, regra: cfg.regra, faixas: cfg.faixas,
+    quesitos: quesitos, alunos: alunos, notas: notas, partic: partic, pares: pares };
 }
 
 /** Nota efetiva de um lançamento: "não entregue" sem nota digitada vale zero. */
@@ -606,24 +633,50 @@ function notaEfetiva_(l) {
   return l.situacao === 'nao_entregue' ? 0 : null;
 }
 
+/** Quanto da nota do grupo o aluno leva, dada a participação (0 a 10) definida pelo docente. Sem definição: 100%. */
+function fatorParticipacao_(estado, p) {
+  if (p === null || p === undefined) return 1;
+  p = Math.max(0, Math.min(10, p));
+  if (estado.regra === 'proporcional') return p / 10;
+  if (estado.regra === 'amortecida') return 0.5 + 0.5 * p / 10;
+  var f = estado.faixas;
+  if (p >= f.cheiaMin) return 1;
+  if (p >= f.mediaMin) return f.mediaPct / 100;
+  if (p > 0) return f.baixaPct / 100;
+  return 0;
+}
+
+function participacaoDecidida_(estado, quesitoId, alunoId) {
+  var l = estado.partic[quesitoId + '|' + alunoId];
+  return l ? l.valor : null;
+}
+
 function arred_(n) { return n === null ? null : Math.round((n + 1e-9) * 100) / 100; }
 
 /** Calcula os quatro componentes e a nota final de um aluno. `soPublicados` restringe aos quesitos publicados. */
 function calcularAluno_(estado, aluno, soPublicados) {
   var somaPeso = 0, somaNota = 0, avaliados = 0, total = 0, comSituacao = 0, noPrazo = 0;
+  var somaPart = 0, qtdPart = 0, porQuesito = {};
   estado.quesitos.forEach(function (q) {
     if (!q.ativo || q.peso <= 0) return;
     if (soPublicados && !q.publicado) return;
     total++;
     var alvo = q.escopo === 'individual' ? 'A' + aluno.id : 'P' + aluno.projeto;
     var l = estado.notas[q.id + '|' + alvo];
-    var n = notaEfetiva_(l);
+    var base = notaEfetiva_(l), p = null, fator = 1;
+    if (q.escopo === 'grupo') {
+      p = participacaoDecidida_(estado, q.id, aluno.id);
+      fator = fatorParticipacao_(estado, p);
+      if (p !== null) { somaPart += p; qtdPart++; }
+    }
+    var n = base === null ? null : base * fator;
+    porQuesito[q.id] = { base: arred_(base), participacao: p, fator: arred_(fator), nota: arred_(n) };
     if (n !== null) { somaPeso += q.peso; somaNota += q.peso * n; avaliados++; }
     if (l && l.situacao) { comSituacao++; if (l.situacao === 'no_prazo') noPrazo++; }
   });
   var comp = {
     entregas: somaPeso > 0 ? somaNota / somaPeso : null,
-    participacao: aluno.participacao,
+    participacao: aluno.participacao !== null ? aluno.participacao : (qtdPart > 0 ? somaPart / qtdPart : null),
     frequencia: aluno.frequencia === null ? null : Math.max(0, Math.min(100, aluno.frequencia)) / 10,
     pontualidade: comSituacao > 0 ? 10 * noPrazo / comSituacao : null
   };
@@ -637,7 +690,8 @@ function calcularAluno_(estado, aluno, soPublicados) {
     id: aluno.id, nome: aluno.nome, projeto: aluno.projeto,
     entregas: arred_(comp.entregas), participacao: arred_(comp.participacao), frequencia: arred_(comp.frequencia),
     pontualidade: arred_(comp.pontualidade), final: pesoUsado > 0 ? arred_(soma / pesoUsado) : null,
-    quesitosAvaliados: avaliados, quesitosTotal: total, faltando: faltando,
+    quesitosAvaliados: avaliados, quesitosTotal: total, faltando: faltando, porQuesito: porQuesito,
+    participacaoAutomatica: aluno.participacao === null && qtdPart > 0,
     parcial: faltando.length > 0 || avaliados < total
   };
 }
@@ -649,8 +703,10 @@ function estadoNotasDocente_(usuario) {
   var membros = lerAba_(controle_().getSheetByName('membros')).filter(function (m) { return m.papel !== 'docente'; })
     .map(function (m) { return { email: String(m.email).toLowerCase(), nome: m.nome, projetos: String(m.projetos), status: m.status }; });
   return { notas: {
-    pesos: e.pesos, finalPublicado: e.finalPublicado,
-    quesitos: e.quesitos.map(function (q) { return { id: q.id, nome: q.nome, peso: q.peso, prazo: q.prazo, escopo: q.escopo, publicado: q.publicado, ativo: q.ativo }; }),
+    pesos: e.pesos, finalPublicado: e.finalPublicado, regra: e.regra, faixas: e.faixas,
+    quesitos: e.quesitos.map(function (q) { return { id: q.id, nome: q.nome, peso: q.peso, prazo: q.prazo, escopo: q.escopo, publicado: q.publicado, ativo: q.ativo, pares: q.pares }; }),
+    participacoes: Object.keys(e.partic).map(function (k) { return { quesito: k.split('|')[0], aluno: k.split('|')[1], valor: e.partic[k].valor }; }),
+    pares: e.pares.map(function (x) { return { quesito: x.quesito, avaliador: x.avaliador, avaliado: x.avaliado, valor: x.valor, comentario: x.comentario }; }),
     alunos: e.alunos.map(function (a) { return { id: a.id, nome: a.nome, projeto: a.projeto, email: a.email, participacao: a.participacao, frequencia: a.frequencia, ativo: a.ativo }; }),
     lancamentos: Object.keys(e.notas).map(function (k) { var n = e.notas[k]; return { quesito: n.quesito, alvo: n.alvo, nota: n.nota, situacao: n.situacao, comentario: n.comentario, docente: nomeCurto_(n.docente), data: n.data }; }),
     fechamento: e.alunos.filter(function (a) { return a.ativo; }).map(function (a) { return calcularAluno_(e, a, false); }),
@@ -719,7 +775,7 @@ function salvarQuesito_(usuario, req) {
       historicoNotas_(usuario, [['avaliação ' + atual.id, '', atual.nome + ' (peso ' + atual.peso + (atual.ativo ? '' : ', inativa') + ')', nome + ' (peso ' + peso + (req.ativo === false ? ', inativa' : '') + ')']]);
     } else {
       var id = 'q' + novoId_().replace(/-/g, '').slice(0, 8);
-      aba.appendRow([id, seguro_(nome), txt_(peso), prazo, escopo, '', 'sim']);
+      aba.appendRow([id, seguro_(nome), txt_(peso), prazo, escopo, '', 'sim', '']);
       historicoNotas_(usuario, [['avaliação ' + id, '', '', nome + ' (peso ' + peso + ')']]);
     }
     return estadoNotasDocente_(usuario);
@@ -746,7 +802,23 @@ function lancarNota_(usuario, req) {
     else aba.appendRow(linha);
     var de = atual ? txt_(atual.nota) + (atual.situacao ? ' / ' + atual.situacao : '') : '';
     var para = txt_(nota) + (situacao ? ' / ' + situacao : '');
-    if (de !== para || (atual ? atual.comentario : '') !== comentario) historicoNotas_(usuario, [[q.nome, alvo, de, para]]);
+    var hist = [];
+    if (de !== para || (atual ? atual.comentario : '') !== comentario) hist.push([q.nome, alvo, de, para]);
+    if (q.escopo === 'grupo' && req.participacoes && req.participacoes.length) {
+      var projeto = Number(alvo.slice(1)), abaP = abaNotas_('participacao', CAB_PARTICIPACAO);
+      req.participacoes.forEach(function (d) {
+        var a = e.alunos.filter(function (x) { return x.id === String(d.aluno); })[0];
+        if (!a || a.projeto !== projeto) throw new Error('Participação: aluno fora deste grupo.');
+        var v = notaValida_(d.valor, a.nome + ' — participação', 10);
+        var ant = e.partic[q.id + '|' + a.id];
+        if ((ant ? ant.valor : null) === v) return;
+        var lp = [q.id, a.id, txt_(v), usuario.nome, new Date().toISOString()];
+        if (ant) abaP.getRange(ant.linha, 1, 1, lp.length).setValues([lp]);
+        else { abaP.appendRow(lp); e.partic[q.id + '|' + a.id] = { linha: abaP.getLastRow(), valor: v }; }
+        hist.push(['participação em ' + q.nome, 'A' + a.id + ' ' + a.nome, txt_(ant ? ant.valor : null), txt_(v)]);
+      });
+    }
+    historicoNotas_(usuario, hist);
     return estadoNotasDocente_(usuario);
   });
 }
@@ -791,30 +863,105 @@ function salvarAlunos_(usuario, req) {
   });
 }
 
-/** Importa a lista da turma: uma linha por aluno, no formato "Nome; número do projeto". */
+/**
+ * Importa a lista da turma: uma linha por aluno, "Nome; número do projeto; e-mail do login".
+ * O e-mail é opcional. Quem já existe (mesmo nome e projeto) não é duplicado; só recebe o e-mail, se vier um novo.
+ */
 function importarAlunos_(usuario, req) {
   exigirDocente_(usuario);
   var linhas = String(req.texto || '').split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
   if (!linhas.length) throw new Error('Cole a lista com uma linha por aluno.');
-  var novos = [];
+  var lidos = [];
   linhas.forEach(function (l, i) {
-    var m = /^(.*?)[;\t,]\s*#?(\d{1,2})\s*$/.exec(l);
-    if (!m || !m[1].trim()) throw new Error('Linha ' + (i + 1) + ' fora do formato "Nome; número do projeto": ' + l.slice(0, 60));
-    novos.push({ nome: m[1].trim(), projeto: Number(m[2]) });
+    var partes = l.split(/[;\t]/).map(function (x) { return x.trim(); });
+    if (partes.length === 1) { var m = /^(.*),\s*#?(\d{1,2})$/.exec(l); if (m) partes = [m[1].trim(), m[2]]; }
+    var projeto = String(partes[1] || '').replace(/^#/, '');
+    var email = String(partes[2] || '').toLowerCase();
+    if (!partes[0] || !/^\d{1,2}$/.test(projeto)) throw new Error('Linha ' + (i + 1) + ' fora do formato "Nome; número do projeto; e-mail": ' + l.slice(0, 60));
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error('Linha ' + (i + 1) + ': e-mail inválido (' + email.slice(0, 60) + ').');
+    lidos.push({ nome: partes[0], projeto: Number(projeto), email: email });
   });
   var e = lerEstadoNotas_();
   var chave = function (nome, projeto) { return nome.toLowerCase().replace(/\s+/g, ' ') + '|' + projeto; };
   var existentes = {};
-  e.alunos.forEach(function (a) { existentes[chave(a.nome, a.projeto)] = true; });
-  var inserir = novos.filter(function (n) {
-    var k = chave(n.nome, n.projeto);
-    if (existentes[k]) return false;
-    existentes[k] = true; return true;
+  e.alunos.forEach(function (a) { existentes[chave(a.nome, a.projeto)] = a; });
+  var salvar = [], novos = 0, atualizados = 0;
+  lidos.forEach(function (n) {
+    var k = chave(n.nome, n.projeto), a = existentes[k];
+    if (a === true) return;                       // repetido dentro da própria lista
+    if (!a) { salvar.push(n); novos++; existentes[k] = true; return; }
+    if (n.email && n.email !== a.email) {
+      salvar.push({ id: a.id, nome: a.nome, projeto: a.projeto, email: n.email, participacao: txt_(a.participacao), frequencia: txt_(a.frequencia), ativo: a.ativo });
+      atualizados++;
+    }
+    existentes[k] = true;
   });
-  if (!inserir.length) { var r0 = estadoNotasDocente_(usuario); r0.importados = 0; return r0; }
-  var r = salvarAlunos_(usuario, { alunos: inserir });
-  r.importados = inserir.length;
+  var r = salvar.length ? salvarAlunos_(usuario, { alunos: salvar }) : estadoNotasDocente_(usuario);
+  r.importados = novos;
+  r.atualizados = atualizados;
   return r;
+}
+
+/** Abre ou fecha, para os alunos, a avaliação de participação (a própria e a dos colegas) de uma atividade. */
+function abrirPares_(usuario, req) {
+  exigirDocente_(usuario);
+  return comTrava_(function () {
+    var e = lerEstadoNotas_();
+    var q = e.quesitos.filter(function (x) { return x.id === String(req.quesito); })[0];
+    if (!q) throw new Error('Avaliação não encontrada.');
+    if (q.escopo !== 'grupo') throw new Error('Só atividades de grupo têm avaliação de participação.');
+    abaNotas_('quesitos', CAB_QUESITOS).getRange(q.linha, 8).setValue(req.abrir ? 'sim' : '');
+    historicoNotas_(usuario, [['avaliação de participação', q.nome, '', req.abrir ? 'aberta aos alunos' : 'fechada']]);
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+function salvarRegra_(usuario, req) {
+  exigirDocente_(usuario);
+  if (REGRAS.indexOf(req.regra) < 0) throw new Error('Regra desconhecida.');
+  var f = req.faixas || {}, novas = {};
+  Object.keys(FAIXAS_PADRAO).forEach(function (k) {
+    var v = notaValida_(f[k], 'Faixas', k.indexOf('Pct') > 0 ? 100 : 10);
+    novas[k] = v === null ? FAIXAS_PADRAO[k] : v;
+  });
+  if (novas.mediaMin > novas.cheiaMin) throw new Error('Faixas: o início da faixa intermediária não pode ser maior que o da faixa cheia.');
+  if (novas.baixaPct > novas.mediaPct) throw new Error('Faixas: a faixa baixa não pode valer mais que a intermediária.');
+  return comTrava_(function () {
+    var antes = lerConfigNotas_();
+    gravarConfig_('regra_participacao', req.regra);
+    Object.keys(novas).forEach(function (k) { gravarConfig_('faixa_' + k, novas[k]); });
+    historicoNotas_(usuario, [['regra de participação', '', antes.regra + ' ' + JSON.stringify(antes.faixas), req.regra + ' ' + JSON.stringify(novas)]]);
+    return estadoNotasDocente_(usuario);
+  });
+}
+
+/** Aluno informa a própria participação e a dos colegas de grupo em uma atividade aberta. */
+function avaliarParticipacao_(usuario, req) {
+  limitar_(usuario);
+  var comentario = texto_(req.comentario, CONFIG.MAX_CAMPO);
+  return comTrava_(function () {
+    var e = lerEstadoNotas_();
+    var eu = e.alunos.filter(function (a) { return a.ativo && a.email && a.email === usuario.email; })[0];
+    if (!eu) throw new Error('Seu login ainda não está ligado ao seu nome na lista da turma.');
+    var q = e.quesitos.filter(function (x) { return x.id === String(req.quesito); })[0];
+    if (!q || !q.ativo || q.escopo !== 'grupo' || !q.pares || q.publicado) throw new Error('A avaliação de participação desta atividade não está aberta.');
+    var itens = req.notas || [];
+    if (!itens.length) throw new Error('Informe ao menos a sua própria participação.');
+    var aba = abaNotas_('avaliacoes_pares', CAB_PARES), agora = new Date().toISOString(), vistos = {};
+    itens.forEach(function (d) {
+      var alvo = e.alunos.filter(function (a) { return a.ativo && a.id === String(d.aluno) && a.projeto === eu.projeto; })[0];
+      if (!alvo) throw new Error('Você só pode avaliar integrantes do seu grupo.');
+      if (vistos[alvo.id]) return;
+      vistos[alvo.id] = true;
+      var v = notaValida_(d.valor, alvo.nome, 10);
+      if (v === null) throw new Error('Dê uma nota de 0 a 10 para ' + (alvo.id === eu.id ? 'você' : alvo.nome) + '.');
+      var ant = e.pares.filter(function (x) { return x.quesito === q.id && x.avaliador === eu.id && x.avaliado === alvo.id; })[0];
+      var linha = [q.id, eu.id, alvo.id, txt_(v), alvo.id === eu.id ? seguro_(comentario) : '', agora];
+      if (ant) aba.getRange(ant.linha, 1, 1, linha.length).setValues([linha]);
+      else aba.appendRow(linha);
+    });
+    return minhasNotas_(usuario);
+  });
 }
 
 function publicarNotas_(usuario, req) {
@@ -835,20 +982,37 @@ function publicarNotas_(usuario, req) {
   });
 }
 
-/** Visão do aluno: só as próprias notas, e só o que já foi publicado. */
+/** Visão do aluno: só as próprias notas publicadas, e as avaliações de participação que ele pode preencher. */
 function minhasNotas_(usuario) {
   var e = lerEstadoNotas_();
   var aluno = e.alunos.filter(function (a) { return a.ativo && a.email && a.email === usuario.email; })[0];
   if (!aluno) return { minhas: { vinculado: false } };
-  var avaliacoes = [];
+  var calc = calcularAluno_(e, aluno, false);
+  var avaliacoes = [], abertas = [];
+  var colegas = e.alunos.filter(function (a) { return a.ativo && a.projeto === aluno.projeto; })
+    .sort(function (a, b) { return a.id === aluno.id ? -1 : (b.id === aluno.id ? 1 : (a.nome < b.nome ? -1 : 1)); })
+    .map(function (a) { return { id: a.id, nome: a.nome, eu: a.id === aluno.id }; });
   e.quesitos.forEach(function (q) {
-    if (!q.ativo || !q.publicado) return;
-    var l = e.notas[q.id + '|' + (q.escopo === 'individual' ? 'A' + aluno.id : 'P' + aluno.projeto)];
-    avaliacoes.push({ nome: q.nome, peso: q.peso, prazo: q.prazo, escopo: q.escopo, nota: notaEfetiva_(l),
-      situacao: l ? l.situacao : '', comentario: l ? l.comentario : '' });
+    if (!q.ativo) return;
+    if (q.publicado) {
+      var l = e.notas[q.id + '|' + (q.escopo === 'individual' ? 'A' + aluno.id : 'P' + aluno.projeto)];
+      var d = calc.porQuesito[q.id] || {};
+      avaliacoes.push({ nome: q.nome, peso: q.peso, prazo: q.prazo, escopo: q.escopo, nota: d.nota === undefined ? null : d.nota,
+        notaGrupo: q.escopo === 'grupo' ? d.base : null, participacao: d.participacao === undefined ? null : d.participacao, fator: d.fator === undefined ? 1 : d.fator,
+        situacao: l ? l.situacao : '', comentario: l ? l.comentario : '' });
+    } else if (q.escopo === 'grupo' && q.pares) {
+      var dadas = {}, comentario = '';
+      e.pares.forEach(function (x) {
+        if (x.quesito !== q.id || x.avaliador !== aluno.id) return;   // só o que ESTE aluno informou
+        dadas[x.avaliado] = x.valor;
+        if (x.avaliado === aluno.id) comentario = x.comentario;
+      });
+      abertas.push({ quesito: q.id, nome: q.nome, prazo: q.prazo, dadas: dadas, comentario: comentario,
+        respondida: colegas.every(function (c) { return dadas[c.id] !== undefined && dadas[c.id] !== null; }) });
+    }
   });
-  var out = { vinculado: true, nome: aluno.nome, projeto: aluno.projeto, avaliacoes: avaliacoes, finalPublicado: e.finalPublicado };
-  if (e.finalPublicado) { out.final = calcularAluno_(e, aluno, false); out.pesos = e.pesos; }
+  var out = { vinculado: true, nome: aluno.nome, projeto: aluno.projeto, avaliacoes: avaliacoes, abertas: abertas, colegas: colegas, finalPublicado: e.finalPublicado };
+  if (e.finalPublicado) { delete calc.porQuesito; out.final = calc; out.pesos = e.pesos; }
   return { minhas: out };
 }
 

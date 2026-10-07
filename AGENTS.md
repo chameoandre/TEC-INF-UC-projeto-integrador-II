@@ -113,8 +113,8 @@ no `sync_sheet.py` e é preservado no navegador por ter `isDomiciliar: true`.
 | `atualizarFicha` | integrante do projeto, docente | Altera campos da ficha; guarda valor anterior em `alteracoes`. |
 | `painel`, `decidirAcesso`, `salvarMembro` | docente | Gestão de acessos. |
 | `devolutiva`, `ocultar` | docente | Comentário docente e ocultação de registro. |
-| `notasPainel`, `salvarPesos`, `salvarQuesito`, `lancarNota`, `salvarAlunos`, `importarAlunos`, `publicarNotas` | docente | Painel de notas (ver seção "Notas"). Cada uma devolve o estado completo já recalculado. |
-| `minhasNotas` | qualquer login | Devolve só as notas publicadas do aluno cujo e-mail está na aba `alunos`. |
+| `notasPainel`, `salvarPesos`, `salvarQuesito`, `lancarNota`, `salvarAlunos`, `importarAlunos`, `publicarNotas`, `abrirPares`, `salvarRegra` | docente | Painel de notas (ver seção "Notas"). Cada uma devolve o estado completo já recalculado. |
+| `minhasNotas`, `avaliarParticipacao` | aluno ligado à lista da turma | Notas publicadas do próprio aluno; e a avaliação de participação dele e dos colegas nas atividades abertas. |
 
 Papéis: `docente` (lista `CONFIG.DOCENTES` ou aba `membros`), `aluno` (aba `membros`, situação
 `ativo`, com os números dos projetos). Alunos só alteram os campos de `CAMPOS_ALUNO`.
@@ -128,14 +128,25 @@ final) e `notas_historico`. As abas são criadas sozinhas no primeiro uso.
 
 Nota final do aluno = média ponderada de quatro componentes, com pesos que somam 100:
 
-- **Entregas**: média ponderada das avaliações ativas (nota do grupo, ou do aluno se a avaliação for individual).
-- **Participação**: 0 a 10, por aluno.
+- **Entregas**: média ponderada das avaliações ativas. Em avaliação de grupo, a nota do aluno é a
+  nota do grupo × fator de participação dele **naquela atividade**; em avaliação individual, é a nota do aluno.
+- **Participação**: 0 a 10, por aluno: o valor fixado na aba Alunos ou, se vazio, a média das participações por atividade.
 - **Frequência**: percentual de presença ÷ 10, por aluno.
 - **Pontualidade**: 10 × (entregas marcadas "no prazo" ÷ entregas com situação marcada), pelo grupo.
 
 Componente sem dado fica fora da conta (os pesos restantes são renormalizados) e a nota sai como
 "parcial". "Não entregue" sem nota digitada vale zero. **Todo o cálculo é feito no servidor**
 (`calcularAluno_`); o `pi2-notas.js` só exibe. Não duplique a fórmula no navegador.
+
+Participação por atividade (abas `participacao` e `avaliacoes_pares`):
+
+- O docente abre a avaliação de uma atividade; cada aluno dá 0 a 10 para si e para cada colega do
+  grupo (`avaliarParticipacao`). O aluno só enxerga o que ele mesmo informou.
+- **O que os alunos informam é só referência.** A nota muda apenas com a participação que o
+  docente grava (coluna "Vale" do editor, enviada junto com `lancarNota`). Sem valor gravado, o fator é 1.
+- A conversão participação → fator é configurável (`salvarRegra`): `faixas` (padrão: 8 a 10 mantém,
+  5 a 7 vale 80%, abaixo de 5 vale 50%, zero zera), `proporcional` ou `amortecida`. Ver `fatorParticipacao_`.
+- Publicar a avaliação fecha a coleta dos alunos.
 
 Publicação: cada avaliação tem o seu "publicada", e a nota final (com participação, frequência e
 pontualidade) tem um interruptor próprio. Antes disso `minhasNotas` não devolve nada.
@@ -187,6 +198,9 @@ no GitHub **não** atualiza o backend.
 
 ## Decisões (mais recente primeiro)
 
+- **07/10/2026** — Participação por atividade com autoavaliação e avaliação dos colegas. Decidido
+  que a avaliação dos alunos não entra direto na nota: o docente vê e define o valor que vale.
+  A pasta `dados-alunos/` entrou no `.gitignore`; listas com nome e e-mail não vão para o repositório.
 - **06/10/2026** — Painel de notas. Nota por grupo nas entregas, com participação e frequência por
   aluno para diferenciar integrantes; pontualidade calculada das entregas no prazo. Avaliações e
   pesos são configuráveis pelo painel. O aluno só vê o que o docente publicar.
@@ -207,6 +221,10 @@ no GitHub **não** atualiza o backend.
 - [ ] Trocar o compartilhamento da planilha de projetos de "Editor" para "Leitor" depois do
       teste com um aluno. Até lá a edição livre continua possível.
 - [ ] Cadastrar ou aprovar os integrantes de cada projeto no Painel docente.
+- [ ] Notas: decidir qual e-mail liga cada aluno ao login (os do SIGAA incluem endereços de
+      familiares; a conta institucional `usuario@aluno.ifsc.edu.br` é a alternativa a confirmar).
+- [ ] Notas: a participação por atividade e o componente "Participação" da nota final descontam o
+      mesmo comportamento duas vezes; avaliar zerar o peso do componente.
 - [ ] Notas: importar a lista da turma (aba Alunos do painel), ligar o e-mail de login de cada
       aluno e revisar os pesos e as avaliações sugeridas, que são ponto de partida e não o combinado
       com a turma.

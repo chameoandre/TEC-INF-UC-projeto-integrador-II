@@ -66,7 +66,41 @@
   }
   function cabecalhoQuesito(q) {
     return '<th scope="col">' + esc(q.nome) + '<small>peso ' + campo(q.peso) + (q.prazo ? ' • até ' + prazoBr(q.prazo) : '') + '</small>' +
-      '<span class="pi2-selo ' + (q.publicado ? 'pub' : '') + '">' + (q.publicado ? 'publicada' : 'rascunho') + '</span></th>';
+      '<span class="pi2-selo ' + (q.publicado ? 'pub' : '') + '">' + (q.publicado ? 'publicada' : 'rascunho') + '</span>' +
+      (q.pares && !q.publicado ? ' <span class="pi2-selo parcial" title="Os alunos podem avaliar a própria participação e a dos colegas">participação aberta</span>' : '') + '</th>';
+  }
+  var REGRA = { faixas: 'por faixas', proporcional: 'proporcional', amortecida: 'amortecida' };
+  function regraTexto() {
+    var f = N.faixas;
+    if (N.regra === 'proporcional') return 'nota do grupo × participação ÷ 10';
+    if (N.regra === 'amortecida') return 'metade da nota do grupo é garantida; a outra metade acompanha a participação';
+    return 'participação de ' + campo(f.cheiaMin) + ' a 10 mantém a nota do grupo; de ' + campo(f.mediaMin) + ' até abaixo de ' + campo(f.cheiaMin) + ' fica com ' + campo(f.mediaPct) + '%; abaixo de ' + campo(f.mediaMin) + ' fica com ' + campo(f.baixaPct) + '%; zero zera';
+  }
+  function media(lista) { return lista.length ? lista.reduce(function (t, x) { return t + x; }, 0) / lista.length : null; }
+
+  /** Bloco "Participação dos integrantes" do editor de uma atividade de grupo. */
+  function blocoParticipacao(q, projeto) {
+    var grupo = N.alunos.filter(function (a) { return a.ativo && a.projeto === projeto; });
+    if (!grupo.length) return '<h3 class="pi2-h">Participação dos integrantes</h3><div class="pi2-vazio">Cadastre os alunos deste grupo na aba “Alunos” para diferenciar a participação.</div>';
+    var nome = function (id) { var a = N.alunos.filter(function (x) { return x.id === id; })[0]; return a ? a.nome.split(' ')[0] : '?'; };
+    var linhas = grupo.map(function (a) {
+      var doQ = N.pares.filter(function (x) { return x.quesito === q.id && x.avaliado === a.id && x.valor !== null; });
+      var auto = doQ.filter(function (x) { return x.avaliador === a.id; })[0];
+      var colegas = doQ.filter(function (x) { return x.avaliador !== a.id; });
+      var med = media(colegas.map(function (x) { return x.valor; }));
+      var dec = N.participacoes.filter(function (x) { return x.quesito === q.id && x.aluno === a.id; })[0];
+      var calc = (N.fechamento.filter(function (f) { return f.id === a.id; })[0] || { porQuesito: {} }).porQuesito[q.id];
+      return '<tr><td>' + esc(a.nome) + (auto && auto.comentario ? '<br><small>“' + esc(auto.comentario) + '”</small>' : '') + '</td>' +
+        '<td>' + (auto ? fmt(auto.valor) : '—') + '</td>' +
+        '<td>' + (med === null ? '—' : fmt(med) + '<br><small>' + colegas.map(function (x) { return esc(nome(x.avaliador)) + ': ' + fmt(x.valor); }).join(' • ') + '</small>') + '</td>' +
+        '<td><input class="pi2-num" type="text" inputmode="decimal" name="part-' + esc(a.id) + '" data-sugestao="' + (med !== null ? campo(Math.round(med * 10) / 10) : (auto ? campo(auto.valor) : '')) + '" aria-label="Participação de ' + esc(a.nome) + '" value="' + esc(campo(dec ? dec.valor : null)) + '" placeholder="10"></td>' +
+        '<td class="pi2-final">' + (calc && calc.nota !== null ? fmt(calc.nota) + (calc.fator < 1 ? '<br><small>' + Math.round(calc.fator * 100) + '% da nota</small>' : '') : '—') + '</td></tr>';
+    }).join('');
+    return '<h3 class="pi2-h pi2-secao-titulo"><span>Participação dos integrantes</span><span>' +
+      (q.publicado ? '' : '<button class="pi2-btn mini" type="button" id="pi2-n-pares">' + (q.pares ? 'Fechar avaliação dos alunos' : 'Abrir para os alunos avaliarem') + '</button> ') +
+      '<button class="pi2-btn mini" type="button" id="pi2-n-sugerir">Usar o que os colegas indicaram</button></span></h3>' +
+      '<p class="pi2-modal-sub">O que os alunos informam é só referência: a nota muda apenas com o valor que você colocar na coluna “Vale”. Vazio conta como participação plena. Regra atual (' + REGRA[N.regra] + '): ' + esc(regraTexto()) + '.</p>' +
+      '<div class="pi2-table-wrap"><table class="pi2-table pi2-grade"><thead><tr><th scope="col">Integrante</th><th scope="col">Autoavaliação</th><th scope="col">Média dos colegas</th><th scope="col">Vale<small>0 a 10</small></th><th scope="col">Nota do aluno</th></tr></thead><tbody>' + linhas + '</tbody></table></div>';
   }
   function ligarCelulas(raiz) {
     $$('.pi2-celula', raiz).forEach(function (b) { b.onclick = function () { editarNota(b.dataset.q, b.dataset.alvo); }; });
@@ -107,6 +141,7 @@
       var a = N.alunos.filter(function (x) { return 'A' + x.id === alvo; })[0];
       titulo = a ? esc(a.nome) + ' (#' + I.doisDigitos(a.projeto) + ')' : '';
     }
+    var ehGrupo = alvo.charAt(0) === 'P', projetoAlvo = ehGrupo ? Number(alvo.slice(1)) : 0;
     var corpo = I.abrirModal(I.cabecalho(esc(q.nome), titulo + ' • peso ' + campo(q.peso) + (q.prazo ? ' • prazo ' + prazoBr(q.prazo) : '')) + evid +
       '<form class="pi2-form" style="margin-top:1rem"><div class="pi2-row">' +
       '<div class="pi2-field"><label for="pi2-n-nota">Nota (0 a 10)</label><input id="pi2-n-nota" name="nota" type="text" inputmode="decimal" autocomplete="off" value="' + esc(campo(l.nota)) + '"><span class="pi2-hint">Deixe vazio para ainda não avaliar.</span></div>' +
@@ -115,11 +150,27 @@
         return '<option value="' + o[0] + '"' + (l.situacao === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
       }).join('') + '</select><span class="pi2-hint">Conta para a pontualidade. “Não entregue” sem nota vale zero.</span></div></div>' +
       '<div class="pi2-field"><label for="pi2-n-com">Comentário (o aluno vê depois da publicação)</label><textarea id="pi2-n-com" class="pi2-curto" name="comentario" maxlength="600">' + esc(l.comentario) + '</textarea></div>' +
-      '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn" type="button" id="pi2-n-voltar">Voltar</button><button class="pi2-btn primario" type="submit">Salvar nota</button></div></form>', true);
+      (ehGrupo ? blocoParticipacao(q, projetoAlvo) : '') +
+      '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn" type="button" id="pi2-n-voltar">Voltar</button><button class="pi2-btn primario" type="submit">Salvar</button></div></form>', true);
     $('#pi2-n-voltar', corpo).onclick = desenhar;
+    var sugerir = $('#pi2-n-sugerir', corpo);
+    if (sugerir) sugerir.onclick = function () {
+      var n = 0;
+      $$('input[data-sugestao]', corpo).forEach(function (i) { if (i.dataset.sugestao) { i.value = i.dataset.sugestao; n++; } });
+      I.aviso(n ? 'Valores preenchidos. Revise e clique em Salvar.' : 'Nenhum aluno avaliou esta atividade ainda.', n ? 'success' : 'warning');
+    };
+    var pares = $('#pi2-n-pares', corpo);
+    if (pares) pares.onclick = function () {
+      pares.disabled = true;
+      chamar('abrirPares', { quesito: qid, abrir: !q.pares }).then(function () {
+        I.aviso(q.pares ? 'Avaliação dos alunos fechada.' : 'Aberta: os alunos já podem avaliar em “Minhas notas”.'); editarNota(qid, alvo);
+      }).catch(function (e) { pares.disabled = false; I.aviso(e.message, 'warning'); });
+    };
     I.aoEnviar($('form', corpo), function (fd) {
-      return chamar('lancarNota', { quesito: qid, alvo: alvo, nota: fd.get('nota'), situacao: fd.get('situacao'), comentario: fd.get('comentario') })
-        .then(function () { I.aviso('Nota salva.'); desenhar(); });
+      var participacoes = [];
+      $$('input[name^="part-"]', corpo).forEach(function (i) { participacoes.push({ aluno: i.name.slice(5), valor: i.value.trim() }); });
+      return chamar('lancarNota', { quesito: qid, alvo: alvo, nota: fd.get('nota'), situacao: fd.get('situacao'), comentario: fd.get('comentario'), participacoes: participacoes })
+        .then(function () { I.aviso('Salvo.'); desenhar(); });
     });
   }
 
@@ -155,10 +206,10 @@
     } else {
       tabela = '<div class="pi2-vazio">Nenhum aluno cadastrado. Cole a lista da turma abaixo para começar.</div>';
     }
-    el.innerHTML = lista + '<p class="pi2-modal-sub">A participação já pode ser lançada igual para o grupo inteiro; altere só quem precisar diferenciar. Sem o e-mail do login, o aluno não consegue ver as próprias notas.</p>' + tabela +
+    el.innerHTML = lista + '<p class="pi2-modal-sub">Participação geral: deixe vazio para o sistema usar a média das participações por atividade; preencha só se quiser fixar um valor. Sem o e-mail do login, o aluno não vê as próprias notas nem avalia a participação do grupo.</p>' + tabela +
       '<h3 class="pi2-h">Importar lista da turma</h3>' +
-      '<form class="pi2-form" id="pi2-form-import"><div class="pi2-field"><label for="pi2-import">Uma linha por aluno, no formato “Nome completo; número do projeto”</label>' +
-      '<textarea id="pi2-import" name="texto" placeholder="Ana Souza; 1&#10;Bruno Lima; 1&#10;Carla Dias; 2"></textarea><span class="pi2-hint">Quem já estiver cadastrado com o mesmo nome e projeto é ignorado.</span></div>' +
+      '<form class="pi2-form" id="pi2-form-import"><div class="pi2-field"><label for="pi2-import">Uma linha por aluno: “Nome completo; número do projeto; e-mail do login” (o e-mail é opcional)</label>' +
+      '<textarea id="pi2-import" name="texto" placeholder="Ana Souza; 1; ana.s@aluno.ifsc.edu.br&#10;Bruno Lima; 1&#10;Carla Dias; 2"></textarea><span class="pi2-hint">Quem já estiver cadastrado com o mesmo nome e projeto não é duplicado; só recebe o e-mail, se a lista trouxer um.</span></div>' +
       '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn" type="submit">Importar</button></div></form>';
     ligarCelulas(el);
     $$('[data-aplicar]', el).forEach(function (b) {
@@ -180,7 +231,7 @@
       return chamar('salvarAlunos', { alunos: mudados }).then(function () { I.aviso(mudados.length + ' aluno(s) atualizado(s).'); desenhar(); });
     });
     I.aoEnviar($('#pi2-form-import', el), function (fd) {
-      return chamar('importarAlunos', { texto: fd.get('texto') }).then(function (r) { I.aviso(r.importados + ' aluno(s) importado(s).'); desenhar(); });
+      return chamar('importarAlunos', { texto: fd.get('texto') }).then(function (r) { I.aviso(r.importados + ' aluno(s) importado(s)' + (r.atualizados ? ', ' + r.atualizados + ' e-mail(s) atualizado(s)' : '') + '.'); desenhar(); });
     });
   }
 
@@ -200,7 +251,7 @@
       return '<tr class="pi2-grupo"><td colspan="6">' + rotuloProjeto(p) + '</td></tr>' + g.map(function (a) {
         var falta = a.faltando.map(function (c) { return COMP[c].toLowerCase(); });
         if (a.quesitosAvaliados < a.quesitosTotal) falta.push((a.quesitosTotal - a.quesitosAvaliados) + ' avaliação(ões) sem nota');
-        return '<tr><td>' + esc(a.nome) + '</td><td>' + fmt(a.entregas) + '<small> (' + a.quesitosAvaliados + '/' + a.quesitosTotal + ')</small></td><td>' + fmt(a.participacao) + '</td><td>' + fmt(a.frequencia) + '</td><td>' + fmt(a.pontualidade) + '</td>' +
+        return '<tr><td>' + esc(a.nome) + '</td><td>' + fmt(a.entregas) + '<small> (' + a.quesitosAvaliados + '/' + a.quesitosTotal + ')</small></td><td>' + fmt(a.participacao) + (a.participacaoAutomatica ? '<small title="Média das participações por atividade"> média</small>' : '') + '</td><td>' + fmt(a.frequencia) + '</td><td>' + fmt(a.pontualidade) + '</td>' +
           '<td class="pi2-final">' + fmt(a.final) + (a.parcial ? ' <span class="pi2-selo parcial" title="Falta: ' + esc(falta.join(', ')) + '">parcial</span>' : '') + '</td></tr>';
       }).join('');
     }).join('');
@@ -247,6 +298,15 @@
       ['entregas', 'participacao', 'frequencia', 'pontualidade'].map(function (c) {
         return '<div class="pi2-field"><label for="pi2-p-' + c + '">' + COMP[c] + ' (%)</label><input id="pi2-p-' + c + '" name="' + c + '" type="text" inputmode="decimal" value="' + esc(campo(N.pesos[c])) + '"></div>';
       }).join('') + '</div><div class="pi2-barra-acoes"><span class="pi2-hint" id="pi2-soma"></span><button class="pi2-btn primario" type="submit">Salvar pesos</button></div><div class="pi2-erro" role="alert"></div></form>' +
+      '<h3 class="pi2-h">Participação por atividade</h3><p class="pi2-modal-sub">Em atividade de grupo, a nota de cada aluno é a nota do grupo ajustada pela participação que você definir para ele naquela atividade.</p>' +
+      '<form class="pi2-form" id="pi2-form-regra"><div class="pi2-field"><label for="pi2-r-regra">Regra de conversão</label><select id="pi2-r-regra" name="regra">' +
+      [['faixas', 'Por faixas — mantém, reduz ou zera conforme a faixa'], ['proporcional', 'Proporcional — nota × participação ÷ 10'], ['amortecida', 'Amortecida — metade da nota garantida']].map(function (o) {
+        return '<option value="' + o[0] + '"' + (N.regra === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+      }).join('') + '</select><span class="pi2-hint" id="pi2-r-exemplo"></span></div>' +
+      '<div class="pi2-pesos" id="pi2-r-faixas">' +
+      [['cheiaMin', 'Nota cheia a partir de'], ['mediaMin', 'Faixa intermediária a partir de'], ['mediaPct', 'Intermediária vale (%)'], ['baixaPct', 'Abaixo disso vale (%)']].map(function (c) {
+        return '<div class="pi2-field"><label for="pi2-r-' + c[0] + '">' + c[1] + '</label><input id="pi2-r-' + c[0] + '" name="' + c[0] + '" type="text" inputmode="decimal" value="' + esc(campo(N.faixas[c[0]])) + '"></div>';
+      }).join('') + '</div><div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn primario" type="submit">Salvar regra</button></div></form>' +
       '<h3 class="pi2-h">Avaliações que compõem “Entregas”</h3><p class="pi2-modal-sub">O peso é relativo: uma avaliação de peso 2 vale o dobro de uma de peso 1. Para tirar uma avaliação da conta sem apagar as notas, desmarque “ativa”.</p>' +
       '<div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th scope="col">Avaliação</th><th scope="col">Peso</th><th scope="col">Fatia das entregas</th><th scope="col">Prazo</th><th scope="col">Tipo</th><th scope="col"></th></tr></thead><tbody>' +
       N.quesitos.map(function (q) {
@@ -265,6 +325,18 @@
         .then(function () { I.aviso('Pesos salvos.'); desenhar(); });
     });
     $$('[data-editar]', el).forEach(function (b) { b.onclick = function () { editarQuesito(b.dataset.editar); }; });
+    var fr = $('#pi2-form-regra', el);
+    var exemplo = function () {
+      var regra = $('[name=regra]', fr).value, v = function (n) { return Number($('[name=' + n + ']', fr).value.replace(',', '.')) || 0; };
+      $('#pi2-r-faixas', el).hidden = regra !== 'faixas';
+      var fator = regra === 'proporcional' ? 0.6 : regra === 'amortecida' ? 0.8 : (6 >= v('cheiaMin') ? 1 : 6 >= v('mediaMin') ? v('mediaPct') / 100 : v('baixaPct') / 100);
+      $('#pi2-r-exemplo', el).textContent = 'Exemplo: grupo com 8,0 e aluno com participação 6 → nota ' + fmt(8 * fator) + '.';
+    };
+    fr.addEventListener('input', exemplo); exemplo();
+    I.aoEnviar(fr, function (fd) {
+      return chamar('salvarRegra', { regra: fd.get('regra'), faixas: { cheiaMin: fd.get('cheiaMin'), mediaMin: fd.get('mediaMin'), mediaPct: fd.get('mediaPct'), baixaPct: fd.get('baixaPct') } })
+        .then(function () { I.aviso('Regra salva. As notas já foram recalculadas.'); desenhar(); });
+    });
   }
 
   function editarQuesito(id) {
@@ -294,11 +366,22 @@
         I.abrirModal(I.cabecalho('Minhas notas', 'Seu login ainda não está ligado ao seu nome na lista da turma. Peça ao professor para fazer essa ligação.'));
         return;
       }
+      var abertas = (m.abertas || []).map(function (a) {
+        return '<form class="pi2-form pi2-fieldset" data-aberta="' + esc(a.quesito) + '"><strong>' + esc(a.nome) + '</strong>' + (a.respondida ? ' <span class="pi2-selo pub">respondida — você pode alterar</span>' : ' <span class="pi2-selo parcial">aguardando sua resposta</span>') +
+          '<div class="pi2-table-wrap"><table class="pi2-table pi2-grade"><thead><tr><th scope="col">Integrante</th><th scope="col">Participação<small>0 a 10</small></th></tr></thead><tbody>' +
+          m.colegas.map(function (c) {
+            return '<tr><td>' + (c.eu ? '<strong>Você</strong> (' + esc(c.nome) + ')' : esc(c.nome)) + '</td><td><input class="pi2-num" type="text" inputmode="decimal" required name="p-' + esc(c.id) + '" aria-label="Participação de ' + esc(c.nome) + '" value="' + esc(campo(a.dadas[c.id])) + '"></td></tr>';
+          }).join('') + '</tbody></table></div>' +
+          '<div class="pi2-field"><label for="pi2-pc-' + esc(a.quesito) + '">O que você fez nesta atividade</label><textarea id="pi2-pc-' + esc(a.quesito) + '" class="pi2-curto" name="comentario" maxlength="600">' + esc(a.comentario) + '</textarea></div>' +
+          '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn primario" type="submit">Enviar avaliação</button></div></form>';
+      }).join('');
+      if (abertas) abertas = '<h3 class="pi2-h">Participação do grupo</h3><p class="pi2-modal-sub">Dê uma nota de 0 a 10 para a sua participação e a de cada colega em cada atividade. Só os professores veem o que você respondeu; seus colegas não.</p>' + abertas + '<h3 class="pi2-h">Notas publicadas</h3>';
       var av = m.avaliacoes.length
         ? '<div class="pi2-timeline">' + m.avaliacoes.map(function (a) {
             return '<div class="pi2-item"><div class="pi2-item-head"><strong>' + esc(a.nome) + '</strong><span>' + (a.escopo === 'individual' ? 'individual' : 'nota do grupo') + '</span>' +
               (a.situacao ? '<span class="pi2-tag">' + SIT[a.situacao] + '</span>' : '') + '</div>' +
               '<div class="pi2-final">' + (a.nota === null ? 'Ainda sem nota' : 'Nota ' + fmt(a.nota)) + '</div>' +
+              (a.nota !== null && a.escopo === 'grupo' && a.fator < 1 ? '<div class="pi2-item-text">Nota do grupo ' + fmt(a.notaGrupo) + ' × ' + Math.round(a.fator * 100) + '% (sua participação nesta atividade: ' + fmt(a.participacao) + ')</div>' : '') +
               (a.comentario ? '<div class="pi2-devolutiva"><small>Comentário do professor</small>' + esc(a.comentario) + '</div>' : '') + '</div>';
           }).join('') + '</div>'
         : '<div class="pi2-vazio">Nenhuma nota publicada ainda.</div>';
@@ -310,7 +393,13 @@
             return '<tr><td>' + COMP[c] + '</td><td>' + campo(m.pesos[c]) + '%</td><td>' + fmt(f[c]) + '</td></tr>';
           }).join('') + '<tr><td><strong>Nota final</strong></td><td></td><td class="pi2-final">' + fmt(f.final) + (f.parcial ? ' <span class="pi2-selo parcial">parcial</span>' : '') + '</td></tr></tbody></table></div>';
       }
-      I.abrirModal(I.cabecalho('Minhas notas', esc(m.nome) + ' • projeto #' + I.doisDigitos(m.projeto) + '. Só você vê esta tela.') + av + fim);
+      var corpo = I.abrirModal(I.cabecalho('Minhas notas', esc(m.nome) + ' • projeto #' + I.doisDigitos(m.projeto) + '. Só você vê esta tela.') + abertas + av + fim);
+      $$('form[data-aberta]', corpo).forEach(function (form) {
+        I.aoEnviar(form, function (fd) {
+          var notas = m.colegas.map(function (c) { return { aluno: c.id, valor: String(fd.get('p-' + c.id) || '').trim() }; });
+          return I.api('avaliarParticipacao', { quesito: form.dataset.aberta, notas: notas, comentario: fd.get('comentario') }).then(function () { I.aviso('Avaliação enviada.'); abrirMinhas(); });
+        });
+      });
     }).catch(function (e) { I.abrirModal(I.cabecalho('Minhas notas', esc(e.message))); });
   }
 })();

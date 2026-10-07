@@ -145,3 +145,6 @@
 .pi2-barra-acoes { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 0.8rem 0; }
 .pi2-fallback { width: 100%; min-height: 8rem; font-family: 'Fira Code', monospace; font-size: 0.75rem; }
 @media (max-width: 720px) { .pi2-pesos { grid-template-columns: 1fr 1fr; } }
+
+#pi2Modal [hidden] { display: none !important; }
+.pi2-grade td small { color: var(--text-dim); font-weight: 500; }

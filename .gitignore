@@ -21,3 +21,8 @@ templates/template-relatorios-ifsc-gpb/
 # Python
 __pycache__/
 *.py[cod]
+
+# Dados pessoais de estudantes: NUNCA publicar (o repositório é público)
+dados-alunos/
+**/dados-alunos/
+*lista-turma*
