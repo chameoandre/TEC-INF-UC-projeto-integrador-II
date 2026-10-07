@@ -148,3 +148,11 @@
 
 #pi2Modal [hidden] { display: none !important; }
 .pi2-grade td small { color: var(--text-dim); font-weight: 500; }
+
+/* ---------- Links extras dos projetos ---------- */
+.link-btn.pi2-link-extra { min-width: 0; color: var(--accent-cyan); }
+.link-btn.pi2-link-extra .pi2-rotulo { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.link-btn.pi2-editar-links { cursor: pointer; border-style: dashed; }
+a.pi2-btn { text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; }
+.proj-links > * { min-width: 0; }
+.pi2-contador-pend { display: inline-block; min-width: 1.35rem; padding: 0 0.35rem; border-radius: 999px; background: var(--accent-amber); color: #1a1205; font-size: 0.72rem; font-weight: 800; line-height: 1.35rem; text-align: center; }

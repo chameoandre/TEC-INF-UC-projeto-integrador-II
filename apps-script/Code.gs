@@ -66,6 +66,7 @@ function instalar() {
   } else {
     ss = SpreadsheetApp.create('PI2-2026 — controle de acessos e registros (PRIVADO)');
     props.setProperty('CONTROLE_ID', ss.getId());
+    MEMO.controleId = ss.getId();
   }
   var membros = garantirAba_(ss, 'membros', CAB_MEMBROS);
   garantirAba_(ss, 'registros', CAB_REGISTROS);
@@ -131,6 +132,10 @@ function doPost(e) {
       salvarMembro: salvarMembro_,
       devolutiva: devolutiva_,
       ocultar: ocultar_,
+      salvarLink: salvarLink_,
+      removerLink: removerLink_,
+      linksProjeto: linksProjeto_,
+      decidirLink: decidirLink_,
       notasPainel: estadoNotasDocente_,
       salvarPesos: salvarPesos_,
       salvarQuesito: salvarQuesito_,
@@ -148,6 +153,7 @@ function doPost(e) {
     var out = fn(usuario, req) || {};
     out.ok = true;
     out.usuario = publicoUsuario_(usuario);
+    if (usuario.papel === 'docente' && (req.acao === 'whoami' || req.acao === 'painel' || req.acao === 'decidirLink' || req.acao === 'decidirAcesso')) out.usuario.pendencias = pendencias_();
     return json_(out);
   } catch (err) {
     return json_({ ok: false, erro: String(err.message || err) });
@@ -279,7 +285,7 @@ function registrar_(usuario, req) {
 function espelharNaPlanilha_(projeto, proximos, dificuldades) {
   var linha = linhaDoProjeto_(projeto);
   if (!linha) return;
-  var aba = SpreadsheetApp.openById(CONFIG.SHEET_ID).getSheetByName(CONFIG.ABA_PROJETOS);
+  var aba = publica_().getSheetByName(CONFIG.ABA_PROJETOS);
   var recentes = lerRegistros_().filter(function (r) { return r.projeto === projeto && !r.oculto && r.tipo !== 'legado'; })
     .slice(0, CONFIG.AVANCOS_NA_PLANILHA)
     .map(function (r) { return '[' + dataCurta_(r.data) + '] ' + r.texto; });
@@ -297,7 +303,7 @@ function atualizarFicha_(usuario, req) {
   return comTrava_(function () {
     var linha = linhaDoProjeto_(projeto);
     if (!linha) throw new Error('Este projeto não tem linha na planilha; fale com um docente.');
-    var aba = SpreadsheetApp.openById(CONFIG.SHEET_ID).getSheetByName(CONFIG.ABA_PROJETOS);
+    var aba = publica_().getSheetByName(CONFIG.ABA_PROJETOS);
     var atuais = aba.getRange(linha, 1, 1, COL.observations).getDisplayValues()[0];
     var log = [];
     var agora = new Date().toISOString();
@@ -327,7 +333,7 @@ function painel_(usuario) {
   var alteracoes = lerAba_(ss.getSheetByName('alteracoes')).slice(-40).reverse().map(function (a) {
     return { data: a.data, projeto: Number(a.projeto), autor: a.autor, campo: a.campo, de: a.valor_anterior, para: a.valor_novo };
   });
-  return { membros: membros, alteracoes: alteracoes, planilhaControle: ss.getUrl(),
+  return { membros: membros, alteracoes: alteracoes, linksPendentes: linksPendentes_(), planilhaControle: ss.getUrl(),
     planilhaPublica: 'https://docs.google.com/spreadsheets/d/' + CONFIG.SHEET_ID };
 }
 
@@ -391,24 +397,24 @@ function ocultar_(usuario, req) {
 function dadosPublicos_() {
   var lidos = lerProjetos_();
   var registros = [];
-  if (PropertiesService.getScriptProperties().getProperty('CONTROLE_ID')) {
+  if (controleId_()) {
     registros = lerRegistros_().filter(function (r) { return !r.oculto; }).map(function (r) {
       return { id: r.id, data: r.data, projeto: r.projeto, autor: nomeCurto_(r.autor), tipo: r.tipo, texto: r.texto,
         evidencia: r.evidencia, experimento: r.experimento, proximosPassos: r.proximos, dificuldades: r.dificuldades,
         devolutiva: r.devolutiva ? { texto: r.devolutiva, autor: nomeCurto_(r.devolutivaAutor), data: r.devolutivaData } : null };
     });
   }
-  return { ok: true, geradoEm: new Date().toISOString(), projetos: lidos.projetos, registros: registros };
+  return { ok: true, geradoEm: new Date().toISOString(), projetos: lidos.projetos, registros: registros, links: controleId_() ? linksPublicos_() : [] };
 }
 
 function lerProjetos_() {
-  var aba = SpreadsheetApp.openById(CONFIG.SHEET_ID).getSheetByName(CONFIG.ABA_PROJETOS);
+  var aba = publica_().getSheetByName(CONFIG.ABA_PROJETOS);
   var linhas = aba.getDataRange().getDisplayValues();
   return { projetos: linhasParaProjetos(linhas) };
 }
 
 function linhaDoProjeto_(projeto) {
-  var aba = SpreadsheetApp.openById(CONFIG.SHEET_ID).getSheetByName(CONFIG.ABA_PROJETOS);
+  var aba = publica_().getSheetByName(CONFIG.ABA_PROJETOS);
   var ids = aba.getRange(1, 1, aba.getLastRow(), 1).getDisplayValues();
   for (var i = 0; i < ids.length; i++) {
     if (/^\d+$/.test(ids[i][0].trim()) && Number(ids[i][0]) === Number(projeto)) return i + 1;
@@ -431,7 +437,7 @@ function lerRegistros_() {
 }
 
 function buscarMembro_(email) {
-  if (!PropertiesService.getScriptProperties().getProperty('CONTROLE_ID')) return null;
+  if (!controleId_()) return null;
   var linhas = lerAba_(controle_().getSheetByName('membros'));
   for (var i = 0; i < linhas.length; i++) {
     if (String(linhas[i].email).toLowerCase().trim() === email) {
@@ -460,10 +466,26 @@ function lerAba_(aba) {
   });
 }
 
+// Abrir uma planilha é a operação mais lenta do Apps Script. Cada execução abre cada planilha
+// uma única vez e reaproveita; estas variáveis valem só durante a execução em curso.
+var MEMO = { controle: null, publica: null, controleId: undefined, abas: {}, esquema: null };
+
+function controleId_() {
+  if (MEMO.controleId === undefined) MEMO.controleId = PropertiesService.getScriptProperties().getProperty('CONTROLE_ID') || '';
+  return MEMO.controleId;
+}
+
 function controle_() {
-  var id = PropertiesService.getScriptProperties().getProperty('CONTROLE_ID');
+  if (MEMO.controle) return MEMO.controle;
+  var id = controleId_();
   if (!id) throw new Error('Backend ainda não instalado: rode a função instalar() no editor do Apps Script.');
-  return SpreadsheetApp.openById(id);
+  MEMO.controle = SpreadsheetApp.openById(id);
+  return MEMO.controle;
+}
+
+function publica_() {
+  if (!MEMO.publica) MEMO.publica = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+  return MEMO.publica;
 }
 
 // ============================ UTILITÁRIOS ============================
@@ -490,6 +512,7 @@ function url_(v, rotulo, aceitaPendente) {
   if (aceitaPendente && s.toUpperCase() === 'PENDENTE') return 'PENDENTE';
   if (!/^https:\/\/[^\s<>"']+$/i.test(s)) throw new Error(rotulo + ': informe um endereço completo começando com https://');
   if (/overleaf\.com\/project\//i.test(s)) throw new Error(rotulo + ': este é o link interno do Overleaf. Use Share → "Turn on link sharing" e cole o link de leitura (…/read/…).');
+  if (/overleaf\.com\//i.test(s) && !/overleaf\.com\/read\//i.test(s)) throw new Error(rotulo + ': este é o link de EDIÇÃO do Overleaf; quem abrir pode alterar o artigo. Em Share, copie o link "Anyone with this link can view" (…/read/…).');
   return s;
 }
 
@@ -509,6 +532,106 @@ function novoId_() { return Utilities.getUuid().slice(0, 13); }
 
 function hash_(s) {
   return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, s)).slice(0, 40);
+}
+
+// ====================================================================
+// LINKS EXTRAS — cada projeto pode ter, além dos links fixos da ficha (GitHub, Overleaf,
+// diagrama, pitch), uma lista livre de links com nome. Ficam na aba "links" da planilha
+// de controle; o GET público devolve só nome e endereço.
+// ====================================================================
+var CAB_LINKS = ['id', 'projeto', 'nome', 'url', 'email', 'autor', 'data', 'removido', 'status', 'decidido_por'];
+var MAX_LINKS_POR_PROJETO = 12;
+
+/**
+ * Link incluído por aluno nasce "pendente" e só aparece no site depois que um docente aprova.
+ * Link incluído por docente já nasce aprovado. Linhas antigas, sem status, contam como aprovadas.
+ */
+function lerLinks_() {
+  return lerAba_(abaNotas_('links', CAB_LINKS)).map(function (l, i) {
+    return { linha: i + 2, id: String(l.id), projeto: Number(l.projeto), nome: String(l.nome), url: String(l.url), autor: String(l.autor || ''),
+      data: String(l.data || ''), removido: l.removido === 'sim', status: l.status === 'pendente' || l.status === 'recusado' ? l.status : 'aprovado' };
+  });
+}
+
+function linksPublicos_() {
+  return lerLinks_().filter(function (l) { return !l.removido && l.status === 'aprovado'; })
+    .map(function (l) { return { id: l.id, projeto: l.projeto, nome: l.nome, url: l.url }; });
+}
+
+/** Todos os links não removidos de um projeto, com a situação: para os integrantes e os docentes. */
+function linksDoProjeto_(projeto) {
+  return lerLinks_().filter(function (l) { return !l.removido && l.projeto === Number(projeto); })
+    .map(function (l) { return { id: l.id, projeto: l.projeto, nome: l.nome, url: l.url, status: l.status, autor: nomeCurto_(l.autor), data: l.data }; });
+}
+
+function linksPendentes_() {
+  return lerLinks_().filter(function (l) { return !l.removido && l.status === 'pendente'; })
+    .map(function (l) { return { id: l.id, projeto: l.projeto, nome: l.nome, url: l.url, autor: l.autor, data: l.data }; });
+}
+
+function linksProjeto_(usuario, req) {
+  exigirEdicao_(usuario, Number(req.projeto));
+  return { doProjeto: linksDoProjeto_(req.projeto) };
+}
+
+function salvarLink_(usuario, req) {
+  var projeto = Number(req.projeto);
+  exigirEdicao_(usuario, projeto);
+  limitar_(usuario);
+  var docente = usuario.papel === 'docente';
+  var nome = texto_(req.nome, 40);
+  if (nome.length < 2) throw new Error('Dê um nome curto ao link (ex.: "Protótipo no ar").');
+  var url = url_(req.url, 'Endereço');
+  if (!url) throw new Error('Informe o endereço do link, começando com https://');
+  return comTrava_(function () {
+    var aba = abaNotas_('links', CAB_LINKS), todos = lerLinks_(), agora = new Date().toISOString();
+    var atual = req.id ? todos.filter(function (l) { return l.id === String(req.id) && !l.removido; })[0] : null;
+    if (req.id && !docente) throw new Error('Para trocar um link, remova o antigo e inclua o novo.');
+    if (req.id && !atual) throw new Error('Link não encontrado.');
+    if (atual && atual.projeto !== projeto) throw new Error('Este link pertence a outro projeto.');
+    var alt = controle_().getSheetByName('alteracoes');
+    if (atual) {
+      aba.getRange(atual.linha, 3, 1, 5).setValues([[seguro_(nome), url, usuario.email, seguro_(usuario.nome), agora]]);
+      aba.getRange(atual.linha, 9, 1, 2).setValues([['aprovado', usuario.email]]);
+      alt.appendRow([agora, projeto, usuario.email, seguro_(usuario.nome), 'link extra', seguro_(atual.nome + ' → ' + atual.url), seguro_(nome + ' → ' + url)]);
+    } else {
+      if (todos.filter(function (l) { return l.projeto === projeto && !l.removido && l.status !== 'recusado'; }).length >= MAX_LINKS_POR_PROJETO) throw new Error('Limite de ' + MAX_LINKS_POR_PROJETO + ' links extras por projeto. Remova algum antes de incluir outro.');
+      aba.appendRow([novoId_(), String(projeto), seguro_(nome), url, usuario.email, seguro_(usuario.nome), agora, '', docente ? 'aprovado' : 'pendente', docente ? usuario.email : '']);
+      alt.appendRow([agora, projeto, usuario.email, seguro_(usuario.nome), docente ? 'link extra' : 'link extra (aguardando aprovação)', '', seguro_(nome + ' → ' + url)]);
+    }
+    return { links: linksPublicos_(), doProjeto: linksDoProjeto_(projeto), pendente: !docente };
+  });
+}
+
+function decidirLink_(usuario, req) {
+  exigirDocente_(usuario);
+  return comTrava_(function () {
+    var l = lerLinks_().filter(function (x) { return x.id === String(req.id) && !x.removido; })[0];
+    if (!l) throw new Error('Link não encontrado.');
+    abaNotas_('links', CAB_LINKS).getRange(l.linha, 9, 1, 2).setValues([[req.aprovar ? 'aprovado' : 'recusado', usuario.email]]);
+    controle_().getSheetByName('alteracoes').appendRow([new Date().toISOString(), l.projeto, usuario.email, seguro_(usuario.nome),
+      'link extra', seguro_(l.nome + ' → ' + l.url), req.aprovar ? '(aprovado)' : '(recusado)']);
+    var out = painel_(usuario);
+    out.links = linksPublicos_();
+    return out;
+  });
+}
+
+function removerLink_(usuario, req) {
+  return comTrava_(function () {
+    var l = lerLinks_().filter(function (x) { return x.id === String(req.id) && !x.removido; })[0];
+    if (!l) throw new Error('Link não encontrado.');
+    exigirEdicao_(usuario, l.projeto);
+    abaNotas_('links', CAB_LINKS).getRange(l.linha, 8).setValue('sim');
+    controle_().getSheetByName('alteracoes').appendRow([new Date().toISOString(), l.projeto, usuario.email, seguro_(usuario.nome), 'link extra', seguro_(l.nome + ' → ' + l.url), '(removido)']);
+    return { links: linksPublicos_(), doProjeto: linksDoProjeto_(l.projeto) };
+  });
+}
+
+/** Quantas coisas esperam decisão de um docente; mostrado como contador no botão do painel. */
+function pendencias_() {
+  var acessos = lerAba_(controle_().getSheetByName('membros')).filter(function (m) { return m.status === 'pendente'; }).length;
+  return { acessos: acessos, links: linksPendentes_().length };
 }
 
 // ====================================================================
@@ -541,10 +664,21 @@ var FAIXAS_PADRAO = { cheiaMin: 8, mediaMin: 5, mediaPct: 80, baixaPct: 50 };
 var QUESITOS_INICIAIS = ['Submissão SNCT (FEPE)', 'Paper SEPEI', 'Trabalhos relacionados',
   'Experimentos (4 definidos e com resultados)', 'Pitch em vídeo', 'Diagrama do projeto', 'Submissão COTB'];
 
-/** Abre (ou cria) uma aba de notas. As células são texto puro, para a planilha não reformatar números e datas. */
+/**
+ * Abre (ou cria) uma aba de notas. As células são texto puro, para a planilha não reformatar números e datas.
+ * O cabeçalho só é conferido quando o formato da aba muda de versão (registrado em ESQUEMA_ABAS),
+ * o que poupa uma leitura por aba em cada acesso.
+ */
 function abaNotas_(nome, cabecalho) {
+  if (MEMO.abas[nome]) return MEMO.abas[nome];
+  var props = PropertiesService.getScriptProperties();
+  if (!MEMO.esquema) {
+    try { MEMO.esquema = JSON.parse(props.getProperty('ESQUEMA_ABAS') || '{}'); } catch (err) { MEMO.esquema = {}; }
+  }
+  var assinatura = cabecalho.join('|');
   var ss = controle_();
   var aba = ss.getSheetByName(nome);
+  if (aba && MEMO.esquema[nome] === assinatura) { MEMO.abas[nome] = aba; return aba; }
   if (!aba) {
     aba = ss.insertSheet(nome);
     aba.getRange(1, 1, aba.getMaxRows(), cabecalho.length).setNumberFormat('@');
@@ -552,11 +686,14 @@ function abaNotas_(nome, cabecalho) {
     aba.setFrozenRows(1);
   } else {
     var topo = aba.getRange(1, 1, 1, cabecalho.length);
-    if (topo.getDisplayValues()[0].join('|') !== cabecalho.join('|')) {
+    if (topo.getDisplayValues()[0].join('|') !== assinatura) {
       aba.getRange(1, 1, aba.getMaxRows(), cabecalho.length).setNumberFormat('@');
       topo.setValues([cabecalho]).setFontWeight('bold');
     }
   }
+  MEMO.esquema[nome] = assinatura;
+  props.setProperty('ESQUEMA_ABAS', JSON.stringify(MEMO.esquema));
+  MEMO.abas[nome] = aba;
   return aba;
 }
 
@@ -1049,7 +1186,7 @@ function linhasParaProjetos(linhas) {
       github: c(linha, 4),
       relatorio: relatorio,
       overleaf: overleaf,
-      overleafStatus: !overleaf ? 'pendente' : (overleaf.indexOf('/project/') >= 0 ? 'privado' : 'ok'),
+      overleafStatus: !overleaf ? 'pendente' : (overleaf.indexOf('/project/') >= 0 ? 'privado' : (overleaf.indexOf('/read/') >= 0 ? 'ok' : 'edicao')),
       canva: pend(c(linha, 6)) ? '' : c(linha, 6),
       pitch: pend(c(linha, 7)) ? '' : c(linha, 7),
       relatedWorks: c(linha, 8) || 'PENDENTE',

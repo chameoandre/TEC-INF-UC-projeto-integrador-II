@@ -17,6 +17,7 @@
   var PI2 = {
     bruto: [],        // projetos sem escape (para formulários)
     registros: [],    // registros públicos, do mais novo para o mais antigo
+    links: [],        // links extras dos projetos: {id, projeto, nome, url}
     usuario: null,    // {email, nome, papel, projetos, status}
     token: null,
     perfil: null,     // dados do token (nome, foto, exp)
@@ -95,7 +96,7 @@ function linhasParaProjetos(linhas) {
       github: c(linha, 4),
       relatorio: relatorio,
       overleaf: overleaf,
-      overleafStatus: !overleaf ? 'pendente' : (overleaf.indexOf('/project/') >= 0 ? 'privado' : 'ok'),
+      overleafStatus: !overleaf ? 'pendente' : (overleaf.indexOf('/project/') >= 0 ? 'privado' : (overleaf.indexOf('/read/') >= 0 ? 'ok' : 'edicao')),
       canva: pend(c(linha, 6)) ? '' : c(linha, 6),
       pitch: pend(c(linha, 7)) ? '' : c(linha, 7),
       relatedWorks: c(linha, 8) || 'PENDENTE',
@@ -172,7 +173,15 @@ function linhasParaProjetos(linhas) {
     PI2.bruto = novos;
     reescapar();
   }
+  /** Situação do link do Overleaf: só o link de leitura (/read/) é seguro para publicar. */
+  function statusOverleaf(url) {
+    if (!url) return 'pendente';
+    if (url.indexOf('/project/') >= 0) return 'privado';   // link interno: ninguém de fora abre
+    return url.indexOf('/read/') >= 0 ? 'ok' : 'edicao';   // sem /read/ é link de edição: quem abre altera o artigo
+  }
   function reescapar() {
+    // Recalcula aqui para valer também para dados vindos de um backend ou de uma cópia antiga.
+    PI2.bruto.forEach(function (p) { if (/overleaf\.com/.test(p.overleaf || '')) p.overleafStatus = statusOverleaf(p.overleaf); });
     projectsData.length = 0;
     PI2.bruto.forEach(function (p) { projectsData.push(escaparProjeto(p)); });
   }
@@ -209,6 +218,7 @@ function linhasParaProjetos(linhas) {
       if (!d.ok) throw new Error(d.erro || 'resposta inválida');
       aplicarProjetos(d.projetos || []);
       PI2.registros = d.registros || [];
+      PI2.links = d.links || [];
       PI2.fonte = 'ao vivo';
     });
   }
@@ -338,6 +348,14 @@ function linhasParaProjetos(linhas) {
   }
   function ehDocente() { return !!(PI2.usuario && PI2.usuario.papel === 'docente' && PI2.usuario.status === 'ativo'); }
 
+  /** Selo com o total de pedidos de acesso e links aguardando decisão do docente. */
+  function contadorPendencias() {
+    var p = (PI2.usuario && PI2.usuario.pendencias) || PI2._pendencias;
+    if (PI2.usuario && PI2.usuario.pendencias) PI2._pendencias = PI2.usuario.pendencias;
+    var n = p ? (p.acessos || 0) + (p.links || 0) : 0;
+    return n ? ' <span class="pi2-contador-pend" title="' + (p.acessos || 0) + ' pedido(s) de acesso e ' + (p.links || 0) + ' link(s) aguardando sua decisão">' + n + '</span>' : '';
+  }
+
   function desenharAuth() {
     var el = $('#pi2-auth');
     if (!el) return;
@@ -358,7 +376,7 @@ function linhasParaProjetos(linhas) {
         (foto ? '<img src="' + esc(foto) + '" alt="" referrerpolicy="no-referrer">' : '<span class="pi2-avatar"><i class="fa-solid fa-user"></i></span>') +
         '<span><span class="pi2-nome">' + esc(u.nome.split(' ')[0]) + '</span> <span class="pi2-role ' + (u.status !== 'ativo' ? 'pendente' : '') + '">' + esc(papel) + '</span></span>' +
       '</div>' +
-      (ehDocente() ? '<button class="btn btn-outline" type="button" id="pi2-btn-painel"><i class="fa-solid fa-user-shield"></i> Painel docente</button>' : '') +
+      (ehDocente() ? '<button class="btn btn-outline" type="button" id="pi2-btn-painel"><i class="fa-solid fa-user-shield"></i> Painel docente' + contadorPendencias() + '</button>' : '') +
       (u.status !== 'ativo' ? '<button class="pi2-linkbtn" type="button" id="pi2-btn-solicitar">Solicitar acesso</button>' : '') +
       '<button class="pi2-linkbtn" type="button" id="pi2-btn-sair">Sair</button>';
     $('#pi2-btn-sair').onclick = PI2.sair;
@@ -501,7 +519,7 @@ function linhasParaProjetos(linhas) {
     { k: 'objective', r: 'Objetivo', t: 'area' },
     { k: 'github', r: 'Repositório GitHub', t: 'url' },
     { k: 'relatorio', r: 'Artigo no Overleaf (link de leitura)', t: 'url', d: 'No Overleaf: Share → Turn on link sharing → copie o link “Anyone with this link can view”.' },
-    { k: 'canva', r: 'Diagrama do projeto (Canva ou similar)', t: 'url' },
+    { k: 'canva', r: 'Diagrama da arquitetura (Canva, Miro, Drive…)', t: 'url' },
     { k: 'pitch', r: 'Vídeo do pitch', t: 'url' },
     { k: 'relatedWorks', r: 'Trabalhos relacionados', t: 'area', d: 'Título de cada trabalho com o ano de publicação, um por linha.' },
     { k: 'techs', r: 'Tecnologias e recursos', t: 'texto', d: 'Separe por vírgula.' }
@@ -621,7 +639,7 @@ function linhasParaProjetos(linhas) {
   }
 
   document.addEventListener('click', function (e) {
-    var alvo = e.target.closest ? e.target.closest('[data-pi2-dev],[data-pi2-ocultar],[data-pi2-todos],[data-pi2-registrar],[data-pi2-ficha]') : null;
+    var alvo = e.target.closest ? e.target.closest('[data-pi2-dev],[data-pi2-ocultar],[data-pi2-todos],[data-pi2-registrar],[data-pi2-ficha],[data-pi2-links]') : null;
     if (!alvo) return;
     e.stopPropagation();
     if (alvo.dataset.pi2Dev) abrirDevolutiva(alvo.dataset.pi2Dev);
@@ -629,6 +647,7 @@ function linhasParaProjetos(linhas) {
     else if (alvo.dataset.pi2Todos) window.openModal(Number(alvo.dataset.pi2Todos));
     else if (alvo.dataset.pi2Registrar) PI2.abrirRegistro(Number(alvo.dataset.pi2Registrar));
     else if (alvo.dataset.pi2Ficha) PI2.abrirFicha(Number(alvo.dataset.pi2Ficha));
+    else if (alvo.dataset.pi2Links) PI2.abrirLinks(Number(alvo.dataset.pi2Links));
   }, true);
 
   // ------------------------------------------------------------------
@@ -639,14 +658,98 @@ function linhasParaProjetos(linhas) {
     if (!PI2.usuario && !loginConfigurado()) return '';
     if (compacto) return '<button type="button" class="link-btn pi2-registrar" data-pi2-registrar="' + id + '" title="Registrar um avanço deste projeto"><i class="fa-solid fa-pen-to-square"></i> Registrar</button>';
     return '<button type="button" class="pi2-btn mini primario" data-pi2-registrar="' + id + '"><i class="fa-solid fa-pen-to-square"></i> Registrar avanço</button> ' +
+      '<button type="button" class="pi2-btn mini" data-pi2-links="' + id + '"><i class="fa-solid fa-link"></i> Links</button> ' +
       '<button type="button" class="pi2-btn mini" data-pi2-ficha="' + id + '"><i class="fa-solid fa-sliders"></i> Atualizar ficha</button>';
   }
+
+  // ------------------------------------------------------------------
+  // Links do projeto: os quatro fixos da ficha e a lista livre de links extras
+  // ------------------------------------------------------------------
+  function linksDo(id) { return PI2.links.filter(function (l) { return Number(l.projeto) === Number(id) && urlSegura(l.url); }); }
+  /** Botões dos links extras, no formato do card (compacto) ou da ficha completa. */
+  function linksExtrasHtml(id, compacto) {
+    return linksDo(id).map(function (l) {
+      return compacto
+        ? '<a href="' + esc(urlSegura(l.url)) + '" target="_blank" rel="noopener" class="link-btn pi2-link-extra" title="' + esc(l.nome) + '" onclick="event.stopPropagation();"><i class="fa-solid fa-link"></i> <span class="pi2-rotulo">' + esc(l.nome) + '</span></a>'
+        : '<a href="' + esc(urlSegura(l.url)) + '" target="_blank" rel="noopener" class="pi2-btn mini"><i class="fa-solid fa-link"></i> ' + esc(l.nome) + '</a>';
+    }).join(compacto ? '' : ' ');
+  }
+  var LINKS_FIXOS = [
+    { k: 'github', r: 'Repositório GitHub' },
+    { k: 'relatorio', r: 'Artigo no Overleaf (link de leitura)', d: 'No Overleaf: Share → copie o link “Anyone with this link can view” (…/read/…).' },
+    { k: 'canva', r: 'Diagrama da arquitetura' },
+    { k: 'pitch', r: 'Pitch em vídeo' }
+  ];
+
+  PI2.abrirLinks = function (id, doProjeto) {
+    if (!PI2.usuario) return abrirLogin(function () { PI2.abrirLinks(id); });
+    if (!podeEditar(id)) return aviso('Você só pode alterar os links do seu próprio projeto.', 'warning');
+    var p = projetoBruto(id);
+    if (!p) return;
+    if (!doProjeto) {
+      // A situação de cada link (no ar, aguardando, recusado) só o servidor sabe.
+      abrirModal(cabecalho('Links do projeto', 'Carregando…'));
+      api('linksProjeto', { projeto: id }).then(function (r) { PI2.abrirLinks(id, r.doProjeto || []); })
+        .catch(function (e) { abrirModal(cabecalho('Links do projeto', esc(e.message))); });
+      return;
+    }
+    var iniciais = {};
+    var fixos = LINKS_FIXOS.map(function (c) {
+      iniciais[c.k] = String(valorAtual(p, c.k)).trim();
+      return campoHtml({ k: c.k, r: c.r, d: c.d, t: 'url' }, iniciais[c.k]);
+    }).join('');
+    var SELO = { aprovado: '<span class="pi2-selo pub">no ar</span>', pendente: '<span class="pi2-selo parcial">aguardando aprovação do professor</span>', recusado: '<span class="pi2-selo">não aprovado</span>' };
+    var extras = doProjeto || linksDo(id).map(function (l) { return { id: l.id, nome: l.nome, url: l.url, status: 'aprovado' }; });
+    var lista = extras.length
+      ? '<div class="pi2-table-wrap"><table class="pi2-table"><tbody>' + extras.map(function (l) {
+          return '<tr><td><strong>' + esc(l.nome) + '</strong> ' + (SELO[l.status] || '') + '<br><a href="' + esc(urlSegura(l.url)) + '" target="_blank" rel="noopener">' + esc(l.url.length > 60 ? l.url.slice(0, 60) + '…' : l.url) + '</a></td>' +
+            '<td style="text-align:right;white-space:nowrap"><button class="pi2-btn mini perigo" type="button" data-remover-link="' + esc(l.id) + '">Remover</button></td></tr>';
+        }).join('') + '</tbody></table></div>'
+      : '<div class="pi2-vazio">Nenhum link extra ainda.</div>';
+    var corpo = abrirModal(cabecalho('Links do projeto', '#' + doisDigitos(p.id) + ' — ' + esc(p.title) + '. Toda alteração fica registrada com seu nome e a data.') +
+      '<h3 class="pi2-h">Links principais</h3><form class="pi2-form" id="pi2-form-fixos">' + fixos +
+      '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn primario" type="submit">Salvar links principais</button></div></form>' +
+      '<h3 class="pi2-h">Outros links</h3><p class="pi2-modal-sub">Protótipo no ar, planilha de testes, apresentação, pasta de fotos… ' + (ehDocente() ? 'Links incluídos por você entram no ar na hora; os dos alunos esperam a sua aprovação.' : 'O link aparece no card do projeto depois que um professor aprovar.') + '</p>' + lista +
+      '<form class="pi2-form" id="pi2-form-extra" style="margin-top:0.8rem"><div class="pi2-row">' +
+      '<div class="pi2-field"><label for="pi2-l-nome">Nome do botão</label><input id="pi2-l-nome" name="nome" type="text" maxlength="40" required placeholder="Ex.: Protótipo no ar"></div>' +
+      '<div class="pi2-field"><label for="pi2-l-url">Endereço</label><input id="pi2-l-url" name="url" type="url" inputmode="url" required placeholder="https://…"></div></div>' +
+      '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn" type="button" id="pi2-l-fechar">Fechar</button><button class="pi2-btn primario" type="submit"><i class="fa-solid fa-plus"></i> Adicionar link</button></div></form>');
+    $('#pi2-l-fechar', corpo).onclick = fecharModal;
+    aoEnviar($('#pi2-form-fixos', corpo), function (fd) {
+      var campos = {};
+      Object.keys(iniciais).forEach(function (k) { var v = String(fd.get(k) || '').trim(); if (v !== iniciais[k]) campos[k] = v; });
+      if (!Object.keys(campos).length) throw new Error('Nenhum link foi alterado.');
+      return api('atualizarFicha', { projeto: p.id, campos: campos }).then(function () {
+        aviso('Links principais atualizados.');
+        return carregar(true).then(function () { PI2.abrirLinks(id, doProjeto); });
+      });
+    });
+    aoEnviar($('#pi2-form-extra', corpo), function (fd) {
+      var url = String(fd.get('url') || '').trim();
+      if (!/^https:\/\//i.test(url)) throw new Error('O endereço precisa começar com https://');
+      return api('salvarLink', { projeto: p.id, nome: fd.get('nome'), url: url }).then(function (r) {
+        PI2.links = r.links || PI2.links; aviso(r.pendente ? 'Link enviado. Ele aparece no card depois que o professor aprovar.' : 'Link adicionado.'); redesenhar(); PI2.abrirLinks(id, r.doProjeto);
+      });
+    });
+    $$('[data-remover-link]', corpo).forEach(function (b) {
+      b.onclick = function () {
+        if (!b.dataset.confirmado) { b.dataset.confirmado = '1'; b.textContent = 'Confirmar remoção'; return; }
+        b.disabled = true;
+        api('removerLink', { id: b.dataset.removerLink }).then(function (r) {
+          PI2.links = r.links || PI2.links; aviso('Link removido.'); redesenhar(); PI2.abrirLinks(id, r.doProjeto);
+        }).catch(function (e) { b.disabled = false; aviso(e.message, 'warning'); });
+      };
+    });
+  };
 
   function complementarCards() {
     $$('.project-card').forEach(function (card) {
       var id = Number(card.id.replace('project-card-', ''));
       var links = $('.proj-links', card);
-      if (links && !$('.pi2-registrar', links)) links.insertAdjacentHTML('beforeend', botoesAcao(id, true));
+      if (links && !$('.pi2-registrar', links) && !$('.pi2-link-extra', links)) {
+        links.insertAdjacentHTML('beforeend', linksExtrasHtml(id, true) + botoesAcao(id, true) +
+          (podeEditar(id) ? '<button type="button" class="link-btn pi2-editar-links" data-pi2-links="' + id + '" title="Corrigir os links deste projeto ou incluir outros"><i class="fa-solid fa-pen"></i> Links</button>' : ''));
+      }
 
       var meta = $('.card-quick-meta', card), ult = ultimoRegistro(id);
       if (meta && CFG.apiUrl) {
@@ -676,10 +779,12 @@ function linhasParaProjetos(linhas) {
     if (!corpo || !$('#projectModal').classList.contains('open')) return;
     var antigo = $('#pi2-modal-extra', corpo);
     if (antigo) antigo.remove();
-    if (!CFG.apiUrl && !registrosDo(id).length) return;
+    if (!CFG.apiUrl && !registrosDo(id).length && !linksDo(id).length) return;
     var div = document.createElement('div');
     div.id = 'pi2-modal-extra';
-    div.innerHTML = '<h3 class="pi2-h pi2-secao-titulo"><span><i class="fa-solid fa-timeline text-cyan"></i> Linha do tempo de registros</span><span>' + botoesAcao(id, false) + '</span></h3>' + timelineHtml(id, 0);
+    var extras = linksExtrasHtml(id, false);
+    div.innerHTML = (extras ? '<h3 class="pi2-h"><i class="fa-solid fa-link text-cyan"></i> Outros links do projeto</h3><div class="pi2-evidencias">' + extras + '</div>' : '') +
+      '<h3 class="pi2-h pi2-secao-titulo"><span><i class="fa-solid fa-timeline text-cyan"></i> Linha do tempo de registros</span><span>' + botoesAcao(id, false) + '</span></h3>' + timelineHtml(id, 0);
     corpo.appendChild(div);
   }
 
@@ -716,10 +821,15 @@ function linhasParaProjetos(linhas) {
       total.textContent = k.total;
       var subs = $$('.kpi-sub', total.closest('.kpi-grid'));
       var privados = k.turma.filter(function (p) { return p.overleafStatus === 'privado'; });
+      var deEdicao = k.turma.filter(function (p) { return p.overleafStatus === 'edicao'; });
       var semLink = k.turma.filter(function (p) { return p.overleafStatus === 'pendente'; });
       if (subs[0]) subs[0].textContent = n + ' equipes' + (individuais ? ' + ' + individuais + ' plano individual' : '');
       if (subs[1]) subs[1].textContent = 'Links de leitura públicos';
-      if (subs[2]) subs[2].textContent = privados.length ? 'Liberar “Share Link”: ' + k.ids(privados) : 'Nenhum link interno';
+      if (subs[2]) subs[2].textContent = (privados.length ? 'Link interno: ' + k.ids(privados) : 'Nenhum link interno') + (deEdicao.length ? ' • de edição: ' + k.ids(deEdicao) : '');
+      var titulos = $$('.kpi-title', total.closest('.kpi-grid'));
+      if (titulos[2]) titulos[2].textContent = 'Links a corrigir';
+      var valor = $('#kpi-overleaf-privado');
+      if (valor) valor.textContent = (privados.length + deEdicao.length) + ' / ' + k.total;
       if (subs[3]) subs[3].textContent = semLink.length ? 'Pendentes: ' + k.ids(semLink) : 'Todos informaram o link';
     }
     var fonte = $('#pi2-fonte');
@@ -803,11 +913,21 @@ function linhasParaProjetos(linhas) {
     var linhasAlt = (d.alteracoes || []).map(function (a) {
       return '<tr><td>' + esc(dataBr(a.data)) + '</td><td>#' + doisDigitos(a.projeto) + '</td><td>' + esc(a.autor) + '</td><td>' + esc(a.campo) + '</td><td>' + esc(String(a.de).slice(0, 80)) + ' → ' + esc(String(a.para).slice(0, 80)) + '</td></tr>';
     }).join('');
-    var corpo = abrirModal(cabecalho('Painel docente', 'Aprovação de acessos, cadastro de integrantes e histórico de alterações.') +
+    var lp = d.linksPendentes || [];
+    var linhasLinks = lp.map(function (l) {
+      return '<tr><td>' + titulo(l.projeto) + '<br><small>' + esc(l.autor) + ' • ' + esc(dataBr(l.data)) + '</small></td>' +
+        '<td><strong>' + esc(l.nome) + '</strong><br><a href="' + esc(urlSegura(l.url)) + '" target="_blank" rel="noopener">' + esc(l.url.length > 55 ? l.url.slice(0, 55) + '…' : l.url) + '</a></td>' +
+        '<td style="white-space:nowrap"><button class="pi2-btn mini primario" type="button" data-link-ok="' + esc(l.id) + '">Aprovar</button> ' +
+        '<button class="pi2-btn mini perigo" type="button" data-link-nao="' + esc(l.id) + '">Recusar</button></td></tr>';
+    }).join('');
+    desenharAuth();
+    var corpo = abrirModal(cabecalho('Painel docente', 'Aprovação de acessos e de links, cadastro de integrantes e histórico de alterações.') +
       '<p><a class="pi2-btn mini" href="' + esc(urlSegura(d.planilhaControle)) + '" target="_blank" rel="noopener"><i class="fa-solid fa-lock"></i> Planilha de controle (privada)</a> ' +
       '<a class="pi2-btn mini" href="' + esc(urlSegura(d.planilhaPublica)) + '" target="_blank" rel="noopener"><i class="fa-solid fa-table"></i> Planilha de projetos</a></p>' +
       '<h3 class="pi2-h">Solicitações pendentes (' + pend.length + ')</h3>' +
       (pend.length ? '<div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th>Estudante</th><th>Projeto pedido</th><th></th></tr></thead><tbody>' + linhasPend + '</tbody></table></div>' : '<div class="pi2-vazio">Nenhuma solicitação aguardando.</div>') +
+      '<h3 class="pi2-h">Links aguardando aprovação (' + lp.length + ')</h3>' +
+      (lp.length ? '<p class="pi2-modal-sub">Abra o endereço para conferir antes de aprovar. Só depois da aprovação o link aparece no card do projeto.</p><div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th>Projeto</th><th>Link</th><th></th></tr></thead><tbody>' + linhasLinks + '</tbody></table></div>' : '<div class="pi2-vazio">Nenhum link aguardando.</div>') +
       '<h3 class="pi2-h">Cadastrar ou alterar integrante</h3>' +
       '<form class="pi2-form"><div class="pi2-row"><div class="pi2-field"><label for="pi2-m-email">E-mail da conta Google</label><input id="pi2-m-email" name="email" type="email" required></div>' +
       '<div class="pi2-field"><label for="pi2-m-nome">Nome</label><input id="pi2-m-nome" name="nome" type="text" maxlength="120"></div></div>' +
@@ -819,6 +939,15 @@ function linhasParaProjetos(linhas) {
       '<h3 class="pi2-h">Últimas alterações de ficha</h3>' +
       (linhasAlt ? '<div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th>Data</th><th>Proj.</th><th>Quem</th><th>Campo</th><th>De → para</th></tr></thead><tbody>' + linhasAlt + '</tbody></table></div>' : '<div class="pi2-vazio">Nenhuma alteração registrada.</div>'));
 
+    $$('[data-link-ok],[data-link-nao]', corpo).forEach(function (b) {
+      b.onclick = function () {
+        b.disabled = true;
+        api('decidirLink', { id: b.dataset.linkOk || b.dataset.linkNao, aprovar: !!b.dataset.linkOk }).then(function (r) {
+          if (r.links) PI2.links = r.links;
+          aviso(b.dataset.linkOk ? 'Link aprovado: já aparece no card.' : 'Link recusado.'); redesenhar(); desenharPainel(r);
+        }).catch(function (e) { b.disabled = false; aviso(e.message, 'warning'); });
+      };
+    });
     $$('[data-aprovar],[data-recusar]', corpo).forEach(function (b) {
       b.onclick = function () {
         b.disabled = true;

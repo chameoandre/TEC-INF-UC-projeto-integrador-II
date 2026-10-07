@@ -90,9 +90,11 @@ def parse_projects(csv_text):
         if not overleaf:
             overleaf_status = "pendente"
         elif "/project/" in overleaf:
-            overleaf_status = "privado"
-        else:
+            overleaf_status = "privado"   # link interno: ninguém de fora abre
+        elif "/read/" in overleaf:
             overleaf_status = "ok"
+        else:
+            overleaf_status = "edicao"    # link de edição: quem abre altera o artigo
 
         techs_raw = cell(row, 24)
         techs = [t.strip().rstrip(".") for t in re.split(r"[,;\n]+", techs_raw) if t.strip()]

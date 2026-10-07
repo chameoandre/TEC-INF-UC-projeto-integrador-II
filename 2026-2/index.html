@@ -3037,7 +3037,7 @@
           <button class="pill" onclick="setFilter('exps-completos', this)"><i class="fa-solid fa-circle-check text-green"></i> Experimentos 4/4</button>
           <button class="pill" onclick="setFilter('exps-pendentes', this)"><i class="fa-solid fa-hourglass-half text-amber"></i> Experimentos a Definir</button>
           <button class="pill" onclick="setFilter('overleaf-ok', this)"><i class="fa-solid fa-check text-green"></i> Overleaf OK</button>
-          <button class="pill" onclick="setFilter('overleaf-privado', this)"><i class="fa-solid fa-lock text-amber"></i> Link Privado (403)</button>
+          <button class="pill" onclick="setFilter('overleaf-privado', this)"><i class="fa-solid fa-lock text-amber"></i> Link a corrigir</button>
         </div>
       </div>
 
@@ -7082,7 +7082,7 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         if (currentFilter === 'all') return true;
         if (currentFilter === 'domiciliar') return p.isDomiciliar || p.id === 11 || (p.team && p.team.includes('Joel'));
         if (currentFilter === 'overleaf-ok') return p.overleafStatus === 'ok';
-        if (currentFilter === 'overleaf-privado') return p.overleafStatus === 'privado';
+        if (currentFilter === 'overleaf-privado') return p.overleafStatus === 'privado' || p.overleafStatus === 'edicao';
         if (currentFilter === 'exps-completos') {
           const exps = p.experiments || {};
           return [1, 2, 3, 4].every(num => {
@@ -7122,6 +7122,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
           badgeHtml = `<span class="proj-overleaf-badge ok"><i class="fa-solid fa-circle-check"></i> Overleaf OK</span>`;
         } else if (p.overleafStatus === 'privado') {
           badgeHtml = `<span class="proj-overleaf-badge privado"><i class="fa-solid fa-lock"></i> Link Privado (403)</span>`;
+        } else if (p.overleafStatus === 'edicao') {
+          badgeHtml = `<span class="proj-overleaf-badge privado" title="Este link permite editar o artigo. Trocar pelo link de leitura."><i class="fa-solid fa-pen"></i> Link de Edição</span>`;
         } else {
           badgeHtml = `<span class="proj-overleaf-badge pendente"><i class="fa-solid fa-circle-xmark"></i> Sem Overleaf</span>`;
         }
@@ -7221,12 +7223,12 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
             <a href="${p.overleaf}" target="_blank" class="link-btn ${!p.overleaf ? 'disabled' : ''}" title="Artigo Overleaf" onclick="event.stopPropagation();">
               <i class="fa-solid fa-file-code"></i> Overleaf
             </a>
-            ${p.canva && p.canva.includes('drive.google.com')
+            ${p.isDomiciliar && p.canva
               ? `<a href="${p.canva}" target="_blank" class="link-btn" title="Pasta Compartilhada no Google Drive (Atendimento Domiciliar CP)" onclick="event.stopPropagation();" style="background: rgba(66, 133, 244, 0.15); border-color: rgba(66, 133, 244, 0.35); color: #60a5fa;">
                    <i class="fa-brands fa-google-drive"></i> Drive CP
                  </a>`
-              : `<a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama Visual" onclick="event.stopPropagation();">
-                   <i class="fa-solid fa-diagram-project"></i> Canva
+              : `<a href="${p.canva}" target="_blank" class="link-btn ${!p.canva ? 'disabled' : ''}" title="Diagrama da arquitetura do projeto" onclick="event.stopPropagation();">
+                   <i class="fa-solid fa-diagram-project"></i> Diagrama
                  </a>`
             }
             <button onclick="openModal(${p.id}); event.stopPropagation();" class="link-btn" title="Ficha Completa em Janela Modal" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: var(--ifsc-green);">
@@ -7433,10 +7435,10 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--border-color);">
           ${p.github ? `<a href="${p.github}" target="_blank" class="btn btn-outline"><i class="fa-brands fa-github"></i> GitHub</a>` : ''}
           ${p.overleaf ? `<a href="${p.overleaf}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-file-code"></i> Abrir Overleaf</a>` : ''}
-          ${p.canva ? (p.canva.includes('drive.google.com') 
+          ${p.canva ? (p.isDomiciliar 
             ? `<a href="${p.canva}" target="_blank" class="btn btn-outline" style="border-color: #60a5fa; color: #60a5fa;"><i class="fa-brands fa-google-drive"></i> Pasta Drive (Atend. Domiciliar)</a>`
-            : `<a href="${p.canva}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-diagram-project"></i> Diagrama / Canva</a>`) : ''}
-          ${p.pitch ? `<a href="${p.pitch}" target="_blank" class="btn btn-outline"><i class="fa-brands fa-youtube"></i> Pitch Vídeo</a>` : ''}
+            : `<a href="${p.canva}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-diagram-project"></i> Diagrama da arquitetura</a>`) : ''}
+          ${p.pitch ? `<a href="${p.pitch}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-video"></i> Pitch em vídeo</a>` : ''}
         </div>
       `;
 
@@ -7464,6 +7466,9 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         } else if (p.overleafStatus === 'ok') {
           statusBadge = '<span class="proj-overleaf-badge ok"><i class="fa-solid fa-check"></i> 100% Funcional (Público)</span>';
           actionTxt = '<span style="color: var(--ifsc-green); font-size: 0.8rem; font-weight: 600;">Pronto para leitura e correção.</span>';
+        } else if (p.overleafStatus === 'edicao') {
+          statusBadge = '<span class="proj-overleaf-badge privado"><i class="fa-solid fa-pen"></i> Link de Edição</span>';
+          actionTxt = '<span style="color: var(--accent-amber); font-size: 0.8rem;">Quem abrir este link pode alterar o artigo. Pedir o link de leitura: "Share" → copiar "Anyone with this link can view" (…/read/…).</span>';
         } else if (p.overleafStatus === 'privado') {
           statusBadge = '<span class="proj-overleaf-badge privado"><i class="fa-solid fa-lock"></i> Link Privado (Erro 403)</span>';
           actionTxt = '<span style="color: var(--accent-amber); font-size: 0.8rem;">Grupo colou URL interna (/project/). Pedir para ativar "Share -> Turn on link sharing".</span>';
@@ -7495,7 +7500,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       document.getElementById('kpi-overleaf-ok').innerText = `${okCount} / ${totalProjs}`;
       document.getElementById('kpi-overleaf-privado').innerText = `${privadoCount} / ${totalProjs}`;
       document.getElementById('kpi-overleaf-pendente').innerText = `${pendenteCount} / ${totalProjs}`;
-      document.getElementById('badge-overleaf-alert').innerText = `${privadoCount} alertas`;
+      const edicaoCount = projectsData.filter(p => p.overleafStatus === 'edicao').length;
+      document.getElementById('badge-overleaf-alert').innerText = `${privadoCount + edicaoCount} alertas`;
     }
 
     // A sincronização ao vivo (API ou CSV da planilha) fica em pi2-live.js.

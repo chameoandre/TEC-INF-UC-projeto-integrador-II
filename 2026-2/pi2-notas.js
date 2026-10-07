@@ -37,15 +37,34 @@
     var sair = $('#pi2-btn-sair', el), b = document.createElement('button');
     b.type = 'button'; b.className = 'btn btn-outline';
     if (u.papel === 'docente') { b.id = 'pi2-btn-notas'; b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Notas'; b.onclick = abrirPainel; }
+    // Adianta a busca logo após o login do docente, para o painel abrir sem espera.
+    if (u.papel === 'docente' && !N) buscar().catch(function () { /* tenta de novo ao abrir */ });
     else { b.id = 'pi2-btn-minhas'; b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Minhas notas'; b.onclick = abrirMinhas; }
     el.insertBefore(b, sair);
   });
 
+  var buscando = null;
+  /** Busca o estado no servidor; chamadas simultâneas compartilham a mesma requisição. */
+  function buscar() {
+    if (!buscando) buscando = chamar('notasPainel').then(function (r) { buscando = null; return r; }, function (e) { buscando = null; throw e; });
+    return buscando;
+  }
   function abrirPainel() {
-    I.abrirModal(I.cabecalho('Notas da turma', 'Carregando…'), true);
-    chamar('notasPainel').then(desenhar).catch(function (e) { I.abrirModal(I.cabecalho('Notas da turma', esc(e.message)), true); });
+    // Com dados já em memória a tela abre na hora e é atualizada em segundo plano.
+    if (N) {
+      desenhar();
+      buscar().then(function () {
+        var aberto = $('#pi2Modal.open #pi2-notas-corpo');
+        if (aberto && (aba === 'entregas' || aba === 'fechamento')) desenhar();
+      }).catch(function () { /* mantém o que já está na tela */ });
+      return;
+    }
+    I.abrirModal(I.cabecalho('Notas da turma', 'Carregando… a primeira abertura leva alguns segundos.'), true);
+    buscar().then(desenhar).catch(function (e) { I.abrirModal(I.cabecalho('Notas da turma', esc(e.message)), true); });
   }
   PI2.abrirNotas = abrirPainel;
+  var sairOriginal = PI2.sair;
+  PI2.sair = function () { N = null; sairOriginal(); };
 
   function desenhar() {
     var abas = [['entregas', 'Entregas por grupo'], ['alunos', 'Alunos'], ['fechamento', 'Fechamento'], ['config', 'Avaliações e pesos']];

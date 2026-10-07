@@ -113,6 +113,8 @@ no `sync_sheet.py` e é preservado no navegador por ter `isDomiciliar: true`.
 | `atualizarFicha` | integrante do projeto, docente | Altera campos da ficha; guarda valor anterior em `alteracoes`. |
 | `painel`, `decidirAcesso`, `salvarMembro` | docente | Gestão de acessos. |
 | `devolutiva`, `ocultar` | docente | Comentário docente e ocultação de registro. |
+| `salvarLink`, `removerLink`, `linksProjeto` | integrante do projeto, docente | Links extras do projeto (aba `links` da planilha de controle; até 12 por projeto). **Link de aluno nasce `pendente` e só entra no `GET` público depois de aprovado**; o de docente entra direto. Aluno não edita link existente: remove e inclui outro. Remover só marca como removido. |
+| `decidirLink` | docente | Aprova ou recusa um link pendente. `whoami` e `painel` devolvem `usuario.pendencias` (acessos e links aguardando), usado no contador do botão "Painel docente". |
 | `notasPainel`, `salvarPesos`, `salvarQuesito`, `lancarNota`, `salvarAlunos`, `importarAlunos`, `publicarNotas`, `abrirPares`, `salvarRegra` | docente | Painel de notas (ver seção "Notas"). Cada uma devolve o estado completo já recalculado. |
 | `minhasNotas`, `avaliarParticipacao` | aluno ligado à lista da turma | Notas publicadas do próprio aluno; e a avaliação de participação dele e dos colegas nas atividades abertas. |
 
@@ -198,6 +200,15 @@ no GitHub **não** atualiza o backend.
 
 ## Decisões (mais recente primeiro)
 
+- **07/10/2026** — Links pelos cards: botão "Links" (para quem pode editar o projeto) abre um modal
+  com os quatro links fixos da ficha e uma lista livre de links extras com nome. Os extras ficam na
+  planilha de controle, e não na de projetos, porque esta tem colunas fixas. Por decisão do docente,
+  link extra incluído por aluno exige aprovação antes de aparecer no site (mais carga para o docente,
+  em troca de controle). Os quatro links fixos continuam valendo na hora, com histórico.
+- **07/10/2026** — Overleaf: além de `/project/` (privado), link sem `/read/` passou a ser tratado como
+  link de **edição** (`overleafStatus: 'edicao'`), sinalizado no card e na auditoria e recusado pelo
+  servidor ao salvar a ficha. A regra está nos três conversores e em `statusOverleaf()` do `pi2-live.js`.
+- **07/10/2026** — Botão "Canva" renomeado para "Diagrama"; "Drive CP" aparece só no projeto #11.
 - **07/10/2026** — Participação por atividade com autoavaliação e avaliação dos colegas. Decidido
   que a avaliação dos alunos não entra direto na nota: o docente vê e define o valor que vale.
   A pasta `dados-alunos/` entrou no `.gitignore`; listas com nome e e-mail não vão para o repositório.
