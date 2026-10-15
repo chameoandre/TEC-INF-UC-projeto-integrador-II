@@ -2651,6 +2651,12 @@
     <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
       <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">2 alertas</span>
     </button>
+    <button class="tab-btn" onclick="switchTab('notas')">
+      <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> Notas & Avaliações
+    </button>
+    <button class="tab-btn" onclick="switchTab('demandas')">
+      <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> Demandas & Checkpoints
+    </button>
   </nav>
 
   <!-- Main Body -->
@@ -6530,6 +6536,20 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
 
     </section>
 
+    <!-- =========================================================================
+         ABA: NOTAS & AVALIAÇÕES (ROTEIRO PEDAGÓGICO & RUBRICAS)
+         ========================================================================= -->
+    <section id="tab-notas" class="tab-content">
+      <!-- Injetado dinamicamente via pi2-live.js -->
+    </section>
+
+    <!-- =========================================================================
+         ABA: DEMANDAS & CHECKPOINTS (DIRECIONADAS E BROADCAST)
+         ========================================================================= -->
+    <section id="tab-demandas" class="tab-content">
+      <!-- Injetado dinamicamente via pi2-live.js -->
+    </section>
+
   </main>
 
   <!-- Modal Project Deep View -->
@@ -7351,8 +7371,15 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       const targetSection = document.getElementById('tab-' + tabId);
       if (targetSection) targetSection.classList.add('active');
 
-      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabId));
       if (activeBtn) activeBtn.classList.add('active');
+
+      if (tabId === 'notas' && window.PI2 && typeof window.PI2.renderNotasTab === 'function') {
+        window.PI2.renderNotasTab();
+      }
+      if (tabId === 'demandas' && window.PI2 && typeof window.PI2.renderDemandasTab === 'function') {
+        window.PI2.renderDemandasTab();
+      }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

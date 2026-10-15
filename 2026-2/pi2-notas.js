@@ -36,10 +36,17 @@
     if (!u || u.status !== 'ativo') return;
     var sair = $('#pi2-btn-sair', el), b = document.createElement('button');
     b.type = 'button'; b.className = 'btn btn-outline';
-    if (u.papel === 'docente') { b.id = 'pi2-btn-notas'; b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Notas'; b.onclick = abrirPainel; }
-    // Adianta a busca logo após o login do docente, para o painel abrir sem espera.
-    if (u.papel === 'docente' && !N) buscar().catch(function () { /* tenta de novo ao abrir */ });
-    else { b.id = 'pi2-btn-minhas'; b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Minhas notas'; b.onclick = abrirMinhas; }
+    if (u.papel === 'docente') {
+      b.id = 'pi2-btn-notas';
+      b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Notas';
+      b.onclick = function () { abrirPainel(); };
+      // Adianta a busca logo após o login do docente, para o painel abrir sem espera.
+      if (!N) buscar().catch(function () { /* tenta de novo ao abrir */ });
+    } else {
+      b.id = 'pi2-btn-minhas';
+      b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Minhas notas';
+      b.onclick = abrirMinhas;
+    }
     el.insertBefore(b, sair);
   });
 
@@ -49,9 +56,13 @@
     if (!buscando) buscando = chamar('notasPainel').then(function (r) { buscando = null; return r; }, function (e) { buscando = null; throw e; });
     return buscando;
   }
-  function abrirPainel() {
+  function abrirPainel(projetoId) {
     // Com dados já em memória a tela abre na hora e é atualizada em segundo plano.
     if (N) {
+      if (projetoId && quesitos('grupo').length) {
+        editarNota(quesitos('grupo')[0].id, 'P' + projetoId);
+        return;
+      }
       desenhar();
       buscar().then(function () {
         var aberto = $('#pi2Modal.open #pi2-notas-corpo');
@@ -60,9 +71,16 @@
       return;
     }
     I.abrirModal(I.cabecalho('Notas da turma', 'Carregando… a primeira abertura leva alguns segundos.'), true);
-    buscar().then(desenhar).catch(function (e) { I.abrirModal(I.cabecalho('Notas da turma', esc(e.message)), true); });
+    buscar().then(function () {
+      if (projetoId && quesitos('grupo').length) {
+        editarNota(quesitos('grupo')[0].id, 'P' + projetoId);
+      } else {
+        desenhar();
+      }
+    }).catch(function (e) { I.abrirModal(I.cabecalho('Notas da turma', esc(e.message)), true); });
   }
   PI2.abrirNotas = abrirPainel;
+  PI2.abrirNotasCalculo = abrirPainel;
   var sairOriginal = PI2.sair;
   PI2.sair = function () { N = null; sairOriginal(); };
 

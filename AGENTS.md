@@ -182,6 +182,10 @@ no GitHub **não** atualiza o backend.
    Teste rápido após qualquer edição grande: o botão de login ainda aparece no cabeçalho?
 9. **Notas nunca saem no `GET` público nem ficam em arquivos do repositório.** Só por `POST`
    autenticado: tudo para docentes, e para o aluno apenas as próprias notas já publicadas.
+10. **Permanência e Intocabilidade do Painel Central de Notas & Avaliações:**
+    - O **Painel Central de Notas & Avaliações** (aba `tab-notas`, botão de navegação `Notas & Avaliações` na `nav-tabs-bar`, atalho dentro do `Painel Docente` e avaliação detalhada por rubricas) é uma funcionalidade nuclear e **permanente**.
+    - É terminantemente proibido remover, omitir ou desvincular o painel de notas em futuras refatorações de `2026-2/index.html`, `2026-2/pi2-live.js` ou scripts de automação.
+    - As chamadas `renderNotasTab()`, `filtrarTabelaNotas()` e a exportação em `window.PI2` devem ser preservadas em todos os ciclos de renderização e sincronização.
 
 ## Como testar
 
@@ -200,6 +204,17 @@ no GitHub **não** atualiza o backend.
 
 ## Decisões (mais recente primeiro)
 
+- **15/10/2026** — Demandas & Checkpoints da Turma: implementado sistema de tarefas e checkpoints com direcionamento para toda a turma (`*` broadcast geral) ou individualmente para equipes específicas (`#1` a `#11`), replicando a estratégia de sucesso do Projeto Integrador 1. Inclui aba permanente (`tab-demandas`) na barra de navegação, modal docente para criação com prazos, pontos e rubricas/critérios de aceite, disparo de notificações por e-mail aos alunos do projeto via `GmailApp`, vinculação de demandas no formulário de avanço de projeto (conclusão silenciosa automática), visualização no modal individual de cada grupo e persistência no Apps Script (`criarDemanda`, `concluirDemanda`, `removerDemanda` e aba `demandas`).
+- **15/10/2026** — Painel Central de Notas & Avaliações por Rubricas: restaurado e fixado como aba permanente (`tab-notas`), espelhando a estratégia consolidada no Projeto Integrador 1. Inclui acompanhamento dos 11 projetos com rubrica do Objetivo Geral (fórmula de 4 critérios: verbo, entregável, público e propósito) e dos 4 Degraus Metodológicos (D1 Exploração/Diagnóstico, D2 Modelagem/Design, D3 Implementação/Código, D4 Validação/Experimentos), visualização de pareceres, destaque para o aluno logado e persistência no Apps Script (`salvarAvaliacao` e aba `avaliacoes`).
+- **13/10/2026** — Persistência de autenticação: migrado de `sessionStorage` para `localStorage`
+  (preservando login entre abas e reinicializações do navegador); restauração imediata do estado
+  logado antes das requisições remotas (eliminando atraso/flicker na barra de login); tratamento de
+  falhas de rede no `whoami` sem deslogar indevidamente; e renovação antecipada e silenciosa do
+  token via Google Identity Services (`auto_select` / One Tap) antes da expiração de 1 hora.
+- **13/10/2026** — Painel de notas: corrigido bug no cabeçalho onde o botão "Notas" do docente era sobrescrito
+  por "Minhas notas" assim que os dados eram carregados em segundo plano. O acesso a notas foi ampliado:
+  botão "Notas da turma" adicionado dentro do Painel docente; e botão "Notas" incluído nos cards e no
+  modal de cada projeto para que docentes possam lançar notas diretamente por equipe.
 - **07/10/2026** — Links pelos cards: botão "Links" (para quem pode editar o projeto) abre um modal
   com os quatro links fixos da ficha e uma lista livre de links extras com nome. Os extras ficam na
   planilha de controle, e não na de projetos, porque esta tem colunas fixas. Por decisão do docente,

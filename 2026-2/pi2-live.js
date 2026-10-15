@@ -18,6 +18,8 @@
     bruto: [],        // projetos sem escape (para formulários)
     registros: [],    // registros públicos, do mais novo para o mais antigo
     links: [],        // links extras dos projetos: {id, projeto, nome, url}
+    avaliacoes: [],   // avaliações de rubricas pedagógicas
+    demandas: [],     // demandas e checkpoints (gerais ou direcionadas por grupo)
     usuario: null,    // {email, nome, papel, projetos, status}
     token: null,
     perfil: null,     // dados do token (nome, foto, exp)
@@ -191,6 +193,12 @@ function linhasParaProjetos(linhas) {
     window.renderAuditTable();
     desenharRaioX();
     atualizarContadores();
+    if ($('#tab-notas') && ($('#tab-notas').classList.contains('active') || PI2._notasRenderizado)) {
+      renderNotasTab();
+    }
+    if ($('#tab-demandas') && ($('#tab-demandas').classList.contains('active') || PI2._demandasRenderizado)) {
+      renderDemandasTab();
+    }
     if (PI2._modalProjeto) complementarModalProjeto(PI2._modalProjeto);
   }
 
@@ -219,6 +227,8 @@ function linhasParaProjetos(linhas) {
       aplicarProjetos(d.projetos || []);
       PI2.registros = d.registros || [];
       PI2.links = d.links || [];
+      PI2.avaliacoes = d.avaliacoes || [];
+      PI2.demandas = d.demandas || [];
       PI2.fonte = 'ao vivo';
     });
   }
@@ -290,14 +300,76 @@ function linhasParaProjetos(linhas) {
     });
   }
 
-  function aoReceberCredencial(resp) { return PI2._entrarComToken(resp.credential); }
+  function guardarSessao(jwt, usuario) {
+    try {
+      localStorage.setItem('pi2-token', jwt);
+      if (usuario) localStorage.setItem('pi2-usuario', JSON.stringify(usuario));
+    } catch (e) {
+      try {
+        sessionStorage.setItem('pi2-token', jwt);
+        if (usuario) sessionStorage.setItem('pi2-usuario', JSON.stringify(usuario));
+      } catch (e2) {}
+    }
+  }
+
+  function lerSessaoGuardada() {
+    try {
+      var tok = localStorage.getItem('pi2-token') || sessionStorage.getItem('pi2-token');
+      var usrStr = localStorage.getItem('pi2-usuario') || sessionStorage.getItem('pi2-usuario');
+      var usr = null;
+      try { usr = usrStr ? JSON.parse(usrStr) : null; } catch (e) {}
+      return { token: tok, usuario: usr };
+    } catch (e) {
+      return { token: null, usuario: null };
+    }
+  }
+
+  function limparSessaoGuardada() {
+    try {
+      localStorage.removeItem('pi2-token');
+      localStorage.removeItem('pi2-usuario');
+    } catch (e) {}
+    try {
+      sessionStorage.removeItem('pi2-token');
+      sessionStorage.removeItem('pi2-usuario');
+    } catch (e) {}
+  }
+
+  function agendarRenovacao(perfil) {
+    if (PI2._timerRenovacao) { clearTimeout(PI2._timerRenovacao); PI2._timerRenovacao = null; }
+    if (!perfil || !perfil.exp) return;
+    var msRestantes = (perfil.exp * 1000) - Date.now();
+    var delay = msRestantes - 120000; // 2 min antes do token de 1h expirar
+    if (delay > 0) {
+      PI2._timerRenovacao = setTimeout(function () {
+        tentarAutoLoginGoogle();
+      }, delay);
+    }
+  }
+
+  function tentarAutoLoginGoogle() {
+    if (!loginConfigurado() || !PI2._googlePronto) return;
+    try {
+      google.accounts.id.prompt();
+    } catch (e) {}
+  }
+
+  function aoReceberCredencial(resp) { return PI2._entrarComToken(resp.credential, false); }
 
   PI2._entrarComToken = function (jwt, silencioso) {
     var perfil = lerToken(jwt);
-    if (!perfil) { aviso('Login inválido.', 'warning'); return Promise.resolve(); }
+    if (!perfil) {
+      if (!silencioso) aviso('Login inválido.', 'warning');
+      return Promise.resolve();
+    }
     PI2.token = jwt; PI2.perfil = perfil;
-    try { sessionStorage.setItem('pi2-token', jwt); } catch (e) { /* armazenamento indisponível */ }
-    return api('whoami').then(function () {
+    guardarSessao(jwt, PI2.usuario);
+    agendarRenovacao(perfil);
+    return api('whoami').then(function (d) {
+      if (d.usuario) {
+        PI2.usuario = d.usuario;
+        guardarSessao(jwt, d.usuario);
+      }
       desenharAuth(); redesenhar();
       var u = PI2.usuario;
       if (silencioso) return;
@@ -307,14 +379,21 @@ function linhasParaProjetos(linhas) {
         if (PI2._aposLogin) { var f = PI2._aposLogin; PI2._aposLogin = null; f(); }
       } else abrirSolicitacao();
     }).catch(function (e) {
-      sair(true);
-      aviso(e.message, 'warning');
+      var msg = String(e && e.message || '');
+      var expirado = msg.indexOf('expir') >= 0 || msg.indexOf('inválid') >= 0;
+      if (expirado) {
+        sair(true);
+        if (!silencioso) aviso('Sua sessão expirou. Entre novamente.', 'warning');
+      } else if (!silencioso) {
+        aviso(e.message, 'warning');
+      }
     });
   };
 
   function sair(silencioso) {
+    if (PI2._timerRenovacao) { clearTimeout(PI2._timerRenovacao); PI2._timerRenovacao = null; }
     PI2.token = null; PI2.perfil = null; PI2.usuario = null;
-    try { sessionStorage.removeItem('pi2-token'); } catch (e) { /* idem */ }
+    limparSessaoGuardada();
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     desenharAuth(); redesenhar();
     if (!silencioso) aviso('Você saiu.');
@@ -327,9 +406,17 @@ function linhasParaProjetos(linhas) {
     s.src = 'https://accounts.google.com/gsi/client';
     s.async = true;
     s.onload = function () {
-      google.accounts.id.initialize({ client_id: CFG.googleClientId, callback: aoReceberCredencial, auto_select: true, use_fedcm_for_prompt: true });
+      google.accounts.id.initialize({
+        client_id: CFG.googleClientId,
+        callback: aoReceberCredencial,
+        auto_select: true,
+        use_fedcm_for_prompt: true
+      });
       PI2._googlePronto = true;
       desenharAuth();
+      if (!tokenValido()) {
+        tentarAutoLoginGoogle();
+      }
     };
     document.head.appendChild(s);
   }
@@ -377,11 +464,13 @@ function linhasParaProjetos(linhas) {
         '<span><span class="pi2-nome">' + esc(u.nome.split(' ')[0]) + '</span> <span class="pi2-role ' + (u.status !== 'ativo' ? 'pendente' : '') + '">' + esc(papel) + '</span></span>' +
       '</div>' +
       (ehDocente() ? '<button class="btn btn-outline" type="button" id="pi2-btn-painel"><i class="fa-solid fa-user-shield"></i> Painel docente' + contadorPendencias() + '</button>' : '') +
+      (ehDocente() ? ' <button class="btn btn-action" type="button" id="pi2-btn-demanda-top" style="background:var(--accent-blue);color:#fff;font-size:0.78rem;padding:0.35rem 0.65rem;" title="Criar nova demanda docente ou broadcast"><i class="fa-solid fa-bullhorn"></i> Nova Demanda</button>' : '') +
       (u.status !== 'ativo' ? '<button class="pi2-linkbtn" type="button" id="pi2-btn-solicitar">Solicitar acesso</button>' : '') +
       '<button class="pi2-linkbtn" type="button" id="pi2-btn-sair">Sair</button>';
     $('#pi2-btn-sair').onclick = PI2.sair;
     PI2.ganchosAuth.forEach(function (f) { f(el, u); });
     if ($('#pi2-btn-painel')) $('#pi2-btn-painel').onclick = abrirPainel;
+    if ($('#pi2-btn-demanda-top')) $('#pi2-btn-demanda-top').onclick = function () { PI2.abrirModalCriarDemanda('*'); };
     if ($('#pi2-btn-solicitar')) $('#pi2-btn-solicitar').onclick = abrirSolicitacao;
   }
 
@@ -475,8 +564,24 @@ function linhasParaProjetos(linhas) {
       var t = p.experiments && p.experiments['exp' + n];
       return '<option value="' + n + '">Exp ' + n + (pendente(t) ? '' : ' — ' + esc(String(t).slice(0, 60))) + '</option>';
     }).join('');
+    var demandasAbertas = (PI2.demandas || []).filter(function (d) {
+      return (d.projeto === '*' || Number(d.projeto) === Number(id)) && d.status !== 'concluida';
+    });
+    var selectDemanda = demandasAbertas.length > 0 ? (
+      '<div class="pi2-field" style="background:var(--chip-bg);padding:0.75rem;border-radius:var(--radius-sm,6px);border:1px solid var(--border-color);">' +
+        '<label for="pi2-reg-demanda" style="color:var(--accent-cyan);font-weight:700;"><i class="fa-solid fa-link"></i> Este avanço cumpre alguma demanda do orientador?</label>' +
+        '<select id="pi2-reg-demanda" name="demandaId">' +
+          '<option value="">Nenhuma / Avanço geral de rotina</option>' +
+          demandasAbertas.map(function (d) {
+            return '<option value="' + esc(d.id) + '">[' + (d.projeto === '*' ? 'Geral' : '#' + doisDigitos(d.projeto)) + '] ' + esc(d.titulo) + (d.prazo ? ' (Prazo: ' + esc(d.prazo) + ')' : '') + '</option>';
+          }).join('') +
+        '</select>' +
+      '</div>'
+    ) : '';
+
     var corpo = abrirModal(cabecalho('Registrar avanço', '#' + doisDigitos(p.id) + ' — ' + esc(p.title) + '. O registro entra na linha do tempo do projeto com seu nome e a data de hoje.') +
       '<form class="pi2-form">' +
+        selectDemanda +
         '<div class="pi2-row">' +
           '<div class="pi2-field"><label for="pi2-tipo">Tipo</label><select id="pi2-tipo" name="tipo">' +
             '<option value="avanco">Avanço no desenvolvimento</option><option value="experimento">Experimento realizado</option>' +
@@ -507,7 +612,8 @@ function linhasParaProjetos(linhas) {
       return api('registrar', {
         projeto: p.id, tipo: fd.get('tipo'), experimento: Number(fd.get('experimento')), texto: fd.get('texto'), evidencia: ev,
         proximosPassos: prox === String(p.nextSteps || '').trim() ? '' : prox,
-        dificuldades: dif === String(p.difficulties || '').trim() ? '' : dif
+        dificuldades: dif === String(p.difficulties || '').trim() ? '' : dif,
+        demandaId: fd.get('demandaId') || ''
       }).then(function () {
         fecharModal(); aviso('Avanço registrado.');
         return carregar(true);
@@ -639,7 +745,7 @@ function linhasParaProjetos(linhas) {
   }
 
   document.addEventListener('click', function (e) {
-    var alvo = e.target.closest ? e.target.closest('[data-pi2-dev],[data-pi2-ocultar],[data-pi2-todos],[data-pi2-registrar],[data-pi2-ficha],[data-pi2-links]') : null;
+    var alvo = e.target.closest ? e.target.closest('[data-pi2-dev],[data-pi2-ocultar],[data-pi2-todos],[data-pi2-registrar],[data-pi2-ficha],[data-pi2-links],[data-pi2-notas],[data-pi2-demanda],[data-pi2-concluir-demanda],[data-pi2-remover-demanda]') : null;
     if (!alvo) return;
     e.stopPropagation();
     if (alvo.dataset.pi2Dev) abrirDevolutiva(alvo.dataset.pi2Dev);
@@ -648,6 +754,10 @@ function linhasParaProjetos(linhas) {
     else if (alvo.dataset.pi2Registrar) PI2.abrirRegistro(Number(alvo.dataset.pi2Registrar));
     else if (alvo.dataset.pi2Ficha) PI2.abrirFicha(Number(alvo.dataset.pi2Ficha));
     else if (alvo.dataset.pi2Links) PI2.abrirLinks(Number(alvo.dataset.pi2Links));
+    else if (alvo.dataset.pi2Notas) PI2.abrirModalAvaliarObjetivos(Number(alvo.dataset.pi2Notas));
+    else if (alvo.dataset.pi2Demanda) PI2.abrirModalCriarDemanda(alvo.dataset.pi2Demanda);
+    else if (alvo.dataset.pi2ConcluirDemanda) PI2.concluirDemanda(alvo.dataset.pi2ConcluirDemanda);
+    else if (alvo.dataset.pi2RemoverDemanda) PI2.removerDemanda(alvo.dataset.pi2RemoverDemanda);
   }, true);
 
   // ------------------------------------------------------------------
@@ -656,10 +766,16 @@ function linhasParaProjetos(linhas) {
   function botoesAcao(id, compacto) {
     if (PI2.usuario && !podeEditar(id)) return '';
     if (!PI2.usuario && !loginConfigurado()) return '';
-    if (compacto) return '<button type="button" class="link-btn pi2-registrar" data-pi2-registrar="' + id + '" title="Registrar um avanço deste projeto"><i class="fa-solid fa-pen-to-square"></i> Registrar</button>';
+    if (compacto) {
+      return (ehDocente() ? '<button type="button" class="link-btn pi2-notas-btn" data-pi2-notas="' + id + '" title="Avaliar rubricas e notas deste projeto"><i class="fa-solid fa-clipboard-list"></i> Avaliar</button> ' : '') +
+        (ehDocente() ? '<button type="button" class="link-btn" data-pi2-demanda="' + id + '" title="Criar demanda para esta equipe"><i class="fa-solid fa-bullhorn"></i> Demanda</button> ' : '') +
+        '<button type="button" class="link-btn pi2-registrar" data-pi2-registrar="' + id + '" title="Registrar um avanço deste projeto"><i class="fa-solid fa-pen-to-square"></i> Registrar</button>';
+    }
     return '<button type="button" class="pi2-btn mini primario" data-pi2-registrar="' + id + '"><i class="fa-solid fa-pen-to-square"></i> Registrar avanço</button> ' +
       '<button type="button" class="pi2-btn mini" data-pi2-links="' + id + '"><i class="fa-solid fa-link"></i> Links</button> ' +
-      '<button type="button" class="pi2-btn mini" data-pi2-ficha="' + id + '"><i class="fa-solid fa-sliders"></i> Atualizar ficha</button>';
+      '<button type="button" class="pi2-btn mini" data-pi2-ficha="' + id + '"><i class="fa-solid fa-sliders"></i> Atualizar ficha</button>' +
+      (ehDocente() ? ' <button type="button" class="pi2-btn mini" data-pi2-demanda="' + id + '" title="Criar demanda para esta equipe"><i class="fa-solid fa-bullhorn"></i> Demanda</button>' : '') +
+      (ehDocente() ? ' <button type="button" class="pi2-btn mini" data-pi2-notas="' + id + '" title="Avaliar rubricas e notas deste projeto"><i class="fa-solid fa-clipboard-list"></i> Avaliar Rubrica</button>' : '');
   }
 
   // ------------------------------------------------------------------
@@ -779,11 +895,40 @@ function linhasParaProjetos(linhas) {
     if (!corpo || !$('#projectModal').classList.contains('open')) return;
     var antigo = $('#pi2-modal-extra', corpo);
     if (antigo) antigo.remove();
-    if (!CFG.apiUrl && !registrosDo(id).length && !linksDo(id).length) return;
+    if (!CFG.apiUrl && !registrosDo(id).length && !linksDo(id).length && !(PI2.demandas || []).length) return;
     var div = document.createElement('div');
     div.id = 'pi2-modal-extra';
     var extras = linksExtrasHtml(id, false);
-    div.innerHTML = (extras ? '<h3 class="pi2-h"><i class="fa-solid fa-link text-cyan"></i> Outros links do projeto</h3><div class="pi2-evidencias">' + extras + '</div>' : '') +
+
+    var projsDemandas = (PI2.demandas || []).filter(function (d) {
+      return d.projeto === '*' || Number(d.projeto) === Number(id);
+    });
+    var demandasHtml = '';
+    if (projsDemandas.length > 0) {
+      demandasHtml = '<div style="margin-bottom:1.25rem;background:var(--chip-bg);padding:1rem;border-radius:var(--radius-sm,6px);border:1px solid var(--border-color);">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">' +
+          '<h4 style="font-size:0.8rem;text-transform:uppercase;color:var(--accent-blue);letter-spacing:0.05em;margin:0;">' +
+            '<i class="fa-solid fa-bullhorn"></i> Demandas & Checkpoints Atribuídos (' + projsDemandas.length + ')' +
+          '</h4>' +
+          (ehDocente() ? '<button class="pi2-btn mini" type="button" data-pi2-demanda="' + id + '" style="font-size:0.72rem;padding:0.2rem 0.5rem;"><i class="fa-solid fa-plus"></i> Nova Demanda</button>' : '') +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.5rem;">' +
+          projsDemandas.map(function (d) {
+            var isDone = d.status === 'concluida';
+            return '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border-left:3px solid ' + (isDone ? 'var(--ifsc-green)' : 'var(--accent-amber)') + ';font-size:0.82rem;">' +
+              '<div>' +
+                '<strong>' + (d.projeto === '*' ? '[Geral] ' : '') + esc(d.titulo) + '</strong>' +
+                (d.prazo ? '<span style="color:var(--accent-amber);font-size:0.75rem;margin-left:0.5rem;"><i class="fa-solid fa-calendar-day"></i> Prazo: ' + esc(d.prazo) + '</span>' : '') +
+              '</div>' +
+              '<span class="status-tag ' + (isDone ? 'tag-ok' : 'tag-pendente') + '" style="font-size:0.7rem;">' + (isDone ? 'Concluída' : 'Pendente') + '</span>' +
+            '</div>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+    }
+
+    div.innerHTML = demandasHtml +
+      (extras ? '<h3 class="pi2-h"><i class="fa-solid fa-link text-cyan"></i> Outros links do projeto</h3><div class="pi2-evidencias">' + extras + '</div>' : '') +
       '<h3 class="pi2-h pi2-secao-titulo"><span><i class="fa-solid fa-timeline text-cyan"></i> Linha do tempo de registros</span><span>' + botoesAcao(id, false) + '</span></h3>' + timelineHtml(id, 0);
     corpo.appendChild(div);
   }
@@ -922,7 +1067,14 @@ function linhasParaProjetos(linhas) {
     }).join('');
     desenharAuth();
     var corpo = abrirModal(cabecalho('Painel docente', 'Aprovação de acessos e de links, cadastro de integrantes e histórico de alterações.') +
-      '<p><a class="pi2-btn mini" href="' + esc(urlSegura(d.planilhaControle)) + '" target="_blank" rel="noopener"><i class="fa-solid fa-lock"></i> Planilha de controle (privada)</a> ' +
+      '<div style="background:var(--chip-bg);border:1px solid var(--border-color);border-radius:var(--radius-sm, 8px);padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">' +
+      '<div><strong style="color:var(--text-main);font-size:0.9rem;"><i class="fa-solid fa-clipboard-list" style="color:var(--accent-amber);"></i> Central Pedagógica & Avaliações</strong>' +
+      '<p style="font-size:0.78rem;color:var(--text-muted);margin:0.15rem 0 0 0;">Controle das notas dos 11 projetos e envio de mensagens e metas.</p></div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+      '<button class="pi2-btn mini primario" style="background:var(--accent-blue);color:#fff;" type="button" onclick="PI2.fecharModal(); PI2.abrirModalCriarDemanda(\'*\');"><i class="fa-solid fa-bullhorn"></i> Nova Demanda / Broadcast</button>' +
+      '<button class="pi2-btn mini primario" style="background:var(--accent-amber);color:#fff;" type="button" onclick="PI2.fecharModal(); switchTab(\'notas\');"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Notas</button></div></div>' +
+      '<p><button class="pi2-btn mini primario" type="button" id="pi2-painel-notas"><i class="fa-solid fa-clipboard-list"></i> Notas da turma</button> ' +
+      '<a class="pi2-btn mini" href="' + esc(urlSegura(d.planilhaControle)) + '" target="_blank" rel="noopener"><i class="fa-solid fa-lock"></i> Planilha de controle (privada)</a> ' +
       '<a class="pi2-btn mini" href="' + esc(urlSegura(d.planilhaPublica)) + '" target="_blank" rel="noopener"><i class="fa-solid fa-table"></i> Planilha de projetos</a></p>' +
       '<h3 class="pi2-h">Solicitações pendentes (' + pend.length + ')</h3>' +
       (pend.length ? '<div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th>Estudante</th><th>Projeto pedido</th><th></th></tr></thead><tbody>' + linhasPend + '</tbody></table></div>' : '<div class="pi2-vazio">Nenhuma solicitação aguardando.</div>') +
@@ -939,6 +1091,8 @@ function linhasParaProjetos(linhas) {
       '<h3 class="pi2-h">Últimas alterações de ficha</h3>' +
       (linhasAlt ? '<div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th>Data</th><th>Proj.</th><th>Quem</th><th>Campo</th><th>De → para</th></tr></thead><tbody>' + linhasAlt + '</tbody></table></div>' : '<div class="pi2-vazio">Nenhuma alteração registrada.</div>'));
 
+    var bNotas = $('#pi2-painel-notas', corpo);
+    if (bNotas) bNotas.onclick = function () { if (PI2.abrirNotas) PI2.abrirNotas(); };
     $$('[data-link-ok],[data-link-nao]', corpo).forEach(function (b) {
       b.onclick = function () {
         b.disabled = true;
@@ -965,18 +1119,877 @@ function linhasParaProjetos(linhas) {
   }
 
   // ------------------------------------------------------------------
+  // Painel Central de Notas & Avaliação por Rubricas
+  // ------------------------------------------------------------------
+
+  function renderNotasTab() {
+    var container = $('#tab-notas');
+    if (!container) return;
+    PI2._notasRenderizado = true;
+
+    var projetos = (typeof window.projectsData !== 'undefined' && Array.isArray(window.projectsData) && window.projectsData.length > 0)
+      ? window.projectsData
+      : ((typeof projectsData !== 'undefined' && Array.isArray(projectsData)) ? projectsData : []);
+
+    var avaliacoes = PI2.avaliacoes || [];
+    var isDocente = ehDocente();
+    var meuProjetoId = (PI2.usuario && PI2.usuario.projetos && Array.isArray(PI2.usuario.projetos))
+      ? (PI2.usuario.projetos[0] !== '*' ? Number(PI2.usuario.projetos[0]) : null)
+      : null;
+
+    var totalProjetos = projetos.length;
+    var avaliadosCount = 0;
+    var aprovadosCount = 0;
+    var ajustarCount = 0;
+    var somaNotas = 0;
+    var countNotasValidas = 0;
+
+    var projsComAval = projetos.map(function (p) {
+      var aval = avaliacoes.find(function (a) {
+        return Number(a.projeto) === Number(p.id) && (a.tipo === 'objetivos' || !a.tipo);
+      });
+      var status = aval ? aval.status : 'pendente';
+      var nota = aval && aval.nota !== undefined && aval.nota !== '' ? parseFloat(String(aval.nota).replace(',', '.')) : null;
+
+      if (aval) {
+        avaliadosCount++;
+        if (status === 'aprovado') aprovadosCount++;
+        else if (status === 'ajustar') ajustarCount++;
+        if (!isNaN(nota) && nota !== null) {
+          somaNotas += nota;
+          countNotasValidas++;
+        }
+      }
+
+      return {
+        projeto: p,
+        avaliacao: aval,
+        status: status,
+        nota: nota
+      };
+    });
+
+    var mediaNotas = countNotasValidas > 0 ? (somaNotas / countNotasValidas).toFixed(1) : '—';
+    var pendentesCount = totalProjetos - avaliadosCount;
+
+    var avaliacaoMeuProjeto = meuProjetoId ? projsComAval.find(function (item) { return Number(item.projeto.id) === meuProjetoId; }) : null;
+
+    container.innerHTML = `
+      <div class="pi2-notas-container">
+        
+        <!-- CABEÇALHO DO PAINEL -->
+        <div class="pi2-notas-header">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem;">
+              <span class="proj-id-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-amber);font-weight:700;">
+                <i class="fa-solid fa-clipboard-list"></i> PAINEL CENTRAL DE AVALIAÇÕES & NOTAS
+              </span>
+              <span style="font-size:0.75rem;color:var(--text-dim);">Turma INF-2024 • Semestre 2026-2</span>
+            </div>
+            <h2 style="font-size:1.35rem;font-weight:700;color:var(--text-main);margin:0;">
+              Acompanhamento de Rubricas Pedagógicas & Roteiro
+            </h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 0 0;">
+              Conformidade do Objetivo Geral (4 critérios) e dos 4 Degraus Específicos (Exploração, Modelagem, Implementação e Validação Experimental).
+            </p>
+          </div>
+
+          <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+            ${(isDocente && typeof PI2.abrirNotasCalculo === 'function') ? `
+              <button class="btn btn-outline" onclick="PI2.abrirNotasCalculo()" style="border-color:var(--accent-purple);color:var(--accent-purple);font-size:0.8rem;padding:0.45rem 0.85rem;" title="Abrir matriz de pesos, frequência e participação">
+                <i class="fa-solid fa-calculator"></i> Matriz Detalhada
+              </button>
+            ` : ''}
+            <button class="btn btn-outline" onclick="PI2.sincronizar()" style="font-size:0.8rem;padding:0.45rem 0.85rem;" title="Atualizar dados da planilha">
+              <i class="fa-solid fa-arrows-rotate"></i> Sincronizar
+            </button>
+          </div>
+        </div>
+
+        <!-- DESTAQUE PARA ESTUDANTE LOGADO -->
+        ${(avaliacaoMeuProjeto && !isDocente) ? `
+          <div class="pi2-aluno-destaque">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+              <div>
+                <span class="proj-id-badge" style="background:rgba(37,99,235,0.15);color:var(--accent-blue);font-weight:700;">
+                  <i class="fa-solid fa-star"></i> SUA EQUIPE — PROJETO #${avaliacaoMeuProjeto.projeto.id}
+                </span>
+                <h3 style="font-size:1.2rem;font-weight:700;color:var(--text-main);margin:0.35rem 0 0.15rem 0;">
+                  ${esc(avaliacaoMeuProjeto.projeto.title || ('Projeto #' + avaliacaoMeuProjeto.projeto.id))}
+                </h3>
+                <span style="font-size:0.8rem;color:var(--text-muted);"><i class="fa-solid fa-users" style="color:var(--accent-blue);"></i> ${esc(avaliacaoMeuProjeto.projeto.team || 'Integrantes a definir')}</span>
+              </div>
+              <div style="display:flex;gap:0.75rem;align-items:center;">
+                <div style="text-align:right;">
+                  <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Nota Roteiro 1</div>
+                  <div class="pi2-nota-val ${avaliacaoMeuProjeto.nota !== null ? (avaliacaoMeuProjeto.nota >= 7 ? 'excelente' : 'ajuste') : ''}" style="font-size:1.4rem;">
+                    ${avaliacaoMeuProjeto.nota !== null ? avaliacaoMeuProjeto.nota.toFixed(1) : 'Em avaliação'}
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Parecer Geral</div>
+                  <span class="status-tag ${avaliacaoMeuProjeto.status === 'aprovado' ? 'tag-ok' : (avaliacaoMeuProjeto.status === 'ajustar' ? 'tag-ajuste' : 'tag-pendente')}" style="padding:0.4rem 0.75rem;font-size:0.82rem;">
+                    ${avaliacaoMeuProjeto.status === 'aprovado' ? '🟢 Conforme' : (avaliacaoMeuProjeto.status === 'ajustar' ? '🟡 Requer Ajustes' : '⚪ Em Elaboração')}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            ${avaliacaoMeuProjeto.avaliacao && avaliacaoMeuProjeto.avaliacao.parecer ? `
+              <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:0.85rem 1.15rem;margin-bottom:0.75rem;">
+                <strong style="font-size:0.85rem;color:var(--accent-blue);display:flex;align-items:center;gap:0.35rem;margin-bottom:0.35rem;">
+                  <i class="fa-solid fa-comment-dots"></i> Devolutiva do Professor Orientador:
+                </strong>
+                <p style="font-size:0.88rem;color:var(--text-main);margin:0;line-height:1.5;">${esc(avaliacaoMeuProjeto.avaliacao.parecer)}</p>
+              </div>
+            ` : ''}
+
+            <!-- 4 Degraus Específicos do Aluno -->
+            ${(avaliacaoMeuProjeto.avaliacao && avaliacaoMeuProjeto.avaliacao.criterios) ? `
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:0.6rem;margin-top:0.75rem;">
+                <div style="background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border:1px solid var(--border-color);font-size:0.78rem;">
+                  <strong>D1 (Exploração):</strong> <span class="pi2-deg-badge ${avaliacaoMeuProjeto.avaliacao.criterios.esp1_status || 'ausente'}">${(avaliacaoMeuProjeto.avaliacao.criterios.esp1_status === 'conforme' ? '✔️ Conforme' : (avaliacaoMeuProjeto.avaliacao.criterios.esp1_status === 'ajustar' ? '⚠️ Ajustar' : '❌ Ausente'))}</span>
+                  ${avaliacaoMeuProjeto.avaliacao.criterios.esp1_obs ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">${esc(avaliacaoMeuProjeto.avaliacao.criterios.esp1_obs)}</div>` : ''}
+                </div>
+                <div style="background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border:1px solid var(--border-color);font-size:0.78rem;">
+                  <strong>D2 (Modelagem):</strong> <span class="pi2-deg-badge ${avaliacaoMeuProjeto.avaliacao.criterios.esp2_status || 'ausente'}">${(avaliacaoMeuProjeto.avaliacao.criterios.esp2_status === 'conforme' ? '✔️ Conforme' : (avaliacaoMeuProjeto.avaliacao.criterios.esp2_status === 'ajustar' ? '⚠️ Ajustar' : '❌ Ausente'))}</span>
+                  ${avaliacaoMeuProjeto.avaliacao.criterios.esp2_obs ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">${esc(avaliacaoMeuProjeto.avaliacao.criterios.esp2_obs)}</div>` : ''}
+                </div>
+                <div style="background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border:1px solid var(--border-color);font-size:0.78rem;">
+                  <strong>D3 (Implementação):</strong> <span class="pi2-deg-badge ${avaliacaoMeuProjeto.avaliacao.criterios.esp3_status || 'ausente'}">${(avaliacaoMeuProjeto.avaliacao.criterios.esp3_status === 'conforme' ? '✔️ Conforme' : (avaliacaoMeuProjeto.avaliacao.criterios.esp3_status === 'ajustar' ? '⚠️ Ajustar' : '❌ Ausente'))}</span>
+                  ${avaliacaoMeuProjeto.avaliacao.criterios.esp3_obs ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">${esc(avaliacaoMeuProjeto.avaliacao.criterios.esp3_obs)}</div>` : ''}
+                </div>
+                <div style="background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border:1px solid var(--border-color);font-size:0.78rem;">
+                  <strong>D4 (Validação):</strong> <span class="pi2-deg-badge ${avaliacaoMeuProjeto.avaliacao.criterios.esp4_status || 'ausente'}">${(avaliacaoMeuProjeto.avaliacao.criterios.esp4_status === 'conforme' ? '✔️ Conforme' : (avaliacaoMeuProjeto.avaliacao.criterios.esp4_status === 'ajustar' ? '⚠️ Ajustar' : '❌ Ausente'))}</span>
+                  ${avaliacaoMeuProjeto.avaliacao.criterios.esp4_obs ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">${esc(avaliacaoMeuProjeto.avaliacao.criterios.esp4_obs)}</div>` : ''}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        ` : ''}
+
+        <!-- QUADRO DE KPIS CONSOLIDADOS -->
+        <div class="pi2-notas-kpi-grid">
+          <div class="pi2-kpi-card">
+            <span class="pi2-kpi-val">${totalProjetos}</span>
+            <span class="pi2-kpi-lbl">Equipes na Turma</span>
+          </div>
+          <div class="pi2-kpi-card">
+            <span class="pi2-kpi-val" style="color:var(--ifsc-green-light);">${aprovadosCount}</span>
+            <span class="pi2-kpi-lbl">Objetivos Aprovados</span>
+          </div>
+          <div class="pi2-kpi-card">
+            <span class="pi2-kpi-val" style="color:var(--accent-amber);">${ajustarCount}</span>
+            <span class="pi2-kpi-lbl">Requerem Ajustes</span>
+          </div>
+          <div class="pi2-kpi-card">
+            <span class="pi2-kpi-val" style="color:var(--text-dim);">${pendentesCount}</span>
+            <span class="pi2-kpi-lbl">Em Elaboração / Sem Nota</span>
+          </div>
+          <div class="pi2-kpi-card">
+            <span class="pi2-kpi-val" style="color:var(--accent-blue);">${mediaNotas}</span>
+            <span class="pi2-kpi-lbl">Média da Turma</span>
+          </div>
+        </div>
+
+        <!-- BARRA DE FILTROS E BUSCA -->
+        <div class="pi2-notas-toolbar">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <input type="text" id="pi2-notas-search" class="pi2-search-input" placeholder="🔍 Buscar por projeto ou integrante..." oninput="PI2.filtrarTabelaNotas()" />
+            <button class="btn-detail active-filter" id="pi2-filter-btn-todos" onclick="PI2.filtrarNotasPorStatus('todos')" style="font-size:0.75rem;padding:0.35rem 0.65rem;">Todos (${totalProjetos})</button>
+            <button class="btn-detail" id="pi2-filter-btn-aprovado" onclick="PI2.filtrarNotasPorStatus('aprovado')" style="font-size:0.75rem;padding:0.35rem 0.65rem;color:var(--ifsc-green-light);">🟢 Conformes (${aprovadosCount})</button>
+            <button class="btn-detail" id="pi2-filter-btn-ajustar" onclick="PI2.filtrarNotasPorStatus('ajustar')" style="font-size:0.75rem;padding:0.35rem 0.65rem;color:var(--accent-amber);">🟡 Ajustar (${ajustarCount})</button>
+            <button class="btn-detail" id="pi2-filter-btn-pendente" onclick="PI2.filtrarNotasPorStatus('pendente')" style="font-size:0.75rem;padding:0.35rem 0.65rem;color:var(--text-dim);">⚪ Pendentes (${pendentesCount})</button>
+          </div>
+          ${isDocente ? `
+            <div style="font-size:0.8rem;color:var(--accent-purple);font-weight:600;">
+              <i class="fa-solid fa-user-shield"></i> Modo Docente Ativo — Edição de Rubricas Habilitada
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- TABELA CONSOLIDADA DAS 11 EQUIPES -->
+        <div class="pi2-notas-table-wrapper">
+          <table class="pi2-notas-table" id="pi2-tabela-notas">
+            <thead>
+              <tr>
+                <th style="width:45px;">#</th>
+                <th style="min-width:200px;">Projeto & Equipe</th>
+                <th style="min-width:140px;">Objetivo Geral</th>
+                <th style="min-width:240px;">4 Degraus Específicos</th>
+                <th style="min-width:110px;">Status</th>
+                <th style="width:90px;text-align:center;">Nota</th>
+                <th style="min-width:200px;">Parecer Orientador</th>
+                <th style="min-width:110px;text-align:right;">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${projsComAval.map(function (item) {
+                var p = item.projeto;
+                var a = item.avaliacao;
+                var nomeProj = p.title || ('Projeto #' + p.id);
+                var integrantesProj = p.team || 'Integrantes a definir';
+                var crit = a && a.criterios ? a.criterios : {};
+                var statusClass = item.status === 'aprovado' ? 'tag-ok' : (item.status === 'ajustar' ? 'tag-ajuste' : 'tag-pendente');
+                var statusLabel = item.status === 'aprovado' ? '🟢 Conforme' : (item.status === 'ajustar' ? '🟡 Ajustar' : '⚪ Pendente');
+                var notaTxt = item.nota !== null ? item.nota.toFixed(1) : '—';
+                var notaClass = item.nota !== null ? (item.nota >= 7.0 ? 'excelente' : 'ajuste') : '';
+
+                return `
+                  <tr class="pi2-nota-row" data-id="${p.id}" data-status="${item.status}" data-nome="${esc(nomeProj).toLowerCase()}" data-integrantes="${esc(integrantesProj).toLowerCase()}">
+                    <td>
+                      <span class="proj-id-badge" style="font-weight:700;">#${p.id}</span>
+                    </td>
+                    <td>
+                      <strong style="color:var(--text-main);font-size:0.92rem;display:block;margin-bottom:0.2rem;">${esc(nomeProj)}</strong>
+                      <div style="font-size:0.75rem;color:var(--text-dim);line-height:1.3;">
+                        <i class="fa-solid fa-users" style="color:var(--accent-blue);"></i> ${esc(integrantesProj)}
+                      </div>
+                    </td>
+                    <td>
+                      ${crit.geral_status ? `
+                        <span class="status-tag ${crit.geral_status === 'conforme' ? 'tag-ok' : 'tag-ajuste'}" style="font-size:0.72rem;">
+                          ${crit.geral_status === 'conforme' ? '✔️ Conforme' : '⚠️ Revisar'}
+                        </span>
+                        <div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.25rem;">
+                          ${crit.geral_verbo ? '✓ Verbo ' : ''}${crit.geral_produto ? '✓ Produto ' : ''}${crit.geral_publico ? '✓ Público ' : ''}${crit.geral_proposito ? '✓ Propósito' : ''}
+                        </div>
+                      ` : '<span style="font-size:0.75rem;color:var(--text-dim);">Não avaliado</span>'}
+                    </td>
+                    <td>
+                      <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
+                        <span class="pi2-deg-badge ${crit.esp1_status || 'ausente'}" title="D1: Exploração e Referenciais (${esc(crit.esp1_obs || 'Sem obs')})">
+                          D1: ${crit.esp1_status === 'conforme' ? '✔️' : (crit.esp1_status === 'ajustar' ? '⚠️' : '❌')}
+                        </span>
+                        <span class="pi2-deg-badge ${crit.esp2_status || 'ausente'}" title="D2: Modelagem, WBS e Wireframe (${esc(crit.esp2_obs || 'Sem obs')})">
+                          D2: ${crit.esp2_status === 'conforme' ? '✔️' : (crit.esp2_status === 'ajustar' ? '⚠️' : '❌')}
+                        </span>
+                        <span class="pi2-deg-badge ${crit.esp3_status || 'ausente'}" title="D3: Implementação Web e GitHub (${esc(crit.esp3_obs || 'Sem obs')})">
+                          D3: ${crit.esp3_status === 'conforme' ? '✔️' : (crit.esp3_status === 'ajustar' ? '⚠️' : '❌')}
+                        </span>
+                        <span class="pi2-deg-badge ${crit.esp4_status || 'ausente'}" title="D4: Validação e Testes (${esc(crit.esp4_obs || 'Sem obs')})">
+                          D4: ${crit.esp4_status === 'conforme' ? '✔️' : (crit.esp4_status === 'ajustar' ? '⚠️' : '❌')}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="status-tag ${statusClass}" style="font-size:0.72rem;">
+                        ${statusLabel}
+                      </span>
+                    </td>
+                    <td style="text-align:center;">
+                      <span class="pi2-nota-val ${notaClass}">
+                        ${notaTxt}
+                      </span>
+                    </td>
+                    <td>
+                      <div style="font-size:0.78rem;color:var(--text-muted);max-width:280px;line-height:1.35;" title="${esc(a && a.parecer ? a.parecer : '')}">
+                        ${a && a.parecer ? esc(a.parecer.length > 80 ? a.parecer.substring(0, 80) + '...' : a.parecer) : '<span style="color:var(--text-dim);">Nenhum parecer emitido</span>'}
+                      </div>
+                    </td>
+                    <td style="text-align:right;">
+                      <div style="display:flex;gap:0.35rem;justify-content:flex-end;">
+                        ${isDocente ? `
+                          <button class="btn-action" onclick="PI2.abrirModalAvaliarObjetivos(${p.id})" style="background:var(--accent-amber);color:#fff;font-size:0.72rem;padding:0.3rem 0.55rem;" title="Avaliar ou editar nota do Projeto #${p.id}">
+                            <i class="fa-solid fa-pen-to-square"></i> Avaliar
+                          </button>
+                        ` : ''}
+                        <button class="btn-detail" onclick="openModal(${p.id})" style="font-size:0.72rem;padding:0.3rem 0.55rem;" title="Abrir ficha do Projeto #${p.id}">
+                          <i class="fa-solid fa-eye"></i> Ficha
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    `;
+  }
+
+  function filtrarTabelaNotas() {
+    var search = ($('#pi2-notas-search') ? $('#pi2-notas-search').value : '').toLowerCase().trim();
+    var rows = $$('.pi2-nota-row');
+    rows.forEach(function (row) {
+      var nome = row.getAttribute('data-nome') || '';
+      var intg = row.getAttribute('data-integrantes') || '';
+      var id = row.getAttribute('data-id') || '';
+      var match = !search || nome.includes(search) || intg.includes(search) || id === search;
+      var curHidden = row.getAttribute('data-status-hidden') === 'true';
+      if (!match || curHidden) {
+        row.style.display = 'none';
+      } else {
+        row.style.display = '';
+      }
+    });
+  }
+
+  function filtrarNotasPorStatus(status) {
+    ['todos', 'aprovado', 'ajustar', 'pendente'].forEach(function (s) {
+      var btn = $('#pi2-filter-btn-' + s);
+      if (btn) {
+        if (s === status) btn.classList.add('active-filter');
+        else btn.classList.remove('active-filter');
+      }
+    });
+
+    var rows = $$('.pi2-nota-row');
+    rows.forEach(function (row) {
+      var rowStatus = row.getAttribute('data-status');
+      if (status === 'todos' || rowStatus === status) {
+        row.removeAttribute('data-status-hidden');
+      } else {
+        row.setAttribute('data-status-hidden', 'true');
+      }
+    });
+    filtrarTabelaNotas();
+  }
+
+  function abrirModalAvaliarObjetivos(projId) {
+    if (!ehDocente()) {
+      aviso('Apenas docentes podem realizar avaliações formais dos projetos.', 'warning');
+      return;
+    }
+
+    var proj = projetoBruto(projId);
+    if (!proj) {
+      aviso('Projeto #' + projId + ' não encontrado.', 'warning');
+      return;
+    }
+
+    var aval = (PI2.avaliacoes || []).find(function (a) {
+      return Number(a.projeto) === Number(projId) && (a.tipo === 'objetivos' || !a.tipo);
+    });
+
+    var crit = (aval && aval.criterios) ? aval.criterios : {};
+    var notaAtual = aval ? (aval.nota || '') : '';
+    var statusAtual = aval ? (aval.status || 'aprovado') : 'aprovado';
+    var parecerAtual = aval ? (aval.parecer || '') : '';
+
+    var textoObjetivo = valorAtual(proj, 'objective') || proj.objective || 'Nenhum objetivo registrado até o momento.';
+
+    var html = `
+      <div style="margin-bottom:1.25rem;">
+        <span class="proj-id-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-amber);font-weight:700;">
+          <i class="fa-solid fa-clipboard-check"></i> RUBRICA PEDAGÓGICA — AVALIAÇÃO DE OBJETIVOS
+        </span>
+        <h2 style="font-size:1.35rem;font-weight:700;margin-top:0.4rem;color:var(--text-main);">
+          #${proj.id} ${esc(proj.title)}
+        </h2>
+        <div style="color:var(--accent-cyan);font-size:0.85rem;"><i class="fa-solid fa-users"></i> ${esc(proj.team)}</div>
+      </div>
+
+      <!-- Texto cadastrado pelos estudantes -->
+      <div class="pi2-obj-preview-box">
+        <div class="pi2-obj-preview-title">
+          <i class="fa-solid fa-file-lines"></i> Redação Atual dos Objetivos (Cadastrada pela Equipe)
+        </div>
+        <div class="pi2-obj-preview-text">${esc(textoObjetivo)}</div>
+      </div>
+
+      <form id="pi2-form-avaliar-objetivos" class="pi2-modal-form">
+        <!-- BLOCO 1: OBJETIVO GERAL -->
+        <div class="pi2-rubrica-section">
+          <div class="pi2-rubrica-header">
+            <h3><i class="fa-solid fa-bullseye" style="color:var(--accent-cyan);"></i> 1. Objetivo Geral (A Grande Meta)</h3>
+            <select id="pi2-eval-geral-status" class="pi2-status-select" style="font-weight:700;">
+              <option value="conforme" ${crit.geral_status === 'conforme' ? 'selected' : ''}>✔️ Conforme / Aprovado</option>
+              <option value="ajustar" ${crit.geral_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+              <option value="ausente" ${crit.geral_status === 'ausente' ? 'selected' : ''}>❌ Não Elaborado / Ausente</option>
+            </select>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem;">
+            Fórmula Roteiro 1: <code>[Verbo de Ação] + [O que será criado] + [Público/Contexto] + [Propósito/Benefício]</code>
+          </p>
+          <div class="pi2-checklist-grid">
+            <label class="pi2-check-item">
+              <input type="checkbox" id="crit-geral-verbo" ${crit.geral_verbo ? 'checked' : ''} />
+              <span><strong>Verbo no Infinitivo:</strong> Inicia com verbo de ação técnica (Desenvolver, Criar, Implementar...)</span>
+            </label>
+            <label class="pi2-check-item">
+              <input type="checkbox" id="crit-geral-produto" ${crit.geral_produto ? 'checked' : ''} />
+              <span><strong>Entregável:</strong> Define claramente o produto de software tangível</span>
+            </label>
+            <label class="pi2-check-item">
+              <input type="checkbox" id="crit-geral-publico" ${crit.geral_publico ? 'checked' : ''} />
+              <span><strong>Público/Contexto:</strong> Delimita para quem e em qual ambiente se aplica</span>
+            </label>
+            <label class="pi2-check-item">
+              <input type="checkbox" id="crit-geral-proposito" ${crit.geral_proposito ? 'checked' : ''} />
+              <span><strong>Propósito & Impacto:</strong> Deixa claro qual problema real ou necessidade resolve</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- BLOCO 2: OBJETIVOS ESPECÍFICOS (OS 4 DEGRAUS METODOLÓGICOS) -->
+        <div class="pi2-rubrica-section">
+          <div class="pi2-rubrica-header">
+            <h3><i class="fa-solid fa-stairs" style="color:var(--ifsc-green-light);"></i> 2. Objetivos Específicos (4 Degraus Metodológicos)</h3>
+            <span style="font-size:0.75rem;color:var(--text-dim);">Avalie um a um conforme o Roteiro</span>
+          </div>
+          <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);padding:0.5rem 0.75rem;border-radius:6px;font-size:0.75rem;color:var(--ifsc-red);margin-bottom:0.85rem;">
+            <i class="fa-solid fa-triangle-exclamation"></i> <strong>Regra Anti-Estudo Passivo:</strong> Vetar tarefas rotineiras ("estudar JS", "ler artigos") ou administrativas ("criar grupo"). Devem ser entregas técnicas tangíveis!
+          </div>
+
+          <div class="pi2-degraus-container">
+            <!-- Degrau 1 -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.4rem;">DEGRAU 1</span>
+                  <span>Requisitos, Diagnóstico & Trabalhos Relacionados</span>
+                </div>
+                <select id="crit-esp1-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.esp1_status === 'conforme' ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.esp1_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.esp1_status === 'ausente' ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <div class="pi2-degrau-desc">Verbos: <em>Mapear, Identificar, Levantar, Investigar necessidades e analisar o estado da arte.</em></div>
+              <input type="text" id="crit-esp1-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp1_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+
+            <!-- Degrau 2 -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.4rem;">DEGRAU 2</span>
+                  <span>Modelagem & Design (Diagramas / Wireframes)</span>
+                </div>
+                <select id="crit-esp2-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.esp2_status === 'conforme' ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.esp2_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.esp2_status === 'ausente' ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <div class="pi2-degrau-desc">Verbos: <em>Modelar arquitetura no Canva/Draw.io, Prototipar wireframes de interface e fluxos.</em></div>
+              <input type="text" id="crit-esp2-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp2_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+
+            <!-- Degrau 3 -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.4rem;">DEGRAU 3</span>
+                  <span>Implementação & Código (GitHub / Software)</span>
+                </div>
+                <select id="crit-esp3-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.esp3_status === 'conforme' ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.esp3_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.esp3_status === 'ausente' ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <div class="pi2-degrau-desc">Verbos: <em>Desenvolver módulos de software, Versionar no Git/GitHub, Estruturar backend e frontend.</em></div>
+              <input type="text" id="crit-esp3-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp3_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+
+            <!-- Degrau 4 -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.4rem;">DEGRAU 4</span>
+                  <span>Validação & Testes Experimentais</span>
+                </div>
+                <select id="crit-esp4-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.esp4_status === 'conforme' ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.esp4_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.esp4_status === 'ausente' ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <div class="pi2-degrau-desc">Verbos: <em>Validar usabilidade com usuários, Executar bateria de testes controlados, Coletar métricas experimentais.</em></div>
+              <input type="text" id="crit-esp4-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp4_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOCO 3: NOTA CONSOLIDADA & PARECER ORIENTADOR -->
+        <div class="pi2-rubrica-section" style="background:var(--chip-bg);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;">
+            <div class="pi2-form-group">
+              <label>Nota Avaliativa (0,0 a 10,0) *</label>
+              <input type="text" id="pi2-eval-nota" required placeholder="Ex: 9.5" value="${esc(notaAtual)}" style="font-size:1.05rem;font-weight:700;" />
+            </div>
+            <div class="pi2-form-group">
+              <label>Parecer Geral de Conformidade *</label>
+              <select id="pi2-eval-status" required style="font-weight:700;">
+                <option value="aprovado" ${statusAtual === 'aprovado' ? 'selected' : ''}>🟢 Aprovado (Objetivos Conformados)</option>
+                <option value="ajustar" ${statusAtual === 'ajustar' ? 'selected' : ''}>🟡 Requer Ajustes (Revisar Redação)</option>
+                <option value="pendente" ${statusAtual === 'pendente' ? 'selected' : ''}>⚪ Em Elaboração / Pendente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pi2-form-group">
+            <label>Devolutiva Pedagógica & Parecer Docente (Visível aos Estudantes)</label>
+            <textarea id="pi2-eval-parecer" rows="3" placeholder="Aponte o que o grupo acertou e exatamente o que precisa ser ajustado nos objetivos antes do próximo checkpoint...">${esc(parecerAtual)}</textarea>
+            <span class="pi2-hint" style="font-size:0.75rem;color:var(--text-dim);">O grupo receberá este parecer de forma transparente no card do projeto.</span>
+          </div>
+        </div>
+
+        <div class="pi2-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="PI2.fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="background:var(--ifsc-green);color:#fff;" id="pi2-btn-submit-eval">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Avaliação dos Objetivos
+          </button>
+        </div>
+      </form>
+    `;
+
+    abrirModal(html, true);
+
+    var form = $('#pi2-form-avaliar-objetivos');
+    if (form) {
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        var btn = $('#pi2-btn-submit-eval');
+        btn.disabled = true;
+        btn.innerText = 'Salvando avaliação...';
+
+        var criteriosObj = {
+          geral_status: $('#pi2-eval-geral-status').value,
+          geral_verbo: $('#crit-geral-verbo').checked,
+          geral_produto: $('#crit-geral-produto').checked,
+          geral_publico: $('#crit-geral-publico').checked,
+          geral_proposito: $('#crit-geral-proposito').checked,
+          esp1_status: $('#crit-esp1-status').value,
+          esp1_obs: $('#crit-esp1-obs').value.trim(),
+          esp2_status: $('#crit-esp2-status').value,
+          esp2_obs: $('#crit-esp2-obs').value.trim(),
+          esp3_status: $('#crit-esp3-status').value,
+          esp3_obs: $('#crit-esp3-obs').value.trim(),
+          esp4_status: $('#crit-esp4-status').value,
+          esp4_obs: $('#crit-esp4-obs').value.trim()
+        };
+
+        var payload = {
+          projeto: projId,
+          tipo: 'objetivos',
+          nota: $('#pi2-eval-nota').value.trim(),
+          status: $('#pi2-eval-status').value,
+          criterios: criteriosObj,
+          parecer: $('#pi2-eval-parecer').value.trim()
+        };
+
+        api('salvarAvaliacao', payload).then(function (res) {
+          var idx = (PI2.avaliacoes || []).findIndex(function (a) { return Number(a.projeto) === Number(projId) && (a.tipo === 'objetivos' || !a.tipo); });
+          var itemSalvo = {
+            id: res.id || ('AV-' + projId + '-OBJETIVOS'),
+            projeto: projId,
+            tipo: 'objetivos',
+            nota: payload.nota,
+            status: payload.status,
+            criterios: criteriosObj,
+            parecer: payload.parecer,
+            avaliador: (PI2.usuario && (PI2.usuario.nome || PI2.usuario.email)) || 'Docente'
+          };
+          if (idx >= 0) {
+            PI2.avaliacoes[idx] = Object.assign(PI2.avaliacoes[idx], itemSalvo);
+          } else {
+            PI2.avaliacoes.push(itemSalvo);
+          }
+
+          aviso('Avaliação dos objetivos salva com sucesso!');
+          fecharModal();
+          renderNotasTab();
+          redesenhar();
+        }).catch(function (err) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Avaliação dos Objetivos';
+          aviso('Erro ao salvar avaliação: ' + (err.message || err), 'warning');
+        });
+      };
+    }
+  }
+
+  // ============================ GESTÃO DE DEMANDAS / CHECKPOINTS ============================
+
+  function abrirModalCriarDemanda(projPredefinido) {
+    if (!PI2.usuario) return abrirLogin(function () { abrirModalCriarDemanda(projPredefinido); });
+    if (!ehDocente()) {
+      aviso('Apenas docentes podem criar demandas para os projetos.', 'warning');
+      return;
+    }
+
+    var projAlvo = projPredefinido != null ? String(projPredefinido) : '*';
+
+    var html = `
+      <div style="margin-bottom:1.25rem;">
+        <span class="proj-id-badge" style="background:rgba(59,130,246,0.15);color:var(--accent-blue);font-weight:700;">
+          <i class="fa-solid fa-bullhorn"></i> ORIENTAÇÃO DOCENTE — PI-2
+        </span>
+        <h2 style="font-size:1.35rem;font-weight:700;margin-top:0.4rem;color:var(--text-main);">Criar Nova Demanda / Checkpoint</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem;">Defina metas específicas por projeto ou dispare para todos os 11 grupos simultaneamente.</p>
+      </div>
+      <form id="pi2-form-criar-demanda" class="pi2-modal-form">
+        <div class="pi2-form-group">
+          <label>Escopo da Demanda (Alvo) *</label>
+          <select id="pi2-dem-projeto" required>
+            <option value="*" ${projAlvo === '*' ? 'selected' : ''}>📣 TODOS OS PROJETOS (Broadcast Geral)</option>
+            ${[1,2,3,4,5,6,7,8,9,10,11].map(function(num) {
+              return `<option value="${num}" ${String(projAlvo) === String(num) ? 'selected' : ''}>Projeto #${doisDigitos(num)}</option>`;
+            }).join('')}
+          </select>
+        </div>
+        <div class="pi2-form-group">
+          <label>Título da Demanda / Meta *</label>
+          <input type="text" id="pi2-dem-titulo" required placeholder="Ex: Entrega do Artigo Preliminar no Overleaf (Seção de Resultados)" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div class="pi2-form-group">
+            <label>Data Limite / Prazo Sugerido</label>
+            <input type="date" id="pi2-dem-prazo" />
+          </div>
+          <div class="pi2-form-group">
+            <label>Pontos / Peso Avaliativo</label>
+            <input type="text" id="pi2-dem-pontos" placeholder="Ex: 10,0 pts ou Peso 2" />
+          </div>
+        </div>
+        <div class="pi2-form-group">
+          <label>Critérios de Aceite & Rubrica Avaliada</label>
+          <textarea id="pi2-dem-criterios" rows="2" placeholder="Ex: 1. Redação no template SBC; 2. Figura com 4 passos de discussão; 3. Sem links privados..."></textarea>
+        </div>
+        <div class="pi2-form-group">
+          <label>Orientações Gerais</label>
+          <textarea id="pi2-dem-desc" rows="3" placeholder="Descreva os requisitos para conclusão desta meta..."></textarea>
+          <span class="pi2-hint" style="font-size:0.75rem;color:var(--text-dim);">Os estudantes cadastrados no escopo receberão uma notificação por e-mail.</span>
+        </div>
+        <div class="pi2-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="PI2.fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="background:var(--accent-blue);color:#fff;" id="pi2-btn-submit-dem">
+            <i class="fa-solid fa-paper-plane"></i> Publicar & Notificar
+          </button>
+        </div>
+      </form>
+    `;
+
+    abrirModal(html, true);
+
+    var form = $('#pi2-form-criar-demanda');
+    if (form) {
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        var btn = $('#pi2-btn-submit-dem');
+        btn.disabled = true;
+        btn.innerText = 'Disparando demanda...';
+
+        var payload = {
+          projeto: $('#pi2-dem-projeto').value,
+          titulo: $('#pi2-dem-titulo').value.trim(),
+          prazo: $('#pi2-dem-prazo').value,
+          pontos: ($('#pi2-dem-pontos') ? $('#pi2-dem-pontos').value.trim() : ''),
+          criterios: ($('#pi2-dem-criterios') ? $('#pi2-dem-criterios').value.trim() : ''),
+          descricao: $('#pi2-dem-desc').value.trim()
+        };
+
+        api('criarDemanda', payload).then(function (res) {
+          var novaDem = {
+            id: res.id || ('D' + Date.now().toString(36).toUpperCase()),
+            data: new Date().toISOString(),
+            projeto: payload.projeto,
+            titulo: payload.titulo,
+            descricao: payload.descricao,
+            prazo: payload.prazo,
+            criadoPor: (PI2.usuario && (PI2.usuario.nome || PI2.usuario.email)) || 'Docente',
+            status: 'pendente',
+            concluidaEm: '',
+            evidencia: '',
+            concluidaPor: '',
+            pontos: payload.pontos,
+            criterios: payload.criterios
+          };
+          PI2.demandas.unshift(novaDem);
+          aviso('Demanda criada com sucesso!');
+          fecharModal();
+          renderDemandasTab();
+          redesenhar();
+        }).catch(function (err) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar & Notificar';
+          aviso('Erro ao criar demanda: ' + (err.message || err), 'warning');
+        });
+      };
+    }
+  }
+
+  function concluirDemanda(demandaId) {
+    if (!PI2.usuario) return abrirLogin(function () { concluirDemanda(demandaId); });
+
+    var d = (PI2.demandas || []).find(function (item) { return item.id === demandaId; });
+    if (!d) return aviso('Demanda não encontrada.', 'warning');
+
+    if (!ehDocente() && !podeEditar(d.projeto)) {
+      return aviso('Você não tem permissão para concluir demandas deste projeto.', 'warning');
+    }
+
+    var texto = prompt('Informe uma breve justificativa ou link de evidência da conclusão:');
+    if (texto === null) return;
+
+    api('concluirDemanda', { demandaId: demandaId, texto: texto, evidencia: texto }).then(function () {
+      d.status = 'concluida';
+      d.concluidaEm = new Date().toISOString();
+      d.concluidaPor = (PI2.usuario && (PI2.usuario.nome || PI2.usuario.email)) || 'Estudante';
+      d.evidencia = texto;
+      aviso('Demanda marcada como concluída!');
+      renderDemandasTab();
+      redesenhar();
+    }).catch(function (err) {
+      aviso('Erro ao concluir demanda: ' + (err.message || err), 'warning');
+    });
+  }
+
+  function removerDemanda(demandaId) {
+    if (!ehDocente()) return;
+    if (!confirm('Deseja realmente remover esta demanda?')) return;
+
+    api('removerDemanda', { demandaId: demandaId }).then(function () {
+      PI2.demandas = (PI2.demandas || []).filter(function (d) { return d.id !== demandaId; });
+      aviso('Demanda removida.');
+      renderDemandasTab();
+      redesenhar();
+    }).catch(function (err) {
+      aviso('Erro ao remover demanda: ' + (err.message || err), 'warning');
+    });
+  }
+
+  function renderDemandasTab() {
+    var container = document.getElementById('tab-demandas');
+    if (!container) return;
+    PI2._demandasRenderizado = true;
+
+    var demandas = PI2.demandas || [];
+    var isDocente = ehDocente();
+
+    if (demandas.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 3.5rem 1rem; background: var(--bg-card); border-radius: var(--radius-lg, 12px); border: 1px solid var(--border-color); color: var(--text-muted); margin-top: 1rem;">
+          <i class="fa-solid fa-list-check" style="font-size: 2.5rem; margin-bottom: 0.75rem; color: var(--text-dim, var(--text-muted));"></i>
+          <h3 style="color:var(--text-main);font-size:1.15rem;margin-bottom:0.35rem;">Nenhuma Demanda Ativa no Momento</h3>
+          <p style="font-size:0.88rem;max-width:480px;margin:0 auto 1.25rem;">Os professores orientadores podem criar demandas e checkpoints para guiar as entregas e experimentos dos 11 grupos.</p>
+          <button class="btn btn-primary" onclick="PI2.abrirModalCriarDemanda('*')" style="background:var(--accent-blue);color:#fff;display:inline-flex;align-items:center;gap:0.4rem;">
+            <i class="fa-solid fa-bullhorn"></i> Criar Demanda / Broadcast
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    var pendentes = demandas.filter(function (d) { return d.status !== 'concluida'; });
+    var concluidas = demandas.filter(function (d) { return d.status === 'concluida'; });
+
+    container.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h3 style="font-size:1.35rem;font-weight:700;color:var(--text-main);margin-bottom:0.25rem;">
+            <i class="fa-solid fa-list-check" style="color:var(--accent-blue);"></i> Demandas & Checkpoints da Turma
+          </h3>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            Acompanhamento de metas direcionadas pelos orientadores (${pendentes.length} pendente${pendentes.length !== 1 ? 's' : ''}, ${concluidas.length} concluída${concluidas.length !== 1 ? 's' : ''}).
+          </p>
+        </div>
+        <button class="btn btn-primary" onclick="PI2.abrirModalCriarDemanda('*')" style="background:var(--accent-blue);color:#fff;display:inline-flex;align-items:center;gap:0.4rem;">
+          <i class="fa-solid fa-bullhorn"></i> Nova Demanda / Broadcast
+        </button>
+      </div>
+
+      <div class="pi2-demandas-grid">
+        ${demandas.map(function(d) {
+          var isBroadcast = d.projeto === '*';
+          var isDone = d.status === 'concluida';
+          var podeConcluir = PI2.usuario && (isDocente || podeEditar(d.projeto));
+
+          return `
+            <div class="pi2-demanda-card ${isDone ? 'concluida' : ''}">
+              <div>
+                <div class="pi2-demanda-header">
+                  <div style="display:flex;gap:0.35rem;align-items:center;flex-wrap:wrap;">
+                    <span class="${isBroadcast ? 'pi2-badge-broadcast' : 'pi2-badge-projeto'}">
+                      ${isBroadcast ? '<i class="fa-solid fa-bullhorn"></i> Geral (Turma)' : 'Projeto #' + doisDigitos(d.projeto)}
+                    </span>
+                    ${d.pontos ? `<span class="proj-id-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;font-size:0.68rem;border:1px solid rgba(245,158,11,0.3);"><i class="fa-solid fa-star"></i> ${esc(d.pontos)}</span>` : ''}
+                  </div>
+                  <span class="status-tag ${isDone ? 'tag-ok' : 'tag-pendente'}">
+                    ${isDone ? '<i class="fa-solid fa-check"></i> Concluída' : '<i class="fa-solid fa-clock"></i> Pendente'}
+                  </span>
+                </div>
+                <h4 class="pi2-demanda-title">${esc(d.titulo)}</h4>
+                <p class="pi2-demanda-desc">${esc(d.descricao || 'Sem descrição adicional.')}</p>
+                ${d.criterios ? `
+                  <div style="background:var(--chip-bg);border:1px solid var(--border-color);border-radius:6px;padding:0.45rem 0.65rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);">
+                    <strong style="color:var(--accent-blue);"><i class="fa-solid fa-list-check"></i> Critérios / Rubrica:</strong> ${esc(d.criterios)}
+                  </div>
+                ` : ''}
+              </div>
+
+              <div>
+                <div class="pi2-demanda-meta">
+                  <span class="pi2-demanda-prazo">
+                    <i class="fa-solid fa-calendar-day"></i> ${d.prazo ? ('Prazo: ' + esc(d.prazo)) : 'Sem data limite'}
+                  </span>
+                  <span style="font-size:0.75rem;">Por: ${esc(d.criadoPor)}</span>
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;gap:0.4rem;margin-top:0.75rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">
+                  ${(!isDone && podeConcluir) ? `
+                    <button class="btn btn-outline" onclick="PI2.concluirDemanda('${esc(d.id)}')" style="color:var(--ifsc-green);border-color:rgba(34,197,94,0.3);font-size:0.75rem;padding:0.25rem 0.6rem;">
+                      <i class="fa-solid fa-check-double"></i> Concluir
+                    </button>
+                  ` : ''}
+                  ${isDocente ? `
+                    <button class="btn btn-outline" onclick="PI2.removerDemanda('${esc(d.id)}')" style="color:var(--ifsc-red);border-color:rgba(239,68,68,0.3);font-size:0.75rem;padding:0.25rem 0.6rem;" title="Excluir demanda">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // ------------------------------------------------------------------
   // Partida
   // ------------------------------------------------------------------
   // Utilitários compartilhados com os outros módulos (pi2-notas.js).
   PI2.interno = { esc: esc, urlSegura: urlSegura, $: $, $$: $$, api: api, aviso: aviso, abrirModal: abrirModal, fecharModal: fecharModal,
     cabecalho: cabecalho, aoEnviar: aoEnviar, ehDocente: ehDocente, doisDigitos: doisDigitos, dataBr: dataBr, haQuanto: haQuanto,
-    projetoBruto: projetoBruto, registrosDo: registrosDo, pendente: pendente };
+    projetoBruto: projetoBruto, registrosDo: registrosDo, pendente: pendente,
+    renderNotasTab: renderNotasTab, abrirModalAvaliarObjetivos: abrirModalAvaliarObjetivos,
+    filtrarTabelaNotas: filtrarTabelaNotas, filtrarNotasPorStatus: filtrarNotasPorStatus,
+    renderDemandasTab: renderDemandasTab, abrirModalCriarDemanda: abrirModalCriarDemanda,
+    concluirDemanda: concluirDemanda, removerDemanda: removerDemanda };
+
+  PI2.renderNotasTab = renderNotasTab;
+  PI2.abrirModalAvaliarObjetivos = abrirModalAvaliarObjetivos;
+  PI2.filtrarTabelaNotas = filtrarTabelaNotas;
+  PI2.filtrarNotasPorStatus = filtrarNotasPorStatus;
+  PI2.renderDemandasTab = renderDemandasTab;
+  PI2.abrirModalCriarDemanda = abrirModalCriarDemanda;
+  PI2.concluirDemanda = concluirDemanda;
+  PI2.removerDemanda = removerDemanda;
+  PI2.fecharModal = fecharModal;
 
   // 1) Escapa imediatamente a cópia salva no HTML, antes do primeiro desenho.
   PI2.bruto = JSON.parse(JSON.stringify(projectsData));
   reescapar();
 
-  // 2) Acrescenta os complementos a cada redesenho feito pelo código original.
+  // 2) Restaura imediatamente a sessão salva se ainda for válida (evita piscar como desconectado).
+  var sessaoSalva = lerSessaoGuardada();
+  if (loginConfigurado() && sessaoSalva.token) {
+    var pSalvo = lerToken(sessaoSalva.token);
+    if (pSalvo && pSalvo.exp * 1000 > Date.now() + 15000) {
+      PI2.token = sessaoSalva.token;
+      PI2.perfil = pSalvo;
+      if (sessaoSalva.usuario) PI2.usuario = sessaoSalva.usuario;
+      agendarRenovacao(pSalvo);
+    }
+  }
+
+  // 3) Acrescenta os complementos a cada redesenho feito pelo código original.
   var desenharOriginal = window.renderProjects;
   window.renderProjects = function () { desenharOriginal(); complementarCards(); };
   var abrirOriginal = window.openModal;
@@ -988,10 +2001,27 @@ function linhasParaProjetos(linhas) {
     desenharRaioX();
     atualizarContadores();
     carregarGoogle();
-    var salvo = null;
-    try { salvo = sessionStorage.getItem('pi2-token'); } catch (e) { /* armazenamento indisponível */ }
-    var perfil = salvo && lerToken(salvo);
-    var retomar = loginConfigurado() && perfil && perfil.exp * 1000 > Date.now() + 60000;
-    carregar(true).then(function () { if (retomar) PI2._entrarComToken(salvo, true); });
+    if ($('#tab-notas') && $('#tab-notas').classList.contains('active')) {
+      renderNotasTab();
+    }
+    if ($('#tab-demandas') && $('#tab-demandas').classList.contains('active')) {
+      renderDemandasTab();
+    }
+    if (tokenValido()) {
+      api('whoami').then(function (d) {
+        if (d.usuario) {
+          PI2.usuario = d.usuario;
+          guardarSessao(PI2.token, d.usuario);
+          desenharAuth();
+          redesenhar();
+        }
+      }).catch(function (e) {
+        var msg = String(e && e.message || '');
+        if (msg.indexOf('expir') >= 0 || msg.indexOf('inválid') >= 0) {
+          sair(true);
+        }
+      });
+    }
+    carregar(true);
   });
 })();

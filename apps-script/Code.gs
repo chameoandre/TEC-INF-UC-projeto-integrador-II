@@ -33,7 +33,8 @@ var CONFIG = {
   MAX_TEXTO: 1500,
   MAX_CAMPO: 600,
   MAX_ENVIOS_POR_HORA: 12,
-  AVANCOS_NA_PLANILHA: 6   // quantos registros recentes espelhar na coluna AVANÇOS
+  AVANCOS_NA_PLANILHA: 6,  // quantos registros recentes espelhar na coluna AVANÇOS
+  NOTIFICAR_EMAIL: true    // Ativar envio de e-mails em novas demandas
 };
 
 // Colunas da aba Visao-geral (1 = A).
@@ -53,6 +54,8 @@ var CAB_MEMBROS = ['email', 'nome', 'projetos', 'papel', 'status', 'solicitado_e
 var CAB_REGISTROS = ['id', 'data', 'projeto', 'email', 'autor', 'tipo', 'texto', 'evidencia', 'experimento',
   'proximos_passos', 'dificuldades', 'oculto', 'devolutiva', 'devolutiva_autor', 'devolutiva_data'];
 var CAB_ALTERACOES = ['data', 'projeto', 'email', 'autor', 'campo', 'valor_anterior', 'valor_novo'];
+var CAB_AVALIACOES = ['id', 'atualizado_em', 'projeto', 'tipo', 'nota', 'status', 'criterios', 'parecer', 'avaliador'];
+var CAB_DEMANDAS = ['id', 'data', 'projeto', 'titulo', 'descricao', 'prazo', 'criado_por', 'status', 'concluida_em', 'evidencia', 'concluida_por', 'pontos', 'criterios'];
 
 // ============================ INSTALAÇÃO ============================
 
@@ -71,6 +74,8 @@ function instalar() {
   var membros = garantirAba_(ss, 'membros', CAB_MEMBROS);
   garantirAba_(ss, 'registros', CAB_REGISTROS);
   garantirAba_(ss, 'alteracoes', CAB_ALTERACOES);
+  garantirAba_(ss, 'avaliacoes', CAB_AVALIACOES);
+  garantirAba_(ss, 'demandas', CAB_DEMANDAS);
   var padrao = ss.getSheetByName('Sheet1') || ss.getSheetByName('Página1') || ss.getSheetByName('Planilha1');
   if (padrao && ss.getSheets().length > 1) ss.deleteSheet(padrao);
 
@@ -146,7 +151,12 @@ function doPost(e) {
       abrirPares: abrirPares_,
       salvarRegra: salvarRegra_,
       avaliarParticipacao: avaliarParticipacao_,
-      minhasNotas: minhasNotas_
+      minhasNotas: minhasNotas_,
+      salvarAvaliacao: salvarAvaliacao_,
+      avaliarObjetivos: salvarAvaliacao_,
+      criarDemanda: criarDemanda_,
+      concluirDemanda: concluirDemanda_,
+      removerDemanda: removerDemanda_
     };
     var fn = acoes[req.acao];
     if (!fn) throw new Error('Ação desconhecida.');
@@ -277,6 +287,9 @@ function registrar_(usuario, req) {
     aba.appendRow([id, new Date().toISOString(), projeto, usuario.email, seguro_(usuario.nome), tipo,
       seguro_(texto), evidencia, experimento || '', seguro_(proximos), seguro_(dificuldades), '', '', '', '']);
     espelharNaPlanilha_(projeto, proximos, dificuldades);
+    if (req.demandaId) {
+      concluirDemandaSilenciosa_(usuario, req.demandaId, texto, evidencia);
+    }
     return { id: id };
   });
 }
@@ -404,7 +417,254 @@ function dadosPublicos_() {
         devolutiva: r.devolutiva ? { texto: r.devolutiva, autor: nomeCurto_(r.devolutivaAutor), data: r.devolutivaData } : null };
     });
   }
-  return { ok: true, geradoEm: new Date().toISOString(), projetos: lidos.projetos, registros: registros, links: controleId_() ? linksPublicos_() : [] };
+  return {
+    ok: true,
+    geradoEm: new Date().toISOString(),
+    projetos: lidos.projetos,
+    registros: registros,
+    links: controleId_() ? linksPublicos_() : [],
+    avaliacoes: lerAvaliacoesPublicas_(),
+    demandas: controleId_() ? lerDemandasPublicas_() : []
+  };
+}
+
+// ============================ AVALIAÇÕES & RUBRICAS (ROTEIRO 1) ============================
+
+function salvarAvaliacao_(usuario, body) {
+  exigirDocente_(usuario);
+  var projId = Number(body.projeto || body.projetoId);
+  if (!projId || isNaN(projId)) throw new Error('Projeto inválido.');
+
+  var tipo = seguro_(texto_(body.tipo || 'objetivos', 50));
+  var nota = seguro_(texto_(String(body.nota != null ? body.nota : ''), 10));
+  var status = seguro_(texto_(body.status || 'pendente', 30));
+  var criterios = typeof body.criterios === 'object' ? JSON.stringify(body.criterios) : String(body.criterios || '{}');
+  var parecer = seguro_(texto_(body.parecer, CONFIG.MAX_TEXTO));
+  var avaliador = nomeCurto_(usuario.nome || usuario.email);
+  var agora = new Date().toISOString();
+  var id = 'AV-' + projId + '-' + tipo.toUpperCase();
+
+  var ss = controle_();
+  var aba = garantirAba_(ss, 'avaliacoes', CAB_AVALIACOES);
+  var dados = aba.getDataRange().getValues();
+  var linhaEncontrada = -1;
+
+  for (var i = 1; i < dados.length; i++) {
+    if (String(dados[i][0]) === id || (Number(dados[i][2]) === projId && String(dados[i][3]) === tipo)) {
+      linhaEncontrada = i + 1;
+      break;
+    }
+  }
+
+  var linha = [id, agora, projId, tipo, nota, status, criterios, parecer, avaliador];
+
+  if (linhaEncontrada > 1) {
+    aba.getRange(linhaEncontrada, 1, 1, CAB_AVALIACOES.length).setValues([linha]);
+  } else {
+    aba.appendRow(linha);
+  }
+
+  return { ok: true, id: id, projeto: projId, tipo: tipo, nota: nota, status: status };
+}
+
+function lerAvaliacoesPublicas_() {
+  if (!controleId_()) return [];
+  var ss = controle_();
+  var aba = ss.getSheetByName('avaliacoes');
+  if (!aba || aba.getLastRow() < 2) return [];
+
+  var dados = aba.getDataRange().getValues();
+  var list = [];
+  for (var i = 1; i < dados.length; i++) {
+    var rawCriterios = String(dados[i][6] || '{}');
+    var criteriosObj = {};
+    try {
+      criteriosObj = JSON.parse(rawCriterios);
+    } catch (e) {
+      criteriosObj = {};
+    }
+
+    list.push({
+      id: String(dados[i][0]),
+      atualizadoEm: String(dados[i][1]),
+      projeto: Number(dados[i][2]),
+      tipo: String(dados[i][3]),
+      nota: String(dados[i][4]),
+      status: String(dados[i][5]),
+      criterios: criteriosObj,
+      parecer: String(dados[i][7] || ''),
+      avaliador: String(dados[i][8] || '')
+    });
+  }
+  return list;
+}
+
+// ============================ GESTÃO DE DEMANDAS / CHECKPOINTS ============================
+
+function criarDemanda_(usuario, body) {
+  exigirDocente_(usuario);
+
+  var projeto = String(body.projeto || '*').trim(); // '*' = todos os projetos
+  var titulo = seguro_(body.titulo, 150);
+  var descricao = seguro_(body.descricao, CONFIG.MAX_TEXTO);
+  var prazo = seguro_(body.prazo, 30); // ex: '2026-10-25'
+  var pontos = seguro_(body.pontos, 30); // ex: '10,0' ou 'Peso 2'
+  var criterios = seguro_(body.criterios, CONFIG.MAX_TEXTO);
+
+  if (!titulo) throw new Error('Informe o título da demanda.');
+
+  var id = 'D' + Date.now().toString(36).toUpperCase();
+  var agora = new Date().toISOString();
+  var autor = nomeCurto_(usuario.nome) || usuario.email;
+
+  var ss = controle_();
+  var aba = garantirAba_(ss, 'demandas', CAB_DEMANDAS);
+  aba.appendRow([id, agora, projeto, titulo, descricao, prazo, autor, 'pendente', '', '', '', pontos, criterios]);
+
+  // Disparar e-mails para os estudantes
+  if (CONFIG.NOTIFICAR_EMAIL) {
+    enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor);
+  }
+
+  return { ok: true, id: id };
+}
+
+function concluirDemanda_(usuario, body) {
+  var demandaId = String(body.demandaId || '').trim();
+  if (!demandaId) throw new Error('Demanda não informada.');
+
+  var ss = controle_();
+  var aba = garantirAba_(ss, 'demandas', CAB_DEMANDAS);
+  var dados = aba.getDataRange().getValues();
+  var achou = false;
+
+  for (var i = 1; i < dados.length; i++) {
+    if (String(dados[i][0]) === demandaId) {
+      var projDemanda = String(dados[i][2]);
+      if (usuario.papel !== 'docente' && !podeEditar_(usuario, projDemanda)) {
+        throw new Error('Você não tem permissão para concluir demandas deste projeto.');
+      }
+      var agora = new Date().toISOString();
+      var autor = nomeCurto_(usuario.nome) || usuario.email;
+      var evidencia = url_(body.evidencia, 'Evidência') || seguro_(body.texto, 300);
+
+      aba.getRange(i + 1, 8).setValue('concluida');
+      aba.getRange(i + 1, 9).setValue(agora);
+      aba.getRange(i + 1, 10).setValue(evidencia);
+      aba.getRange(i + 1, 11).setValue(autor);
+      achou = true;
+      break;
+    }
+  }
+
+  if (!achou) throw new Error('Demanda não encontrada.');
+  return { ok: true, demandaId: demandaId };
+}
+
+function concluirDemandaSilenciosa_(usuario, demandaId, texto, evidencia) {
+  try {
+    var ss = controle_();
+    var aba = ss.getSheetByName('demandas');
+    if (!aba) return;
+    var dados = aba.getDataRange().getValues();
+    for (var i = 1; i < dados.length; i++) {
+      if (String(dados[i][0]) === String(demandaId)) {
+        aba.getRange(i + 1, 8).setValue('concluida');
+        aba.getRange(i + 1, 9).setValue(new Date().toISOString());
+        aba.getRange(i + 1, 10).setValue(evidencia || texto);
+        aba.getRange(i + 1, 11).setValue(nomeCurto_(usuario.nome) || usuario.email);
+        break;
+      }
+    }
+  } catch (e) {
+    Logger.log('Erro ao concluir demanda silenciosa: ' + e);
+  }
+}
+
+function removerDemanda_(usuario, req) {
+  exigirDocente_(usuario);
+  var demandaId = String(req.demandaId || req.id || '').trim();
+  if (!demandaId) throw new Error('Demanda não informada.');
+  var ss = controle_();
+  var aba = ss.getSheetByName('demandas');
+  if (!aba) return { ok: true };
+  var dados = aba.getDataRange().getValues();
+  for (var i = 1; i < dados.length; i++) {
+    if (String(dados[i][0]) === String(demandaId)) {
+      aba.deleteRow(i + 1);
+      return { ok: true, removido: demandaId };
+    }
+  }
+  return { ok: true };
+}
+
+function lerDemandasPublicas_() {
+  var ss = controle_();
+  var aba = ss.getSheetByName('demandas');
+  if (!aba || aba.getLastRow() < 2) return [];
+  var dados = aba.getDataRange().getValues();
+  var list = [];
+  for (var i = 1; i < dados.length; i++) {
+    list.push({
+      id: String(dados[i][0]),
+      data: String(dados[i][1]),
+      projeto: String(dados[i][2]),
+      titulo: String(dados[i][3]),
+      descricao: String(dados[i][4]),
+      prazo: String(dados[i][5]),
+      criadoPor: String(dados[i][6]),
+      status: String(dados[i][7] || 'pendente'),
+      concluidaEm: String(dados[i][8] || ''),
+      evidencia: String(dados[i][9] || ''),
+      concluidaPor: String(dados[i][10] || ''),
+      pontos: String(dados[i][11] || ''),
+      criterios: String(dados[i][12] || '')
+    });
+  }
+  return list.reverse();
+}
+
+function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor) {
+  try {
+    var emailsDestino = [];
+    var ss = controle_();
+    var abaMembros = ss.getSheetByName('membros');
+    if (!abaMembros) return;
+    var membros = abaMembros.getDataRange().getValues();
+
+    for (var i = 1; i < membros.length; i++) {
+      var e = String(membros[i][0] || '').toLowerCase().trim();
+      var projs = String(membros[i][2] || '').split(',').map(function (s) { return s.trim(); });
+      var status = membros[i][4];
+      if (status === 'ativo' && e.indexOf('@') > 0) {
+        if (projeto === '*' || projs.indexOf(String(projeto)) >= 0 || projs.indexOf('*') >= 0) {
+          if (emailsDestino.indexOf(e) === -1) {
+            emailsDestino.push(e);
+          }
+        }
+      }
+    }
+
+    if (!emailsDestino.length) return;
+
+    var escopoTxt = projeto === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + projeto);
+    var assunto = '[PI-2] Nova Demanda Docente: ' + titulo + ' [' + escopoTxt + ']';
+    var corpo = 'Olá,\n\n' +
+      'A equipe docente de Projeto Integrador II (' + autor + ') registrou uma nova demanda/checkpoint para você:\n\n' +
+      '🎯 Título: ' + titulo + '\n' +
+      '📋 Escopo: ' + escopoTxt + '\n' +
+      (prazo ? ('📅 Prazo sugerido: ' + prazo + '\n') : '') +
+      (descricao ? ('\n📝 Detalhes e Orientações:\n' + descricao + '\n') : '') +
+      '\nPara acompanhar e marcar a entrega pelo dashboard:\n' +
+      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
+      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+
+    emailsDestino.forEach(function (to) {
+      GmailApp.sendEmail(to, assunto, corpo);
+    });
+  } catch (err) {
+    Logger.log('Erro ao enviar e-mail de demanda: ' + err);
+  }
 }
 
 function lerProjetos_() {
