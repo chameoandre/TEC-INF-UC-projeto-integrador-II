@@ -30,7 +30,7 @@ var CONFIG = {
   // ativo entra independentemente do domínio. Deixe [] para aceitar qualquer conta.
   DOMINIOS_PERMITIDOS: ['ifsc.edu.br', 'aluno.ifsc.edu.br'],
 
-  MAX_TEXTO: 1500,
+  MAX_TEXTO: 3000,
   MAX_CAMPO: 600,
   MAX_ENVIOS_POR_HORA: 12,
   AVANCOS_NA_PLANILHA: 6,  // quantos registros recentes espelhar na coluna AVANÇOS

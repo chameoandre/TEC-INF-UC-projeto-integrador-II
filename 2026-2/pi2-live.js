@@ -181,11 +181,86 @@ function linhasParaProjetos(linhas) {
     if (url.indexOf('/project/') >= 0) return 'privado';   // link interno: ninguém de fora abre
     return url.indexOf('/read/') >= 0 ? 'ok' : 'edicao';   // sem /read/ é link de edição: quem abre altera o artigo
   }
+  // ------------------------------------------------------------------
+  // Estrutura de Objetivos: Geral + 4 Degraus Metodológicos + Desdobramentos
+  // ------------------------------------------------------------------
+  function parseObjetivos(texto) {
+    var raw = String(texto || '').trim();
+    var res = {
+      geral: '',
+      d1: '',
+      d2: '',
+      d3: '',
+      d4: '',
+      extras: [] // [{ degrau: 'D1'|'D2'|'D3'|'D4', texto: '...' }]
+    };
+    if (!raw) return res;
+
+    if (/\[OBJETIVO GERAL\]/i.test(raw) || /\[OBJETIVOS ESPEC[ÍI]FICOS\]/i.test(raw) || /\[D[1-4]\]/i.test(raw)) {
+      var partes = raw.split(/\[OBJETIVOS ESPEC[ÍI]FICOS\]/i);
+      res.geral = partes[0].replace(/\[OBJETIVO GERAL\]/i, '').trim();
+
+      if (partes.length > 1) {
+        var linhas = partes[1].split(/\r?\n/);
+        linhas.forEach(function (linha) {
+          var m = linha.match(/^[-*•]?\s*\[(D[1-4])\]\s*(.*)$/i);
+          if (m) {
+            var deg = m[1].toUpperCase();
+            var cont = m[2].trim();
+            if (deg === 'D1' && !res.d1) res.d1 = cont;
+            else if (deg === 'D2' && !res.d2) res.d2 = cont;
+            else if (deg === 'D3' && !res.d3) res.d3 = cont;
+            else if (deg === 'D4' && !res.d4) res.d4 = cont;
+            else if (cont) {
+              res.extras.push({ degrau: deg, texto: cont });
+            }
+          }
+        });
+      }
+    } else {
+      res.geral = raw;
+    }
+    return res;
+  }
+
+  function serializarObjetivos(dados) {
+    var linhas = [];
+    linhas.push('[OBJETIVO GERAL]');
+    linhas.push(String(dados.geral || '').trim());
+    linhas.push('');
+    linhas.push('[OBJETIVOS ESPECÍFICOS]');
+    linhas.push('- [D1] ' + String(dados.d1 || '').trim());
+    linhas.push('- [D2] ' + String(dados.d2 || '').trim());
+    linhas.push('- [D3] ' + String(dados.d3 || '').trim());
+    linhas.push('- [D4] ' + String(dados.d4 || '').trim());
+    (dados.extras || []).forEach(function (ex) {
+      var tx = String(ex.texto || '').trim();
+      if (tx) {
+        linhas.push('- [' + String(ex.degrau || 'D1').toUpperCase() + '] ' + tx);
+      }
+    });
+    return linhas.join('\n');
+  }
+
+  PI2.parseObjetivos = parseObjetivos;
+  PI2.serializarObjetivos = serializarObjetivos;
+
   function reescapar() {
     // Recalcula aqui para valer também para dados vindos de um backend ou de uma cópia antiga.
-    PI2.bruto.forEach(function (p) { if (/overleaf\.com/.test(p.overleaf || '')) p.overleafStatus = statusOverleaf(p.overleaf); });
+    PI2.bruto.forEach(function (p) {
+      if (/overleaf\.com/.test(p.overleaf || '')) p.overleafStatus = statusOverleaf(p.overleaf);
+      p.objetivosParsed = parseObjetivos(p.objective);
+      p.objetivoGeral = p.objetivosParsed.geral;
+    });
     projectsData.length = 0;
-    PI2.bruto.forEach(function (p) { projectsData.push(escaparProjeto(p)); });
+    PI2.bruto.forEach(function (p) {
+      var ep = escaparProjeto(p);
+      if (p.objetivosParsed && p.objetivosParsed.geral) {
+        ep.objectiveOriginal = ep.objective;
+        ep.objective = esc(p.objetivosParsed.geral);
+      }
+      projectsData.push(ep);
+    });
   }
 
   function redesenhar() {
@@ -622,7 +697,6 @@ function linhasParaProjetos(linhas) {
   };
 
   var CAMPOS_FICHA = [
-    { k: 'objective', r: 'Objetivo', t: 'area' },
     { k: 'github', r: 'Repositório GitHub', t: 'url' },
     { k: 'relatorio', r: 'Artigo no Overleaf (link de leitura)', t: 'url', d: 'No Overleaf: Share → Turn on link sharing → copie o link “Anyone with this link can view”.' },
     { k: 'canva', r: 'Diagrama da arquitetura (Canva, Miro, Drive…)', t: 'url' },
@@ -671,15 +745,157 @@ function linhasParaProjetos(linhas) {
       return '<fieldset class="pi2-fieldset"><legend>Experimento ' + n + '</legend>' +
         bloco([{ k: 'exp' + n, r: 'Título / o que será testado', t: 'texto' }, { k: 'exp' + n + 'res', r: 'Resultados obtidos', t: 'area' }]) + '</fieldset>';
     }).join('');
+
+    var rawObj = String(valorAtual(p, 'objective') || p.objective || '').trim();
+    iniciais['objective'] = rawObj;
+    var parsedObj = parseObjetivos(rawObj);
+
+    function itemExtraHtml(degrau, texto, idx) {
+      return '<div class="pi2-obj-extra-item" data-extra-idx="' + idx + '" style="background:var(--chip-bg);border:1px dashed var(--accent-cyan);border-radius:6px;padding:0.65rem 0.8rem;display:flex;flex-direction:column;gap:0.4rem;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+          '<div style="display:flex;align-items:center;gap:0.5rem;">' +
+            '<span style="font-size:0.75rem;font-weight:700;color:var(--text-main);"><i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> Desdobramento de:</span>' +
+            '<select class="pi2-extra-degrau-select" style="font-size:0.78rem;padding:0.2rem 0.45rem;border-radius:4px;font-weight:700;">' +
+              '<option value="D1"' + (degrau === 'D1' ? ' selected' : '') + '>D1 (Diagnóstico/Requisitos)</option>' +
+              '<option value="D2"' + (degrau === 'D2' ? ' selected' : '') + '>D2 (Modelagem/Design)</option>' +
+              '<option value="D3"' + (degrau === 'D3' ? ' selected' : '') + '>D3 (Implementação/Código)</option>' +
+              '<option value="D4"' + (degrau === 'D4' ? ' selected' : '') + '>D4 (Validação/Testes)</option>' +
+            '</select>' +
+          '</div>' +
+          '<button type="button" class="pi2-btn-remover-extra" style="background:none;border:none;color:var(--ifsc-red,#ef4444);cursor:pointer;font-size:0.85rem;" title="Remover desdobramento">' +
+            '<i class="fa-solid fa-trash-can"></i>' +
+          '</button>' +
+        '</div>' +
+        '<textarea class="pi2-curto pi2-extra-texto" rows="2" maxlength="500" placeholder="Redação do objetivo específico adicional relacionado a este degrau...">' + esc(texto) + '</textarea>' +
+      '</div>';
+    }
+
+    var blocoObjetivos = `
+      <div class="pi2-rubrica-section" style="border-left:4px solid var(--accent-cyan);padding:1rem;margin-bottom:1rem;">
+        <div class="pi2-field" style="margin-bottom:0.75rem;">
+          <label for="pi2-f-obj-geral" style="font-size:0.88rem;font-weight:700;color:var(--text-main);display:flex;align-items:center;gap:0.4rem;">
+            <i class="fa-solid fa-bullseye" style="color:var(--accent-cyan);"></i> Objetivo Geral do Projeto
+          </label>
+          <div class="pi2-hint" style="margin-bottom:0.4rem;font-size:0.75rem;line-height:1.4;">
+            <strong>Fórmula do Roteiro 1:</strong> <code>[Verbo no Infinitivo] + [Entregável de Software/Hardware Tangível] + [Público-Alvo e Contexto] + [Propósito e Impacto Real]</code>
+          </div>
+          <textarea id="pi2-f-obj-geral" class="pi2-curto" rows="3" maxlength="1000" placeholder="Ex: Desenvolver uma estação meteorológica IoT de baixo custo para o campus do IFSC com sensores e microcontrolador ESP32 para monitoramento microclimático e fins educacionais...">${esc(parsedObj.geral)}</textarea>
+        </div>
+
+        <fieldset class="pi2-fieldset" style="border:1px solid var(--border-color);border-radius:8px;padding:0.9rem;margin-top:1rem;">
+          <legend style="font-weight:700;color:var(--text-main);font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;">
+            <i class="fa-solid fa-stairs" style="color:var(--ifsc-green);"></i> Objetivos Específicos — 4 Degraus Metodológicos
+          </legend>
+          <div class="pi2-hint" style="margin-bottom:0.75rem;font-size:0.75rem;">
+            Padrão mínimo de 4 objetivos específicos cobrindo todo o ciclo metodológico (D1 a D4). Caso necessite desdobrar algum degrau em mais frentes de trabalho, use o botão <strong>+ Adicionar objetivo específico</strong>.
+          </div>
+
+          <!-- D1 -->
+          <div class="pi2-field" style="margin-bottom:0.75rem;">
+            <label for="pi2-f-obj-d1" style="font-size:0.8rem;font-weight:700;color:var(--accent-cyan);display:flex;align-items:center;gap:0.4rem;">
+              <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.35rem;">D1</span> Degrau 1: Diagnóstico, Requisitos & Estado da Arte
+            </label>
+            <div class="pi2-hint" style="font-size:0.72rem;margin-bottom:0.25rem;">Verbos: <em>Mapear, Identificar, Levantar requisitos e analisar trabalhos relacionados.</em></div>
+            <textarea id="pi2-f-obj-d1" class="pi2-curto" rows="2" maxlength="600" placeholder="Ex: Mapear os requisitos funcionais e não-funcionais dos sensores meteorológicos e levantar o estado da arte na literatura...">${esc(parsedObj.d1)}</textarea>
+          </div>
+
+          <!-- D2 -->
+          <div class="pi2-field" style="margin-bottom:0.75rem;">
+            <label for="pi2-f-obj-d2" style="font-size:0.8rem;font-weight:700;color:var(--accent-cyan);display:flex;align-items:center;gap:0.4rem;">
+              <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.35rem;">D2</span> Degrau 2: Modelagem, Arquitetura & Design
+            </label>
+            <div class="pi2-hint" style="font-size:0.72rem;margin-bottom:0.25rem;">Verbos: <em>Modelar arquitetura técnica no Canva/Draw.io, Prototipar wireframes e diagramas de fluxo.</em></div>
+            <textarea id="pi2-f-obj-d2" class="pi2-curto" rows="2" maxlength="600" placeholder="Ex: Modelar a arquitetura física dos circuitos eletrônicos e projetar os wireframes da interface web responsiva...">${esc(parsedObj.d2)}</textarea>
+          </div>
+
+          <!-- D3 -->
+          <div class="pi2-field" style="margin-bottom:0.75rem;">
+            <label for="pi2-f-obj-d3" style="font-size:0.8rem;font-weight:700;color:var(--accent-cyan);display:flex;align-items:center;gap:0.4rem;">
+              <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.35rem;">D3</span> Degrau 3: Implementação, Código & Software
+            </label>
+            <div class="pi2-hint" style="font-size:0.72rem;margin-bottom:0.25rem;">Verbos: <em>Desenvolver firmware/software, Versionar no GitHub, Implementar rotinas e integrações.</em></div>
+            <textarea id="pi2-f-obj-d3" class="pi2-curto" rows="2" maxlength="600" placeholder="Ex: Desenvolver o firmware de leitura em C++, implementar a API de ingestão de dados e versionar no GitHub...">${esc(parsedObj.d3)}</textarea>
+          </div>
+
+          <!-- D4 -->
+          <div class="pi2-field" style="margin-bottom:0.75rem;">
+            <label for="pi2-f-obj-d4" style="font-size:0.8rem;font-weight:700;color:var(--accent-cyan);display:flex;align-items:center;gap:0.4rem;">
+              <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.35rem;">D4</span> Degrau 4: Validação, Testes Experimentais & Métricas
+            </label>
+            <div class="pi2-hint" style="font-size:0.72rem;margin-bottom:0.25rem;">Verbos: <em>Validar precisão e calibração, Executar testes controlados, Coletar métricas com usuários.</em></div>
+            <textarea id="pi2-f-obj-d4" class="pi2-curto" rows="2" maxlength="600" placeholder="Ex: Validar a calibragem dos sensores em bancada experimental e avaliar a usabilidade do painel com a comunidade escolar...">${esc(parsedObj.d4)}</textarea>
+          </div>
+
+          <!-- Lista de Desdobramentos Extras -->
+          <div id="pi2-lista-especificos-extras" style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.6rem;">
+            ${(parsedObj.extras || []).map(function (ex, idx) {
+              return itemExtraHtml(ex.degrau, ex.texto, idx);
+            }).join('')}
+          </div>
+
+          <div style="margin-top:0.85rem;display:flex;justify-content:flex-end;">
+            <button type="button" class="btn btn-outline" id="pi2-btn-add-obj-esp" style="font-size:0.78rem;padding:0.35rem 0.75rem;color:var(--accent-cyan);border-color:var(--accent-cyan);">
+              <i class="fa-solid fa-plus"></i> Adicionar Objetivo Específico
+            </button>
+          </div>
+        </fieldset>
+      </div>
+    `;
+
     var corpo = abrirModal(cabecalho('Atualizar ficha do projeto', '#' + doisDigitos(p.id) + ' — ' + esc(p.title) + '. Só os campos que você alterar são gravados; cada alteração fica registrada com autor, data e valor anterior.') +
-      '<form class="pi2-form">' + (ehDocente() ? bloco(CAMPOS_FICHA_DOCENTE.slice(0, 2)) : '') + bloco(CAMPOS_FICHA) + exps +
+      '<form class="pi2-form">' + (ehDocente() ? bloco(CAMPOS_FICHA_DOCENTE.slice(0, 2)) : '') + blocoObjetivos + bloco(CAMPOS_FICHA) + exps +
       (ehDocente() ? bloco(CAMPOS_FICHA_DOCENTE.slice(2)) : '') +
       '<div class="pi2-erro" role="alert"></div>' +
       '<div class="pi2-actions"><button class="pi2-btn" type="button" id="pi2-cancelar">Cancelar</button><button class="pi2-btn primario" type="submit"><i class="fa-solid fa-floppy-disk"></i> Salvar alterações</button></div></form>');
     $('#pi2-cancelar', corpo).onclick = fecharModal;
+
+    // Ações para adicionar e remover objetivos específicos extras
+    var btnAddExtra = $('#pi2-btn-add-obj-esp', corpo);
+    var containerExtras = $('#pi2-lista-especificos-extras', corpo);
+    if (btnAddExtra && containerExtras) {
+      btnAddExtra.onclick = function () {
+        var count = containerExtras.children.length;
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = itemExtraHtml('D1', '', count);
+        var novoItem = wrapper.firstElementChild;
+        containerExtras.appendChild(novoItem);
+        var txtArea = $('.pi2-extra-texto', novoItem);
+        if (txtArea) txtArea.focus();
+      };
+    }
+
+    corpo.addEventListener('click', function (e) {
+      var btnRem = e.target.closest('.pi2-btn-remover-extra');
+      if (btnRem) {
+        var item = btnRem.closest('.pi2-obj-extra-item');
+        if (item) item.remove();
+      }
+    });
+
     aoEnviar($('form', corpo), function (fd) {
       var campos = {};
+
+      // Coleta Objetivo Geral + Objetivos Específicos estruturados
+      var g = ($('#pi2-f-obj-geral', corpo) ? $('#pi2-f-obj-geral', corpo).value : '').trim();
+      var d1 = ($('#pi2-f-obj-d1', corpo) ? $('#pi2-f-obj-d1', corpo).value : '').trim();
+      var d2 = ($('#pi2-f-obj-d2', corpo) ? $('#pi2-f-obj-d2', corpo).value : '').trim();
+      var d3 = ($('#pi2-f-obj-d3', corpo) ? $('#pi2-f-obj-d3', corpo).value : '').trim();
+      var d4 = ($('#pi2-f-obj-d4', corpo) ? $('#pi2-f-obj-d4', corpo).value : '').trim();
+      var extras = [];
+      $$('.pi2-obj-extra-item', corpo).forEach(function (item) {
+        var sel = $('.pi2-extra-degrau-select', item);
+        var txt = $('.pi2-extra-texto', item);
+        if (txt && txt.value.trim()) {
+          extras.push({ degrau: sel ? sel.value : 'D1', texto: txt.value.trim() });
+        }
+      });
+      var objSerializado = serializarObjetivos({ geral: g, d1: d1, d2: d2, d3: d3, d4: d4, extras: extras });
+      if (objSerializado !== iniciais['objective']) {
+        campos['objective'] = objSerializado;
+      }
+
       Object.keys(iniciais).forEach(function (k) {
+        if (k === 'objective') return;
         var v = String(fd.get(k) || '').trim();
         if (v !== iniciais[k]) campos[k] = v;
       });
@@ -893,6 +1109,96 @@ function linhasParaProjetos(linhas) {
   function complementarModalProjeto(id) {
     var corpo = $('#modalContent');
     if (!corpo || !$('#projectModal').classList.contains('open')) return;
+
+    // Enriquecimento com caixas separadas para Objetivo Geral e Objetivos Específicos (Degraus D1-D4)
+    var p = projetoBruto(id);
+    if (p) {
+      var rawObj = valorAtual(p, 'objective') || p.objective || '';
+      var parsed = parseObjetivos(rawObj);
+
+      // Localiza a seção de objetivo no modal e aprimora com caixas separadas
+      var objSec = Array.from($$('div', corpo)).find(function (d) {
+        var h4 = $('h4', d);
+        return h4 && /Objetivo Geral/i.test(h4.textContent);
+      });
+
+      if (objSec) {
+        var aval = (PI2.avaliacoes || []).find(function (a) { return Number(a.projeto) === Number(id) && (a.tipo === 'objetivos' || !a.tipo); });
+        var crit = (aval && aval.criterios) ? aval.criterios : {};
+
+        function statusBadge(st) {
+          if (st === 'conforme') return '<span class="status-tag tag-ok" style="font-size:0.68rem;padding:0.15rem 0.4rem;"><i class="fa-solid fa-check"></i> Conforme</span>';
+          if (st === 'ajustar') return '<span class="status-tag tag-ajuste" style="font-size:0.68rem;padding:0.15rem 0.4rem;"><i class="fa-solid fa-triangle-exclamation"></i> Requer Ajustes</span>';
+          return '<span class="status-tag tag-pendente" style="font-size:0.68rem;padding:0.15rem 0.4rem;">⏳ A Avaliar</span>';
+        }
+
+        var degrausInfo = [
+          { k: 'D1', tit: 'D1: Diagnóstico, Requisitos & Estado da Arte', txt: parsed.d1, st: crit.esp1_status, obs: crit.esp1_obs },
+          { k: 'D2', tit: 'D2: Modelagem, Arquitetura & Design', txt: parsed.d2, st: crit.esp2_status, obs: crit.esp2_obs },
+          { k: 'D3', tit: 'D3: Implementação, Código & Software', txt: parsed.d3, st: crit.esp3_status, obs: crit.esp3_obs },
+          { k: 'D4', tit: 'D4: Validação, Testes Experimentais & Métricas', txt: parsed.d4, st: crit.esp4_status, obs: crit.esp4_obs }
+        ];
+
+        objSec.innerHTML = `
+          <!-- CAIXA SEPARADA 1: OBJETIVO GERAL -->
+          <div class="pi2-obj-preview-box" style="margin-bottom:1rem;border-left:4px solid var(--accent-cyan);background:var(--chip-bg);border-radius:8px;padding:0.85rem 1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+              <h4 style="font-size:0.82rem;text-transform:uppercase;color:var(--accent-cyan);letter-spacing:0.05em;margin:0;display:flex;align-items:center;gap:0.4rem;">
+                <i class="fa-solid fa-bullseye"></i> Objetivo Geral do Projeto
+              </h4>
+              ${statusBadge(crit.geral_status)}
+            </div>
+            <p style="color:var(--text-main);font-size:0.92rem;line-height:1.55;margin:0;">
+              ${esc(parsed.geral || 'Definição de escopo em andamento.')}
+            </p>
+          </div>
+
+          <!-- CAIXA SEPARADA 2: OBJETIVOS ESPECÍFICOS (4 DEGRAUS METODOLÓGICOS + DESDOBRAMENTOS) -->
+          <div style="margin-bottom:1.25rem;background:var(--bg-card);border:1px solid var(--border-color);border-radius:10px;padding:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+              <h4 style="font-size:0.82rem;text-transform:uppercase;color:var(--ifsc-green-light);letter-spacing:0.05em;margin:0;display:flex;align-items:center;gap:0.4rem;">
+                <i class="fa-solid fa-stairs"></i> Objetivos Específicos — 4 Degraus Metodológicos (D1 a D4)
+              </h4>
+              <span style="font-size:0.72rem;color:var(--text-dim);">Ciclo Pedagógico</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+              ${degrausInfo.map(function (d) {
+                var extrasDesseDegrau = (parsed.extras || []).filter(function (ex) { return ex.degrau === d.k; });
+                return `
+                  <div style="background:var(--chip-bg);border:1px solid var(--border-color);border-radius:6px;padding:0.65rem 0.85rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                      <div style="display:flex;align-items:center;gap:0.4rem;">
+                        <span class="proj-id-badge" style="font-size:0.65rem;padding:0.15rem 0.4rem;">${d.k}</span>
+                        <strong style="font-size:0.82rem;color:var(--text-main);">${esc(d.tit)}</strong>
+                      </div>
+                      ${statusBadge(d.st)}
+                    </div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.45;margin-left:0.2rem;">
+                      ${d.txt ? esc(d.txt) : '<em style="color:var(--text-dim);">Etapa metodológica padrão do projeto (a detalhar pela equipe).</em>'}
+                    </div>
+                    ${d.obs ? `<div style="font-size:0.76rem;color:var(--accent-amber);margin-top:0.3rem;"><i class="fa-solid fa-comment-dots"></i> Devolutiva docente: ${esc(d.obs)}</div>` : ''}
+                    
+                    ${extrasDesseDegrau.length > 0 ? `
+                      <div style="margin-top:0.5rem;padding-top:0.4rem;border-top:1px dashed var(--border-color);display:flex;flex-direction:column;gap:0.35rem;">
+                        ${extrasDesseDegrau.map(function (ex) {
+                          return `
+                            <div style="font-size:0.8rem;background:rgba(6,182,212,0.08);border-left:2px solid var(--accent-cyan);padding:0.35rem 0.6rem;border-radius:4px;color:var(--text-main);">
+                              <i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> <strong>Desdobramento:</strong> ${esc(ex.texto)}
+                            </div>
+                          `;
+                        }).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+
     var antigo = $('#pi2-modal-extra', corpo);
     if (antigo) antigo.remove();
     if (!CFG.apiUrl && !registrosDo(id).length && !linksDo(id).length && !(PI2.demandas || []).length) return;
@@ -1530,10 +1836,14 @@ function linhasParaProjetos(linhas) {
     var statusAtual = aval ? (aval.status || 'aprovado') : 'aprovado';
     var parecerAtual = aval ? (aval.parecer || '') : '';
 
-    var textoObjetivo = valorAtual(proj, 'objective') || proj.objective || 'Nenhum objetivo registrado até o momento.';
+    var rawObj = valorAtual(proj, 'objective') || proj.objective || '';
+    var parsedObj = parseObjetivos(rawObj);
 
     var eqDados = (PI2.notas && typeof PI2.notas.obterDadosEquipe === 'function') ? PI2.notas.obterDadosEquipe(projId) : null;
     var membros = (eqDados && eqDados.membros) ? eqDados.membros : [];
+
+    var demEquipe = (PI2.demandas || []).filter(function (d) { return d.projeto === '*' || Number(d.projeto) === Number(projId); });
+    var demConcluidas = demEquipe.filter(function (d) { return d.status === 'concluida'; }).length;
 
     var html = `
       <div style="margin-bottom:1.25rem;">
@@ -1578,12 +1888,12 @@ function linhasParaProjetos(linhas) {
         </div>
       </div>
 
-      <!-- Texto cadastrado pelos estudantes -->
+      <!-- Texto cadastrado pelos estudantes: OBJETIVO GERAL -->
       <div class="pi2-obj-preview-box" style="margin-bottom:1.25rem;">
         <div class="pi2-obj-preview-title">
           <i class="fa-solid fa-bullseye"></i> Redação Atual do Objetivo Geral (Cadastrada pela Equipe)
         </div>
-        <div class="pi2-obj-preview-text">${esc(textoObjetivo)}</div>
+        <div class="pi2-obj-preview-text">${esc(parsedObj.geral || 'Nenhum objetivo geral registrado até o momento.')}</div>
       </div>
 
       <form id="pi2-form-avaliar-objetivos" class="pi2-modal-form">
@@ -1620,11 +1930,11 @@ function linhasParaProjetos(linhas) {
           </div>
         </div>
 
-        <!-- BLOCO 2: OBJETIVOS ESPECÍFICOS (OS 4 DEGRAUS METODOLÓGICOS) -->
+        <!-- BLOCO 2: OBJETIVOS ESPECÍFICOS (OS 4 DEGRAUS METODOLÓGICOS E DESDOBRAMENTOS) -->
         <div class="pi2-rubrica-section">
           <div class="pi2-rubrica-header">
             <h3><i class="fa-solid fa-stairs" style="color:var(--ifsc-green-light);"></i> 2. Os 4 Degraus Metodológicos (D1 a D4)</h3>
-            <span style="font-size:0.75rem;color:var(--text-dim);">Avalie a entrega formativa de cada etapa</span>
+            <span style="font-size:0.75rem;color:var(--text-dim);">Inspeção formativa da redação e entregáveis de cada etapa</span>
           </div>
 
           <div class="pi2-degraus-container">
@@ -1642,7 +1952,13 @@ function linhasParaProjetos(linhas) {
                 </select>
               </div>
               <div class="pi2-degrau-desc">Verbos: <em>Mapear, Identificar, Levantar, Investigar necessidades e analisar o estado da arte.</em></div>
-              <input type="text" id="crit-esp1-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp1_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+              <div style="font-size:0.8rem;background:var(--chip-bg);border-left:3px solid var(--accent-cyan);padding:0.4rem 0.65rem;border-radius:4px;margin:0.35rem 0;color:var(--text-main);">
+                <strong>Redação cadastrada pelos estudantes:</strong> ${parsedObj.d1 ? esc(parsedObj.d1) : '<em style="color:var(--text-dim);">Não redigido ainda</em>'}
+              </div>
+              ${(parsedObj.extras || []).filter(function (ex) { return ex.degrau === 'D1'; }).map(function (ex) {
+                return `<div style="font-size:0.76rem;background:rgba(6,182,212,0.08);border-left:2px solid var(--accent-cyan);padding:0.3rem 0.55rem;border-radius:4px;margin:0.25rem 0;color:var(--text-main);"><i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> <strong>Desdobramento:</strong> ${esc(ex.texto)}</div>`;
+              }).join('')}
+              <input type="text" id="crit-esp1-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp1_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;margin-top:0.3rem;" />
             </div>
 
             <!-- Degrau 2 -->
@@ -1659,7 +1975,13 @@ function linhasParaProjetos(linhas) {
                 </select>
               </div>
               <div class="pi2-degrau-desc">Verbos: <em>Modelar arquitetura no Canva/Draw.io, Prototipar wireframes de interface e fluxos.</em></div>
-              <input type="text" id="crit-esp2-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp2_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+              <div style="font-size:0.8rem;background:var(--chip-bg);border-left:3px solid var(--accent-cyan);padding:0.4rem 0.65rem;border-radius:4px;margin:0.35rem 0;color:var(--text-main);">
+                <strong>Redação cadastrada pelos estudantes:</strong> ${parsedObj.d2 ? esc(parsedObj.d2) : '<em style="color:var(--text-dim);">Não redigido ainda</em>'}
+              </div>
+              ${(parsedObj.extras || []).filter(function (ex) { return ex.degrau === 'D2'; }).map(function (ex) {
+                return `<div style="font-size:0.76rem;background:rgba(6,182,212,0.08);border-left:2px solid var(--accent-cyan);padding:0.3rem 0.55rem;border-radius:4px;margin:0.25rem 0;color:var(--text-main);"><i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> <strong>Desdobramento:</strong> ${esc(ex.texto)}</div>`;
+              }).join('')}
+              <input type="text" id="crit-esp2-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp2_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;margin-top:0.3rem;" />
             </div>
 
             <!-- Degrau 3 -->
@@ -1676,7 +1998,13 @@ function linhasParaProjetos(linhas) {
                 </select>
               </div>
               <div class="pi2-degrau-desc">Verbos: <em>Desenvolver módulos de software, Versionar no Git/GitHub, Estruturar backend e frontend.</em></div>
-              <input type="text" id="crit-esp3-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp3_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+              <div style="font-size:0.8rem;background:var(--chip-bg);border-left:3px solid var(--accent-cyan);padding:0.4rem 0.65rem;border-radius:4px;margin:0.35rem 0;color:var(--text-main);">
+                <strong>Redação cadastrada pelos estudantes:</strong> ${parsedObj.d3 ? esc(parsedObj.d3) : '<em style="color:var(--text-dim);">Não redigido ainda</em>'}
+              </div>
+              ${(parsedObj.extras || []).filter(function (ex) { return ex.degrau === 'D3'; }).map(function (ex) {
+                return `<div style="font-size:0.76rem;background:rgba(6,182,212,0.08);border-left:2px solid var(--accent-cyan);padding:0.3rem 0.55rem;border-radius:4px;margin:0.25rem 0;color:var(--text-main);"><i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> <strong>Desdobramento:</strong> ${esc(ex.texto)}</div>`;
+              }).join('')}
+              <input type="text" id="crit-esp3-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp3_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;margin-top:0.3rem;" />
             </div>
 
             <!-- Degrau 4 -->
@@ -1693,7 +2021,13 @@ function linhasParaProjetos(linhas) {
                 </select>
               </div>
               <div class="pi2-degrau-desc">Verbos: <em>Validar usabilidade com usuários, Executar bateria de testes controlados, Coletar métricas experimentais.</em></div>
-              <input type="text" id="crit-esp4-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp4_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+              <div style="font-size:0.8rem;background:var(--chip-bg);border-left:3px solid var(--accent-cyan);padding:0.4rem 0.65rem;border-radius:4px;margin:0.35rem 0;color:var(--text-main);">
+                <strong>Redação cadastrada pelos estudantes:</strong> ${parsedObj.d4 ? esc(parsedObj.d4) : '<em style="color:var(--text-dim);">Não redigido ainda</em>'}
+              </div>
+              ${(parsedObj.extras || []).filter(function (ex) { return ex.degrau === 'D4'; }).map(function (ex) {
+                return `<div style="font-size:0.76rem;background:rgba(6,182,212,0.08);border-left:2px solid var(--accent-cyan);padding:0.3rem 0.55rem;border-radius:4px;margin:0.25rem 0;color:var(--text-main);"><i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> <strong>Desdobramento:</strong> ${esc(ex.texto)}</div>`;
+              }).join('')}
+              <input type="text" id="crit-esp4-obs" placeholder="Observação/apontamento específico (opcional)" value="${esc(crit.esp4_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;margin-top:0.3rem;" />
             </div>
           </div>
         </div>
@@ -1820,6 +2154,15 @@ function linhasParaProjetos(linhas) {
 
         <!-- BLOCO 5: NOTA CONSOLIDADA & PARECER ORIENTADOR -->
         <div class="pi2-rubrica-section" style="background:var(--chip-bg);">
+          <div style="margin-bottom:0.85rem;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:0.6rem 0.85rem;border-radius:6px;border:1px dashed var(--accent-amber);">
+            <div style="font-size:0.78rem;color:var(--text-muted);">
+              <i class="fa-solid fa-calculator" style="color:var(--accent-amber);"></i> Computar tudo (Objetivo Geral + 4 Degraus + Artefatos + Demandas):
+            </div>
+            <button type="button" class="btn btn-outline" id="pi2-btn-computar-nota-sugerida" style="font-size:0.75rem;padding:0.3rem 0.65rem;color:var(--accent-amber);border-color:var(--accent-amber);">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Sugerir Nota Consolidada
+            </button>
+          </div>
+
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;">
             <div class="pi2-form-group">
               <label>Nota Avaliativa Geral (0,0 a 10,0) *</label>
@@ -1852,6 +2195,48 @@ function linhasParaProjetos(linhas) {
     `;
 
     abrirModal(html, true);
+
+    // Botão para computar nota sugerida com base em todas as rubricas e demandas
+    var btnComputar = $('#pi2-btn-computar-nota-sugerida');
+    if (btnComputar) {
+      btnComputar.onclick = function () {
+        var pontos = 0;
+        // 1. Objetivo Geral (até 1,5 pts)
+        var stGeral = $('#pi2-eval-geral-status') ? $('#pi2-eval-geral-status').value : 'ausente';
+        if (stGeral === 'conforme') pontos += 1.5;
+        else if (stGeral === 'ajustar') pontos += 0.8;
+
+        // 2. Os 4 Degraus Metodológicos (até 4,0 pts = 1,0 cada)
+        ['esp1', 'esp2', 'esp3', 'esp4'].forEach(function (k) {
+          var el = $('#crit-' + k + '-status');
+          var st = el ? el.value : 'ausente';
+          if (st === 'conforme') pontos += 1.0;
+          else if (st === 'ajustar') pontos += 0.5;
+        });
+
+        // 3. Entregas Técnicas de Artefatos (até 3,0 pts = 0,75 cada)
+        ['artigo', 'github', 'diagrama', 'pitch'].forEach(function (k) {
+          var el = $('#crit-' + k + '-status');
+          var st = el ? el.value : 'ausente';
+          if (st === 'conforme') pontos += 0.75;
+          else if (st === 'ajustar') pontos += 0.35;
+        });
+
+        // 4. Demandas & Checkpoints (até 1,5 pts)
+        if (demEquipe.length > 0) {
+          pontos += (demConcluidas / demEquipe.length) * 1.5;
+        } else {
+          pontos += 1.5; // sem demandas pendentes no momento
+        }
+
+        var notaFinal = Math.min(10.0, Math.max(0.0, pontos)).toFixed(1);
+        var notaInput = $('#pi2-eval-nota');
+        if (notaInput) notaInput.value = notaFinal;
+        var stSelect = $('#pi2-eval-status');
+        if (stSelect) stSelect.value = (Number(notaFinal) >= 7.0) ? 'aprovado' : 'ajustar';
+        aviso('Nota consolidada calculada: ' + notaFinal + ' (Objetivo Geral + 4 Degraus + Artefatos + Demandas).');
+      };
+    }
 
     var btnCopiarPares = $('#pi2-btn-copiar-pares');
     if (btnCopiarPares) {
@@ -1968,7 +2353,11 @@ function linhasParaProjetos(linhas) {
           <select id="pi2-dem-projeto" required>
             <option value="*" ${projAlvo === '*' ? 'selected' : ''}>📣 TODOS OS PROJETOS (Broadcast Geral)</option>
             ${[1,2,3,4,5,6,7,8,9,10,11].map(function(num) {
-              return `<option value="${num}" ${String(projAlvo) === String(num) ? 'selected' : ''}>Projeto #${doisDigitos(num)}</option>`;
+              var p = (PI2.bruto || []).find(function(item) { return Number(item.id) === Number(num); }) || {};
+              var rotulo = 'Projeto #' + doisDigitos(num);
+              if (p.title) rotulo += ' — ' + p.title;
+              if (p.authors) rotulo += ' (' + p.authors + ')';
+              return `<option value="${num}" ${String(projAlvo) === String(num) ? 'selected' : ''}>${esc(rotulo)}</option>`;
             }).join('')}
           </select>
         </div>
