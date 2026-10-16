@@ -1122,10 +1122,16 @@ function linhasParaProjetos(linhas) {
   // Painel Central de Notas & Avaliação por Rubricas
   // ------------------------------------------------------------------
 
+  function trocarSubAbaNotas(subaba) {
+    PI2._notasSubaba = subaba;
+    renderNotasTab();
+  }
+
   function renderNotasTab() {
     var container = $('#tab-notas');
     if (!container) return;
     PI2._notasRenderizado = true;
+    var subaba = PI2._notasSubaba || 'rubricas';
 
     var projetos = (typeof window.projectsData !== 'undefined' && Array.isArray(window.projectsData) && window.projectsData.length > 0)
       ? window.projectsData
@@ -1174,6 +1180,40 @@ function linhasParaProjetos(linhas) {
 
     var avaliacaoMeuProjeto = meuProjetoId ? projsComAval.find(function (item) { return Number(item.projeto.id) === meuProjetoId; }) : null;
 
+    var titulosSubabas = {
+      rubricas: { titulo: 'Acompanhamento de Rubricas Pedagógicas & Roteiro', desc: 'Conformidade do Objetivo Geral (4 critérios) e dos 4 Degraus Específicos (Exploração, Modelagem, Implementação e Validação Experimental).' },
+      entregas: { titulo: 'Entregas Formais & Demandas da Turma', desc: 'Acompanhamento de prazos, critérios de aceite, rubricas formativas e avaliação de pares dos integrantes.' },
+      fechamento: { titulo: 'Fechamento de Médias & Consolidação Final', desc: 'Média ponderada oficial com Entregas, Participação por Pares, Frequência e Pontualidade.' },
+      alunos: { titulo: 'Alunos & Frequência da Turma', desc: 'Vínculo acadêmico com contas Google, frequência registrada e notas individuais.' },
+      config: { titulo: 'Configurações Pedagógicas, Pesos & Regras de Participação', desc: 'Definição da fórmula da avaliação de pares (faixas, proporcional ou amortecida) e pesos dos componentes.' },
+      minhas: { titulo: 'Minhas Notas & Avaliação de Participação da Equipe', desc: 'Avaliação sigilosa de pares entre os colegas da equipe e consulta de notas e pareceres publicados.' }
+    };
+
+    var subInfo = titulosSubabas[subaba] || titulosSubabas.rubricas;
+
+    var htmlSubabasBar = `
+      <div class="pi2-subtabs-bar">
+        <button type="button" class="pi2-subtab-btn ${subaba === 'rubricas' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('rubricas')">
+          <i class="fa-solid fa-bullseye"></i> Rubricas (Objetivos & D1-D4)
+        </button>
+        <button type="button" class="pi2-subtab-btn ${subaba === 'entregas' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('entregas')">
+          <i class="fa-solid fa-list-check"></i> Entregas & Demandas
+        </button>
+        <button type="button" class="pi2-subtab-btn ${subaba === 'fechamento' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('fechamento')">
+          <i class="fa-solid fa-chart-simple"></i> Fechamento & Médias
+        </button>
+        <button type="button" class="pi2-subtab-btn ${subaba === 'alunos' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('alunos')">
+          <i class="fa-solid fa-users"></i> Alunos & Frequência
+        </button>
+        <button type="button" class="pi2-subtab-btn ${subaba === 'config' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('config')">
+          <i class="fa-solid fa-sliders"></i> Pesos & Regras
+        </button>
+        <button type="button" class="pi2-subtab-btn ${subaba === 'minhas' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('minhas')">
+          <i class="fa-solid fa-user-graduate"></i> Minhas Notas & Pares
+        </button>
+      </div>
+    `;
+
     container.innerHTML = `
       <div class="pi2-notas-container">
         
@@ -1187,25 +1227,25 @@ function linhasParaProjetos(linhas) {
               <span style="font-size:0.75rem;color:var(--text-dim);">Turma INF-2024 • Semestre 2026-2</span>
             </div>
             <h2 style="font-size:1.35rem;font-weight:700;color:var(--text-main);margin:0;">
-              Acompanhamento de Rubricas Pedagógicas & Roteiro
+              ${subInfo.titulo}
             </h2>
             <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 0 0;">
-              Conformidade do Objetivo Geral (4 critérios) e dos 4 Degraus Específicos (Exploração, Modelagem, Implementação e Validação Experimental).
+              ${subInfo.desc}
             </p>
           </div>
 
           <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
-            ${(isDocente && typeof PI2.abrirNotasCalculo === 'function') ? `
-              <button class="btn btn-outline" onclick="PI2.abrirNotasCalculo()" style="border-color:var(--accent-purple);color:var(--accent-purple);font-size:0.8rem;padding:0.45rem 0.85rem;" title="Abrir matriz de pesos, frequência e participação">
-                <i class="fa-solid fa-calculator"></i> Matriz Detalhada
-              </button>
-            ` : ''}
             <button class="btn btn-outline" onclick="PI2.sincronizar()" style="font-size:0.8rem;padding:0.45rem 0.85rem;" title="Atualizar dados da planilha">
               <i class="fa-solid fa-arrows-rotate"></i> Sincronizar
             </button>
           </div>
         </div>
 
+        ${htmlSubabasBar}
+
+        ${subaba !== 'rubricas' ? `
+          <div id="pi2-notas-inline-corpo" style="margin-top:0.5rem;"></div>
+        ` : `
         <!-- DESTAQUE PARA ESTUDANTE LOGADO -->
         ${(avaliacaoMeuProjeto && !isDocente) ? `
           <div class="pi2-aluno-destaque">
@@ -1405,9 +1445,18 @@ function linhasParaProjetos(linhas) {
             </tbody>
           </table>
         </div>
+        `}
 
       </div>
     `;
+
+    if (subaba !== 'rubricas') {
+      setTimeout(function () {
+        if (window.PI2 && window.PI2.notas && typeof window.PI2.notas.renderizarNaAba === 'function') {
+          window.PI2.notas.renderizarNaAba(subaba, $('#pi2-notas-inline-corpo'));
+        }
+      }, 0);
+    }
   }
 
   function filtrarTabelaNotas() {
@@ -1961,9 +2010,11 @@ function linhasParaProjetos(linhas) {
     renderNotasTab: renderNotasTab, abrirModalAvaliarObjetivos: abrirModalAvaliarObjetivos,
     filtrarTabelaNotas: filtrarTabelaNotas, filtrarNotasPorStatus: filtrarNotasPorStatus,
     renderDemandasTab: renderDemandasTab, abrirModalCriarDemanda: abrirModalCriarDemanda,
-    concluirDemanda: concluirDemanda, removerDemanda: removerDemanda };
+    concluirDemanda: concluirDemanda, removerDemanda: removerDemanda,
+    trocarSubAbaNotas: trocarSubAbaNotas };
 
   PI2.renderNotasTab = renderNotasTab;
+  PI2.trocarSubAbaNotas = trocarSubAbaNotas;
   PI2.abrirModalAvaliarObjetivos = abrirModalAvaliarObjetivos;
   PI2.filtrarTabelaNotas = filtrarTabelaNotas;
   PI2.filtrarNotasPorStatus = filtrarNotasPorStatus;

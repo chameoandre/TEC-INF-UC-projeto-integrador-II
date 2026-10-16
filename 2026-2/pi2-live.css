@@ -642,3 +642,65 @@ a.pi2-btn { text-decoration: none; display: inline-flex; align-items: center; ga
   color: var(--accent-amber);
 }
 
+/* ============================ SUB-ABAS DO PAINEL DE NOTAS ============================ */
+.pi2-subtabs-bar {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 0.5rem;
+  overflow-x: auto;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.pi2-subtab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted, #64748b);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.pi2-subtab-btn:hover {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text-main, #1e293b);
+}
+
+.pi2-subtab-btn.active {
+  background: var(--accent-purple, #8b5cf6);
+  color: #ffffff;
+  border-color: var(--accent-purple, #8b5cf6);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
+}
+
+.pi2-demandas-sinc-box {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.pi2-demanda-nota-card {
+  background: var(--bg-surface, rgba(241, 245, 249, 0.5));
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.85rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pi2-demanda-nota-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}

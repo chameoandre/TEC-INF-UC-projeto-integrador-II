@@ -84,7 +84,44 @@
   var sairOriginal = PI2.sair;
   PI2.sair = function () { N = null; sairOriginal(); };
 
+  function renderizarNaAba(subaba, container) {
+    var c = container || $('#pi2-notas-inline-corpo');
+    if (!c) return;
+    if (subaba) aba = subaba;
+
+    if (aba === 'minhas') {
+      renderizarMinhasNaAba(c);
+      return;
+    }
+
+    if (!N) {
+      c.innerHTML = '<div style="padding:3rem 1.5rem;text-align:center;color:var(--text-muted);">' +
+        '<i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;color:var(--accent-purple);"></i>' +
+        '<div style="font-weight:600;font-size:0.95rem;">Carregando dados pedagógicos de notas e entregas...</div>' +
+        '<div style="font-size:0.8rem;margin-top:0.35rem;color:var(--text-dim);">A primeira carga pode levar alguns segundos para calcular médias e sincronizar.</div>' +
+        '</div>';
+      buscar().then(function () {
+        renderizarNaAba(aba, c);
+      }).catch(function (e) {
+        c.innerHTML = '<div class="pi2-erro" style="margin:1.5rem;padding:1rem;border-radius:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--accent-red);">' +
+          '<strong><i class="fa-solid fa-triangle-exclamation"></i> Não foi possível carregar os dados de notas:</strong> ' + esc(e.message) +
+          '<div style="margin-top:0.75rem;"><button class="pi2-btn mini" type="button" onclick="PI2.notas.buscar().then(function(){ PI2.notas.renderizarNaAba(\'' + esc(aba) + '\'); });">Tentar novamente</button></div></div>';
+      });
+      return;
+    }
+
+    c.innerHTML = '';
+    var renderFn = ({ entregas: telaEntregas, alunos: telaAlunos, fechamento: telaFechamento, config: telaConfig })[aba] || telaEntregas;
+    renderFn(c);
+  }
+
   function desenhar() {
+    var inlineCorpo = $('#pi2-notas-inline-corpo');
+    var modalAberto = $('#pi2Modal.open');
+    if (inlineCorpo && !modalAberto) {
+      renderizarNaAba(aba, inlineCorpo);
+      return;
+    }
     var abas = [['entregas', 'Entregas por grupo'], ['alunos', 'Alunos'], ['fechamento', 'Fechamento'], ['config', 'Avaliações e pesos']];
     var corpo = I.abrirModal(
       I.cabecalho('Notas da turma', 'Visível só para docentes. Os alunos veem as próprias notas depois que você publicar.') +
@@ -144,20 +181,102 @@
   }
 
   // ------------------------------------------------------------------
-  // Entregas por grupo
+  // Entregas por grupo & Demandas Sincronizadas
   // ------------------------------------------------------------------
   function telaEntregas(el) {
     var qs = quesitos('grupo');
-    if (!qs.length) { el.innerHTML = '<div class="pi2-vazio">Nenhuma avaliação de grupo ativa. Crie uma em “Avaliações e pesos”.</div>'; return; }
-    el.innerHTML = '<p class="pi2-modal-sub">Clique em uma célula para lançar a nota (0 a 10), marcar se a entrega foi no prazo e deixar um comentário para o grupo.</p>' +
-      '<div class="pi2-table-wrap"><table class="pi2-table pi2-grade"><thead><tr><th scope="col">Projeto</th>' + qs.map(cabecalhoQuesito).join('') + '</tr></thead><tbody>' +
-      projetos().map(function (p) {
-        return '<tr><td><strong>' + rotuloProjeto(p) + '</strong></td>' + qs.map(function (q) { return '<td>' + celula(q, 'P' + p.id) + '</td>'; }).join('') + '</tr>';
-      }).join('') + '</tbody></table></div>';
+    var demandas = (window.PI2 && Array.isArray(window.PI2.demandas)) ? window.PI2.demandas : [];
+
+    var topBar = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.25rem;">' +
+      '<div>' +
+      '<h3 style="margin:0;font-size:1.15rem;font-weight:700;color:var(--text-main);display:flex;align-items:center;gap:0.45rem;">' +
+      '<i class="fa-solid fa-list-check" style="color:var(--accent-purple);"></i> Matriz de Entregas Formais & Avaliação de Pares' +
+      '</h3>' +
+      '<p style="margin:0.25rem 0 0 0;font-size:0.82rem;color:var(--text-muted);">' +
+      'Clique em qualquer célula para lançar a nota do grupo, abrir ou fechar a avaliação de pares e emitir parecer formativo.' +
+      '</p>' +
+      '</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+      '<button class="pi2-btn mini" type="button" id="pi2-btn-nova-aval" style="font-size:0.8rem;"><i class="fa-solid fa-plus"></i> Nova Avaliação Formal</button>' +
+      '<button class="pi2-btn primario mini" type="button" id="pi2-btn-nova-demanda" style="font-size:0.8rem;"><i class="fa-solid fa-bullhorn"></i> Nova Demanda / Checkpoint</button>' +
+      '</div>' +
+      '</div>';
+
+    var tabelaHtml = '';
+    if (!qs.length) {
+      tabelaHtml = '<div class="pi2-vazio">Nenhuma avaliação formal de grupo ativa. Use o botão acima para criar uma entrega formal com peso e prazo.</div>';
+    } else {
+      tabelaHtml = '<div class="pi2-table-wrap"><table class="pi2-table pi2-grade"><thead><tr><th scope="col">Projeto</th>' + qs.map(cabecalhoQuesito).join('') + '</tr></thead><tbody>' +
+        projetos().map(function (p) {
+          return '<tr><td><strong>' + rotuloProjeto(p) + '</strong></td>' + qs.map(function (q) { return '<td>' + celula(q, 'P' + p.id) + '</td>'; }).join('') + '</tr>';
+        }).join('') + '</tbody></table></div>';
+    }
+
+    // Seção de Demandas Sincronizadas
+    var demandasHtml = '<div class="pi2-demandas-sinc-box">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;">' +
+      '<div>' +
+      '<h3 style="margin:0;font-size:1.1rem;font-weight:700;color:var(--text-main);display:flex;align-items:center;gap:0.45rem;">' +
+      '<i class="fa-solid fa-bullhorn" style="color:var(--accent-purple);"></i> Demandas & Checkpoints da Turma' +
+      '</h3>' +
+      '<p style="margin:0.25rem 0 0 0;font-size:0.82rem;color:var(--text-muted);">' +
+      'Sincronizadas com o painel de demandas. Permitem orientar correções formativas com critérios de aceite/rubricas.' +
+      '</p>' +
+      '</div>' +
+      '<span class="proj-id-badge" style="background:rgba(139,92,246,0.15);color:var(--accent-purple);font-size:0.75rem;">' + demandas.length + ' demanda(s) ativa(s)</span>' +
+      '</div>';
+
+    if (!demandas.length) {
+      demandasHtml += '<div class="pi2-vazio">Nenhuma demanda ativa no momento. Clique em “Nova Demanda / Checkpoint” acima para disparar uma tarefa para a turma ou equipe específica com rubricas de aceite.</div>';
+    } else {
+      demandasHtml += '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
+        demandas.map(function (d) {
+          var ehBroadcast = d.projetoAlvo === '*' || !d.projetoAlvo;
+          var badgeAlvo = ehBroadcast
+            ? '<span class="pi2-badge-broadcast"><i class="fa-solid fa-users"></i> Toda a Turma</span>'
+            : '<span class="pi2-badge-projeto"><i class="fa-solid fa-user-group"></i> Projeto #' + esc(d.projetoAlvo) + '</span>';
+          var prazoStr = d.prazo ? ('<span class="pi2-demanda-prazo"><i class="fa-regular fa-clock"></i> Prazo: ' + esc(d.prazo) + '</span>') : '';
+          var pontosStr = d.pontos ? ('<span class="pi2-tag" style="background:rgba(16,185,129,0.15);color:var(--ifsc-green-light);font-weight:700;"><i class="fa-solid fa-award"></i> ' + esc(d.pontos) + ' pts</span>') : '';
+
+          return '<div class="pi2-demanda-nota-card">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.4rem;">' +
+            '<div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">' +
+            badgeAlvo +
+            '<strong style="font-size:0.95rem;color:var(--text-main);">' + esc(d.titulo) + '</strong>' +
+            pontosStr +
+            '</div>' +
+            prazoStr +
+            '</div>' +
+            '<div style="font-size:0.84rem;color:var(--text-muted);margin-bottom:0.5rem;line-height:1.45;">' + esc(d.descricao) + '</div>' +
+            (d.rubrica ? ('<div style="background:var(--bg-card);border:1px dashed var(--accent-purple);border-radius:6px;padding:0.5rem 0.75rem;font-size:0.8rem;color:var(--text-main);margin-bottom:0.5rem;"><strong><i class="fa-solid fa-clipboard-check" style="color:var(--accent-purple);"></i> Critérios de Aceite / Rubrica para Correção:</strong> ' + esc(d.rubrica) + '</div>') : '') +
+            '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;font-size:0.75rem;color:var(--text-dim);border-top:1px dashed var(--border-color);padding-top:0.4rem;">' +
+            '<span><i class="fa-solid fa-user-pen"></i> Criado por: ' + esc(d.autor || 'Docente') + '</span>' +
+            '<div style="display:flex;gap:0.4rem;">' +
+            (!ehBroadcast ? ('<button class="pi2-btn mini" type="button" onclick="if(window.openModal) window.openModal(' + Number(d.projetoAlvo) + ');"><i class="fa-solid fa-eye"></i> Ver Projeto #' + esc(d.projetoAlvo) + '</button>') : '') +
+            '<button class="pi2-btn mini" type="button" style="color:var(--accent-green);" onclick="if(PI2.concluirDemanda) PI2.concluirDemanda(\'' + esc(d.id) + '\');"><i class="fa-solid fa-check"></i> Marcar Concluída</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        }).join('') + '</div>';
+    }
+    demandasHtml += '</div>';
+
+    el.innerHTML = topBar + tabelaHtml + demandasHtml;
     ligarCelulas(el);
+
+    var btnNovaAval = $('#pi2-btn-nova-aval', el);
+    if (btnNovaAval) btnNovaAval.onclick = function () { editorQuesito(''); };
+
+    var btnNovaDem = $('#pi2-btn-nova-demanda', el);
+    if (btnNovaDem) btnNovaDem.onclick = function () {
+      if (window.PI2 && typeof window.PI2.abrirModalCriarDemanda === 'function') {
+        window.PI2.abrirModalCriarDemanda();
+      }
+    };
   }
 
   function editarNota(qid, alvo) {
+
     var q = N.quesitos.filter(function (x) { return x.id === qid; })[0];
     var l = lancamento(qid, alvo) || { nota: null, situacao: '', comentario: '' };
     var titulo, evid = '';
@@ -393,8 +512,126 @@
   }
 
   // ------------------------------------------------------------------
-  // Visão do aluno
+  // Visão do aluno & Avaliação de Pares
   // ------------------------------------------------------------------
+  function montarHtmlMinhas(m) {
+    var abertas = (m.abertas || []).map(function (a) {
+      return '<form class="pi2-form pi2-fieldset" data-aberta="' + esc(a.quesito) + '" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:10px;padding:1.25rem;margin-bottom:1rem;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem;">' +
+        '<strong style="font-size:1rem;color:var(--text-main);"><i class="fa-solid fa-users-gear" style="color:var(--accent-purple);"></i> ' + esc(a.nome) + '</strong>' +
+        (a.respondida ? ' <span class="pi2-selo pub">respondida — você pode alterar</span>' : ' <span class="pi2-selo parcial">aguardando sua resposta</span>') +
+        '</div>' +
+        '<div class="pi2-table-wrap"><table class="pi2-table pi2-grade"><thead><tr><th scope="col">Integrante da Equipe</th><th scope="col">Participação individual<small>0 a 10</small></th></tr></thead><tbody>' +
+        m.colegas.map(function (c) {
+          return '<tr><td>' + (c.eu ? '<strong>Você</strong> (' + esc(c.nome) + ')' : esc(c.nome)) + '</td><td><input class="pi2-num" type="text" inputmode="decimal" required name="p-' + esc(c.id) + '" aria-label="Participação de ' + esc(c.nome) + '" value="' + esc(campo(a.dadas[c.id])) + '" placeholder="0 a 10"></td></tr>';
+        }).join('') + '</tbody></table></div>' +
+        '<div class="pi2-field" style="margin-top:0.75rem;"><label for="pi2-pc-' + esc(a.quesito) + '">O que você realizou nesta atividade (sua contribuição):</label><textarea id="pi2-pc-' + esc(a.quesito) + '" class="pi2-curto" name="comentario" maxlength="600" placeholder="Descreva sucintamente suas tarefas e resultados nesta entrega...">' + esc(a.comentario) + '</textarea></div>' +
+        '<div class="pi2-erro" role="alert"></div>' +
+        '<div class="pi2-actions" style="margin-top:0.75rem;"><button class="pi2-btn primario" type="submit"><i class="fa-solid fa-paper-plane"></i> Enviar Avaliação de Pares</button></div></form>';
+    }).join('');
+
+    if (abertas) {
+      abertas = '<div style="margin-bottom:1.5rem;"><h3 class="pi2-h" style="display:flex;align-items:center;gap:0.45rem;"><i class="fa-solid fa-user-check" style="color:var(--accent-purple);"></i> Avaliação de Participação da Equipe (Pares)</h3>' +
+        '<p class="pi2-modal-sub" style="margin-bottom:1rem;">Dê uma nota de 0 a 10 para a sua própria participação e a de cada colega do seu grupo nesta atividade. <strong>Sigilo total:</strong> só os professores veem o que você responder, seus colegas não têm acesso às notas atribuídas por você.</p>' +
+        abertas + '</div>';
+    }
+
+    var av = m.avaliacoes.length
+      ? '<div class="pi2-timeline">' + m.avaliacoes.map(function (a) {
+          return '<div class="pi2-item"><div class="pi2-item-head"><strong>' + esc(a.nome) + '</strong><span>' + (a.escopo === 'individual' ? 'individual' : 'nota do grupo') + '</span>' +
+            (a.situacao ? '<span class="pi2-tag">' + SIT[a.situacao] + '</span>' : '') + '</div>' +
+            '<div class="pi2-final">' + (a.nota === null ? 'Ainda sem nota' : 'Nota ' + fmt(a.nota)) + '</div>' +
+            (a.nota !== null && a.escopo === 'grupo' && a.fator < 1 ? '<div class="pi2-item-text">Nota do grupo ' + fmt(a.notaGrupo) + ' × ' + Math.round(a.fator * 100) + '% (sua participação nesta atividade: ' + fmt(a.participacao) + ')</div>' : '') +
+            (a.comentario ? '<div class="pi2-devolutiva"><small>Comentário do professor orientador</small>' + esc(a.comentario) + '</div>' : '') + '</div>';
+        }).join('') + '</div>'
+      : '<div class="pi2-vazio">Nenhuma nota publicada pelos professores ainda.</div>';
+
+    var fim = '';
+    if (m.finalPublicado && m.final) {
+      var f = m.final;
+      fim = '<h3 class="pi2-h" style="margin-top:1.5rem;">Composição da Nota Final</h3><div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th scope="col">Componente</th><th scope="col">Peso</th><th scope="col">Sua nota</th></tr></thead><tbody>' +
+        ['entregas', 'participacao', 'frequencia', 'pontualidade'].filter(function (c) { return m.pesos[c] > 0; }).map(function (c) {
+          return '<tr><td>' + COMP[c] + '</td><td>' + campo(m.pesos[c]) + '%</td><td>' + fmt(f[c]) + '</td></tr>';
+        }).join('') + '<tr><td><strong>Nota final</strong></td><td></td><td class="pi2-final">' + fmt(f.final) + (f.parcial ? ' <span class="pi2-selo parcial">parcial</span>' : '') + '</td></tr></tbody></table></div>';
+    }
+
+    return { abertas: abertas, av: av, fim: fim };
+  }
+
+  function ligarFormsMinhas(raiz, m, aoRecarregar) {
+    $$('form[data-aberta]', raiz).forEach(function (form) {
+      I.aoEnviar(form, function (fd) {
+        var notas = m.colegas.map(function (c) { return { aluno: c.id, valor: String(fd.get('p-' + c.id) || '').trim() }; });
+        return I.api('avaliarParticipacao', { quesito: form.dataset.aberta, notas: notas, comentario: fd.get('comentario') }).then(function () {
+          I.aviso('Avaliação de participação enviada com sucesso!');
+          if (typeof aoRecarregar === 'function') aoRecarregar();
+        });
+      });
+    });
+  }
+
+  function renderizarMinhasNaAba(container) {
+    if (!container) return;
+    var u = PI2.usuario;
+    var ehDocente = u && u.papel === 'docente';
+
+    if (ehDocente) {
+      container.innerHTML = '<div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem;">' +
+        '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">' +
+        '<span class="proj-id-badge" style="background:rgba(139,92,246,0.15);color:var(--accent-purple);font-weight:700;"><i class="fa-solid fa-chalkboard-user"></i> Visão Docente da Avaliação de Pares</span>' +
+        '</div>' +
+        '<h3 style="font-size:1.15rem;font-weight:700;margin:0 0 0.4rem 0;color:var(--text-main);">Como funciona a Avaliação de Pares pelos Estudantes</h3>' +
+        '<p style="font-size:0.86rem;color:var(--text-muted);line-height:1.5;margin:0 0 1rem 0;">' +
+        'Quando você abre uma entrega para avaliação de pares na aba <strong>Entregas & Demandas</strong>, os integrantes do grupo acessam esta tela, atribuem uma nota de 0 a 10 entre si e detalham suas contribuições. ' +
+        'As notas enviadas pelos alunos são <strong>estritamente confidenciais</strong> (somente os professores têm acesso). ' +
+        'No painel de notas da atividade, o professor orientador visualiza a autoavaliação e a média dos colegas com 1 clique no botão <em>“Usar o que os colegas indicaram”</em>.' +
+        '</p>' +
+        '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button class="pi2-btn mini" type="button" onclick="PI2.trocarSubAbaNotas(\'entregas\')"><i class="fa-solid fa-list-check"></i> Ir para Entregas & Demandas</button>' +
+        '<button class="pi2-btn mini" type="button" onclick="PI2.trocarSubAbaNotas(\'alunos\')"><i class="fa-solid fa-users"></i> Ver Lista de Alunos</button>' +
+        '</div>' +
+        '</div>';
+      return;
+    }
+
+    container.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;color:var(--accent-purple);"></i><div>Carregando suas avaliações de pares e notas...</div></div>';
+
+    I.api('minhasNotas').then(function (r) {
+      var m = r.minhas;
+      if (!m.vinculado) {
+        container.innerHTML = '<div class="pi2-vazio" style="padding:2.5rem 1.5rem;text-align:center;">' +
+          '<i class="fa-solid fa-id-card" style="font-size:2rem;color:var(--accent-amber);margin-bottom:1rem;"></i>' +
+          '<h3 style="font-size:1.1rem;margin:0 0 0.5rem 0;">Vínculo Acadêmico Pendente</h3>' +
+          '<p style="font-size:0.86rem;color:var(--text-muted);max-width:480px;margin:0 auto;">' +
+          'Seu login Google ainda não está associado ao seu nome na lista da turma. Solicite ao professor orientador para efetuar o vínculo no Painel Docente.' +
+          '</p>' +
+          '</div>';
+        return;
+      }
+
+      var partes = montarHtmlMinhas(m);
+      container.innerHTML = '<div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;">' +
+        '<div>' +
+        '<span class="proj-id-badge" style="background:rgba(37,99,235,0.15);color:var(--accent-blue);font-weight:700;"><i class="fa-solid fa-user-graduate"></i> ' + esc(m.nome) + '</span>' +
+        '<span style="font-size:0.8rem;color:var(--text-dim);margin-left:0.5rem;">Projeto #' + I.doisDigitos(m.projeto) + '</span>' +
+        '</div>' +
+        '<span style="font-size:0.75rem;color:var(--text-dim);"><i class="fa-solid fa-lock"></i> Visualização confidencial individual</span>' +
+        '</div>' +
+        partes.abertas +
+        '<h3 class="pi2-h" style="display:flex;align-items:center;gap:0.45rem;margin-top:1.5rem;"><i class="fa-solid fa-clipboard-check" style="color:var(--ifsc-green-light);"></i> Notas e Devolutivas Publicadas</h3>' +
+        partes.av +
+        partes.fim +
+        '</div>';
+
+      ligarFormsMinhas(container, m, function () {
+        renderizarMinhasNaAba(container);
+      });
+    }).catch(function (e) {
+      container.innerHTML = '<div class="pi2-erro" style="margin:1.5rem;">Erro ao carregar suas notas: ' + esc(e.message) + '</div>';
+    });
+  }
+
   function abrirMinhas() {
     I.abrirModal(I.cabecalho('Minhas notas', 'Carregando…'));
     I.api('minhasNotas').then(function (r) {
@@ -403,40 +640,21 @@
         I.abrirModal(I.cabecalho('Minhas notas', 'Seu login ainda não está ligado ao seu nome na lista da turma. Peça ao professor para fazer essa ligação.'));
         return;
       }
-      var abertas = (m.abertas || []).map(function (a) {
-        return '<form class="pi2-form pi2-fieldset" data-aberta="' + esc(a.quesito) + '"><strong>' + esc(a.nome) + '</strong>' + (a.respondida ? ' <span class="pi2-selo pub">respondida — você pode alterar</span>' : ' <span class="pi2-selo parcial">aguardando sua resposta</span>') +
-          '<div class="pi2-table-wrap"><table class="pi2-table pi2-grade"><thead><tr><th scope="col">Integrante</th><th scope="col">Participação<small>0 a 10</small></th></tr></thead><tbody>' +
-          m.colegas.map(function (c) {
-            return '<tr><td>' + (c.eu ? '<strong>Você</strong> (' + esc(c.nome) + ')' : esc(c.nome)) + '</td><td><input class="pi2-num" type="text" inputmode="decimal" required name="p-' + esc(c.id) + '" aria-label="Participação de ' + esc(c.nome) + '" value="' + esc(campo(a.dadas[c.id])) + '"></td></tr>';
-          }).join('') + '</tbody></table></div>' +
-          '<div class="pi2-field"><label for="pi2-pc-' + esc(a.quesito) + '">O que você fez nesta atividade</label><textarea id="pi2-pc-' + esc(a.quesito) + '" class="pi2-curto" name="comentario" maxlength="600">' + esc(a.comentario) + '</textarea></div>' +
-          '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn primario" type="submit">Enviar avaliação</button></div></form>';
-      }).join('');
-      if (abertas) abertas = '<h3 class="pi2-h">Participação do grupo</h3><p class="pi2-modal-sub">Dê uma nota de 0 a 10 para a sua participação e a de cada colega em cada atividade. Só os professores veem o que você respondeu; seus colegas não.</p>' + abertas + '<h3 class="pi2-h">Notas publicadas</h3>';
-      var av = m.avaliacoes.length
-        ? '<div class="pi2-timeline">' + m.avaliacoes.map(function (a) {
-            return '<div class="pi2-item"><div class="pi2-item-head"><strong>' + esc(a.nome) + '</strong><span>' + (a.escopo === 'individual' ? 'individual' : 'nota do grupo') + '</span>' +
-              (a.situacao ? '<span class="pi2-tag">' + SIT[a.situacao] + '</span>' : '') + '</div>' +
-              '<div class="pi2-final">' + (a.nota === null ? 'Ainda sem nota' : 'Nota ' + fmt(a.nota)) + '</div>' +
-              (a.nota !== null && a.escopo === 'grupo' && a.fator < 1 ? '<div class="pi2-item-text">Nota do grupo ' + fmt(a.notaGrupo) + ' × ' + Math.round(a.fator * 100) + '% (sua participação nesta atividade: ' + fmt(a.participacao) + ')</div>' : '') +
-              (a.comentario ? '<div class="pi2-devolutiva"><small>Comentário do professor</small>' + esc(a.comentario) + '</div>' : '') + '</div>';
-          }).join('') + '</div>'
-        : '<div class="pi2-vazio">Nenhuma nota publicada ainda.</div>';
-      var fim = '';
-      if (m.finalPublicado && m.final) {
-        var f = m.final;
-        fim = '<h3 class="pi2-h">Nota final</h3><div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th scope="col">Componente</th><th scope="col">Peso</th><th scope="col">Sua nota</th></tr></thead><tbody>' +
-          ['entregas', 'participacao', 'frequencia', 'pontualidade'].filter(function (c) { return m.pesos[c] > 0; }).map(function (c) {
-            return '<tr><td>' + COMP[c] + '</td><td>' + campo(m.pesos[c]) + '%</td><td>' + fmt(f[c]) + '</td></tr>';
-          }).join('') + '<tr><td><strong>Nota final</strong></td><td></td><td class="pi2-final">' + fmt(f.final) + (f.parcial ? ' <span class="pi2-selo parcial">parcial</span>' : '') + '</td></tr></tbody></table></div>';
-      }
-      var corpo = I.abrirModal(I.cabecalho('Minhas notas', esc(m.nome) + ' • projeto #' + I.doisDigitos(m.projeto) + '. Só você vê esta tela.') + abertas + av + fim);
-      $$('form[data-aberta]', corpo).forEach(function (form) {
-        I.aoEnviar(form, function (fd) {
-          var notas = m.colegas.map(function (c) { return { aluno: c.id, valor: String(fd.get('p-' + c.id) || '').trim() }; });
-          return I.api('avaliarParticipacao', { quesito: form.dataset.aberta, notas: notas, comentario: fd.get('comentario') }).then(function () { I.aviso('Avaliação enviada.'); abrirMinhas(); });
-        });
-      });
+      var partes = montarHtmlMinhas(m);
+      var corpo = I.abrirModal(I.cabecalho('Minhas notas', esc(m.nome) + ' • projeto #' + I.doisDigitos(m.projeto) + '. Só você vê esta tela.') + partes.abertas + '<h3 class="pi2-h">Notas publicadas</h3>' + partes.av + partes.fim);
+      ligarFormsMinhas(corpo, m, abrirMinhas);
     }).catch(function (e) { I.abrirModal(I.cabecalho('Minhas notas', esc(e.message))); });
   }
+
+  PI2.abrirMinhas = abrirMinhas;
+  PI2.notas = {
+    buscar: buscar,
+    abrirPainel: abrirPainel,
+    abrirMinhas: abrirMinhas,
+    editarNota: editarNota,
+    criarQuesito: function () { editorQuesito(''); },
+    renderizarNaAba: renderizarNaAba,
+    renderizarMinhasNaAba: renderizarMinhasNaAba,
+    obterEstado: function () { return N; }
+  };
 })();
