@@ -39,13 +39,25 @@
     if (u.papel === 'docente') {
       b.id = 'pi2-btn-notas';
       b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Notas';
-      b.onclick = function () { abrirPainel(); };
+      b.onclick = function () {
+        if (typeof window.switchTab === 'function') {
+          window.switchTab('notas');
+        } else {
+          abrirPainel();
+        }
+      };
       // Adianta a busca logo após o login do docente, para o painel abrir sem espera.
       if (!N) buscar().catch(function () { /* tenta de novo ao abrir */ });
     } else {
       b.id = 'pi2-btn-minhas';
       b.innerHTML = '<i class="fa-solid fa-clipboard-list"></i> Minhas notas';
-      b.onclick = abrirMinhas;
+      b.onclick = function () {
+        if (typeof window.switchTab === 'function') {
+          window.switchTab('notas');
+        } else {
+          abrirMinhas();
+        }
+      };
     }
     el.insertBefore(b, sair);
   });
@@ -79,7 +91,17 @@
       }
     }).catch(function (e) { I.abrirModal(I.cabecalho('Notas da turma', esc(e.message)), true); });
   }
-  PI2.abrirNotas = abrirPainel;
+  PI2.abrirNotasLegado = abrirPainel;
+  PI2.abrirNotas = function (projetoId) {
+    if (typeof window.switchTab === 'function') {
+      window.switchTab('notas');
+      if (projetoId && PI2.abrirModalAvaliarObjetivos) {
+        setTimeout(function () { PI2.abrirModalAvaliarObjetivos(projetoId); }, 150);
+      }
+    } else {
+      abrirPainel(projetoId);
+    }
+  };
   PI2.abrirNotasCalculo = abrirPainel;
   var sairOriginal = PI2.sair;
   PI2.sair = function () { N = null; sairOriginal(); };
@@ -655,6 +677,27 @@
     criarQuesito: function () { editorQuesito(''); },
     renderizarNaAba: renderizarNaAba,
     renderizarMinhasNaAba: renderizarMinhasNaAba,
-    obterEstado: function () { return N; }
+    obterEstado: function () { return N; },
+    obterDadosEquipe: function (projetoId) {
+      if (!N || !N.alunos) return null;
+      var grupo = N.alunos.filter(function (a) { return a.ativo && Number(a.projeto) === Number(projetoId); });
+      var nome = function (id) { var a = N.alunos.filter(function (x) { return x.id === id; })[0]; return a ? a.nome.split(' ')[0] : '?'; };
+      return grupo.map(function (a) {
+        var doQ = (N.pares || []).filter(function (x) { return x.avaliado === a.id && x.valor !== null; });
+        var auto = doQ.filter(function (x) { return x.avaliador === a.id; })[0];
+        var colegas = doQ.filter(function (x) { return x.avaliador !== a.id; });
+        var med = media(colegas.map(function (x) { return x.valor; }));
+        var dec = (N.participacoes || []).filter(function (x) { return x.aluno === a.id; })[0];
+        return {
+          id: a.id,
+          nome: a.nome,
+          auto: auto ? auto.valor : null,
+          comentario: auto ? auto.comentario : '',
+          mediaColegas: med,
+          detalhesColegas: colegas.map(function (x) { return nome(x.avaliador) + ': ' + fmt(x.valor); }).join(' • '),
+          vale: dec ? dec.valor : (med !== null ? Math.round(med * 10) / 10 : (auto ? auto.valor : ''))
+        };
+      });
+    }
   };
 })();

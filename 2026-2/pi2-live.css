@@ -419,6 +419,49 @@ a.pi2-btn { text-decoration: none; display: inline-flex; align-items: center; ga
   border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
+.pi2-item-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.pi2-item-badge.conforme {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--ifsc-green, #16a34a);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.pi2-item-badge.ajustar {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.pi2-item-badge.ausente {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--ifsc-red, #dc2626);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.pi2-item-badge.link {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-blue, #2563eb);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.pi2-pills-row {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .pi2-nota-val {
   display: inline-flex;
   align-items: center;

@@ -1119,19 +1119,14 @@ function linhasParaProjetos(linhas) {
   }
 
   // ------------------------------------------------------------------
-  // Painel Central de Notas & Avaliação por Rubricas
-  // ------------------------------------------------------------------
-
   function trocarSubAbaNotas(subaba) {
-    PI2._notasSubaba = subaba;
-    renderNotasTab();
+    if (PI2.abrirNotasLegado) PI2.abrirNotasLegado(subaba);
   }
 
   function renderNotasTab() {
     var container = $('#tab-notas');
     if (!container) return;
     PI2._notasRenderizado = true;
-    var subaba = PI2._notasSubaba || 'rubricas';
 
     var projetos = (typeof window.projectsData !== 'undefined' && Array.isArray(window.projectsData) && window.projectsData.length > 0)
       ? window.projectsData
@@ -1149,6 +1144,7 @@ function linhasParaProjetos(linhas) {
     var ajustarCount = 0;
     var somaNotas = 0;
     var countNotasValidas = 0;
+    var entregasConformesCount = 0;
 
     var projsComAval = projetos.map(function (p) {
       var aval = avaliacoes.find(function (a) {
@@ -1167,6 +1163,9 @@ function linhasParaProjetos(linhas) {
         }
       }
 
+      var crit = (aval && aval.criterios) ? aval.criterios : {};
+      if (crit.artigo_status === 'conforme' || p.overleafStatus === 'ok') entregasConformesCount++;
+
       return {
         projeto: p,
         avaliacao: aval,
@@ -1180,40 +1179,6 @@ function linhasParaProjetos(linhas) {
 
     var avaliacaoMeuProjeto = meuProjetoId ? projsComAval.find(function (item) { return Number(item.projeto.id) === meuProjetoId; }) : null;
 
-    var titulosSubabas = {
-      rubricas: { titulo: 'Acompanhamento de Rubricas Pedagógicas & Roteiro', desc: 'Conformidade do Objetivo Geral (4 critérios) e dos 4 Degraus Específicos (Exploração, Modelagem, Implementação e Validação Experimental).' },
-      entregas: { titulo: 'Entregas Formais & Demandas da Turma', desc: 'Acompanhamento de prazos, critérios de aceite, rubricas formativas e avaliação de pares dos integrantes.' },
-      fechamento: { titulo: 'Fechamento de Médias & Consolidação Final', desc: 'Média ponderada oficial com Entregas, Participação por Pares, Frequência e Pontualidade.' },
-      alunos: { titulo: 'Alunos & Frequência da Turma', desc: 'Vínculo acadêmico com contas Google, frequência registrada e notas individuais.' },
-      config: { titulo: 'Configurações Pedagógicas, Pesos & Regras de Participação', desc: 'Definição da fórmula da avaliação de pares (faixas, proporcional ou amortecida) e pesos dos componentes.' },
-      minhas: { titulo: 'Minhas Notas & Avaliação de Participação da Equipe', desc: 'Avaliação sigilosa de pares entre os colegas da equipe e consulta de notas e pareceres publicados.' }
-    };
-
-    var subInfo = titulosSubabas[subaba] || titulosSubabas.rubricas;
-
-    var htmlSubabasBar = `
-      <div class="pi2-subtabs-bar">
-        <button type="button" class="pi2-subtab-btn ${subaba === 'rubricas' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('rubricas')">
-          <i class="fa-solid fa-bullseye"></i> Rubricas (Objetivos & D1-D4)
-        </button>
-        <button type="button" class="pi2-subtab-btn ${subaba === 'entregas' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('entregas')">
-          <i class="fa-solid fa-list-check"></i> Entregas & Demandas
-        </button>
-        <button type="button" class="pi2-subtab-btn ${subaba === 'fechamento' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('fechamento')">
-          <i class="fa-solid fa-chart-simple"></i> Fechamento & Médias
-        </button>
-        <button type="button" class="pi2-subtab-btn ${subaba === 'alunos' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('alunos')">
-          <i class="fa-solid fa-users"></i> Alunos & Frequência
-        </button>
-        <button type="button" class="pi2-subtab-btn ${subaba === 'config' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('config')">
-          <i class="fa-solid fa-sliders"></i> Pesos & Regras
-        </button>
-        <button type="button" class="pi2-subtab-btn ${subaba === 'minhas' ? 'active' : ''}" onclick="PI2.trocarSubAbaNotas('minhas')">
-          <i class="fa-solid fa-user-graduate"></i> Minhas Notas & Pares
-        </button>
-      </div>
-    `;
-
     container.innerHTML = `
       <div class="pi2-notas-container">
         
@@ -1222,33 +1187,39 @@ function linhasParaProjetos(linhas) {
           <div>
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem;">
               <span class="proj-id-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-amber);font-weight:700;">
-                <i class="fa-solid fa-clipboard-list"></i> PAINEL CENTRAL DE AVALIAÇÕES & NOTAS
+                <i class="fa-solid fa-clipboard-list"></i> CENTRAL PEDAGÓGICA UNIFICADA
               </span>
               <span style="font-size:0.75rem;color:var(--text-dim);">Turma INF-2024 • Semestre 2026-2</span>
             </div>
             <h2 style="font-size:1.35rem;font-weight:700;color:var(--text-main);margin:0;">
-              ${subInfo.titulo}
+              Grade Unificada de Notas & Rubricas Formativas
             </h2>
             <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 0 0;">
-              ${subInfo.desc}
+              Acompanhamento integrado de todos os itens avaliativos da turma (Objetivo Geral, 4 Degraus Metodológicos D1-D4, Entregas Técnicas, Demandas e Avaliação de Pares).
             </p>
           </div>
 
           <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+            ${isDocente ? `
+              <button class="btn btn-outline" onclick="PI2.abrirModalCriarDemanda('*')" style="font-size:0.8rem;padding:0.45rem 0.85rem;color:var(--accent-blue);" title="Criar nova demanda para toda a turma ou equipe">
+                <i class="fa-solid fa-bullhorn"></i> Nova Demanda Broadcast
+              </button>
+              <button class="btn btn-outline" onclick="PI2.abrirNotasLegado('config')" style="font-size:0.8rem;padding:0.45rem 0.85rem;" title="Configurar pesos e fórmulas de fechamento">
+                <i class="fa-solid fa-sliders"></i> Pesos & Regras
+              </button>
+              <button class="btn btn-outline" onclick="PI2.abrirNotasLegado('alunos')" style="font-size:0.8rem;padding:0.45rem 0.85rem;" title="Gerenciar chamada, frequência e lista de estudantes">
+                <i class="fa-solid fa-users"></i> Alunos & Frequência
+              </button>
+            ` : ''}
             <button class="btn btn-outline" onclick="PI2.sincronizar()" style="font-size:0.8rem;padding:0.45rem 0.85rem;" title="Atualizar dados da planilha">
               <i class="fa-solid fa-arrows-rotate"></i> Sincronizar
             </button>
           </div>
         </div>
 
-        ${htmlSubabasBar}
-
-        ${subaba !== 'rubricas' ? `
-          <div id="pi2-notas-inline-corpo" style="margin-top:0.5rem;"></div>
-        ` : `
         <!-- DESTAQUE PARA ESTUDANTE LOGADO -->
         ${(avaliacaoMeuProjeto && !isDocente) ? `
-          <div class="pi2-aluno-destaque">
+          <div class="pi2-aluno-destaque" style="margin-bottom:1.25rem;">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
               <div>
                 <span class="proj-id-badge" style="background:rgba(37,99,235,0.15);color:var(--accent-blue);font-weight:700;">
@@ -1261,13 +1232,13 @@ function linhasParaProjetos(linhas) {
               </div>
               <div style="display:flex;gap:0.75rem;align-items:center;">
                 <div style="text-align:right;">
-                  <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Nota Roteiro 1</div>
+                  <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Nota Atual</div>
                   <div class="pi2-nota-val ${avaliacaoMeuProjeto.nota !== null ? (avaliacaoMeuProjeto.nota >= 7 ? 'excelente' : 'ajuste') : ''}" style="font-size:1.4rem;">
                     ${avaliacaoMeuProjeto.nota !== null ? avaliacaoMeuProjeto.nota.toFixed(1) : 'Em avaliação'}
                   </div>
                 </div>
                 <div>
-                  <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Parecer Geral</div>
+                  <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Situação Geral</div>
                   <span class="status-tag ${avaliacaoMeuProjeto.status === 'aprovado' ? 'tag-ok' : (avaliacaoMeuProjeto.status === 'ajustar' ? 'tag-ajuste' : 'tag-pendente')}" style="padding:0.4rem 0.75rem;font-size:0.82rem;">
                     ${avaliacaoMeuProjeto.status === 'aprovado' ? '🟢 Conforme' : (avaliacaoMeuProjeto.status === 'ajustar' ? '🟡 Requer Ajustes' : '⚪ Em Elaboração')}
                   </span>
@@ -1286,7 +1257,7 @@ function linhasParaProjetos(linhas) {
 
             <!-- 4 Degraus Específicos do Aluno -->
             ${(avaliacaoMeuProjeto.avaliacao && avaliacaoMeuProjeto.avaliacao.criterios) ? `
-              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:0.6rem;margin-top:0.75rem;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:0.6rem;margin-top:0.75rem;">
                 <div style="background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border:1px solid var(--border-color);font-size:0.78rem;">
                   <strong>D1 (Exploração):</strong> <span class="pi2-deg-badge ${avaliacaoMeuProjeto.avaliacao.criterios.esp1_status || 'ausente'}">${(avaliacaoMeuProjeto.avaliacao.criterios.esp1_status === 'conforme' ? '✔️ Conforme' : (avaliacaoMeuProjeto.avaliacao.criterios.esp1_status === 'ajustar' ? '⚠️ Ajustar' : '❌ Ausente'))}</span>
                   ${avaliacaoMeuProjeto.avaliacao.criterios.esp1_obs ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">${esc(avaliacaoMeuProjeto.avaliacao.criterios.esp1_obs)}</div>` : ''}
@@ -1324,7 +1295,7 @@ function linhasParaProjetos(linhas) {
           </div>
           <div class="pi2-kpi-card">
             <span class="pi2-kpi-val" style="color:var(--text-dim);">${pendentesCount}</span>
-            <span class="pi2-kpi-lbl">Em Elaboração / Sem Nota</span>
+            <span class="pi2-kpi-lbl">Em Elaboração</span>
           </div>
           <div class="pi2-kpi-card">
             <span class="pi2-kpi-val" style="color:var(--accent-blue);">${mediaNotas}</span>
@@ -1343,7 +1314,7 @@ function linhasParaProjetos(linhas) {
           </div>
           ${isDocente ? `
             <div style="font-size:0.8rem;color:var(--accent-purple);font-weight:600;">
-              <i class="fa-solid fa-user-shield"></i> Modo Docente Ativo — Edição de Rubricas Habilitada
+              <i class="fa-solid fa-user-shield"></i> Modo Docente Ativo — Clique em <strong>Avaliar</strong> para lançar rubricas, artefatos e avaliação de pares
             </div>
           ` : ''}
         </div>
@@ -1353,13 +1324,16 @@ function linhasParaProjetos(linhas) {
           <table class="pi2-notas-table" id="pi2-tabela-notas">
             <thead>
               <tr>
-                <th style="width:45px;">#</th>
-                <th style="min-width:200px;">Projeto & Equipe</th>
-                <th style="min-width:140px;">Objetivo Geral</th>
-                <th style="min-width:240px;">4 Degraus Específicos</th>
-                <th style="min-width:110px;">Status</th>
-                <th style="width:90px;text-align:center;">Nota</th>
-                <th style="min-width:200px;">Parecer Orientador</th>
+                <th style="width:40px;">#</th>
+                <th style="min-width:180px;">Projeto & Equipe</th>
+                <th style="min-width:130px;">Objetivo Geral</th>
+                <th style="min-width:180px;">4 Degraus (D1-D4)</th>
+                <th style="min-width:190px;">Entregas Técnicas</th>
+                <th style="min-width:85px;text-align:center;">Demandas</th>
+                <th style="min-width:95px;text-align:center;">Pares</th>
+                <th style="min-width:95px;">Status</th>
+                <th style="width:65px;text-align:center;">Nota</th>
+                <th style="min-width:180px;">Parecer Orientador</th>
                 <th style="min-width:110px;text-align:right;">Ações</th>
               </tr>
             </thead>
@@ -1374,6 +1348,12 @@ function linhasParaProjetos(linhas) {
                 var statusLabel = item.status === 'aprovado' ? '🟢 Conforme' : (item.status === 'ajustar' ? '🟡 Ajustar' : '⚪ Pendente');
                 var notaTxt = item.nota !== null ? item.nota.toFixed(1) : '—';
                 var notaClass = item.nota !== null ? (item.nota >= 7.0 ? 'excelente' : 'ajuste') : '';
+
+                var demEquipe = (PI2.demandas || []).filter(function (d) { return d.projeto === '*' || Number(d.projeto) === Number(p.id); });
+                var concluidas = demEquipe.filter(function (d) { return d.status === 'concluida'; }).length;
+
+                var eqDados = (PI2.notas && typeof PI2.notas.obterDadosEquipe === 'function') ? PI2.notas.obterDadosEquipe(p.id) : null;
+                var totalMembros = eqDados && eqDados.membros ? eqDados.membros.length : 0;
 
                 return `
                   <tr class="pi2-nota-row" data-id="${p.id}" data-status="${item.status}" data-nome="${esc(nomeProj).toLowerCase()}" data-integrantes="${esc(integrantesProj).toLowerCase()}">
@@ -1397,7 +1377,7 @@ function linhasParaProjetos(linhas) {
                       ` : '<span style="font-size:0.75rem;color:var(--text-dim);">Não avaliado</span>'}
                     </td>
                     <td>
-                      <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
+                      <div style="display:flex;gap:0.25rem;flex-wrap:wrap;">
                         <span class="pi2-deg-badge ${crit.esp1_status || 'ausente'}" title="D1: Exploração e Referenciais (${esc(crit.esp1_obs || 'Sem obs')})">
                           D1: ${crit.esp1_status === 'conforme' ? '✔️' : (crit.esp1_status === 'ajustar' ? '⚠️' : '❌')}
                         </span>
@@ -1413,6 +1393,47 @@ function linhasParaProjetos(linhas) {
                       </div>
                     </td>
                     <td>
+                      <div class="pi2-pills-row">
+                        ${p.overleaf ? `
+                          <a href="${esc(urlSegura(p.overleaf))}" target="_blank" rel="noopener" class="pi2-item-badge ${crit.artigo_status || (p.overleafStatus === 'ok' ? 'conforme' : 'ajustar')}" title="Artigo SBC Overleaf: ${esc(crit.artigo_obs || p.overleafStatus || 'Link disponível')}">
+                            <i class="fa-solid fa-file-lines"></i> Artigo
+                          </a>
+                        ` : `<span class="pi2-item-badge ausente" title="Artigo não informado"><i class="fa-solid fa-file-lines"></i> Artigo</span>`}
+
+                        ${p.github ? `
+                          <a href="${esc(urlSegura(p.github))}" target="_blank" rel="noopener" class="pi2-item-badge ${crit.github_status || 'conforme'}" title="Código GitHub: ${esc(crit.github_obs || 'Link disponível')}">
+                            <i class="fa-brands fa-github"></i> Código
+                          </a>
+                        ` : `<span class="pi2-item-badge ausente" title="GitHub não informado"><i class="fa-brands fa-github"></i> Código</span>`}
+
+                        ${p.canva ? `
+                          <a href="${esc(urlSegura(p.canva))}" target="_blank" rel="noopener" class="pi2-item-badge ${crit.diagrama_status || 'conforme'}" title="Diagrama Canva/Drive: ${esc(crit.diagrama_obs || 'Link disponível')}">
+                            <i class="fa-solid fa-project-diagram"></i> Diag
+                          </a>
+                        ` : `<span class="pi2-item-badge ausente" title="Diagrama não informado"><i class="fa-solid fa-project-diagram"></i> Diag</span>`}
+
+                        ${p.pitch ? `
+                          <a href="${esc(urlSegura(p.pitch))}" target="_blank" rel="noopener" class="pi2-item-badge ${crit.pitch_status || 'conforme'}" title="Vídeo Pitch: ${esc(crit.pitch_obs || 'Link disponível')}">
+                            <i class="fa-solid fa-video"></i> Pitch
+                          </a>
+                        ` : `<span class="pi2-item-badge ausente" title="Pitch não informado"><i class="fa-solid fa-video"></i> Pitch</span>`}
+                      </div>
+                    </td>
+                    <td style="text-align:center;">
+                      ${demEquipe.length > 0 ? `
+                        <span class="status-tag ${concluidas === demEquipe.length ? 'tag-ok' : 'tag-ajuste'}" style="font-size:0.7rem;padding:0.2rem 0.45rem;" title="${concluidas} de ${demEquipe.length} demandas concluídas">
+                          <i class="fa-solid fa-bullhorn"></i> ${concluidas}/${demEquipe.length}
+                        </span>
+                      ` : '<span style="font-size:0.72rem;color:var(--text-dim);">—</span>'}
+                    </td>
+                    <td style="text-align:center;">
+                      ${totalMembros > 0 ? `
+                        <span class="pi2-item-badge link" style="font-size:0.7rem;" title="${totalMembros} estudantes com participação acompanhada">
+                          <i class="fa-solid fa-user-group"></i> ${totalMembros} alunos
+                        </span>
+                      ` : '<span style="font-size:0.72rem;color:var(--text-dim);">Fator 1.0</span>'}
+                    </td>
+                    <td>
                       <span class="status-tag ${statusClass}" style="font-size:0.72rem;">
                         ${statusLabel}
                       </span>
@@ -1423,14 +1444,14 @@ function linhasParaProjetos(linhas) {
                       </span>
                     </td>
                     <td>
-                      <div style="font-size:0.78rem;color:var(--text-muted);max-width:280px;line-height:1.35;" title="${esc(a && a.parecer ? a.parecer : '')}">
-                        ${a && a.parecer ? esc(a.parecer.length > 80 ? a.parecer.substring(0, 80) + '...' : a.parecer) : '<span style="color:var(--text-dim);">Nenhum parecer emitido</span>'}
+                      <div style="font-size:0.78rem;color:var(--text-muted);max-width:240px;line-height:1.35;" title="${esc(a && a.parecer ? a.parecer : '')}">
+                        ${a && a.parecer ? esc(a.parecer.length > 70 ? a.parecer.substring(0, 70) + '...' : a.parecer) : '<span style="color:var(--text-dim);">Sem parecer emitido</span>'}
                       </div>
                     </td>
                     <td style="text-align:right;">
                       <div style="display:flex;gap:0.35rem;justify-content:flex-end;">
                         ${isDocente ? `
-                          <button class="btn-action" onclick="PI2.abrirModalAvaliarObjetivos(${p.id})" style="background:var(--accent-amber);color:#fff;font-size:0.72rem;padding:0.3rem 0.55rem;" title="Avaliar ou editar nota do Projeto #${p.id}">
+                          <button class="btn-action" onclick="PI2.abrirModalAvaliarObjetivos(${p.id})" style="background:var(--accent-amber);color:#fff;font-size:0.72rem;padding:0.3rem 0.55rem;" title="Avaliar rubricas, entregas e pares do Projeto #${p.id}">
                             <i class="fa-solid fa-pen-to-square"></i> Avaliar
                           </button>
                         ` : ''}
@@ -1445,18 +1466,9 @@ function linhasParaProjetos(linhas) {
             </tbody>
           </table>
         </div>
-        `}
 
       </div>
     `;
-
-    if (subaba !== 'rubricas') {
-      setTimeout(function () {
-        if (window.PI2 && window.PI2.notas && typeof window.PI2.notas.renderizarNaAba === 'function') {
-          window.PI2.notas.renderizarNaAba(subaba, $('#pi2-notas-inline-corpo'));
-        }
-      }, 0);
-    }
   }
 
   function filtrarTabelaNotas() {
@@ -1520,10 +1532,13 @@ function linhasParaProjetos(linhas) {
 
     var textoObjetivo = valorAtual(proj, 'objective') || proj.objective || 'Nenhum objetivo registrado até o momento.';
 
+    var eqDados = (PI2.notas && typeof PI2.notas.obterDadosEquipe === 'function') ? PI2.notas.obterDadosEquipe(projId) : null;
+    var membros = (eqDados && eqDados.membros) ? eqDados.membros : [];
+
     var html = `
       <div style="margin-bottom:1.25rem;">
         <span class="proj-id-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-amber);font-weight:700;">
-          <i class="fa-solid fa-clipboard-check"></i> RUBRICA PEDAGÓGICA — AVALIAÇÃO DE OBJETIVOS
+          <i class="fa-solid fa-clipboard-check"></i> RUBRICAS PEDAGÓGICAS COMPLETAS
         </span>
         <h2 style="font-size:1.35rem;font-weight:700;margin-top:0.4rem;color:var(--text-main);">
           #${proj.id} ${esc(proj.title)}
@@ -1531,10 +1546,42 @@ function linhasParaProjetos(linhas) {
         <div style="color:var(--accent-cyan);font-size:0.85rem;"><i class="fa-solid fa-users"></i> ${esc(proj.team)}</div>
       </div>
 
+      <!-- Links diretos para conferência imediata -->
+      <div style="background:var(--bg-surface, rgba(241,245,249,0.6));border:1px solid var(--border-color);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text-main);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+          <i class="fa-solid fa-up-right-from-square" style="color:var(--accent-blue);"></i> Artefatos da Equipe para Inspeção Imediata:
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+          ${proj.overleaf ? `
+            <a href="${esc(urlSegura(proj.overleaf))}" target="_blank" rel="noopener" class="pi2-item-badge link" style="padding:0.35rem 0.65rem;font-size:0.8rem;">
+              <i class="fa-solid fa-file-lines"></i> Abrir Artigo SBC no Overleaf
+            </a>
+          ` : `<span class="pi2-item-badge ausente" style="padding:0.35rem 0.65rem;font-size:0.8rem;"><i class="fa-solid fa-file-lines"></i> Artigo Overleaf não cadastrado</span>`}
+
+          ${proj.github ? `
+            <a href="${esc(urlSegura(proj.github))}" target="_blank" rel="noopener" class="pi2-item-badge link" style="padding:0.35rem 0.65rem;font-size:0.8rem;">
+              <i class="fa-brands fa-github"></i> Repositório GitHub
+            </a>
+          ` : `<span class="pi2-item-badge ausente" style="padding:0.35rem 0.65rem;font-size:0.8rem;"><i class="fa-brands fa-github"></i> Repositório não cadastrado</span>`}
+
+          ${proj.canva ? `
+            <a href="${esc(urlSegura(proj.canva))}" target="_blank" rel="noopener" class="pi2-item-badge link" style="padding:0.35rem 0.65rem;font-size:0.8rem;">
+              <i class="fa-solid fa-project-diagram"></i> Diagrama de Arquitetura
+            </a>
+          ` : `<span class="pi2-item-badge ausente" style="padding:0.35rem 0.65rem;font-size:0.8rem;"><i class="fa-solid fa-project-diagram"></i> Diagrama não cadastrado</span>`}
+
+          ${proj.pitch ? `
+            <a href="${esc(urlSegura(proj.pitch))}" target="_blank" rel="noopener" class="pi2-item-badge link" style="padding:0.35rem 0.65rem;font-size:0.8rem;">
+              <i class="fa-solid fa-video"></i> Vídeo Pitch
+            </a>
+          ` : `<span class="pi2-item-badge ausente" style="padding:0.35rem 0.65rem;font-size:0.8rem;"><i class="fa-solid fa-video"></i> Pitch não cadastrado</span>`}
+        </div>
+      </div>
+
       <!-- Texto cadastrado pelos estudantes -->
-      <div class="pi2-obj-preview-box">
+      <div class="pi2-obj-preview-box" style="margin-bottom:1.25rem;">
         <div class="pi2-obj-preview-title">
-          <i class="fa-solid fa-file-lines"></i> Redação Atual dos Objetivos (Cadastrada pela Equipe)
+          <i class="fa-solid fa-bullseye"></i> Redação Atual do Objetivo Geral (Cadastrada pela Equipe)
         </div>
         <div class="pi2-obj-preview-text">${esc(textoObjetivo)}</div>
       </div>
@@ -1543,7 +1590,7 @@ function linhasParaProjetos(linhas) {
         <!-- BLOCO 1: OBJETIVO GERAL -->
         <div class="pi2-rubrica-section">
           <div class="pi2-rubrica-header">
-            <h3><i class="fa-solid fa-bullseye" style="color:var(--accent-cyan);"></i> 1. Objetivo Geral (A Grande Meta)</h3>
+            <h3><i class="fa-solid fa-bullseye" style="color:var(--accent-cyan);"></i> 1. Rubrica do Objetivo Geral</h3>
             <select id="pi2-eval-geral-status" class="pi2-status-select" style="font-weight:700;">
               <option value="conforme" ${crit.geral_status === 'conforme' ? 'selected' : ''}>✔️ Conforme / Aprovado</option>
               <option value="ajustar" ${crit.geral_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
@@ -1576,11 +1623,8 @@ function linhasParaProjetos(linhas) {
         <!-- BLOCO 2: OBJETIVOS ESPECÍFICOS (OS 4 DEGRAUS METODOLÓGICOS) -->
         <div class="pi2-rubrica-section">
           <div class="pi2-rubrica-header">
-            <h3><i class="fa-solid fa-stairs" style="color:var(--ifsc-green-light);"></i> 2. Objetivos Específicos (4 Degraus Metodológicos)</h3>
-            <span style="font-size:0.75rem;color:var(--text-dim);">Avalie um a um conforme o Roteiro</span>
-          </div>
-          <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);padding:0.5rem 0.75rem;border-radius:6px;font-size:0.75rem;color:var(--ifsc-red);margin-bottom:0.85rem;">
-            <i class="fa-solid fa-triangle-exclamation"></i> <strong>Regra Anti-Estudo Passivo:</strong> Vetar tarefas rotineiras ("estudar JS", "ler artigos") ou administrativas ("criar grupo"). Devem ser entregas técnicas tangíveis!
+            <h3><i class="fa-solid fa-stairs" style="color:var(--ifsc-green-light);"></i> 2. Os 4 Degraus Metodológicos (D1 a D4)</h3>
+            <span style="font-size:0.75rem;color:var(--text-dim);">Avalie a entrega formativa de cada etapa</span>
           </div>
 
           <div class="pi2-degraus-container">
@@ -1654,40 +1698,171 @@ function linhasParaProjetos(linhas) {
           </div>
         </div>
 
-        <!-- BLOCO 3: NOTA CONSOLIDADA & PARECER ORIENTADOR -->
+        <!-- BLOCO 3: ENTREGAS TÉCNICAS & ARTEFATOS -->
+        <div class="pi2-rubrica-section">
+          <div class="pi2-rubrica-header">
+            <h3><i class="fa-solid fa-box-archive" style="color:var(--accent-purple);"></i> 3. Rubricas das Entregas Técnicas & Artefatos</h3>
+            <span style="font-size:0.75rem;color:var(--text-dim);">Artigo, repositório, diagrama e pitch</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:0.75rem;">
+            <!-- Artigo SBC Overleaf -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <i class="fa-solid fa-file-lines" style="color:var(--accent-blue);"></i> <strong>Artigo SBC (Overleaf)</strong>
+                </div>
+                <select id="crit-artigo-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.artigo_status === 'conforme' || (!crit.artigo_status && proj.overleafStatus === 'ok') ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.artigo_status === 'ajustar' || (!crit.artigo_status && proj.overleafStatus === 'edicao') ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.artigo_status === 'ausente' || (!crit.artigo_status && !proj.overleaf) ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <input type="text" id="crit-artigo-obs" placeholder="Apontamentos de estrutura do artigo" value="${esc(crit.artigo_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+
+            <!-- Código GitHub -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <i class="fa-brands fa-github" style="color:var(--text-main);"></i> <strong>Código (GitHub)</strong>
+                </div>
+                <select id="crit-github-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.github_status === 'conforme' || (!crit.github_status && proj.github) ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.github_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.github_status === 'ausente' || (!crit.github_status && !proj.github) ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <input type="text" id="crit-github-obs" placeholder="Apontamentos do repositório/commits" value="${esc(crit.github_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+
+            <!-- Diagrama / Arquitetura -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <i class="fa-solid fa-project-diagram" style="color:var(--accent-amber);"></i> <strong>Diagrama de Arquitetura</strong>
+                </div>
+                <select id="crit-diagrama-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.diagrama_status === 'conforme' || (!crit.diagrama_status && proj.canva) ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.diagrama_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.diagrama_status === 'ausente' || (!crit.diagrama_status && !proj.canva) ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <input type="text" id="crit-diagrama-obs" placeholder="Apontamentos do diagrama/WBS" value="${esc(crit.diagrama_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+
+            <!-- Vídeo Pitch -->
+            <div class="pi2-degrau-row">
+              <div class="pi2-degrau-top">
+                <div class="pi2-degrau-tag">
+                  <i class="fa-solid fa-video" style="color:var(--ifsc-red);"></i> <strong>Vídeo Pitch</strong>
+                </div>
+                <select id="crit-pitch-status" class="pi2-status-select">
+                  <option value="conforme" ${crit.pitch_status === 'conforme' || (!crit.pitch_status && proj.pitch) ? 'selected' : ''}>✔️ Conforme</option>
+                  <option value="ajustar" ${crit.pitch_status === 'ajustar' ? 'selected' : ''}>⚠️ Requer Ajustes</option>
+                  <option value="ausente" ${crit.pitch_status === 'ausente' || (!crit.pitch_status && !proj.pitch) ? 'selected' : ''}>❌ Ausente</option>
+                </select>
+              </div>
+              <input type="text" id="crit-pitch-obs" placeholder="Apontamentos do vídeo pitch" value="${esc(crit.pitch_obs || '')}" style="font-size:0.8rem;padding:0.35rem 0.6rem;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOCO 4: PARTICIPAÇÃO & AVALIAÇÃO DE PARES -->
+        <div class="pi2-rubrica-section">
+          <div class="pi2-rubrica-header">
+            <h3><i class="fa-solid fa-user-group" style="color:var(--accent-blue);"></i> 4. Participação Individual & Avaliação de Pares</h3>
+            <span style="font-size:0.75rem;color:var(--text-dim);">Autoavaliação e nota indicada pelos colegas da equipe</span>
+          </div>
+
+          ${membros.length > 0 ? `
+            <div class="pi2-table-wrap" style="margin-bottom:0.75rem;">
+              <table class="pi2-table" style="font-size:0.8rem;">
+                <thead>
+                  <tr>
+                    <th>Estudante</th>
+                    <th style="text-align:center;">Autoavaliação</th>
+                    <th style="text-align:center;">Média dos Colegas</th>
+                    <th style="width:140px;text-align:center;">Participação (Vale)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${membros.map(function (m) {
+                    var mediaParesTxt = m.mediaPares !== null && m.mediaPares !== undefined ? Number(m.mediaPares).toFixed(1) : '—';
+                    var autoTxt = m.auto !== null && m.auto !== undefined ? Number(m.auto).toFixed(1) : '—';
+                    var valeVal = m.vale !== null && m.vale !== undefined ? m.vale : (m.mediaPares !== null ? m.mediaPares : '10');
+
+                    return `
+                      <tr>
+                        <td><strong>${esc(m.nome || m.id)}</strong></td>
+                        <td style="text-align:center;">${autoTxt}</td>
+                        <td style="text-align:center;"><span class="pi2-item-badge link">${mediaParesTxt}</span></td>
+                        <td style="text-align:center;">
+                          <input type="number" step="0.1" min="0" max="10" class="pi2-eval-participacao-input" data-aluno-id="${esc(m.id)}" data-media-pares="${mediaParesTxt !== '—' ? mediaParesTxt : '10'}" value="${valeVal}" style="width:80px;text-align:center;font-weight:700;padding:0.25rem 0.4rem;font-size:0.85rem;" />
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+            <div style="display:flex;justify-content:flex-end;">
+              <button type="button" class="btn btn-outline" id="pi2-btn-copiar-pares" style="font-size:0.75rem;padding:0.3rem 0.65rem;">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Usar médias indicadas pelos colegas para todos
+              </button>
+            </div>
+          ` : `
+            <div style="font-size:0.8rem;color:var(--text-muted);background:var(--bg-card);padding:0.75rem 1rem;border-radius:6px;border:1px solid var(--border-color);">
+              <i class="fa-solid fa-circle-info" style="color:var(--accent-blue);"></i> Integrantes desta equipe estão em fase de homologação na planilha de controle. O fator de participação geral está como 1.0 (100%).
+            </div>
+          `}
+        </div>
+
+        <!-- BLOCO 5: NOTA CONSOLIDADA & PARECER ORIENTADOR -->
         <div class="pi2-rubrica-section" style="background:var(--chip-bg);">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;">
             <div class="pi2-form-group">
-              <label>Nota Avaliativa (0,0 a 10,0) *</label>
+              <label>Nota Avaliativa Geral (0,0 a 10,0) *</label>
               <input type="text" id="pi2-eval-nota" required placeholder="Ex: 9.5" value="${esc(notaAtual)}" style="font-size:1.05rem;font-weight:700;" />
             </div>
             <div class="pi2-form-group">
               <label>Parecer Geral de Conformidade *</label>
               <select id="pi2-eval-status" required style="font-weight:700;">
-                <option value="aprovado" ${statusAtual === 'aprovado' ? 'selected' : ''}>🟢 Aprovado (Objetivos Conformados)</option>
-                <option value="ajustar" ${statusAtual === 'ajustar' ? 'selected' : ''}>🟡 Requer Ajustes (Revisar Redação)</option>
+                <option value="aprovado" ${statusAtual === 'aprovado' ? 'selected' : ''}>🟢 Aprovado (Objetivos & Entregas Conformadas)</option>
+                <option value="ajustar" ${statusAtual === 'ajustar' ? 'selected' : ''}>🟡 Requer Ajustes (Revisar Redação/Entregas)</option>
                 <option value="pendente" ${statusAtual === 'pendente' ? 'selected' : ''}>⚪ Em Elaboração / Pendente</option>
               </select>
             </div>
           </div>
 
           <div class="pi2-form-group">
-            <label>Devolutiva Pedagógica & Parecer Docente (Visível aos Estudantes)</label>
-            <textarea id="pi2-eval-parecer" rows="3" placeholder="Aponte o que o grupo acertou e exatamente o que precisa ser ajustado nos objetivos antes do próximo checkpoint...">${esc(parecerAtual)}</textarea>
-            <span class="pi2-hint" style="font-size:0.75rem;color:var(--text-dim);">O grupo receberá este parecer de forma transparente no card do projeto.</span>
+            <label>Devolutiva Pedagógica & Parecer Docente (Transparente para os Estudantes)</label>
+            <textarea id="pi2-eval-parecer" rows="3" placeholder="Aponte o que o grupo acertou e exatamente o que precisa ser corrigido antes da próxima entrega...">${esc(parecerAtual)}</textarea>
+            <span class="pi2-hint" style="font-size:0.75rem;color:var(--text-dim);">A equipe terá acesso a este parecer para orientar as correções necessárias.</span>
           </div>
         </div>
 
         <div class="pi2-modal-footer">
           <button type="button" class="btn btn-outline" onclick="PI2.fecharModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary" style="background:var(--ifsc-green);color:#fff;" id="pi2-btn-submit-eval">
-            <i class="fa-solid fa-floppy-disk"></i> Salvar Avaliação dos Objetivos
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Avaliação Completa & Rubricas
           </button>
         </div>
       </form>
     `;
 
     abrirModal(html, true);
+
+    var btnCopiarPares = $('#pi2-btn-copiar-pares');
+    if (btnCopiarPares) {
+      btnCopiarPares.onclick = function () {
+        $$('.pi2-eval-participacao-input').forEach(function (inp) {
+          var media = inp.getAttribute('data-media-pares');
+          if (media && media !== '—') inp.value = media;
+        });
+        aviso('Notas de participação preenchidas com as médias atribuídas pelos colegas.');
+      };
+    }
 
     var form = $('#pi2-form-avaliar-objetivos');
     if (form) {
@@ -1696,6 +1871,12 @@ function linhasParaProjetos(linhas) {
         var btn = $('#pi2-btn-submit-eval');
         btn.disabled = true;
         btn.innerText = 'Salvando avaliação...';
+
+        var participacaoMap = {};
+        $$('.pi2-eval-participacao-input').forEach(function (inp) {
+          var aId = inp.getAttribute('data-aluno-id');
+          if (aId) participacaoMap[aId] = inp.value;
+        });
 
         var criteriosObj = {
           geral_status: $('#pi2-eval-geral-status').value,
@@ -1710,7 +1891,16 @@ function linhasParaProjetos(linhas) {
           esp3_status: $('#crit-esp3-status').value,
           esp3_obs: $('#crit-esp3-obs').value.trim(),
           esp4_status: $('#crit-esp4-status').value,
-          esp4_obs: $('#crit-esp4-obs').value.trim()
+          esp4_obs: $('#crit-esp4-obs').value.trim(),
+          artigo_status: $('#crit-artigo-status') ? $('#crit-artigo-status').value : 'conforme',
+          artigo_obs: $('#crit-artigo-obs') ? $('#crit-artigo-obs').value.trim() : '',
+          github_status: $('#crit-github-status') ? $('#crit-github-status').value : 'conforme',
+          github_obs: $('#crit-github-obs') ? $('#crit-github-obs').value.trim() : '',
+          diagrama_status: $('#crit-diagrama-status') ? $('#crit-diagrama-status').value : 'conforme',
+          diagrama_obs: $('#crit-diagrama-obs') ? $('#crit-diagrama-obs').value.trim() : '',
+          pitch_status: $('#crit-pitch-status') ? $('#crit-pitch-status').value : 'conforme',
+          pitch_obs: $('#crit-pitch-obs') ? $('#crit-pitch-obs').value.trim() : '',
+          participacao: participacaoMap
         };
 
         var payload = {
@@ -1740,13 +1930,13 @@ function linhasParaProjetos(linhas) {
             PI2.avaliacoes.push(itemSalvo);
           }
 
-          aviso('Avaliação dos objetivos salva com sucesso!');
+          aviso('Avaliação completa das rubricas salva com sucesso!');
           fecharModal();
           renderNotasTab();
           redesenhar();
         }).catch(function (err) {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Avaliação dos Objetivos';
+          btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Avaliação Completa & Rubricas';
           aviso('Erro ao salvar avaliação: ' + (err.message || err), 'warning');
         });
       };
