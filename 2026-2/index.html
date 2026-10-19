@@ -13,7 +13,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="pi2-live.css?v=2.7">
+  <link rel="stylesheet" href="pi2-live.css?v=2.8">
 
   <style>
     /* ==========================================================================
@@ -264,59 +264,215 @@
       transform: rotate(15deg);
     }
 
-    /* Navigation Bar / Tabs */
+    /* Navigation Bar / Tabs em 2 Linhas com Cor de Destaque */
     .nav-tabs-bar {
-      background: var(--bg-surface);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.5rem 2rem;
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.14) 0%, rgba(15, 23, 42, 0.85) 50%, rgba(14, 165, 233, 0.12) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(34, 197, 94, 0.35);
+      border-bottom: 2px solid rgba(34, 197, 94, 0.4);
+      padding: 0.65rem 1.5rem;
       display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
+      flex-direction: column;
+      gap: 0.45rem;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
       transition: var(--transition);
     }
-    .tab-btn {
-      background: transparent;
-      border: none;
+    [data-theme="light"] .nav-tabs-bar {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, #f8fafc 50%, rgba(14, 165, 233, 0.08) 100%);
+      border-top: 1px solid rgba(22, 163, 74, 0.25);
+      border-bottom: 2px solid rgba(22, 163, 74, 0.35);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+    .nav-tabs-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .nav-tabs-group-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      padding: 0.25rem 0.55rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+      user-select: none;
+    }
+    [data-theme="light"] .nav-tabs-group-label {
+      background: rgba(0, 0, 0, 0.04);
+      color: #475569;
+    }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.84rem;
       font-weight: 600;
-      padding: 0.6rem 1.1rem;
+      padding: 0.42rem 0.85rem;
       border-radius: var(--radius-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.45rem;
       transition: var(--transition);
       white-space: nowrap;
     }
     .tab-btn:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(34, 197, 94, 0.4);
+      transform: translateY(-1px);
     }
     [data-theme="light"] .tab-btn:hover {
-      background: rgba(0, 0, 0, 0.04);
+      background: #ffffff;
+      border-color: var(--ifsc-green);
     }
     .tab-btn.active {
-      color: var(--text-main);
-      background: rgba(22, 163, 74, 0.15);
-      border: 1px solid var(--border-glow);
+      color: #ffffff;
+      background: var(--ifsc-green);
+      border-color: var(--ifsc-green-light);
+      box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
     }
     .tab-btn .badge-count {
-      background: rgba(128, 128, 128, 0.18);
-      font-size: 0.75rem;
-      padding: 0.1rem 0.45rem;
+      background: rgba(128, 128, 128, 0.22);
+      font-size: 0.72rem;
+      padding: 0.08rem 0.42rem;
       border-radius: 10px;
       color: var(--text-muted);
     }
     .tab-btn.active .badge-count {
-      background: var(--ifsc-green);
+      background: rgba(255, 255, 255, 0.25);
       color: #fff;
       font-weight: 700;
     }
     [data-theme="dark"] .tab-btn.active .badge-count {
-      color: #042f14;
+      background: rgba(0, 0, 0, 0.25);
+      color: #ffffff;
     }
+
+    /* Utilitarios & Atalhos */
+    .utilitarios-section {
+      margin-bottom: 2.2rem;
+    }
+    .utilitarios-group-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.45rem;
+    }
+    .utilitarios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.85rem;
+    }
+    .util-btn-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.95rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: var(--shadow-glass);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .util-btn-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--ifsc-green);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      background: var(--bg-surface);
+    }
+    .util-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .util-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+    .util-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .util-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .util-badge-ext {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-left: 0.3rem;
+      opacity: 0.6;
+      transition: var(--transition);
+    }
+    .util-btn-card:hover .util-badge-ext {
+      opacity: 1;
+      color: var(--ifsc-green-light);
+      transform: translate(2px, -2px);
+    }
+
+    /* Cards de Eventos Cientificos */
+    .eventos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+    .evento-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-glass);
+      transition: var(--transition);
+    }
+    .evento-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+    .evento-card.featured-amber { border-top: 4px solid var(--accent-amber); }
+    .evento-card.featured-green { border-top: 4px solid var(--ifsc-green); }
+    .evento-card.featured-cyan { border-top: 4px solid var(--accent-cyan); }
+    .evento-card.featured-purple { border-top: 4px solid var(--accent-purple); }
+    .evento-card.featured-blue { border-top: 4px solid #3b82f6; }
 
     /* Main Container */
     main {
@@ -2634,29 +2790,44 @@
     </div>
   </header>
 
-  <!-- Navigation Tabs -->
+  <!-- Navigation Tabs Dividida em 2 Linhas com Cor de Destaque -->
   <nav class="nav-tabs-bar">
-    <button class="tab-btn active" onclick="switchTab('projetos')">
-      <i class="fa-solid fa-cubes"></i> Painel de Projetos <span class="badge-count">11</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
-      <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Turma (Pauta)
-    </button>
-    <button class="tab-btn" onclick="switchTab('cotb-2027')">
-      <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Computer on the Beach 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">Submissão 15/11</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('timeline')">
-      <i class="fa-solid fa-timeline"></i> Timeline de Atividades & Aulas
-    </button>
-    <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
-      <i class="fa-solid fa-file-code"></i> Status Overleaf & Links <span class="badge-count" id="badge-overleaf-alert">2 alertas</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('notas')">
-      <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> Notas & Avaliações
-    </button>
-    <button class="tab-btn" onclick="switchTab('demandas')">
-      <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> Demandas & Checkpoints
-    </button>
+    <!-- Linha 1: Gestao Pedagogica, Acompanhamento & Avaliacao -->
+    <div class="nav-tabs-row">
+      <span class="nav-tabs-group-label"><i class="fa-solid fa-layer-group"></i> Gest&atilde;o:</span>
+      <button class="tab-btn active" onclick="switchTab('projetos')">
+        <i class="fa-solid fa-cubes"></i> Painel de Projetos <span class="badge-count">11</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
+        <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Turma (Pauta)
+      </button>
+      <button class="tab-btn" onclick="switchTab('notas')">
+        <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> Notas &amp; Avalia&ccedil;&otilde;es
+      </button>
+      <button class="tab-btn" onclick="switchTab('demandas')">
+        <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> Demandas &amp; Checkpoints
+      </button>
+      <button class="tab-btn" onclick="switchTab('timeline')">
+        <i class="fa-solid fa-timeline"></i> Timeline de Aulas
+      </button>
+    </div>
+
+    <!-- Linha 2: Producao Cientifica, Eventos, Escrita & Utilitarios -->
+    <div class="nav-tabs-row">
+      <span class="nav-tabs-group-label"><i class="fa-solid fa-flask"></i> Produ&ccedil;&atilde;o &amp; Pesquisa:</span>
+      <button class="tab-btn" onclick="switchTab('eventos')">
+        <i class="fa-solid fa-award" style="color: var(--accent-amber);"></i> Eventos de Computa&ccedil;&atilde;o <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); font-weight: 700;">Submiss&otilde;es</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('utilitarios')">
+        <i class="fa-solid fa-screwdriver-wrench" style="color: var(--ifsc-green-light);"></i> Atalhos &amp; Utilit&aacute;rios
+      </button>
+      <button class="tab-btn" onclick="switchTab('cotb-2027')">
+        <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Guia COTB 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">15/11</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
+        <i class="fa-solid fa-file-code"></i> Status Overleaf &amp; Links <span class="badge-count" id="badge-overleaf-alert">2 alertas</span>
+      </button>
+    </div>
   </nav>
 
   <!-- Main Body -->
@@ -2973,24 +3144,6 @@
         </div>
       </div>
 
-      <!-- COTB 2027 Call for Papers Alert Banner -->
-      <div class="cotb-announcement-banner">
-        <div class="cotb-announcement-left">
-          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.4rem;">
-            <div class="cotb-announcement-badge"><i class="fa-solid fa-bullhorn"></i> CHAMADA OFICIAL PUBLICADA • 18ª EDIÇÃO</div>
-            <span style="background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.4); color: var(--ifsc-green-light); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.76rem; font-weight: 800;">
-              <i class="fa-solid fa-circle-check"></i> Submissão 100% Gratuita (R$ 0,00)
-            </span>
-          </div>
-          <h3><i class="fa-solid fa-umbrella-beach text-amber"></i> Computer on the Beach 2027 — Submissões Abertas até 15/11/2026</h3>
-          <p>O COTB 2027 será realizado de <strong>13 a 17 de abril de 2027</strong> em Florianópolis (Hotel Praia Brava). As submissões via sistema <strong>JEMS da SBC</strong> abrem em 01/10 com prazo limite em <strong>15 de novembro de 2026</strong>. <strong>Não há taxa para submeter</strong> (apenas o artigo pronto em PDF anônimo). Taxa de registro e correções aplicam-se <em>exclusivamente em 2027 e somente se o artigo for aprovado</em>!</p>
-        </div>
-        <div class="cotb-announcement-right">
-          <button class="btn btn-primary" onclick="switchTab('cotb-2027')" style="white-space: nowrap;">
-            <i class="fa-solid fa-arrow-right"></i> Ver Guia & Prazos COTB
-          </button>
-        </div>
-      </div>
 
       <!-- KPI Summary Cards -->
       <div class="kpi-grid">
@@ -3664,6 +3817,397 @@ Costa e Souza \cite{costa2023estacao} & Estação meteorológica em nuvem & Cust
           </tbody>
         </table>
       </div>
+    </section>
+
+    <!-- TAB: EVENTOS DE COMPUTACAO & OPORTUNIDADES CIENTIFICAS -->
+    <section id="tab-eventos" class="tab-content">
+      <div class="hero-banner" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(22, 163, 74, 0.14) 50%, rgba(14, 165, 233, 0.1) 100%); border-color: rgba(245, 158, 11, 0.4);">
+        <div class="hero-info">
+          <div class="cotb-announcement-badge"><i class="fa-solid fa-award"></i> DIVULGA&Ccedil;&Atilde;O CIENT&Iacute;FICA &bull; TURMA INF-2024</div>
+          <h2 style="color: var(--text-main);"><i class="fa-solid fa-award text-amber"></i> Eventos de Computa&ccedil;&atilde;o &amp; Publica&ccedil;&atilde;o Cient&iacute;fica</h2>
+          <p>O desenvolvimento dos artigos e experimentos de Projeto Integrador II tem como meta a submiss&atilde;o e valida&ccedil;&atilde;o em confer&ecirc;ncias cient&iacute;ficas de computa&ccedil;&atilde;o. Submeter um artigo consolida a escrita acad&ecirc;mica, desenvolve a argumenta&ccedil;&atilde;o t&eacute;cnica e projeta os estudantes para a comunidade cient&iacute;fica e profissional.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-calendar-check text-amber"></i> Alvo Principal: <strong>COTB 2027 (15/11)</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-circle-check text-green"></i> Submiss&atilde;o: <strong>100% Gratuita (R$ 0,00)</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-user-secret text-cyan"></i> Avalia&ccedil;&atilde;o: <strong>Double-Blind Peer Review</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-cloud-arrow-up text-blue"></i> Sistema: <strong>JEMS / SBC</strong></div>
+        </div>
+      </div>
+
+      <!-- Grid de Eventos Cientificos -->
+      <div class="eventos-grid">
+        
+        <!-- Card 1: COTB 2027 -->
+        <div class="evento-card featured-amber">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+              <span class="pedagogical-badge amber"><i class="fa-solid fa-star"></i> Alvo Oficial da Turma &bull; 18&ordf; Edi&ccedil;&atilde;o</span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-amber);"><i class="fa-solid fa-clock"></i> Deadline: 15/11/2026</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); margin: 0 0 0.5rem 0;">
+              <i class="fa-solid fa-umbrella-beach text-amber"></i> Computer on the Beach 2027 (COTB)
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.9rem;">
+              Principal congresso regional de computa&ccedil;&atilde;o aplicada de Santa Catarina (Google Scholar h-index 7). Realizado de <strong>13 a 17 de abril de 2027</strong> em Florian&oacute;polis (Hotel Praia Brava).
+            </p>
+            <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--accent-amber); padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.82rem; color: var(--text-main); margin-bottom: 1rem;">
+              <strong>Formatos aceitos:</strong> Artigo Completo (at&eacute; 6 p&aacute;gs) ou Resumo Estendido (2 a 3 p&aacute;gs). Modelo SBC LaTeX no Overleaf. Submiss&atilde;o 100% gratuita via JEMS!
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <button class="btn btn-primary" onclick="switchTab('cotb-2027')" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+              <i class="fa-solid fa-book-open"></i> Guia Completo COTB
+            </button>
+            <a href="http://www.computeronthebeach.com.br" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem; border-color: var(--accent-amber); color: var(--accent-amber);">
+              <i class="fa-solid fa-globe"></i> Site Oficial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: SEPEI IFSC -->
+        <div class="evento-card featured-green">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+              <span class="pedagogical-badge green"><i class="fa-solid fa-building-columns"></i> Rede Federal SC &bull; Institucional</span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--ifsc-green-light);"><i class="fa-solid fa-calendar"></i> Edi&ccedil;&atilde;o Anual PROPPI</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); margin: 0 0 0.5rem 0;">
+              <i class="fa-solid fa-flask-vial text-green"></i> SEPEI &mdash; Semin&aacute;rio de Ensino, Pesquisa, Extens&atilde;o e Inova&ccedil;&atilde;o
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.9rem;">
+              O maior encontro cient&iacute;fico e acad&ecirc;mico do IFSC. Re&uacute;ne projetos de pesquisa aplicada, inova&ccedil;&atilde;o tecnol&oacute;gica e extens&atilde;o de todos os 22 c&acirc;mpus do estado de Santa Catarina.
+            </p>
+            <div style="background: rgba(34, 197, 94, 0.08); border-left: 3px solid var(--ifsc-green); padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.82rem; color: var(--text-main); margin-bottom: 1rem;">
+              <strong>Formatos aceitos:</strong> P&ocirc;ster cient&iacute;fico, comunica&ccedil;&atilde;o oral e resumo expandido publicado nos anais da editora do IFSC com registro ISSN.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <a href="https://www.ifsc.edu.br/sepei" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem; border-color: var(--ifsc-green); color: var(--ifsc-green-light);">
+              <i class="fa-solid fa-globe"></i> Portal SEPEI IFSC <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem;"></i>
+            </a>
+            <a href="https://periodicos.ifsc.edu.br/" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+              <i class="fa-solid fa-newspaper"></i> Anais Hist&oacute;ricos
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 3: SNCT -->
+        <div class="evento-card featured-cyan">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+              <span class="pedagogical-badge cyan"><i class="fa-solid fa-atom"></i> MCTI &bull; Mostra Aberta &agrave; Comunidade</span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-calendar"></i> Semana de Outubro</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); margin: 0 0 0.5rem 0;">
+              <i class="fa-solid fa-microchip" style="color: var(--accent-cyan);"></i> SNCT &mdash; Semana Nacional de Ci&ecirc;ncia e Tecnologia
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.9rem;">
+              Evento nacional promovido pelo Minist&eacute;rio da Ci&ecirc;ncia, Tecnologia e Inova&ccedil;&atilde;o (MCTI). No C&acirc;mpus Garopaba, os grupos apresentam estandes com prot&oacute;tipos reais e demonstra&ccedil;&otilde;es interativas.
+            </p>
+            <div style="background: rgba(6, 182, 212, 0.08); border-left: 3px solid var(--accent-cyan); padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.82rem; color: var(--text-main); margin-bottom: 1rem;">
+              <strong>Formatos aceitos:</strong> Estandes pr&aacute;ticos com prot&oacute;tipos de IoT, IA, acessibilidade e sustentabilidade, al&eacute;m de pain&eacute;is e apresenta&ccedil;&otilde;es rel&acirc;mpago (pitch).
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <a href="https://snct.mcti.gov.br" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem; border-color: var(--accent-cyan); color: var(--accent-cyan);">
+              <i class="fa-solid fa-globe"></i> Portal SNCT MCTI <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem;"></i>
+            </a>
+            <a href="https://www.ifsc.edu.br/snct" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+              <i class="fa-solid fa-users"></i> SNCT no IFSC
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 4: Escolas Regionais SBC Sul -->
+        <div class="evento-card featured-purple">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+              <span class="pedagogical-badge purple"><i class="fa-solid fa-network-wired"></i> SBC Regional Sul</span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--accent-purple);"><i class="fa-solid fa-graduation-cap"></i> F&oacute;rum de Inicia&ccedil;&atilde;o Cient&iacute;fica</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); margin: 0 0 0.5rem 0;">
+              <i class="fa-solid fa-graduation-cap text-purple"></i> Escolas Regionais da SBC no Sul (ERRC &bull; ERBD &bull; ERIN)
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.9rem;">
+              Escolas tem&aacute;ticas da Sociedade Brasileira de Computa&ccedil;&atilde;o focadas em Redes de Computadores (ERRC), Banco de Dados (ERBD) e Inform&aacute;tica Aplicada (ERIN) sediadas no RS e SC.
+            </p>
+            <div style="background: rgba(168, 85, 247, 0.08); border-left: 3px solid var(--accent-purple); padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.82rem; color: var(--text-main); margin-bottom: 1rem;">
+              <strong>Formatos aceitos:</strong> Workshops de Inicia&ccedil;&atilde;o Cient&iacute;fica (WIC) para estudantes do ensino m&eacute;dio t&eacute;cnico e gradua&ccedil;&atilde;o, com sess&otilde;es de p&ocirc;steres e artigos curtos.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <a href="https://www.sbc.org.br" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem; border-color: var(--accent-purple); color: var(--accent-purple);">
+              <i class="fa-solid fa-globe"></i> Portal SBC <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem;"></i>
+            </a>
+            <a href="https://www.sbc.org.br/eventos" target="_blank" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+              <i class="fa-solid fa-calendar-days"></i> Calend&aacute;rio de Eventos
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 5: JEMS SBC -->
+        <div class="evento-card featured-blue">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+              <span class="pedagogical-badge blue"><i class="fa-solid fa-cloud-arrow-up"></i> Sistema Central de Submiss&otilde;es</span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: #3b82f6;"><i class="fa-solid fa-shield-halved"></i> Cadastro Gratuito</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: var(--text-main); margin: 0 0 0.5rem 0;">
+              <i class="fa-solid fa-paper-plane" style="color: #3b82f6;"></i> JEMS &mdash; Journal and Event Management System (SBC)
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.9rem;">
+              Plataforma oficial da Sociedade Brasileira de Computa&ccedil;&atilde;o (SBC) adotada pelo COTB e por confer&ecirc;ncias nacionais para recep&ccedil;&atilde;o de arquivos em PDF, cadastro de coautores e pareceres da banca.
+            </p>
+            <div style="background: rgba(59, 130, 246, 0.08); border-left: 3px solid #3b82f6; padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.82rem; color: var(--text-main); margin-bottom: 1rem;">
+              <strong>Orienta&ccedil;&atilde;o importante:</strong> Todos os integrantes do grupo devem criar uma conta gratuita no JEMS previamente para serem vinculados na submiss&atilde;o do artigo.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <a href="https://jems.sbc.org.br" target="_blank" class="btn btn-primary" style="background: #2563eb; font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Sistema JEMS SBC
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB: ATALHOS & UTILITARIOS PARA PRODUCAO E PESQUISA -->
+    <section id="tab-utilitarios" class="tab-content">
+      <div class="hero-banner" style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.16) 0%, rgba(14, 165, 233, 0.14) 50%, rgba(168, 85, 247, 0.1) 100%); border-color: rgba(22, 163, 74, 0.4);">
+        <div class="hero-info">
+          <div class="cotb-announcement-badge"><i class="fa-solid fa-screwdriver-wrench"></i> CAIXA DE FERRAMENTAS DO ESTUDANTE DE INFORM&Aacute;TICA</div>
+          <h2 style="color: var(--text-main);"><i class="fa-solid fa-screwdriver-wrench text-green"></i> Central de Atalhos &amp; Ferramentas Essenciais</h2>
+          <p>Sele&ccedil;&atilde;o de aplicativos web, utilit&aacute;rios de modelagem, bases bibliogr&aacute;ficas e plataformas de c&oacute;digo recomendadas pela equipe docente para dar suporte &agrave; escrita do artigo, constru&ccedil;&atilde;o de gr&aacute;ficos e testes pr&aacute;ticos da turma.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tag"><i class="fa-solid fa-bolt text-green"></i> Atalhos R&aacute;pidos: <strong>16 Ferramentas</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-laptop-code text-cyan"></i> Categorias: <strong>4 &Aacute;reas</strong></div>
+          <div class="meta-tag"><i class="fa-solid fa-arrow-up-right-from-square text-amber"></i> Acesso: <strong>Links Diretos 100% Online</strong></div>
+        </div>
+      </div>
+
+      <!-- Grupo 1: Escrita Cientifica & LaTeX -->
+      <div class="utilitarios-section">
+        <div class="utilitarios-group-title">
+          <i class="fa-solid fa-file-lines" style="color: var(--accent-purple);"></i>
+          <span>1. Escrita Cient&iacute;fica, LaTeX &amp; Formata&ccedil;&atilde;o ABNT/SBC</span>
+        </div>
+        <div class="utilitarios-grid">
+          
+          <a href="https://www.overleaf.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green-light);">
+              <i class="fa-solid fa-file-code"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Overleaf</span>
+              <span class="util-desc">Editor LaTeX colaborativo na nuvem</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://www.tablesgenerator.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+              <i class="fa-solid fa-table"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Tables Generator</span>
+              <span class="util-desc">Cria&ccedil;&atilde;o visual de tabelas booktabs</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://detexify.kirelabs.org/classify.html" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">
+              <i class="fa-solid fa-pen-ruler"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Detexify</span>
+              <span class="util-desc">Desenhe e descubra o c&oacute;digo LaTeX</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://www.bibguru.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">
+              <i class="fa-solid fa-bookmark"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">BibGuru</span>
+              <span class="util-desc">Gerador de refer&ecirc;ncias BibTeX</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Grupo 2: Pesquisa Bibliografica & Trabalhos Correlatos -->
+      <div class="utilitarios-section">
+        <div class="utilitarios-group-title">
+          <i class="fa-solid fa-magnifying-glass" style="color: var(--accent-blue);"></i>
+          <span>2. Pesquisa Bibliogr&aacute;fica, Artigos &amp; Estado da Arte</span>
+        </div>
+        <div class="utilitarios-grid">
+          
+          <a href="https://scholar.google.com.br" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Google Acad&ecirc;mico</span>
+              <span class="util-desc">Busca de papers e cita&ccedil;&otilde;es BibTeX</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://scielo.org" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">
+              <i class="fa-solid fa-book-open-reader"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">SciELO Brasil</span>
+              <span class="util-desc">Biblioteca cient&iacute;fica aberta nacional</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://www.connectedpapers.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+              <i class="fa-solid fa-circle-nodes"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Connected Papers</span>
+              <span class="util-desc">Grafo visual de trabalhos correlatos</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://www.periodicos.capes.gov.br" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(34, 197, 94, 0.15); color: var(--ifsc-green);">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Peri&oacute;dicos CAPES</span>
+              <span class="util-desc">Bases internacionais (login CAFe IFSC)</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Grupo 3: Modelagem Visual, Diagramas & Apresentacao -->
+      <div class="utilitarios-section">
+        <div class="utilitarios-group-title">
+          <i class="fa-solid fa-palette" style="color: var(--accent-amber);"></i>
+          <span>3. Modelagem Visual, Diagramas de Arquitetura &amp; Design</span>
+        </div>
+        <div class="utilitarios-grid">
+          
+          <a href="https://app.diagrams.net" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(249, 115, 22, 0.15); color: #fb923c;">
+              <i class="fa-solid fa-diagram-project"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">draw.io (Diagrams.net)</span>
+              <span class="util-desc">Arquitetura de software e circuitos SVG</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://www.canva.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">
+              <i class="fa-solid fa-palette"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Canva</span>
+              <span class="util-desc">Slides de pitch, p&ocirc;steres e artes</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://tinypng.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+              <i class="fa-solid fa-file-image"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">TinyPNG</span>
+              <span class="util-desc">Comprime imagens para o Overleaf</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://carbon.now.sh" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(148, 163, 184, 0.15); color: #94a3b8;">
+              <i class="fa-solid fa-code"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Carbon</span>
+              <span class="util-desc">Imagens elegantes de trechos de c&oacute;digo</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Grupo 4: Dados Empiricos, Repositorios & Submissoes -->
+      <div class="utilitarios-section">
+        <div class="utilitarios-group-title">
+          <i class="fa-solid fa-code-branch" style="color: var(--ifsc-green-light);"></i>
+          <span>4. An&aacute;lise de Dados, Controle de C&oacute;digo &amp; Submiss&otilde;es</span>
+        </div>
+        <div class="utilitarios-grid">
+          
+          <a href="https://colab.research.google.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(234, 179, 8, 0.15); color: #eab308;">
+              <i class="fa-solid fa-chart-simple"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">Google Colab</span>
+              <span class="util-desc">Notebooks Python, Pandas &amp; Gr&aacute;ficos</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://github.com" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(255, 255, 255, 0.1); color: var(--text-main);">
+              <i class="fa-brands fa-github"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">GitHub</span>
+              <span class="util-desc">Controle de vers&atilde;o e reposit&oacute;rios</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://jems.sbc.org.br" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(37, 99, 235, 0.15); color: #3b82f6;">
+              <i class="fa-solid fa-paper-plane"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">JEMS (SBC)</span>
+              <span class="util-desc">Submiss&atilde;o de artigos e pareceres</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+          <a href="https://developer.mozilla.org" target="_blank" class="util-btn-card">
+            <div class="util-icon-box" style="background: rgba(13, 148, 136, 0.15); color: #2dd4bf;">
+              <i class="fa-solid fa-book-journal-whills"></i>
+            </div>
+            <div class="util-info">
+              <span class="util-name">MDN Web Docs</span>
+              <span class="util-desc">Refer&ecirc;ncia oficial de JS, CSS e APIs</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square util-badge-ext"></i>
+          </a>
+
+        </div>
+      </div>
+
     </section>
 
     <!-- TAB 5: COMPUTER ON THE BEACH 2027 -->
@@ -7626,8 +8170,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     }
 
   </script>
-  <script src="pi2-config.js?v=2.7"></script>
-  <script src="pi2-live.js?v=2.7"></script>
-  <script src="pi2-notas.js?v=2.7"></script>
+  <script src="pi2-config.js?v=2.8"></script>
+  <script src="pi2-live.js?v=2.8"></script>
+  <script src="pi2-notas.js?v=2.8"></script>
 </body>
 </html>

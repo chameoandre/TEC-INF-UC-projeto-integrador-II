@@ -226,6 +226,12 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Reorganização do Menu em Duas Linhas, Novas Abas de Eventos e Utilitários & Limpeza Visual:
+  - **Menu de Navegação em Duas Linhas (`.nav-tabs-bar`)**: Reestruturação da barra de navegação com cor de destaque elegante e gradiente sutil, agrupando as abas em 2 linhas temáticas (`Gestão & Acompanhamento` e `Produção & Pesquisa`), eliminando a sobrecarga de largura lateral e o scroll horizontal excessivo.
+  - **Aba de Eventos de Computação (`tab-eventos`)**: Seção nobre com cards elegantes para os principais eventos científicos da área (Computer on the Beach 2027, SEPEI IFSC, SNCT MCTI, Escolas Regionais SBC Sul e Sistema JEMS), detalhando prazos, formatos de artigo e botões de acesso.
+  - **Aba de Atalhos & Utilitários (`tab-utilitarios`)**: Central de ferramentas organizada em 4 áreas com botões compactos ("app launcher") com ícones e descrições diretas (Overleaf, Tables Generator, Detexify, BibGuru, Google Acadêmico, SciELO, Connected Papers, Periódicos CAPES, draw.io, Canva, TinyPNG, Carbon, Google Colab, GitHub, JEMS e MDN Docs).
+  - **Remoção de Redundância na Central Pedagógica**: Removido o banner duplicado do COTB (`cotb-announcement-banner`) da tela principal, pois o card temático do COTB na grade pedagógica já contempla o acesso e as instruções. Incrementado cache-buster para `?v=2.8`.
+
 - **19/10/2026** — Gestão Avançada de Prazos, Contagem Regressiva e Alertas de Demandas:
   - **Contador Dinâmico de Prazos (Countdown)**: Implementada a função `calcularContadorPrazo` com badges visuais reativos em cada card de demanda (`pi2-countdown-badge`):
     - `⏳ Restam X dias e Y horas` (normal);
