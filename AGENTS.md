@@ -226,6 +226,18 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Aplicação de Slides Interativos Multiaulas & Botões "Slides" na Central Pedagógica:
+  - **Aplicação Completa de Slides Interativos (`2026-2/slides-aulas/index.html`)**: Ambiente dinâmico e imersivo para apresentação e explanação fluida dos conteúdos pedagógicos em sala de aula ou projeção. Suporte a tela cheia (tecla `F`), navegação por teclado (`←`, `→`, `Espaço`, `Home`, `End`), barra de progresso em tempo real, dots de navegação direta e seletor rápido de aulas.
+  - **Aulas e Tópicos Contemplados na Apresentação**:
+    - *Aula 1 • Elaboração de Objetivos*: Fórmula dos 4 critérios (`[Verbo] + [Produto] + [Público] + [Propósito]`), Degraus D1 a D4 e exemplos comparativos práticos ("O que evitar vs O que a SBC espera").
+    - *Aula 2 • Metodologia em Computação*: Design Science Research (DSR), diagrama draw.io, isolamento de variáveis (VI/VD/VC) e garantia de reprodutibilidade científica.
+    - *Aula 3 • Trabalhos Relacionados*: Mineração em bases (Scholar, SOL SBC, Scielo), seleção do quarteto de artigos, Quadro Comparativo e conectivos de contraste.
+    - *Aula 4 • Experimentos Científicos*: Diferença entre código funcional e validação científica, os 3 tipos de experimentos (Desempenho/Stress, Usabilidade SUS e Acurácia/Funcional), formulação de hipóteses e tabela de dados brutos.
+    - *Aula 5 • Expressão de Resultados*: Matriz de decisão para escolha do tipo de gráfico, regras de tabelas SBC (*booktabs* sem linhas verticais) e redação crítica/discussão.
+    - *COTB 2027*: Regras de submissão no JEMS, formatação (2 a 6 páginas), revisão duplo-cega (*double-blind*) e cronograma até a deadline de 15/11.
+  - **Botões "Slides" Integrados em Cada Card (`.btn-card-slides`)**: Adicionado o botão estilizado com ícone de display e microinterações de hover nos cards da Central Pedagógica em `2026-2/index.html`, permitindo abrir a apresentação diretamente no slide inicial da aula selecionada via URL param (`?aula=1`, `?aula=2`, `?aula=3`, `?aula=4`, `?aula=5` ou `?aula=cotb`).
+  - **Incremento de Cache-Buster**: Atualizado para `?v=3.1` em `2026-2/index.html`.
+
 - **19/10/2026** — Atualização do Raio-X da Turma, Novo Card/Modal de Metodologia em Computação & Padronização para "Aulas":
   - **Atualização Completa do Raio-X da Turma (`tab-avancos-pendencias`)**: Sincronização dos blocos 1, 2 e 3 com o diagnóstico de 19/10/2026. Atualizado o sumário executivo com os avanços recentes de outubro das 10 equipes regulares (#01 a #10) e do plano domiciliar (#11). Destaque para Overleaf 100% ativo (8 links públicos de leitura `/read/` e 2 links diretos de edição), 8/10 pitch vídeos funcionais e matriz semafórica com orientações práticas para a condução dos atendimentos de bancada.
   - **Card da Aula 2: Metodologia Científica em Computação**: Inserido novo card na Central Pedagógica (`pedagogical-hub-grid`) com Clipart SVG vetorial ilustrando o pipeline metodológico completo (Setup de Hardware/SO, Arquitetura draw.io, Repositório GitHub e Validação Empírica/Reprodutibilidade).

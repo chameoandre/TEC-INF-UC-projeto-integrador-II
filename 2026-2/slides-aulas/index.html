@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slides Interativos das Aulas • Projeto Integrador II (IFSC Garopaba)</title>
+  <meta name="description" content="Slides pedagógicos interativos para as aulas de Projeto Integrador II: Objetivos, Metodologia, Trabalhos Relacionados, Experimentos Científicos e Expressão de Resultados.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root, [data-theme="dark"] {
+      --bg-dark: #070d09;
+      --bg-surface: #0e1711;
+      --bg-card: rgba(16, 27, 20, 0.85);
+      --bg-card-hover: rgba(23, 38, 28, 0.95);
+      --border-color: rgba(34, 197, 94, 0.22);
+      --border-glow: rgba(34, 197, 94, 0.45);
+
+      --ifsc-green: #16a34a;
+      --ifsc-green-light: #4ade80;
+      --ifsc-green-glow: rgba(34, 197, 94, 0.3);
+      --ifsc-red: #ef4444;
+
+      --accent-cyan: #06b6d4;
+      --accent-cyan-light: #67e8f9;
+      --accent-amber: #f59e0b;
+      --accent-amber-light: #fde68a;
+      --accent-purple: #a855f7;
+      --accent-purple-light: #d8b4fe;
+      --accent-blue: #3b82f6;
+      --accent-blue-light: #93c5fd;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card-hover: #ffffff;
+      --border-color: rgba(22, 163, 74, 0.25);
+      --border-glow: rgba(22, 163, 74, 0.5);
+
+      --ifsc-green: #15803d;
+      --ifsc-green-light: #16a34a;
+      --ifsc-green-glow: rgba(22, 163, 74, 0.2);
+      --ifsc-red: #dc2626;
+
+      --accent-cyan: #0284c7;
+      --accent-cyan-light: #38bdf8;
+      --accent-amber: #d97706;
+      --accent-amber-light: #f59e0b;
+      --accent-purple: #7e22ce;
+      --accent-purple-light: #a855f7;
+      --accent-blue: #2563eb;
+      --accent-blue-light: #3b82f6;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+
+      --shadow-glass: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 40%);
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.65rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--ifsc-green) 0%, #059669 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 12px var(--ifsc-green-glow);
+    }
+
+    .brand-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .brand-title p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Lesson Navigation Pills */
+    .lesson-nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.3rem 0.4rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    .lesson-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .lesson-tab:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .lesson-tab.active {
+      background: var(--ifsc-green);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--ifsc-green-glow);
+    }
+    .lesson-tab.active.cyan { background: #0284c7; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35); }
+    .lesson-tab.active.purple { background: #7c3aed; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35); }
+    .lesson-tab.active.green { background: #16a34a; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35); }
+    .lesson-tab.active.blue { background: #2563eb; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35); }
+    .lesson-tab.active.amber { background: #d97706; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35); }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-header {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.4rem 0.75rem;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .btn-header:hover {
+      background: var(--chip-bg);
+      border-color: var(--ifsc-green-light);
+      color: var(--ifsc-green-light);
+    }
+
+    /* Progress bar */
+    .progress-bar-container {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--ifsc-green) 0%, var(--accent-cyan) 100%);
+      width: 20%;
+      transition: width 0.3s ease;
+    }
+
+    /* Slide Viewport */
+    .deck-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slide-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 2.2rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.97) translateY(18px);
+      transition: opacity 0.38s ease, transform 0.38s ease, visibility 0.38s;
+      overflow-y: auto;
+    }
+
+    .slide-wrapper.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Slide Elements */
+    .slide-header {
+      margin-bottom: 1.5rem;
+      max-width: 950px;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.22rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
+      border: 1px solid currentColor;
+    }
+    .slide-tag.amber { color: var(--accent-amber-light); background: rgba(245, 158, 11, 0.14); }
+    .slide-tag.cyan { color: var(--accent-cyan-light); background: rgba(6, 182, 212, 0.14); }
+    .slide-tag.purple { color: var(--accent-purple-light); background: rgba(168, 85, 247, 0.14); }
+    .slide-tag.green { color: var(--ifsc-green-light); background: rgba(34, 197, 94, 0.14); }
+    .slide-tag.blue { color: var(--accent-blue-light); background: rgba(59, 130, 246, 0.14); }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.15rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    .slide-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .card-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.4rem;
+      box-shadow: var(--shadow-glass);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-box:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+    }
+
+    .card-box h3, .card-box h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-box p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Visual Cliparts and Diagrams */
+    .clipart-hero-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .clipart-hero-box svg {
+      width: 100%;
+      max-height: 110px;
+    }
+
+    /* Comparison Box (Wrong vs Correct) */
+    .compare-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .compare-side {
+      padding: 1.25rem;
+      border-radius: 12px;
+      border: 1px solid;
+    }
+
+    .compare-side.wrong {
+      background: rgba(239, 68, 68, 0.06);
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .compare-side.correct {
+      background: rgba(34, 197, 94, 0.06);
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+
+    .compare-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .compare-side.wrong .compare-title { color: #f87171; }
+    .compare-side.correct .compare-title { color: #4ade80; }
+
+    .compare-side ul {
+      padding-left: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Highlight Banner */
+    .highlight-banner {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(6, 182, 212, 0.12) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: 12px;
+      padding: 1.1rem 1.4rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .highlight-icon {
+      font-size: 1.6rem;
+      color: var(--ifsc-green-light);
+      flex-shrink: 0;
+    }
+
+    .highlight-text {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    /* Bottom Controls */
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      padding: 0.6rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .slide-dots {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .dot.active {
+      width: 22px;
+      border-radius: 10px;
+      background: var(--ifsc-green);
+    }
+
+    .footer-center {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--ifsc-green);
+      color: #ffffff;
+      border-color: var(--ifsc-green);
+      transform: scale(1.05);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.76rem;
+      color: var(--text-dim);
+    }
+
+    .kbd-shortcut {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-4, .compare-container {
+        grid-template-columns: 1fr;
+      }
+      .slide-wrapper {
+        padding: 1.5rem 1.5rem;
+      }
+      .slide-title {
+        font-size: 1.6rem;
+      }
+      header {
+        padding: 0.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header>
+    <div class="brand-group">
+      <div class="logo-badge"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="brand-title">
+        <h1>Projeto Integrador II • Slides de Aula</h1>
+        <p>Técnico em Informática • IFSC Garopaba • Turma INF-2024</p>
+      </div>
+    </div>
+
+    <!-- Navegação entre Aulas -->
+    <div class="lesson-nav-bar" id="lessonNavBar">
+      <button class="lesson-tab active amber" onclick="mudarAula('1')">
+        <i class="fa-solid fa-bullseye"></i> Aula 1: Objetivos
+      </button>
+      <button class="lesson-tab cyan" onclick="mudarAula('2')">
+        <i class="fa-solid fa-network-wired"></i> Aula 2: Metodologia
+      </button>
+      <button class="lesson-tab purple" onclick="mudarAula('3')">
+        <i class="fa-solid fa-book-bookmark"></i> Aula 3: Trabalhos Relac.
+      </button>
+      <button class="lesson-tab green" onclick="mudarAula('4')">
+        <i class="fa-solid fa-flask-vial"></i> Aula 4: Experimentos
+      </button>
+      <button class="lesson-tab blue" onclick="mudarAula('5')">
+        <i class="fa-solid fa-chart-pie"></i> Aula 5: Resultados
+      </button>
+      <button class="lesson-tab amber" onclick="mudarAula('cotb')">
+        <i class="fa-solid fa-umbrella-beach"></i> COTB 2027
+      </button>
+    </div>
+
+    <!-- Ações Topo -->
+    <div class="header-actions">
+      <button class="btn-header" onclick="alternarTelaCheia()" title="Alternar Modo Tela Cheia (F11)">
+        <i class="fa-solid fa-expand"></i> Tela Cheia
+      </button>
+      <a href="../index.html" class="btn-header" title="Voltar ao Dashboard Principal">
+        <i class="fa-solid fa-arrow-left"></i> Painel Geral
+      </a>
+    </div>
+  </header>
+
+  <!-- Progress Bar Top -->
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progressBar"></div>
+  </div>
+
+  <!-- Deck Viewport -->
+  <main class="deck-container" id="deckContainer">
+    <!-- Slides são injetados/alternados dinamicamente via JavaScript -->
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <footer>
+    <div class="footer-left">
+      <span id="slideCounter">Slide 1 de 5</span>
+      <div class="slide-dots" id="slideDots"></div>
+    </div>
+
+    <div class="footer-center">
+      <button class="btn-nav" id="btnPrev" onclick="slideAnterior()" title="Slide Anterior (Seta Esquerda)">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button class="btn-nav" id="btnNext" onclick="proximoSlide()" title="Próximo Slide (Seta Direita ou Espaço)">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="footer-right">
+      <span>Navegue com <span class="kbd-shortcut">←</span> <span class="kbd-shortcut">→</span> ou <span class="kbd-shortcut">Espaço</span></span>
+    </div>
+  </footer>
+
+  <!-- Banco de Slides das Aulas em Objeto JS -->
+  <script>
+    const AULAS_DATA = {
+      // ==========================================
+      // AULA 1: ELABORAÇÃO DE OBJETIVOS
+      // ==========================================
+      '1': {
+        nome: 'Aula 1: Elaboração de Objetivos',
+        tagCor: 'amber',
+        slides: [
+          {
+            tag: 'Fundamentos Metodológicos • Aula 1',
+            titulo: 'Elaboração de Objetivos Científicos em Computação',
+            subtitulo: 'Como formular o Objetivo Geral e os Degraus Metodológicos de forma precisa, mensurável e alinhada com o modelo da SBC.',
+            html: `
+              <div class="clipart-hero-box">
+                <svg viewBox="0 0 280 85" fill="none">
+                  <circle cx="55" cy="42" r="30" fill="rgba(245, 158, 11, 0.12)" />
+                  <circle cx="55" cy="42" r="26" fill="#451a03" stroke="#f59e0b" stroke-width="2" />
+                  <circle cx="55" cy="42" r="18" fill="#78350f" stroke="#fbbf24" stroke-width="1.5" />
+                  <circle cx="55" cy="42" r="10" fill="#b45309" />
+                  <circle cx="55" cy="42" r="4" fill="#fde68a" />
+                  <line x1="18" y1="22" x2="52" y2="40" stroke="#fef08a" stroke-width="2.5" stroke-linecap="round" />
+                  <polygon points="55,42 45,36 49,43" fill="#f59e0b" />
+                  <path d="M 85 45 C 105 45 105 66 125 66" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3 3" />
+                  <rect x="125" y="58" width="32" height="18" rx="3" fill="#065f46" stroke="#34d399" stroke-width="1.5" />
+                  <text x="141" y="70" font-family="'Outfit'" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">D1: REQ</text>
+                  <rect x="160" y="44" width="32" height="32" rx="3" fill="#1e3a8a" stroke="#60a5fa" stroke-width="1.5" />
+                  <text x="176" y="56" font-family="'Outfit'" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">D2: MOD</text>
+                  <rect x="195" y="30" width="32" height="46" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1.5" />
+                  <text x="211" y="42" font-family="'Outfit'" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">D3: DEV</text>
+                  <rect x="230" y="16" width="34" height="60" rx="3" fill="#831843" stroke="#f472b6" stroke-width="1.5" />
+                  <text x="247" y="28" font-family="'Outfit'" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">D4: TEST</text>
+                  <circle cx="247" cy="40" r="5" fill="#22c55e" />
+                </svg>
+              </div>
+              <div class="grid-3">
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-bullseye text-amber"></i> O Ponto de Partida</h3>
+                  <p>O objetivo é o contrato científico do seu trabalho. Ele define exatamente o que você promete entregar e como a banca do COTB vai avaliar se o projeto teve sucesso.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-cube text-cyan"></i> Produto Tangível</h3>
+                  <p>Em computação aplicada, o objetivo sempre resulta em um <strong>artefato concreto</strong>: um aplicativo, uma fechadura biométrica IoT, um jogo sério ou um simulador de montagem.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-stairs text-green"></i> Escada de 4 Degraus</h3>
+                  <p>Os objetivos específicos não são listas de tarefas diárias; são os quatro pilares técnicos encadeados que sustentam a construção e validação do artefato.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'A Fórmula Matemática • Aula 1',
+            titulo: 'A Fórmula do Objetivo Geral em 4 Critérios',
+            subtitulo: 'Todo objetivo geral aprovado em conferências da SBC deve conter os 4 componentes obrigatórios em uma única frase:',
+            html: `
+              <div class="grid-4" style="margin-bottom: 1.25rem;">
+                <div class="card-box" style="border-left: 4px solid var(--ifsc-green);">
+                  <span style="font-size: 0.72rem; font-weight: 800; color: var(--ifsc-green); text-transform: uppercase;">1. Critério</span>
+                  <h4 style="color: var(--ifsc-green-light); margin: 0.2rem 0 0.4rem;">[Verbo de Ação]</h4>
+                  <p style="font-size: 0.8rem;">Sempre no infinitivo. Ex.: <em>Desenvolver</em>, <em>Implementar</em>, <em>Construir</em>, <em>Projetar</em>.</p>
+                </div>
+                <div class="card-box" style="border-left: 4px solid var(--accent-cyan);">
+                  <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">2. Critério</span>
+                  <h4 style="color: var(--accent-cyan-light); margin: 0.2rem 0 0.4rem;">[Produto Tangível]</h4>
+                  <p style="font-size: 0.8rem;">O artefato exato que será criado. Ex.: <em>um aplicativo web de scout de voleibol</em>.</p>
+                </div>
+                <div class="card-box" style="border-left: 4px solid var(--accent-purple);">
+                  <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-purple); text-transform: uppercase;">3. Critério</span>
+                  <h4 style="color: var(--accent-purple-light); margin: 0.2rem 0 0.4rem;">[Público / Contexto]</h4>
+                  <p style="font-size: 0.8rem;">Quem usará e onde. Ex.: <em>para equipes escolares e amadoras da região de Garopaba</em>.</p>
+                </div>
+                <div class="card-box" style="border-left: 4px solid var(--accent-amber);">
+                  <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-amber); text-transform: uppercase;">4. Critério</span>
+                  <h4 style="color: var(--accent-amber-light); margin: 0.2rem 0 0.4rem;">[Propósito / Impacto]</h4>
+                  <p style="font-size: 0.8rem;">O problema resolvido. Ex.: <em>visando acelerar o registro tático e gerar relatórios em tempo real</em>.</p>
+                </div>
+              </div>
+
+              <div class="highlight-banner">
+                <i class="fa-solid fa-quote-left highlight-icon"></i>
+                <div class="highlight-text">
+                  <strong>Exemplo Completo Consolidado:</strong><br>
+                  <em>"<strong>Desenvolver</strong> [1] <strong>uma fechadura biométrica automatizada baseada em IoT</strong> [2] <strong>para os laboratórios de informática do IFSC Câmpus Garopaba</strong> [3], <strong>visando mitigar o extravio de chaves físicas e registrar logs de acesso em tempo real</strong> [4]."</em>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Engenharia de Software • Aula 1',
+            titulo: 'Os 4 Degraus Metodológicos (D1 a D4)',
+            subtitulo: 'Os objetivos específicos são a esteira técnica encadeada para realizar o objetivo geral:',
+            html: `
+              <div class="grid-2">
+                <div class="card-box" style="border-color: rgba(16, 185, 129, 0.4);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--ifsc-green);">DEGRAU D1</span>
+                    <i class="fa-solid fa-list-check text-green"></i>
+                  </div>
+                  <h4>Levantamento de Requisitos &amp; Diagnóstico</h4>
+                  <p>Mapear dores dos usuários, entrevistar os interessados e especificar os Requisitos Funcionais (RF) e Não Funcionais (RNF) do sistema.</p>
+                </div>
+
+                <div class="card-box" style="border-color: rgba(6, 182, 212, 0.4);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--accent-cyan);">DEGRAU D2</span>
+                    <i class="fa-solid fa-diagram-project text-cyan"></i>
+                  </div>
+                  <h4>Modelagem Conceitual &amp; Arquitetura (draw.io)</h4>
+                  <p>Criar os diagramas de arquitetura, fluxo de dados, modelo entidade-relacionamento (DER) e wireframes de interface no Canva ou Figma.</p>
+                </div>
+
+                <div class="card-box" style="border-color: rgba(168, 85, 247, 0.4);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--accent-purple);">DEGRAU D3</span>
+                    <i class="fa-solid fa-code text-purple"></i>
+                  </div>
+                  <h4>Implementação Tecnológica &amp; Repositório</h4>
+                  <p>Construir o artefato no código (Python, Godot, Flask, React, SQLite), versionado com commits semânticos no GitHub da equipe.</p>
+                </div>
+
+                <div class="card-box" style="border-color: rgba(245, 158, 11, 0.4);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--accent-amber);">DEGRAU D4</span>
+                    <i class="fa-solid fa-flask-vial text-amber"></i>
+                  </div>
+                  <h4>Validação Empírica &amp; Testes</h4>
+                  <p>Executar os 4 experimentos práticos, coletar métricas numéricas (tempo, FPS, latência, Escala SUS) e demonstrar eficácia com gráficos.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Comparativo Prático • Aula 1',
+            titulo: 'Erros Clássicos vs. Formulação Científica Correta',
+            subtitulo: 'Identifique os vícios comuns de escrita e veja a transformação direta para o padrão aceito no COTB:',
+            html: `
+              <div class="compare-container">
+                <div class="compare-side wrong">
+                  <div class="compare-title"><i class="fa-solid fa-xmark"></i> O que NÃO fazer (Amador / Tarefa Pessoal)</div>
+                  <ul>
+                    <li><em>"Pesquisar sobre fechaduras e comprar peças na internet."</em> &rarr; Comprar peças é atividade de rotina, não objetivo científico.</li>
+                    <li><em>"Aprender a linguagem Python e Godot."</em> &rarr; O aprendizado é benefício pessoal do estudante, o artigo avalia o artefato gerado.</li>
+                    <li><em>"Fazer um site muito bonito para ajudar as pessoas."</em> &rarr; Adjetivos vagos e sem critérios numéricos de sucesso.</li>
+                  </ul>
+                </div>
+
+                <div class="compare-side correct">
+                  <div class="compare-title"><i class="fa-solid fa-check"></i> Formulação Correta (Padrão SBC)</div>
+                  <ul>
+                    <li><em>"Implementar a integração de telemetria entre sensores BME280 e microcontrolador ESP32 via protocolo I2C."</em></li>
+                    <li><em>"Modelar a arquitetura lógica do simulador pedagógico em três camadas desacopladas no Godot Engine."</em></li>
+                    <li><em>"Avaliar a usabilidade do aplicativo com 15 voluntários por meio da System Usability Scale (SUS)."</em></li>
+                  </ul>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+
+      // ==========================================
+      // AULA 2: METODOLOGIA EM COMPUTAÇÃO
+      // ==========================================
+      '2': {
+        nome: 'Aula 2: Metodologia em Computação',
+        tagCor: 'cyan',
+        slides: [
+          {
+            tag: 'Engenharia & Ciência • Aula 2',
+            titulo: 'Metodologia Científica em Computação e Informática',
+            subtitulo: 'Como descrever a esteira de desenvolvimento do artefato e fundamentar a pesquisa empírica no template SBC para o COTB 2027.',
+            html: `
+              <div class="clipart-hero-box">
+                <svg viewBox="0 0 280 85" fill="none">
+                  <circle cx="45" cy="42" r="30" fill="rgba(6, 182, 212, 0.12)" />
+                  <circle cx="140" cy="42" r="28" fill="rgba(34, 197, 94, 0.12)" />
+                  <circle cx="235" cy="42" r="30" fill="rgba(99, 102, 241, 0.12)" />
+                  <path d="M 60 42 H 95" stroke="#22d3ee" stroke-width="2" stroke-dasharray="3 3" />
+                  <path d="M 143 42 H 175" stroke="#34d399" stroke-width="2" stroke-dasharray="3 3" />
+                  <path d="M 209 42 H 222" stroke="#818cf8" stroke-width="2" stroke-dasharray="3 3" />
+                  <rect x="20" y="24" width="40" height="36" rx="5" fill="#083344" stroke="#06b6d4" stroke-width="1.6" />
+                  <rect x="25" y="28" width="30" height="18" rx="3" fill="#0e7490" />
+                  <text x="40" y="69.5" font-family="'Outfit'" font-size="6" font-weight="800" fill="#a7f3d0" text-anchor="middle">SETUP / HW</text>
+                  <rect x="95" y="20" width="48" height="44" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.6" />
+                  <text x="119" y="73.5" font-family="'Outfit'" font-size="6" font-weight="800" fill="#6ee7b7" text-anchor="middle">DRAW.IO</text>
+                  <rect x="175" y="24" width="34" height="36" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.6" />
+                  <text x="192" y="69.5" font-family="'Outfit'" font-size="6" font-weight="800" fill="#c7d2fe" text-anchor="middle">GITHUB</text>
+                  <rect x="222" y="18" width="46" height="48" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.6" />
+                  <text x="245" y="75.5" font-family="'Outfit'" font-size="5.8" font-weight="800" fill="#38bdf8" text-anchor="middle">REPRODUTIV.</text>
+                </svg>
+              </div>
+              <div class="grid-3">
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-layer-group text-cyan"></i> DSR & Pesquisa Aplicada</h3>
+                  <p>Adota-se a metodologia baseada em <em>Design Science Research</em>: a resposta científica reside no desenvolvimento rigoroso de um artefato para solucionar um problema prático.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-diagram-project text-green"></i> Diagrama Arquitetural</h3>
+                  <p>Todo artigo de computação na SBC <strong>exige a Figura 1</strong> ilustrando a arquitetura: Frontend, Backend, Banco de Dados, Sensores e Protocolos de Rede.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-sliders text-purple"></i> Reprodutibilidade</h3>
+                  <p>Outro pesquisador deve ser capaz de ler a sua metodologia, montar o mesmo setup e reproduzir exatamente os mesmos experimentos com os mesmos dados.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Estrutura do Texto • Aula 2',
+            titulo: 'A Anatomia da Seção de Metodologia no Artigo',
+            subtitulo: 'Como organizar os parágrafos e subseções dentro do template SBC no Overleaf:',
+            html: `
+              <div class="grid-2">
+                <div class="card-box" style="border-left: 4px solid var(--accent-cyan);">
+                  <h4>§1. Classificação da Pesquisa &amp; Pipeline</h4>
+                  <p>Abertura situando a natureza da pesquisa aplicada, experimental e quantitativa. Citação da esteira iterativa em 4 etapas (Requisitos, Modelagem, Implementação e Testes).</p>
+                </div>
+                <div class="card-box" style="border-left: 4px solid var(--ifsc-green);">
+                  <h4>§2. Caracterização do Setup &amp; Hardware</h4>
+                  <p>Especificação detalhada de dispositivos físicos: modelo do Raspberry Pi, sensores IoT, câmeras, SO (ex: Ubuntu 22.04 LTS), linguagens (Python 3.11) e bibliotecas com versões.</p>
+                </div>
+                <div class="card-box" style="border-left: 4px solid var(--accent-purple);">
+                  <h4>§3. Arquitetura e Modelagem do Sistema</h4>
+                  <p>Referência direta à Figura 1 do draw.io. Descrição dos componentes, fluxo síncrono/assíncrono das mensagens e padrão de projeto (ex.: MVC, Microsserviços, Pub/Sub).</p>
+                </div>
+                <div class="card-box" style="border-left: 4px solid var(--accent-amber);">
+                  <h4>§4. Protocolo Experimental &amp; Métricas</h4>
+                  <p>Descrição dos 4 experimentos controlados: perfil dos voluntários, tempo de execução, métricas coletadas, critérios éticos e preparo para a Seção de Resultados.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Variáveis & Setup • Aula 2',
+            titulo: 'Isolamento de Variáveis: O Segredo da Ciência',
+            subtitulo: 'Sem variáveis isoladas, o experimento não tem validade científica. Entenda os três tipos:',
+            html: `
+              <div class="grid-3">
+                <div class="card-box" style="border-top: 4px solid #38bdf8;">
+                  <h4 style="color: #38bdf8;"><i class="fa-solid fa-wand-magic-sparkles"></i> Variável Independente (VI)</h4>
+                  <strong style="font-size: 0.85rem; color: var(--text-main);">O que o pesquisador altera:</strong>
+                  <p style="margin-top: 0.4rem;">Fator manipulado sistematicamente para observar o efeito. Ex.: taxa de bitrate do vídeo (360p vs 1080p), tipo de iluminação ou perfil de usuário (novato vs experiente).</p>
+                </div>
+
+                <div class="card-box" style="border-top: 4px solid #22c55e;">
+                  <h4 style="color: #22c55e;"><i class="fa-solid fa-chart-line"></i> Variável Dependente (VD)</h4>
+                  <strong style="font-size: 0.85rem; color: var(--text-main);">O que é medido numericamente:</strong>
+                  <p style="margin-top: 0.4rem;">O resultado empírico registrado. Ex.: tempo de resposta (ms), taxa de quadros (FPS), consumo de RAM (MB), ou pontuação na escala SUS (0 a 100).</p>
+                </div>
+
+                <div class="card-box" style="border-top: 4px solid #c084fc;">
+                  <h4 style="color: #c084fc;"><i class="fa-solid fa-shield-halved"></i> Variáveis de Controle (VC)</h4>
+                  <strong style="font-size: 0.85rem; color: var(--text-main);">O que se mantém idêntico:</strong>
+                  <p style="margin-top: 0.4rem;">Condições que NÃO podem variar durante os testes. Ex.: mesma rede Wi-Fi cabeada, mesmo modelo de computador, mesmo conjunto de dados de teste.</p>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+
+      // ==========================================
+      // AULA 3: TRABALHOS RELACIONADOS
+      // ==========================================
+      '3': {
+        nome: 'Aula 3: Trabalhos Relacionados',
+        tagCor: 'purple',
+        slides: [
+          {
+            tag: 'Revisão Bibliográfica • Aula 3',
+            titulo: 'Mapeamento do Estado da Arte & Trabalhos Relacionados',
+            subtitulo: 'Como situar sua pesquisa na literatura científica e provar a originalidade da sua proposta.',
+            html: `
+              <div class="clipart-hero-box">
+                <svg viewBox="0 0 280 85" fill="none">
+                  <circle cx="50" cy="42" r="30" fill="rgba(168, 85, 247, 0.12)" />
+                  <path d="M 32 32 C 45 28 65 30 75 35 L 75 62 C 65 57 45 55 32 59 Z" fill="#3b0764" stroke="#a855f7" stroke-width="1.5" />
+                  <path d="M 118 32 C 105 28 85 30 75 35 L 75 62 C 85 57 105 55 118 59 Z" fill="#2e1065" stroke="#a855f7" stroke-width="1.5" />
+                  <circle cx="140" cy="38" r="16" fill="rgba(147, 51, 234, 0.25)" stroke="#c084fc" stroke-width="2.5" />
+                  <line x1="152" y1="49" x2="165" y2="62" stroke="#c084fc" stroke-width="3.5" stroke-linecap="round" />
+                  <rect x="180" y="24" width="70" height="42" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" />
+                  <text x="239" y="29" font-family="'Outfit'" font-size="8.5" font-weight="700" fill="#ffffff" text-anchor="middle">\\cite[1]</text>
+                </svg>
+              </div>
+              <div class="grid-3">
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-magnifying-glass text-purple"></i> Por que mapear?</h3>
+                  <p>Nenhum projeto nasce do vácuo. Mostrar o que outros já fizeram comprova que você domina o tema e identifica as limitações das soluções existentes.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-table-list text-cyan"></i> Quadro Comparativo</h3>
+                  <p>A melhor ferramenta é uma tabela comparativa com critérios técnicos (custo, IA local, offline, usabilidade) confrontando sua proposta com 3 a 4 artigos correlatos.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-code-compare text-green"></i> Conectivos de Contraste</h3>
+                  <p>A redação não é um resumo solto; é uma discussão crítica usando conectivos como <em>"Diferentemente de Silva (2022)..."</em> e <em>"Enquanto Santos (2021) foca em..."</em>.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Fontes Científicas • Aula 3',
+            titulo: 'Onde Encontrar Artigos Válidos para o Artigo',
+            subtitulo: 'Fontes abertas recomendadas para pesquisar trabalhos correlatos em computação:',
+            html: `
+              <div class="grid-2">
+                <div class="card-box">
+                  <h4><i class="fa-brands fa-google text-cyan"></i> Google Acadêmico (Scholar)</h4>
+                  <p>Maior base acadêmica mundial. Use operadores booleanos: <code>"streaming adaptativo" AND "qoe" AND "voleibol"</code> para refinar a busca.</p>
+                </div>
+                <div class="card-box">
+                  <h4><i class="fa-solid fa-umbrella-beach text-amber"></i> Anais do COTB (UNIVALI)</h4>
+                  <p>Publicações das edições anteriores do Computer on the Beach. Ideal para entender a linguagem e o escopo exato que a comissão do evento busca.</p>
+                </div>
+                <div class="card-box">
+                  <h4><i class="fa-solid fa-book-open text-purple"></i> SBC OpenLib (SOL)</h4>
+                  <p>Biblioteca digital oficial da Sociedade Brasileira de Computação contendo artigos do CSBC, WebMedia, ERRC e simpósios nacionais.</p>
+                </div>
+                <div class="card-box">
+                  <h4><i class="fa-solid fa-graduation-cap text-green"></i> SciELO &amp; Periódicos CAPES</h4>
+                  <p>Repositórios científicos revisados por pares com artigos em português e inglês de alto impacto nas ciências exatas e engenharias.</p>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+
+      // ==========================================
+      // AULA 4: EXPERIMENTOS CIENTÍFICOS
+      // ==========================================
+      '4': {
+        nome: 'Aula 4: Experimentos Científicos',
+        tagCor: 'green',
+        slides: [
+          {
+            tag: 'Protocolos de Teste • Aula 4',
+            titulo: 'Experimentos Científicos em Computação: Do Código à Evidência',
+            subtitulo: 'Como transformar um artefato funcional em pesquisa científica quantitativa e empírica.',
+            html: `
+              <div class="clipart-hero-box">
+                <svg viewBox="0 0 280 85" fill="none">
+                  <circle cx="65" cy="45" r="32" fill="rgba(34, 197, 94, 0.12)" />
+                  <path d="M 58 20 L 72 20 L 72 32 L 86 58 C 89 63 85 68 79 68 L 51 68 C 45 68 41 63 44 58 L 58 32 Z" fill="#064e3b" stroke="#22c55e" stroke-width="2" />
+                  <rect x="115" y="24" width="46" height="42" rx="6" fill="#065f46" stroke="#34d399" stroke-width="1.5" />
+                  <path d="M 87 56 H 115" stroke="#10b981" stroke-width="2" stroke-dasharray="3 3" />
+                  <circle cx="218" cy="45" r="24" fill="#134e4a" stroke="#2dd4bf" stroke-width="2" />
+                  <text x="218" y="64" font-family="'Outfit'" font-size="7.5" font-weight="800" fill="#ffffff" text-anchor="middle">METRICS</text>
+                </svg>
+              </div>
+              <div class="grid-3">
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-bolt text-amber"></i> O Choque de Realidade</h3>
+                  <p>Desenvolver software é apenas construir o artefato. A <strong>Ciência</strong> começa quando submetemos esse artefato a estímulos e medimos os dados resultantes.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-stopwatch text-cyan"></i> Métricas Numéricas</h3>
+                  <p>Sem números, não há validação. Todo experimento precisa de unidades claras: segundos (s), milissegundos (ms), FPS, percentual (%) ou pontos SUS (0-100).</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-chart-line text-green"></i> O Ciclo em 5 Passos</h3>
+                  <p>Pergunta de pesquisa &rarr; Hipótese &rarr; Cenário de Teste &rarr; Coleta de Dados Brutos &rarr; Gráficos e Conclusão.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Os 3 Tipos • Aula 4',
+            titulo: 'Os 3 Tipos de Experimento em Computação Aplicada',
+            subtitulo: 'Todo projeto de PI-II se enquadra em ao menos um dos seguintes formatos empíricos:',
+            html: `
+              <div class="grid-3">
+                <div class="card-box" style="border-top: 4px solid var(--accent-cyan);">
+                  <h4 style="color: var(--accent-cyan-light);"><i class="fa-solid fa-microchip"></i> 1. Desempenho &amp; Benchmark</h4>
+                  <p>Medição de recursos computacionais internos. Ex.: tempo de resposta do modelo local LM Studio, taxa de quadros (FPS) no Godot, consumo de CPU e RAM.</p>
+                </div>
+                <div class="card-box" style="border-top: 4px solid var(--ifsc-green);">
+                  <h4 style="color: var(--ifsc-green-light);"><i class="fa-solid fa-network-wired"></i> 2. Rede, Carga &amp; IoT</h4>
+                  <p>Submissão do sistema a condições adversas de tráfego. Ex.: transmissão HLS com bitrate adaptativo no JifTV, perda de pacotes e latência de sensor BME280.</p>
+                </div>
+                <div class="card-box" style="border-top: 4px solid var(--accent-purple);">
+                  <h4 style="color: var(--accent-purple-light);"><i class="fa-solid fa-users"></i> 3. Usabilidade &amp; Usuários (SUS)</h4>
+                  <p>Avaliação empírica com voluntários reais. Aplicação da <em>System Usability Scale</em> (SUS 0-100), tempo de conclusão da tarefa e contagem de cliques incorretos.</p>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+
+      // ==========================================
+      // AULA 5: EXPRESSÃO DE RESULTADOS
+      // ==========================================
+      '5': {
+        nome: 'Aula 5: Expressão de Resultados',
+        tagCor: 'blue',
+        slides: [
+          {
+            tag: 'Gráficos & Análise • Aula 5',
+            titulo: 'Expressão de Resultados: Tabelas ABNT/SBC e Gráficos',
+            subtitulo: 'Como apresentar dados brutos em representações gráficas claras e interpretá-los com rigor estatístico.',
+            html: `
+              <div class="clipart-hero-box">
+                <svg viewBox="0 0 280 85" fill="none">
+                  <circle cx="85" cy="42" r="35" fill="rgba(59, 130, 246, 0.12)" />
+                  <rect x="42" y="48" width="16" height="20" rx="2" fill="#0284c7" />
+                  <rect x="68" y="32" width="16" height="36" rx="2" fill="#2563eb" />
+                  <rect x="94" y="20" width="16" height="48" rx="2" fill="#4f46e5" />
+                  <path d="M 50 44 Q 76 28 102 16" stroke="#38bdf8" stroke-width="2.5" fill="none" />
+                  <rect x="150" y="20" width="105" height="48" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+                </svg>
+              </div>
+              <div class="grid-3">
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-chart-column text-blue"></i> Matriz de Gráficos</h3>
+                  <p>Barras para comparar grupos discretos; Linhas para evolução temporal contínua; Boxplot para dispersão e quartis; Dispersão para correlação.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-table text-cyan"></i> Tabelas SBC (booktabs)</h3>
+                  <p>Regra absoluta da SBC e ABNT: <strong>NUNCA use linhas verticais em tabelas científicas</strong>. Use apenas <code>\\toprule</code>, <code>\\midrule</code> e <code>\\bottomrule</code>.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-comment-dots text-green"></i> Análise Crítica</h3>
+                  <p>Não basta colar o gráfico e dizer "veja a figura". Explique o que a média e o desvio padrão representam em relação à hipótese original.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            tag: 'Matriz de Decisão • Aula 5',
+            titulo: 'Qual Gráfico Escolher para o seu Artigo?',
+            subtitulo: 'Regras visuais para selecionar a representação gráfica mais eficiente para seus dados:',
+            html: `
+              <div class="grid-4">
+                <div class="card-box">
+                  <h4 style="color: #60a5fa;"><i class="fa-solid fa-chart-bar"></i> Gráfico de Barras</h4>
+                  <strong style="font-size: 0.8rem; color: var(--text-main);">Quando usar:</strong>
+                  <p style="margin-top: 0.3rem;">Comparar grandezas entre categorias distintas (ex.: novatos vs veteranos; tempo por tarefa).</p>
+                </div>
+                <div class="card-box">
+                  <h4 style="color: #38bdf8;"><i class="fa-solid fa-chart-line"></i> Gráfico de Linhas</h4>
+                  <strong style="font-size: 0.8rem; color: var(--text-main);">Quando usar:</strong>
+                  <p style="margin-top: 0.3rem;">Séries temporais e evolução contínua (ex.: variação de temperatura ao longo de 48h; oscilação de bitrate).</p>
+                </div>
+                <div class="card-box">
+                  <h4 style="color: #c084fc;"><i class="fa-solid fa-braille"></i> Dispersão (Scatter)</h4>
+                  <strong style="font-size: 0.8rem; color: var(--text-main);">Quando usar:</strong>
+                  <p style="margin-top: 0.3rem;">Analisar a correlação entre duas variáveis contínuas (ex.: tamanho do modelo 3D vs tempo de processamento).</p>
+                </div>
+                <div class="card-box">
+                  <h4 style="color: #4ade80;"><i class="fa-solid fa-boxes-stacked"></i> Boxplot</h4>
+                  <strong style="font-size: 0.8rem; color: var(--text-main);">Quando usar:</strong>
+                  <p style="margin-top: 0.3rem;">Demonstrar a distribuição estatística completa: mediana, quartis e outliers (ex.: latência de rede em 1000 pings).</p>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+
+      // ==========================================
+      // COTB 2027: GUIA DE SUBMISSÃO
+      // ==========================================
+      'cotb': {
+        nome: 'COTB 2027 • Guia de Submissão',
+        tagCor: 'amber',
+        slides: [
+          {
+            tag: 'Evento Alvo • 15/11',
+            titulo: 'Computer on the Beach 2027: O Destino dos Artigos',
+            subtitulo: '18ª edição do principal congresso de computação aplicada do Sul do Brasil, sediado em Florianópolis.',
+            html: `
+              <div class="clipart-hero-box">
+                <svg viewBox="0 0 280 85" fill="none">
+                  <circle cx="75" cy="40" r="22" fill="#fbbf24" opacity="0.9" />
+                  <path d="M 15 54 C 40 50 65 56 95 53 C 120 50 145 54 165 52 L 165 72 L 15 72 Z" fill="#0369a1" />
+                  <rect x="180" y="16" width="85" height="52" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" />
+                  <text x="222" y="32" font-family="'Outfit'" font-size="8.5" font-weight="800" fill="#fde68a" text-anchor="middle">COTB 2027</text>
+                  <text x="222" y="48" font-family="'Outfit'" font-size="11" font-weight="800" fill="#ffffff" text-anchor="middle">FLORIPA</text>
+                  <text x="222" y="60" font-family="'Outfit'" font-size="7" font-weight="800" fill="#fde68a" text-anchor="middle">DEADLINE 15/11</text>
+                </svg>
+              </div>
+              <div class="grid-3">
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-file-contract text-amber"></i> Modalidades</h3>
+                  <p>Artigos Completos (4 a 6 páginas) ou Resumos Estendidos (2 a 3 páginas) no formato oficial de artigos da SBC.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-user-secret text-cyan"></i> Revisão Duplo-Cega</h3>
+                  <p>O manuscrito deve ser 100% anonimizado: sem nomes, sem citação do IFSC e sem links pessoais que identifiquem os autores.</p>
+                </div>
+                <div class="card-box">
+                  <h3><i class="fa-solid fa-upload text-green"></i> Sistema JEMS</h3>
+                  <p>A submissão é realizada eletronicamente através do sistema JEMS da SBC até o dia 15 de novembro de 2026.</p>
+                </div>
+              </div>
+            `
+          }
+        ]
+      }
+    };
+
+    // Estado da Apresentação
+    let aulaAtual = '1';
+    let slideIndexAtual = 0;
+
+    // Inicialização
+    function init() {
+      // Lê parâmetro da URL (ex: ?aula=2)
+      const params = new URLSearchParams(window.location.search);
+      const paramAula = params.get('aula') || '1';
+      if (AULAS_DATA[paramAula]) {
+        aulaAtual = paramAula;
+      }
+      renderizarNavegacaoAulas();
+      carregarAula(aulaAtual, 0);
+      configurarTeclado();
+    }
+
+    // Renderiza as abas de aula no topo
+    function renderizarNavegacaoAulas() {
+      const tabs = document.querySelectorAll('.lesson-tab');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+        const onclickAttr = tab.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(`'${aulaAtual}'`)) {
+          tab.classList.add('active');
+        }
+      });
+    }
+
+    // Muda a aula ativa
+    function mudarAula(novaAula) {
+      if (!AULAS_DATA[novaAula]) return;
+      aulaAtual = novaAula;
+      slideIndexAtual = 0;
+      
+      // Atualiza URL sem recarregar
+      const url = new URL(window.location);
+      url.searchParams.set('aula', novaAula);
+      window.history.replaceState({}, '', url);
+
+      renderizarNavegacaoAulas();
+      carregarAula(aulaAtual, 0);
+    }
+
+    // Carrega e desenha os slides da aula
+    function carregarAula(idAula, indiceSlide) {
+      const aula = AULAS_DATA[idAula];
+      if (!aula) return;
+
+      const container = document.getElementById('deckContainer');
+      container.innerHTML = '';
+
+      aula.slides.forEach((s, idx) => {
+        const slideEl = document.createElement('section');
+        slideEl.className = 'slide-wrapper' + (idx === indiceSlide ? ' active' : '');
+        slideEl.id = `slide-${idx}`;
+        slideEl.innerHTML = `
+          <div class="slide-header">
+            <span class="slide-tag ${aula.tagCor}">${s.tag}</span>
+            <h2 class="slide-title">${s.titulo}</h2>
+            <p class="slide-subtitle">${s.subtitulo}</p>
+          </div>
+          <div class="slide-body">
+            ${s.html}
+          </div>
+        `;
+        container.appendChild(slideEl);
+      });
+
+      slideIndexAtual = indiceSlide;
+      atualizarControlesRodape();
+    }
+
+    // Atualiza barra de progresso, contador e botões
+    function atualizarControlesRodape() {
+      const total = AULAS_DATA[aulaAtual].slides.length;
+      
+      // Contador
+      document.getElementById('slideCounter').innerText = `Slide ${slideIndexAtual + 1} de ${total}`;
+
+      // Barra de Progresso
+      const pct = ((slideIndexAtual + 1) / total) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+
+      // Botões Prev / Next
+      document.getElementById('btnPrev').disabled = (slideIndexAtual === 0);
+      document.getElementById('btnNext').disabled = (slideIndexAtual === total - 1);
+
+      // Dots
+      const dotsContainer = document.getElementById('slideDots');
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === slideIndexAtual ? ' active' : '');
+        dot.onclick = () => irParaSlide(i);
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    // Navegação de slides
+    function proximoSlide() {
+      const total = AULAS_DATA[aulaAtual].slides.length;
+      if (slideIndexAtual < total - 1) {
+        irParaSlide(slideIndexAtual + 1);
+      }
+    }
+
+    function slideAnterior() {
+      if (slideIndexAtual > 0) {
+        irParaSlide(slideIndexAtual - 1);
+      }
+    }
+
+    function irParaSlide(novoIndex) {
+      const slides = document.querySelectorAll('.slide-wrapper');
+      slides.forEach((s, idx) => {
+        if (idx === novoIndex) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+      slideIndexAtual = novoIndex;
+      atualizarControlesRodape();
+    }
+
+    // Configuração de Teclado
+    function configurarTeclado() {
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          proximoSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          slideAnterior();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          irParaSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          irParaSlide(AULAS_DATA[aulaAtual].slides.length - 1);
+        } else if (e.key.toLowerCase() === 'f') {
+          alternarTelaCheia();
+        } else if (e.key === 'Escape') {
+          if (!document.fullscreenElement) {
+            window.location.href = '../index.html';
+          }
+        }
+      });
+    }
+
+    // Fullscreen API
+    function alternarTelaCheia() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn('Erro ao ativar tela cheia:', err);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Executa ao carregar
+    window.onload = init;
+  </script>
+</body>
+</html>
