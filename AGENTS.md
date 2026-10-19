@@ -129,10 +129,21 @@ Disparo de e-mails em tempo real via `GmailApp.sendEmail` para avisos de novas d
 - **Conta Remetente**: Todos os e-mails são disparados pela conta Google proprietária da implantação do Apps Script (`chameoandre@gmail.com`) e ficam registrados exclusivamente na pasta **Enviados** dessa conta.
 - **Autorização OAuth**: A funcionalidade requer permissão do escopo do Gmail (`https://www.googleapis.com/auth/gmail.send`). Se não autorizado, as chamadas falham silenciosamente no bloco `try/catch`. Para forçar a tela de consentimento de segurança do Google, execute manualmente a função `diagnosticoEnvioEmail()` no editor do Apps Script.
 - **Destinatários Ativos**: O script consulta exclusivamente a aba `membros` da planilha privada de controle (`PI2-2026 — controle de acessos e registros (PRIVADO)`), filtrando por `status == 'ativo'` e pelo projeto da demanda (ou todos se `*`). Se a aba estiver vazia, nenhum e-mail é disparado.
+- **Padrão Visual dos E-mails (Template HTML Responsivo - Padrão TCC / Marília)**:
+  - Todo envio utiliza `GmailApp.sendEmail` com `htmlBody` renderizado pela função `montarHtmlEmailDemanda_`.
+  - Design em card moderno (`max-width: 650px`, bordas arredondadas `12px`, sombras suaves e tipografia moderna).
+  - Cabeçalhos temáticos coloridos com branding institucional do IFSC Garopaba:
+    - *Verde IFSC (`#16a34a`)* para Novas Demandas;
+    - *Âmbar (`#d97706`)* para Lembretes e Alertas de Prazos;
+    - *Azul Oceano (`#0284c7`)* para Atualizações e Prorrogações de Prazos;
+    - *Roxo (`#7c3aed`)* para Comunicados e Esclarecimentos da Equipe Docente.
+  - Caixas dedicadas com bordas esquerdas reforçadas para **Metadados da Meta**, **Critérios de Aceite & Rubrica Formativa**, **Orientações Técnicas** e **Mensagens Exclusivas dos Orientadores**.
+  - Botão de ação central com link direto e destacado para o dashboard público (`https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/`).
+  - Rodapé institucional formal com assinatura dos três docentes da unidade curricular.
 - **Rotinas Administrativas Úteis no Editor**:
   - `diagnosticoEnvioEmail`: Inspeciona a aba `membros`, lista a contagem de e-mails ativos, força a autorização do Gmail e envia e-mail de prova para o docente.
   - `importarTurmaSIGAA`: Cadastra/sincroniza em lote os 33 alunos da turma INF-2024 vinculados aos seus respectivos projetos (1 a 11).
-  - `reenviarEmailUltimaDemanda`: Reenvia a notificação da última demanda cadastrada para todos os membros ativos.
+  - `reenviarEmailUltimaDemanda`: Reenvia a notificação da última demanda cadastrada com o novo layout HTML para todos os membros ativos.
 
 ### Notas
 

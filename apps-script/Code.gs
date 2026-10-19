@@ -680,6 +680,103 @@ function notificarDemanda_(usuario, body) {
   return { ok: true, id: demandaId, tipo: tipo, totalEnviados: totalEnviados };
 }
 
+function montarHtmlEmailDemanda_(params) {
+  var tipo = params.tipo || 'nova';
+  var titulo = params.titulo || '';
+  var escopoTxt = params.escopoTxt || 'Geral (Turma)';
+  var prazo = params.prazo || '';
+  var prazoAnterior = params.prazoAnterior || '';
+  var pontos = params.pontos || '';
+  var criterios = params.criterios || '';
+  var descricao = params.descricao || '';
+  var mensagem = params.mensagem || '';
+  var autor = params.autor || 'Equipe Docente';
+  var dashboardUrl = 'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/';
+
+  // Paleta de cores por tipo
+  var corHeader = '#16a34a'; // Verde IFSC padrão
+  var tituloHeader = '🎯 Nova Demanda & Checkpoint Docente';
+  var introTexto = 'A equipe docente de Projeto Integrador II registrou uma nova meta avaliativa para você e seu grupo:';
+
+  if (tipo === 'lembrete') {
+    corHeader = '#d97706'; // Âmbar
+    tituloHeader = '⏳ Lembrete de Prazo: Demanda Pendente';
+    introTexto = 'Este é um lembrete docente referente à demanda em andamento da sua equipe. Confiram o prazo e as entregas pendentes:';
+  } else if (tipo === 'comunicado') {
+    corHeader = '#7c3aed'; // Roxo
+    tituloHeader = '📢 Comunicado da Equipe Docente';
+    introTexto = 'A equipe docente enviou uma orientação/comunicado complementar vinculado à seguinte demanda:';
+  } else if (tipo === 'prazo') {
+    corHeader = '#0284c7'; // Azul Oceano
+    tituloHeader = '📅 Atualização de Prazo de Entrega';
+    introTexto = 'O prazo da seguinte demanda foi atualizado pelos professores orientadores:';
+  }
+
+  var html = '<div style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; color: #1e293b; line-height: 1.6; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff;">' +
+    '<div style="background: ' + corHeader + '; padding: 22px 26px; color: #ffffff;">' +
+      '<h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em;">' + tituloHeader + '</h2>' +
+      '<p style="margin: 4px 0 0; font-size: 0.85rem; opacity: 0.92;">Projeto Integrador II • Técnico em Informática • IFSC Garopaba</p>' +
+    '</div>' +
+    '<div style="padding: 26px;">' +
+      '<p style="margin-top: 0; font-size: 1rem; color: #0f172a;">Olá, estudantes do <strong>' + escopoTxt + '</strong>,</p>' +
+      '<p style="color: #475569; font-size: 0.95rem; margin-bottom: 20px;">' + introTexto + '</p>' +
+
+      '<div style="background: #f8fafc; border-left: 4px solid ' + corHeader + '; border-radius: 8px; padding: 14px 18px; margin: 18px 0; font-size: 0.92rem; border-top: 1px solid #f1f5f9; border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">' +
+        '<div style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">' + titulo + '</div>' +
+        '<div style="display: flex; flex-wrap: wrap; gap: 12px; color: #475569; font-size: 0.85rem; margin-top: 4px;">' +
+          '<div><strong>📋 Escopo:</strong> ' + escopoTxt + '</div>' +
+          (prazo ? ('<div><strong>📅 Prazo Limite:</strong> <span style="color: #b45309; font-weight: 700;">' + prazo + '</span></div>') : '') +
+          (prazoAnterior ? ('<div style="color: #94a3b8; font-size: 0.8rem;">(Prazo anterior: ' + prazoAnterior + ')</div>') : '') +
+          (pontos ? ('<div><strong>⭐ Pontuação / Peso:</strong> ' + pontos + '</div>') : '') +
+        '</div>' +
+      '</div>';
+
+  if (mensagem) {
+    html += '<div style="margin-top: 20px;">' +
+      '<h3 style="color: #475569; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">💬 Mensagem & Esclarecimento Docente (' + autor + '):</h3>' +
+      '<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 16px; font-size: 0.92rem; color: #1e3a8a; white-space: pre-line; line-height: 1.55;">' +
+        mensagem +
+      '</div>' +
+    '</div>';
+  }
+
+  if (criterios) {
+    html += '<div style="margin-top: 20px;">' +
+      '<h3 style="color: #166534; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">📋 Critérios de Aceite & Rubrica Formativa:</h3>' +
+      '<div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #22c55e; border-radius: 8px; padding: 14px 16px; font-size: 0.92rem; color: #14532d; white-space: pre-line; line-height: 1.55;">' +
+        criterios +
+      '</div>' +
+    '</div>';
+  }
+
+  if (descricao) {
+    html += '<div style="margin-top: 20px;">' +
+      '<h3 style="color: #0e7490; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">📝 Detalhes e Orientações Técnicas:</h3>' +
+      '<div style="background: #ecfeff; border: 1px solid #a5f3fc; border-left: 4px solid #06b6d4; border-radius: 8px; padding: 14px 16px; font-size: 0.9rem; color: #155e75; white-space: pre-line; line-height: 1.55;">' +
+        descricao +
+      '</div>' +
+    '</div>';
+  }
+
+  html += '<div style="margin-top: 28px; padding: 20px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; text-align: center;">' +
+      '<p style="margin: 0 0 10px; font-size: 0.88rem; color: #64748b;">Acompanhe o andamento e registre o avanço pelo dashboard da disciplina:</p>' +
+      '<a href="' + dashboardUrl + '" target="_blank" style="display: inline-block; background: #16a34a; color: #ffffff; text-decoration: none; font-weight: 700; padding: 10px 22px; border-radius: 6px; font-size: 0.92rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">' +
+        '🚀 Acessar Dashboard do Projeto Integrador II' +
+      '</a>' +
+    '</div>' +
+
+    '<hr style="border: none; border-top: 1px solid #e2e8f0; margin: 26px 0 16px;">' +
+    '<p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.5;">' +
+      '<strong>Equipe Docente — Projeto Integrador II</strong><br>' +
+      'Prof. André Moraes • Profa. Karyna Landra • Prof. Nauber Gavski<br>' +
+      'Instituto Federal de Santa Catarina (IFSC) — Câmpus Garopaba' +
+    '</p>' +
+  '</div>' +
+'</div>';
+
+  return html;
+}
+
 function enviarNotificacaoDemandaCustom_(dem, tipo, mensagem, autor) {
   var emailsDestino = [];
   var ss = controle_();
@@ -705,53 +802,48 @@ function enviarNotificacaoDemandaCustom_(dem, tipo, mensagem, autor) {
 
   var escopoTxt = projStr === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + projStr);
   var assunto = '';
-  var corpo = '';
+  var corpoTexto = '';
 
   if (tipo === 'prazo') {
     assunto = '[PI-2 ALTERAÇÃO DE PRAZO] ' + dem.titulo + ' [' + escopoTxt + ']';
-    corpo = 'Olá,\n\n' +
-      'A equipe docente de Projeto Integrador II (' + autor + ') atualizou o prazo da seguinte demanda:\n\n' +
-      '🎯 Demanda: ' + dem.titulo + '\n' +
-      '📋 Escopo: ' + escopoTxt + '\n' +
-      '📅 NOVO PRAZO / DATA LIMITE: ' + dem.novoPrazo + '\n' +
-      (dem.prazoAnterior ? ('(Prazo anterior: ' + dem.prazoAnterior + ')\n') : '') +
-      (mensagem ? ('\n💬 Mensagem / Motivo da alteração:\n' + mensagem + '\n') : '') +
-      (dem.criterios ? ('\n📋 Critérios de Aceite:\n' + dem.criterios + '\n') : '') +
-      '\nConfiram as orientações no dashboard:\n' +
-      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
-      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+    corpoTexto = 'Olá,\n\nA equipe docente atualizou o prazo da demanda:\n\n' +
+      'Demanda: ' + dem.titulo + '\nEscopo: ' + escopoTxt + '\nNOVO PRAZO: ' + dem.novoPrazo + '\n' +
+      (mensagem ? ('Mensagem: ' + mensagem + '\n') : '') +
+      '\nDashboard: https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n';
   } else if (tipo === 'comunicado') {
     assunto = '[PI-2 COMUNICADO] ' + dem.titulo + ' [' + escopoTxt + ']';
-    corpo = 'Olá,\n\n' +
-      'A equipe docente de Projeto Integrador II (' + autor + ') enviou um comunicado sobre a demanda:\n\n' +
-      '🎯 Demanda: ' + dem.titulo + '\n' +
-      '📋 Escopo: ' + escopoTxt + '\n' +
-      (dem.prazo ? ('📅 Prazo: ' + dem.prazo + '\n') : '') +
-      '\n📢 MENSAGEM / COMUNICADO:\n' +
-      (mensagem || '(Sem mensagem adicional)') + '\n\n' +
-      '---\n' +
-      'Acompanhem os detalhes no dashboard:\n' +
-      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
-      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+    corpoTexto = 'Olá,\n\nA equipe docente enviou um comunicado sobre a demanda:\n\n' +
+      'Demanda: ' + dem.titulo + '\nEscopo: ' + escopoTxt + '\n' +
+      'Mensagem: ' + (mensagem || '(Sem mensagem adicional)') + '\n\n' +
+      'Dashboard: https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n';
   } else {
     // lembrete
     assunto = '[PI-2 LEMBRETE] Prazo de Demanda: ' + dem.titulo + ' [' + escopoTxt + ']';
-    corpo = 'Olá,\n\n' +
-      'Este é um lembrete docente (' + autor + ') referente à entrega/meta em andamento:\n\n' +
-      '🎯 Demanda: ' + dem.titulo + '\n' +
-      '📋 Escopo: ' + escopoTxt + '\n' +
-      (dem.prazo ? ('📅 Data Limite / Prazo: ' + dem.prazo + '\n') : '') +
-      (dem.criterios ? ('\n📋 Critérios de Aceite & Rubrica:\n' + dem.criterios + '\n') : '') +
-      (dem.descricao ? ('\n📝 Orientações:\n' + dem.descricao + '\n') : '') +
-      (mensagem ? ('\n⚠️ Recado adicional:\n' + mensagem + '\n') : '') +
-      '\nPor favor, atualizem seus cards e registrem o avanço pelo dashboard:\n' +
-      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
-      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+    corpoTexto = 'Olá,\n\nEste é um lembrete docente referente à demanda em andamento:\n\n' +
+      'Demanda: ' + dem.titulo + '\nEscopo: ' + escopoTxt + '\nPrazo: ' + (dem.prazo || 'Sem data limite') + '\n' +
+      (mensagem ? ('Mensagem: ' + mensagem + '\n') : '') +
+      '\nDashboard: https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n';
   }
+
+  var htmlBody = montarHtmlEmailDemanda_({
+    tipo: tipo,
+    titulo: dem.titulo,
+    escopoTxt: escopoTxt,
+    prazo: dem.novoPrazo || dem.prazo,
+    prazoAnterior: dem.prazoAnterior,
+    pontos: dem.pontos,
+    criterios: dem.criterios,
+    descricao: dem.descricao,
+    mensagem: mensagem,
+    autor: autor
+  });
 
   emailsDestino.forEach(function (to) {
     try {
-      GmailApp.sendEmail(to, assunto, corpo);
+      GmailApp.sendEmail(to, assunto, corpoTexto, {
+        htmlBody: htmlBody,
+        name: 'Projeto Integrador II • IFSC Garopaba'
+      });
     } catch (err) {
       Logger.log('Erro ao enviar para ' + to + ': ' + err);
     }
@@ -811,18 +903,30 @@ function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor) {
 
     var escopoTxt = projeto === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + projeto);
     var assunto = '[PI-2] Nova Demanda Docente: ' + titulo + ' [' + escopoTxt + ']';
-    var corpo = 'Olá,\n\n' +
-      'A equipe docente de Projeto Integrador II (' + autor + ') registrou uma nova demanda/checkpoint para você:\n\n' +
-      '🎯 Título: ' + titulo + '\n' +
-      '📋 Escopo: ' + escopoTxt + '\n' +
-      (prazo ? ('📅 Prazo sugerido: ' + prazo + '\n') : '') +
-      (descricao ? ('\n📝 Detalhes e Orientações:\n' + descricao + '\n') : '') +
-      '\nPara acompanhar e marcar a entrega pelo dashboard:\n' +
-      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
-      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+    var corpoTexto = 'Olá,\n\nA equipe docente registrou uma nova demanda para você:\n\n' +
+      'Título: ' + titulo + '\nEscopo: ' + escopoTxt + '\nPrazo: ' + (prazo || 'Sem data limite') + '\n\n' +
+      'Dashboard: https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n';
+
+    var htmlBody = montarHtmlEmailDemanda_({
+      tipo: 'nova',
+      titulo: titulo,
+      escopoTxt: escopoTxt,
+      prazo: prazo,
+      criterios: '',
+      descricao: descricao,
+      mensagem: '',
+      autor: autor
+    });
 
     emailsDestino.forEach(function (to) {
-      GmailApp.sendEmail(to, assunto, corpo);
+      try {
+        GmailApp.sendEmail(to, assunto, corpoTexto, {
+          htmlBody: htmlBody,
+          name: 'Projeto Integrador II • IFSC Garopaba'
+        });
+      } catch (err) {
+        Logger.log('Erro ao enviar para ' + to + ': ' + err);
+      }
     });
   } catch (err) {
     Logger.log('Erro ao enviar e-mail de demanda: ' + err);
@@ -1728,4 +1832,32 @@ function importarTurmaSIGAA() {
 
   Logger.log('Concluído! Alunos cadastrados na aba membros: ' + count);
 }
+
+/**
+ * Reenvia a notificação da última demanda registrada com o template HTML completo para todos os destinatários.
+ */
+function reenviarEmailUltimaDemanda() {
+  var ss = controle_();
+  var aba = ss.getSheetByName('demandas');
+  if (!aba || aba.getLastRow() < 2) throw new Error('Nenhuma demanda encontrada.');
+
+  var ultimaLinha = aba.getLastRow();
+  var dados = aba.getRange(ultimaLinha, 1, 1, 13).getValues()[0];
+
+  var dem = {
+    id: dados[0],
+    projeto: dados[2],
+    titulo: dados[3],
+    descricao: dados[4],
+    prazo: dados[5],
+    criadoPor: dados[6],
+    pontos: dados[11],
+    criterios: dados[12]
+  };
+
+  Logger.log('Reenviando e-mail HTML da última demanda: ' + dem.titulo + ' [ID: ' + dem.id + ']');
+  var total = enviarNotificacaoDemandaCustom_(dem, 'nova', '', dem.criadoPor);
+  Logger.log('Concluído! E-mails HTML enviados para ' + total + ' estudantes.');
+}
+
 
