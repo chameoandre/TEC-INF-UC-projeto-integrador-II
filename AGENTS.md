@@ -226,6 +226,13 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Atualização do Raio-X da Turma, Novo Card/Modal de Metodologia em Computação & Padronização para "Aulas":
+  - **Atualização Completa do Raio-X da Turma (`tab-avancos-pendencias`)**: Sincronização dos blocos 1, 2 e 3 com o diagnóstico de 19/10/2026. Atualizado o sumário executivo com os avanços recentes de outubro das 10 equipes regulares (#01 a #10) e do plano domiciliar (#11). Destaque para Overleaf 100% ativo (8 links públicos de leitura `/read/` e 2 links diretos de edição), 8/10 pitch vídeos funcionais e matriz semafórica com orientações práticas para a condução dos atendimentos de bancada.
+  - **Card da Aula 2: Metodologia Científica em Computação**: Inserido novo card na Central Pedagógica (`pedagogical-hub-grid`) com Clipart SVG vetorial ilustrando o pipeline metodológico completo (Setup de Hardware/SO, Arquitetura draw.io, Repositório GitHub e Validação Empírica/Reprodutibilidade).
+  - **Modal Pedagógico da Aula de Metodologia (`metodologiaModal`)**: Modal interativo contendo os 4 eixos essenciais para escrita da Metodologia no template SBC (Natureza da Pesquisa Aplicada/DSR, Os 4 Degraus Metodológicos D1-D4, Isolamento de Variáveis VI/VD/VC com caracterização do ambiente, Comparativo Prático "O que NÃO fazer vs O que a SBC espera" e Snippet LaTeX pronto para cópia direta para o Overleaf).
+  - **Padronização da Nomenclatura para "Aulas"**: Substituição sistemática de "Roteiros" por "Aulas" em todos os cards e botões da Central Pedagógica (`Aula 1 • Elaboração de Objetivos`, `Aula 2 • Metodologia em Computação`, `Aula 3 • Trabalhos Relacionados`, `Aula 4 • Experimentos Científicos`, `Aula 5 • Expressão de Resultados`), refletindo com fidelidade a abordagem temática de sala de aula.
+  - **Incremento de Cache-Buster**: Atualizado para `?v=3.0` em `2026-2/index.html`.
+
 - **19/10/2026** — Aumento de Dimensão e Realce de Destaque / Hover no Menu de Seções:
   - **Botões do Menu Encorpados (`.tab-btn`)**: Aumento da tipografia para `0.92rem` e padding para `0.55rem 1.1rem` com bordas arredondadas de `9px`, garantindo maior conforto visual e ergonomia no clique.
   - **Hover Altamente Evidente & Feedback Tátil**: Aplicação de gradiente iluminado verde/ciano (`rgba(34, 197, 94, 0.25)`), borda verde-clara acesa (`var(--ifsc-green-light)`), elevação tridimensional com sombra suave (`box-shadow: 0 6px 18px rgba(34, 197, 94, 0.32)`) e micro-animação de escala nos ícones (`scale(1.18)`).
