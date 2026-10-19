@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roteiro 1 — Objetivos, Overleaf (COTB) e Trabalhos Relacionados | PI-2 (IFSC Garopaba)</title>
+  <meta name="description" content="Roteiro Prático 1 de Projeto Integrador II: Definição de Objetivos, Configuração do Overleaf (Modelo COTB) e Mapeamento de Trabalhos Relacionados.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root, [data-theme="dark"] {
+      --bg-dark: #080d0a;
+      --bg-surface: #0f1712;
+      --bg-card: rgba(18, 28, 22, 0.85);
+      --bg-card-hover: rgba(26, 42, 32, 0.95);
+      --border-color: rgba(34, 197, 94, 0.2);
+      --border-glow: rgba(34, 197, 94, 0.4);
+
+      --ifsc-green: #16a34a;
+      --ifsc-green-light: #4ade80;
+      --ifsc-green-glow: rgba(34, 197, 94, 0.25);
+      --ifsc-red: #ef4444;
+
+      --accent-cyan: #06b6d4;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+      --accent-blue: #3b82f6;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --chip-bg: rgba(0, 0, 0, 0.4);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card-hover: #ffffff;
+      --border-color: rgba(22, 163, 74, 0.25);
+      --border-glow: rgba(22, 163, 74, 0.5);
+
+      --ifsc-green: #15803d;
+      --ifsc-green-light: #16a34a;
+      --ifsc-green-glow: rgba(22, 163, 74, 0.2);
+      --ifsc-red: #dc2626;
+
+      --accent-cyan: #0284c7;
+      --accent-amber: #d97706;
+      --accent-purple: #7e22ce;
+      --accent-blue: #2563eb;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+
+      --chip-bg: rgba(241, 245, 249, 0.8);
+      --shadow-glass: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--ifsc-green) 0%, #059669 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-size: 1.3rem;
+      box-shadow: 0 4px 12px var(--ifsc-green-glow);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .btn-action:hover {
+      background: var(--ifsc-green);
+      color: white;
+      border-color: var(--ifsc-green);
+      transform: translateY(-1px);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Hero */
+    .hero-box {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.15) 0%, rgba(6, 182, 212, 0.08) 50%, rgba(15, 23, 18, 0.5) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.25rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-glass);
+      position: relative;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(34, 197, 94, 0.18);
+      color: var(--ifsc-green-light);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+    }
+
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      max-width: 850px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Timeline dos Passos */
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-glass);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .step-card:hover {
+      border-color: var(--border-glow);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .step-number {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--ifsc-green) 0%, var(--accent-cyan) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+
+    .step-title-group h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .step-title-group p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Destaques didáticos */
+    .formula-box {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      margin: 1rem 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+      line-height: 1.5;
+    }
+
+    .example-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-top: 0.85rem;
+      font-size: 0.88rem;
+    }
+
+    .example-box strong {
+      color: var(--ifsc-green-light);
+    }
+
+    .checklist-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin: 1rem 0;
+    }
+
+    .checklist-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .checklist-list i {
+      color: var(--ifsc-green-light);
+      margin-top: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .badge-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* Grid de Links Rápidos */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* =========================================================================
+       ILUSTRAÇÕES E INFOGRÁFICOS DO PROCESSO
+       ========================================================================= */
+    .process-pipeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+    }
+
+    .pipeline-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      transition: var(--transition);
+      box-shadow: var(--shadow-glass);
+    }
+
+    .pipeline-step:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+    }
+
+    .pipeline-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--ifsc-green) 0%, var(--accent-cyan) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .pipeline-step h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .pipeline-step p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Diagrama dos Degraus (Passo 1) */
+    .stairs-diagram {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .stairs-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--accent-cyan);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .stairs-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .stair-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .stair-item:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .stair-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .stair-text strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--text-main);
+    }
+
+    .stair-text span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Semáforo do Link Overleaf (Passo 2) */
+    .link-comparison-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .link-compare-card {
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      font-size: 0.82rem;
+    }
+
+    .link-compare-card.correct {
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    .link-compare-card.wrong {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    /* Vídeos Rápidos */
+    .video-card-box {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin: 1.25rem 0;
+      overflow: hidden;
+    }
+
+    .video-card-header {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(6, 182, 212, 0.08);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .video-responsive {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .video-responsive iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-footer-link {
+      padding: 0.5rem 0.9rem;
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+    }
+
+    .link-card {
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: var(--transition);
+    }
+
+    .link-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .link-card-icon {
+      font-size: 1.5rem;
+      color: var(--accent-cyan);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand-group">
+      <div class="logo-badge">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div class="brand-text">
+        <h1>Roteiro de Aula Prática #1</h1>
+        <p>Projeto Integrador II • Turma Info 2024 (3º Ano / 2026-2) • IFSC Câmpus Garopaba</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a href="../index.html" class="btn-action">
+        <i class="fa-solid fa-chart-line"></i> Abrir Dashboard PI-2
+      </a>
+      <button class="btn-action" onclick="toggleTheme()" title="Alternar Modo Escuro / Claro">
+        <i class="fa-solid fa-moon" id="theme-icon"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Hero Banner -->
+    <section class="hero-box">
+      <span class="hero-tag"><i class="fa-solid fa-code-branch"></i> Roteiro Prático & Hands-on</span>
+      <h2 class="hero-title">Definição de Objetivos, Overleaf (COTB) e Trabalhos Relacionados</h2>
+      <p class="hero-subtitle">
+        Nesta aula, cada equipe irá formalizar o <strong>Objetivo Geral e Específicos</strong> do seu software, inicializar a escrita científica no <strong>Overleaf</strong> utilizando o formato do <em>Computer on the Beach (COTB / SBC)</em> e garimpar <strong>pelo menos 2 trabalhos relacionados</strong> nos anais do evento.
+      </p>
+      <div class="hero-meta">
+        <div><i class="fa-solid fa-clock"></i> Duração estimada: <strong>1h40min (2 aulas)</strong></div>
+        <div><i class="fa-solid fa-chalkboard-user"></i> Orientação: <strong>Prof. Dr. André Moraes</strong></div>
+        <div><i class="fa-solid fa-bullseye"></i> Entrega: <strong>Dashboard PI-2 ao final da aula</strong></div>
+      </div>
+    </section>
+
+    <!-- ==================== ILUSTRAÇÃO DO PROCESSO GERAL ==================== -->
+    <div class="process-pipeline">
+      <div class="pipeline-step" style="border-top: 3px solid var(--accent-cyan);">
+        <div class="pipeline-badge">1</div>
+        <h4>🎯 Propósito & Alvo</h4>
+        <p>Formula o <strong>Objetivo Geral</strong> e os <strong>4 degraus específicos</strong> da solução.</p>
+      </div>
+
+      <div class="pipeline-step" style="border-top: 3px solid var(--accent-purple);">
+        <div class="pipeline-badge" style="background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);">2</div>
+        <h4>📚 Fundamentação</h4>
+        <p>Pesquisa <strong>2 artigos no COTB</strong> para comparar semelhanças e diferenciais.</p>
+      </div>
+
+      <div class="pipeline-step" style="border-top: 3px solid var(--accent-amber);">
+        <div class="pipeline-badge" style="background: linear-gradient(135deg, var(--accent-amber) 0%, #ea580c 100%);">3</div>
+        <h4>📄 Artigo Overleaf</h4>
+        <p>Inicia o template SBC e gera o <strong>Link de Leitura</strong> seguro (<code>/read/</code>).</p>
+      </div>
+
+      <div class="pipeline-step" style="border-top: 3px solid var(--ifsc-green);">
+        <div class="pipeline-badge" style="background: linear-gradient(135deg, var(--ifsc-green) 0%, #059669 100%);">4</div>
+        <h4>🚀 Dashboard PI-2</h4>
+        <p>Faz login institucional e registra a <strong>Ficha + Avanço</strong> da aula.</p>
+      </div>
+    </div>
+
+    <!-- ==================== PASSO 1: OBJETIVOS ==================== -->
+    <section class="step-card">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title-group">
+          <h3>Estruturação dos Objetivos (Geral e Específicos)</h3>
+          <p>Defina com precisão o que o projeto resolverá e quais são os degraus práticos de execução.</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Todo projeto técnico-científico precisa de um objetivo claro. A redação deve sempre iniciar com um <strong>verbo no infinitivo</strong> (evite termos vagos como <em>"tentar"</em> ou <em>"aprender"</em>).
+      </p>
+
+      <h4 style="font-size: 0.95rem; color: var(--accent-cyan); margin-top: 1rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Fórmula do Objetivo Geral:</h4>
+      <div class="formula-box">
+        [VERBO DE AÇÃO] + [O QUE SERÁ DESENVOLVIDO] + [PÚBLICO-ALVO / CONTEXTO] + [PROPÓSITO / BENEFÍCIO]
+      </div>
+
+      <div class="example-box">
+        <strong>Exemplo Prático (SELI):</strong><br/>
+        <em>"<strong>Desenvolver</strong> uma plataforma web interativa <strong>para apoio à aprendizagem de LIBRAS</strong> voltada a estudantes do ensino fundamental, <strong>visando facilitar a inclusão escolar e a comunicação acessível</strong>."</em>
+      </div>
+
+      <!-- ==================== FIGURA 1: ILUSTRAÇÃO INTUITIVA DOS OBJETIVOS ==================== -->
+      <figure style="margin: 1.5rem 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; box-shadow: var(--shadow-glass); text-align: center;">
+        <svg viewBox="0 0 900 320" width="100%" height="100%" style="max-width: 860px; height: auto; display: block; margin: 0 auto;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad-geral" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#16a34a" />
+              <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+            <linearGradient id="grad-esp1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3b82f6" />
+              <stop offset="100%" stop-color="#0284c7" />
+            </linearGradient>
+            <linearGradient id="grad-esp2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a855f7" />
+              <stop offset="100%" stop-color="#7e22ce" />
+            </linearGradient>
+            <linearGradient id="grad-esp3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b" />
+              <stop offset="100%" stop-color="#d97706" />
+            </linearGradient>
+            <linearGradient id="grad-esp4" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10b981" />
+              <stop offset="100%" stop-color="#059669" />
+            </linearGradient>
+            <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+            </filter>
+          </defs>
+
+          <!-- Bloco Superior: Objetivo Geral -->
+          <g filter="url(#shadow)">
+            <rect x="150" y="20" width="600" height="90" rx="14" fill="url(#grad-geral)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+            <circle cx="200" cy="65" r="28" fill="rgba(0,0,0,0.25)" />
+            <text x="200" y="73" font-family="'Outfit', sans-serif" font-size="24" fill="#ffffff" text-anchor="middle">🎯</text>
+            <text x="245" y="52" font-family="'Outfit', sans-serif" font-size="20" font-weight="800" fill="#ffffff">OBJETIVO GERAL (O Alvo / A Meta Final)</text>
+            <text x="245" y="78" font-family="'Inter', sans-serif" font-size="13" font-weight="500" fill="#e0f2fe">"O QUE SERÁ CRIADO + PARA QUEM + BENEFÍCIO DA SOLUÇÃO"</text>
+          </g>
+
+          <!-- Setas de Conexão -->
+          <path d="M 450 110 L 450 135 M 450 135 L 120 135 L 120 160 M 450 135 L 340 135 L 340 160 M 450 135 L 560 135 L 560 160 M 450 135 L 780 135 L 780 160" stroke="#06b6d4" stroke-width="2.5" fill="none" stroke-dasharray="4,4" />
+
+          <!-- Degrau 1 -->
+          <g filter="url(#shadow)">
+            <rect x="25" y="160" width="190" height="135" rx="12" fill="#121c16" stroke="rgba(59,130,246,0.5)" stroke-width="1.5" />
+            <rect x="25" y="160" width="190" height="34" rx="12" fill="url(#grad-esp1)" />
+            <text x="120" y="183" font-family="'Outfit', sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">1. REQUISITOS 📋</text>
+            <text x="120" y="215" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#93c5fd" text-anchor="middle">Mapear & Identificar</text>
+            <text x="120" y="238" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">Levantar problemas,</text>
+            <text x="120" y="254" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">dores dos usuários e</text>
+            <text x="120" y="270" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">regras de negócio.</text>
+          </g>
+
+          <!-- Degrau 2 -->
+          <g filter="url(#shadow)">
+            <rect x="245" y="160" width="190" height="135" rx="12" fill="#121c16" stroke="rgba(168,85,247,0.5)" stroke-width="1.5" />
+            <rect x="245" y="160" width="190" height="34" rx="12" fill="url(#grad-esp2)" />
+            <text x="340" y="183" font-family="'Outfit', sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">2. MODELAGEM 📐</text>
+            <text x="340" y="215" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#d8b4fe" text-anchor="middle">Projetar & Prototipar</text>
+            <text x="340" y="238" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">Arquitetura no draw.io,</text>
+            <text x="340" y="254" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">fluxos de dados e</text>
+            <text x="340" y="270" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">wireframes das telas.</text>
+          </g>
+
+          <!-- Degrau 3 -->
+          <g filter="url(#shadow)">
+            <rect x="465" y="160" width="190" height="135" rx="12" fill="#121c16" stroke="rgba(245,158,11,0.5)" stroke-width="1.5" />
+            <rect x="465" y="160" width="190" height="34" rx="12" fill="url(#grad-esp3)" />
+            <text x="560" y="183" font-family="'Outfit', sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">3. CÓDIGO 💻</text>
+            <text x="560" y="215" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#fde68a" text-anchor="middle">Desenvolver & Versionar</text>
+            <text x="560" y="238" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">Codificar frontend,</text>
+            <text x="560" y="254" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">backend e commits</text>
+            <text x="560" y="270" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">organizados no GitHub.</text>
+          </g>
+
+          <!-- Degrau 4 -->
+          <g filter="url(#shadow)">
+            <rect x="685" y="160" width="190" height="135" rx="12" fill="#121c16" stroke="rgba(168,85,247,0.5)" stroke-width="1.5" />
+            <rect x="685" y="160" width="190" height="34" rx="12" fill="url(#grad-esp4)" />
+            <text x="780" y="183" font-family="'Outfit', sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">4. VALIDAÇÃO 🧪</text>
+            <text x="780" y="215" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#a7f3d0" text-anchor="middle">Testar & Avaliar</text>
+            <text x="780" y="238" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">Testes de usabilidade,</text>
+            <text x="780" y="254" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">coleta de feedback e</text>
+            <text x="780" y="270" font-family="'Inter', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">refinamento do software.</text>
+          </g>
+        </svg>
+        <figcaption style="margin-top: 0.85rem; font-size: 0.82rem; color: var(--text-muted);">
+          <strong>Figura 1:</strong> Estrutura Metodológica — O Objetivo Geral representa o destino final, enquanto os Objetivos Específicos representam os 4 degraus práticos de execução técnica.
+        </figcaption>
+      </figure>
+
+      <!-- ==================== GUIA DE ELABORAÇÃO DOS OBJETIVOS ESPECÍFICOS ==================== -->
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-color);">
+        <h4 style="font-size: 1.1rem; color: var(--accent-amber); margin-bottom: 0.4rem;">
+          <i class="fa-solid fa-list-ol"></i> Como Elaborar os Objetivos Específicos (Passo a Passo)
+        </h4>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+          Enquanto o Objetivo Geral diz <strong>aonde queremos chegar</strong>, os Objetivos Específicos detalham <strong>o que precisa ser feito na prática</strong> para que o software exista. Cada objetivo específico deve ser uma entrega técnica mensurável.
+        </p>
+
+        <h5 style="font-size: 0.92rem; color: var(--accent-cyan);"><i class="fa-solid fa-key"></i> Fórmula Prática do Objetivo Específico:</h5>
+        <div class="formula-box" style="border-left-color: var(--accent-amber); color: var(--accent-amber);">
+          [VERBO OPERACIONAL NO INFINITIVO] + [OBJETO / ENTREGÁVEL TÉCNICO] + [MÉTODO / FERRAMENTA OU PROPÓSITO]
+        </div>
+
+        <!-- Banco de Verbos por Etapa -->
+        <h5 style="font-size: 0.92rem; color: var(--text-main); margin-top: 1.25rem; margin-bottom: 0.6rem;">
+          <i class="fa-solid fa-book-bookmark"></i> Banco de Verbos Recomendados (Por Etapa da Engenharia de Software):
+        </h5>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-sm); padding: 0.85rem;">
+            <strong style="color: #60a5fa; font-size: 0.82rem; display: block; margin-bottom: 0.3rem;"><i class="fa-solid fa-clipboard-list"></i> 1. Requisitos & Diagnóstico</strong>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Mapear, Identificar, Levantar, Investigar, Entrevistar, Analisar.</span>
+          </div>
+
+          <div style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: var(--radius-sm); padding: 0.85rem;">
+            <strong style="color: #c084fc; font-size: 0.82rem; display: block; margin-bottom: 0.3rem;"><i class="fa-solid fa-diagram-project"></i> 2. Modelagem & Design</strong>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Projetar, Modelar, Prototipar, Estruturar, Desenhar, Elaborar.</span>
+          </div>
+
+          <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-sm); padding: 0.85rem;">
+            <strong style="color: #fbbf24; font-size: 0.82rem; display: block; margin-bottom: 0.3rem;"><i class="fa-solid fa-code"></i> 3. Implementação</strong>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Desenvolver, Implementar, Codificar, Integrar, Construir, Versionar.</span>
+          </div>
+
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-sm); padding: 0.85rem;">
+            <strong style="color: #34d399; font-size: 0.82rem; display: block; margin-bottom: 0.3rem;"><i class="fa-solid fa-vial-circle-check"></i> 4. Validação & Testes</strong>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Validar, Avaliar, Testar, Mensurar, Aplicar, Coletar feedback.</span>
+          </div>
+        </div>
+
+        <!-- Exemplo Completo dos 4 Objetivos Específicos -->
+        <h5 style="font-size: 0.92rem; color: var(--ifsc-green-light); margin-top: 1rem; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-check-double"></i> Exemplo Completo dos 4 Objetivos Específicos (Projeto SELI):
+        </h5>
+
+        <div style="background: var(--chip-bg); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem;">
+          <ul class="checklist-list" style="margin: 0;">
+            <li>
+              <i class="fa-solid fa-arrow-right" style="color: #60a5fa;"></i>
+              <div>
+                <strong>Objetivo Específico 1 (Requisitos):</strong><br/>
+                <em>"<strong>Mapear</strong> as principais dificuldades no aprendizado inicial de LIBRAS mediante questionário aplicado a estudantes e docentes do ensino fundamental."</em>
+              </div>
+            </li>
+            <li style="margin-top: 0.6rem;">
+              <i class="fa-solid fa-arrow-right" style="color: #c084fc;"></i>
+              <div>
+                <strong>Objetivo Específico 2 (Modelagem):</strong><br/>
+                <em>"<strong>Modelar</strong> a arquitetura do sistema no draw.io e <strong>prototipar</strong> os wireframes das interfaces responsivas de prática e quiz."</em>
+              </div>
+            </li>
+            <li style="margin-top: 0.6rem;">
+              <i class="fa-solid fa-arrow-right" style="color: #fbbf24;"></i>
+              <div>
+                <strong>Objetivo Específico 3 (Código):</strong><br/>
+                <em>"<strong>Desenvolver</strong> a aplicação web utilizando HTML5, CSS3, JavaScript e versionamento Git/GitHub com deploy no GitHub Pages."</em>
+              </div>
+            </li>
+            <li style="margin-top: 0.6rem;">
+              <i class="fa-solid fa-arrow-right" style="color: #34d399;"></i>
+              <div>
+                <strong>Objetivo Específico 4 (Validação):</strong><br/>
+                <em>"<strong>Validar</strong> a usabilidade e a interatividade da plataforma através de testes de usabilidade com a turma, coletando métricas de retenção e facilidade de uso."</em>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- O que evitar -->
+        <div style="margin-top: 1rem; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-sm); padding: 0.85rem 1rem; font-size: 0.82rem;">
+          <strong style="color: var(--ifsc-red);"><i class="fa-solid fa-triangle-exclamation"></i> O que NÃO colocar como Objetivo Específico:</strong>
+          <ul style="margin-left: 1.25rem; margin-top: 0.35rem; color: var(--text-muted);">
+            <li><strong>Evite atividades passivas de estudo pessoal:</strong> <em>"Estudar JavaScript"</em>, <em>"Aprender LaTeX"</em> ou <em>"Ler 5 artigos"</em> (isso são tarefas de rotina do estudante, não objetivos técnicos do software).</li>
+            <li><strong>Evite rotinas administrativas:</strong> <em>"Criar grupo no WhatsApp"</em> ou <em>"Fazer reuniões semanais"</em>.</li>
+            <li><strong>Garanta que seja mensurável:</strong> Cada objetivo deve gerar um entregável concreto (um diagrama, um código no GitHub, um artigo no Overleaf, um relatório de teste).</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== PASSO 2: OVERLEAF ==================== -->
+    <section class="step-card">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title-group">
+          <h3>Setup do Artigo no Overleaf (Modelo COTB / SBC)</h3>
+          <p>Configuração do ambiente colaborativo LaTeX e geração do link seguro de leitura.</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+        Nosso artigo adotará a estrutura padrão da <strong>Sociedade Brasileira de Computação (SBC)</strong>, utilizada no congresso <strong>Computer on the Beach (COTB)</strong>.
+      </p>
+
+      <ul class="checklist-list">
+        <li><i class="fa-solid fa-arrow-right"></i> <strong>Acesse o Overleaf:</strong> Um dos integrantes do grupo cria um novo projeto a partir do modelo SBC.</li>
+        <li><i class="fa-solid fa-arrow-right"></i> <strong>Convide a Equipe:</strong> Compartilhe o projeto com os colegas do grupo para edição simultânea.</li>
+        <li><i class="fa-solid fa-arrow-right"></i> <strong>Adicione as Informações Iniciais:</strong>
+          <ul style="margin-left: 1.5rem; margin-top: 0.35rem; color: var(--text-muted); font-size: 0.85rem;">
+            <li>Título provisório do projeto;</li>
+            <li>Nomes dos estudantes autores e do orientador (<em>Prof. Dr. André Moraes</em>);</li>
+            <li>Filiação institucional: <em>Instituto Federal de Santa Catarina (IFSC) — Câmpus Garopaba</em>.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- ==================== FIGURA 2: FLUXO DO OVERLEAF E LINK DE LEITURA ==================== -->
+      <figure style="margin: 1.5rem 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; box-shadow: var(--shadow-glass); text-align: center;">
+        <svg viewBox="0 0 880 200" width="100%" height="100%" style="max-width: 840px; height: auto; display: block; margin: 0 auto;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad-ov1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#475569" />
+              <stop offset="100%" stop-color="#1e293b" />
+            </linearGradient>
+            <linearGradient id="grad-ov2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0284c7" />
+              <stop offset="100%" stop-color="#0369a1" />
+            </linearGradient>
+            <linearGradient id="grad-ov3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#16a34a" />
+              <stop offset="100%" stop-color="#15803d" />
+            </linearGradient>
+            <filter id="shadow-ov" x="-5%" y="-5%" width="110%" height="115%">
+              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000000" flood-opacity="0.35" />
+            </filter>
+          </defs>
+
+          <!-- Caixa 1: Template SBC -->
+          <g filter="url(#shadow-ov)">
+            <rect x="20" y="30" width="230" height="130" rx="12" fill="url(#grad-ov1)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+            <circle cx="60" cy="70" r="20" fill="rgba(255,255,255,0.1)" />
+            <text x="60" y="77" font-family="'Outfit', sans-serif" font-size="18" fill="#ffffff" text-anchor="middle">📄</text>
+            <text x="95" y="65" font-family="'Outfit', sans-serif" font-size="14" font-weight="700" fill="#ffffff">1. Template SBC</text>
+            <text x="95" y="82" font-family="'Inter', sans-serif" font-size="10.5" fill="#94a3b8">Overleaf LaTeX</text>
+            <text x="35" y="118" font-family="'Inter', sans-serif" font-size="10" fill="#cbd5e1">Preencher Título, Autores</text>
+            <text x="35" y="135" font-family="'Inter', sans-serif" font-size="10" fill="#cbd5e1">e Orientador do IFSC.</text>
+          </g>
+
+          <!-- Seta 1 -> 2 -->
+          <path d="M 260 95 L 300 95" stroke="#06b6d4" stroke-width="3" stroke-linecap="round" fill="none" marker-end="url(#arrow)" />
+          <polygon points="305,95 295,89 295,101" fill="#06b6d4" />
+
+          <!-- Caixa 2: Botão Share -->
+          <g filter="url(#shadow-ov)">
+            <rect x="315" y="30" width="240" height="130" rx="12" fill="url(#grad-ov2)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" />
+            <circle cx="355" cy="70" r="20" fill="rgba(255,255,255,0.2)" />
+            <text x="355" y="77" font-family="'Outfit', sans-serif" font-size="18" fill="#ffffff" text-anchor="middle">🔗</text>
+            <text x="390" y="65" font-family="'Outfit', sans-serif" font-size="14" font-weight="700" fill="#ffffff">2. Botão Share</text>
+            <text x="390" y="82" font-family="'Inter', sans-serif" font-size="10.5" fill="#e0f2fe">Compartilhar</text>
+            <text x="330" y="118" font-family="'Inter', sans-serif" font-size="10" fill="#f0f9ff">Ativar opção: "Anyone with</text>
+            <text x="330" y="135" font-family="'Inter', sans-serif" font-size="10" fill="#f0f9ff">this link can view".</text>
+          </g>
+
+          <!-- Seta 2 -> 3 -->
+          <path d="M 565 95 L 605 95" stroke="#16a34a" stroke-width="3" stroke-linecap="round" fill="none" />
+          <polygon points="610,95 600,89 600,101" fill="#16a34a" />
+
+          <!-- Caixa 3: Link de Leitura /read/ -->
+          <g filter="url(#shadow-ov)">
+            <rect x="620" y="30" width="240" height="130" rx="12" fill="url(#grad-ov3)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+            <circle cx="660" cy="70" r="20" fill="rgba(255,255,255,0.2)" />
+            <text x="660" y="77" font-family="'Outfit', sans-serif" font-size="18" fill="#ffffff" text-anchor="middle">🛡️</text>
+            <text x="695" y="65" font-family="'Outfit', sans-serif" font-size="14" font-weight="700" fill="#ffffff">3. Link /read/</text>
+            <text x="695" y="82" font-family="'Inter', sans-serif" font-size="10.5" fill="#dcfce7">Seguro no Dashboard</text>
+            <text x="635" y="118" font-family="'Inter', sans-serif" font-size="10" fill="#ffffff">Copiar a URL contendo /read/</text>
+            <text x="635" y="135" font-family="'Inter', sans-serif" font-size="10" fill="#ffffff">e colar na Ficha do PI-2.</text>
+          </g>
+        </svg>
+        <figcaption style="margin-top: 0.85rem; font-size: 0.82rem; color: var(--text-muted);">
+          <strong>Figura 2:</strong> Fluxo do Artigo no Overleaf — Do template oficial da SBC até a geração do link público de visualização protegido contra edições acidentais.
+        </figcaption>
+      </figure>
+
+      <!-- Semáforo do Link Overleaf -->
+      <div class="link-comparison-box">
+        <div class="link-compare-card correct">
+          <div style="font-weight: 700; color: var(--ifsc-green-light); margin-bottom: 0.3rem;">
+            <i class="fa-solid fa-circle-check"></i> LINK CORRETO (Visualização Pública)
+          </div>
+          <code style="display: block; background: rgba(0,0,0,0.3); padding: 0.35rem 0.5rem; border-radius: 4px; color: var(--ifsc-green-light); font-size: 0.78rem;">https://www.overleaf.com/read/xxxxxxxxx</code>
+          <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.75rem;">Gerado em <em>Share > Anyone with this link can view</em>. Permite leitura pelo orientador e banca sem risco de edições acidentais.</p>
+        </div>
+
+        <div class="link-compare-card wrong">
+          <div style="font-weight: 700; color: var(--ifsc-red); margin-bottom: 0.3rem;">
+            <i class="fa-solid fa-circle-xmark"></i> LINK INCORRETO (Não Compartilhar)
+          </div>
+          <code style="display: block; background: rgba(0,0,0,0.3); padding: 0.35rem 0.5rem; border-radius: 4px; color: var(--ifsc-red); font-size: 0.78rem;">https://www.overleaf.com/project/xxxxxxxxx</code>
+          <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.75rem;">Link interno de edição da sua conta privada. O sistema do Dashboard rejeitará este link por segurança.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PASSO 3: TRABALHOS RELACIONADOS ==================== -->
+    <section class="step-card">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title-group">
+          <h3>Garimpagem nos Anais do Computer on the Beach (COTB)</h3>
+          <p>Pesquisa de trabalhos similares para fundamentar a relevância e originalidade do projeto.</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Cada equipe deve encontrar <strong>pelo menos 2 artigos científicos já publicados</strong> que abordem problemas parecidos ou usem tecnologias semelhantes à do seu projeto.
+      </p>
+
+      <div class="links-grid">
+        <a href="https://sol.sbc.org.br/index.php/cotb" target="_blank" class="link-card">
+          <i class="fa-solid fa-building-columns link-card-icon"></i>
+          <div>
+            <strong>Anais do COTB (SBC OpenLib)</strong>
+            <p style="font-size: 0.75rem; color: var(--text-dim);">Acesse a biblioteca aberta oficial da SBC</p>
+          </div>
+        </a>
+        <a href="https://scholar.google.com.br/" target="_blank" class="link-card">
+          <i class="fa-brands fa-google link-card-icon" style="color: var(--accent-purple);"></i>
+          <div>
+            <strong>Google Acadêmico</strong>
+            <p style="font-size: 0.75rem; color: var(--text-dim);">Busque por palavras-chave + "Computer on the Beach"</p>
+          </div>
+        </a>
+      </div>
+
+      <h4 style="font-size: 0.95rem; color: var(--accent-cyan); margin-top: 1.25rem;"><i class="fa-solid fa-magnifying-glass"></i> O que extrair de cada trabalho encontrado?</h4>
+      <div style="background: var(--chip-bg); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: 0.5rem; font-size: 0.88rem;">
+        <p><strong>1. Quem fez e quando:</strong> Ex: <em>Souza e Pereira (2023)</em></p>
+        <p style="margin-top: 0.35rem;"><strong>2. O que o trabalho deles propôs:</strong> Ex: <em>"Desenvolveram um jogo de cartas digital para ensinar finanças no ensino fundamental..."</em></p>
+        <p style="margin-top: 0.35rem;"><strong>3. Qual a diferença em relação ao seu projeto:</strong> Ex: <em>"Diferente do trabalho citado, nossa proposta focará no controle de gastos reais do jovem através de um painel responsivo..."</em></p>
+      </div>
+    </section>
+
+    <!-- ==================== PASSO 4: ENTREGA NO DASHBOARD ==================== -->
+    <section class="step-card" style="border-left: 4px solid var(--ifsc-green);">
+      <div class="step-header">
+        <div class="step-number" style="background: var(--ifsc-green);">4</div>
+        <div class="step-title-group">
+          <h3>Entrega Final no Dashboard de PI-2</h3>
+          <p>Consolidação e registro oficial dos avanços obtidos na aula de hoje.</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+        Antes do término da aula, cada equipe deve cumprir o seguinte <strong>checklist de entrega</strong>:
+      </p>
+
+      <ul class="checklist-list">
+        <li><i class="fa-solid fa-square-check"></i> Fazer login no topo do <strong>Dashboard de PI-2</strong> com a conta Google/IFSC institucional.</li>
+        <li><i class="fa-solid fa-square-check"></i> Clicar no botão <strong>`[+ Avanço]`</strong> do seu Projeto.</li>
+        <li><i class="fa-solid fa-square-check"></i> Selecionar a demanda de hoje ou descrever:
+          <ul style="margin-left: 1.5rem; margin-top: 0.35rem; color: var(--text-muted); font-size: 0.85rem;">
+            <li>Objetivo Geral e Específicos consolidados;</li>
+            <li>Link de Leitura do Overleaf (<code>/read/</code>);</li>
+            <li>Resumo dos 2 Trabalhos Relacionados encontrados no COTB.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="../index.html" class="btn-action" style="background: var(--ifsc-green); color: white; padding: 0.65rem 1.5rem; font-size: 0.95rem;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar o Dashboard para Enviar
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>Instituto Federal de Santa Catarina (IFSC) — Câmpus Garopaba</strong></p>
+    <p style="margin-top: 0.3rem;">Unidade Curricular: Projeto Integrador II • Turma Info 2024 (3º Ano / 2026-2)</p>
+    <p style="margin-top: 0.3rem; font-size: 0.75rem; color: var(--text-dim);">Docente Responsável: Prof. Dr. André Moraes (andre.moraes@ifsc.edu.br)</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme") || "dark";
+      const next = current === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      localStorage.setItem("pi1_theme", next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById("theme-icon");
+      if (icon) {
+        icon.className = theme === "dark" ? "fa-solid fa-moon" : "fa-solid fa-sun";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("pi1_theme") || "dark";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      updateThemeIcon(savedTheme);
+    });
+  </script>
+</body>
+</html>

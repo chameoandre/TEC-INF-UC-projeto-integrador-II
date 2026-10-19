@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devolutiva de Objetivos & Integração COTB/SBC — PI-2 (IFSC Garopaba)</title>
+  <meta name="description" content="Slides interativos de alinhamento pedagógico dos 4 Degraus Metodológicos e transposição dos objetivos para o template do artigo científico COTB/SBC no Overleaf.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons & FontAwesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --ifsc-green: #16a34a;
+      --ifsc-green-light: #4ade80;
+      --ifsc-green-glow: rgba(34, 197, 94, 0.35);
+      --ifsc-red: #ef4444;
+
+      --bg-dark: #070b12;
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --bg-card-hover: rgba(22, 33, 58, 0.95);
+      --border-color: rgba(255, 255, 255, 0.09);
+      --border-glow: rgba(34, 197, 94, 0.4);
+
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glass: 0 12px 40px rgba(0, 0, 0, 0.45);
+      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2rem;
+      background: rgba(11, 17, 32, 0.9);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 50;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--ifsc-green), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.15rem;
+      box-shadow: 0 0 16px var(--ifsc-green-glow);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.45rem 0.95rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--ifsc-green);
+      border-color: var(--ifsc-green);
+      color: #fff;
+      box-shadow: 0 0 14px var(--ifsc-green-glow);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .slide-counter {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ifsc-green-light);
+      padding: 0 0.5rem;
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--ifsc-green), var(--accent-cyan));
+      width: 16.66%;
+      transition: width 0.35s ease;
+      box-shadow: 0 0 8px var(--ifsc-green-glow);
+    }
+
+    /* Slide Deck Viewport */
+    .deck-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 2.2rem 3.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(40px);
+      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* Typography & Badges */
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.15);
+      border: 1px solid rgba(22, 163, 74, 0.3);
+      color: var(--ifsc-green-light);
+      margin-bottom: 0.7rem;
+      width: fit-content;
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .slide-title span {
+      background: linear-gradient(135deg, var(--ifsc-green-light), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-lead {
+      color: var(--text-muted);
+      font-size: 1.02rem;
+      line-height: 1.5;
+      margin-bottom: 1.6rem;
+      max-width: 980px;
+    }
+
+    /* Cards & Grids */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+    }
+
+    /* Slide 1 Specifics */
+    .hero-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--ifsc-green);
+    }
+
+    .stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Slide 2: Pipeline Diagram */
+    .pipeline-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .pipeline-step:hover {
+      border-color: var(--ifsc-green);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px var(--ifsc-green-glow);
+    }
+
+    .pipeline-step.active-focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+    }
+
+    .step-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ifsc-green-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.6rem;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .step-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .step-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .pipeline-arrow {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* Slide 3: 4 Degraus Grid */
+    .degraus-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
+      margin-top: 0.8rem;
+    }
+
+    .degrau-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 3px solid var(--ifsc-green);
+    }
+
+    .degrau-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .degrau-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--ifsc-green-light);
+    }
+
+    .degrau-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .degrau-verbs {
+      font-size: 0.76rem;
+      color: var(--accent-cyan);
+      font-family: 'Fira Code', monospace;
+      margin-bottom: 0.7rem;
+      line-height: 1.4;
+    }
+
+    .degrau-deliverable {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      border-left: 2px solid var(--accent-amber);
+    }
+
+    /* Slide 4: Antes vs Depois */
+    .compare-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 0.8rem;
+    }
+
+    .compare-box {
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .compare-box.bad {
+      border-left: 4px solid var(--ifsc-red);
+    }
+
+    .compare-box.good {
+      border-left: 4px solid var(--ifsc-green);
+    }
+
+    .compare-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .compare-list li {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      padding-left: 1.4rem;
+      position: relative;
+    }
+
+    .compare-box.bad li::before {
+      content: '❌';
+      position: absolute;
+      left: 0;
+      font-size: 0.8rem;
+    }
+
+    .compare-box.good li::before {
+      content: '✔️';
+      position: absolute;
+      left: 0;
+      font-size: 0.8rem;
+    }
+
+    /* Slide 5: LaTeX Code Preview */
+    .latex-preview-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 0.6rem;
+    }
+
+    .code-panel {
+      background: #040810;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      line-height: 1.6;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.8rem;
+      right: 0.8rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: var(--transition);
+    }
+
+    .copy-btn:hover {
+      background: var(--ifsc-green);
+      border-color: var(--ifsc-green);
+    }
+
+    .rendered-article-panel {
+      background: #ffffff;
+      color: #1e293b;
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      box-shadow: var(--shadow-glass);
+      overflow-y: auto;
+      max-height: 380px;
+    }
+
+    .rendered-article-panel h4 {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+    }
+
+    /* Slide 6: Checklist */
+    .checklist-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .task-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.3rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .task-card.done {
+      border-color: var(--ifsc-green);
+      background: rgba(22, 163, 74, 0.1);
+    }
+
+    .task-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .task-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: transparent;
+      transition: var(--transition);
+    }
+
+    .task-card.done .task-checkbox {
+      background: var(--ifsc-green);
+      border-color: var(--ifsc-green);
+      color: #fff;
+    }
+
+    .task-info h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .task-info p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0f172a;
+      border: 1px solid var(--ifsc-green);
+      color: #fff;
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(15px);
+      transition: var(--transition);
+    }
+
+    #toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    /* Footer hints */
+    .deck-footer {
+      padding: 0.6rem 2rem;
+      background: rgba(11, 17, 32, 0.9);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      color: var(--text-dim);
+    }
+
+    .kbd-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 0.15rem 0.4rem;
+      font-size: 0.7rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="brand-group">
+      <div class="brand-icon">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div class="brand-text">
+        <h1>Projeto Integrador 1 • Alinhamento & Devolutiva</h1>
+        <span>IFSC Câmpus Garopaba • Técnico Integrado em Informática (Turma Info 24)</span>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-nav" id="btn-prev" onclick="prevSlide()" disabled title="Slide Anterior (Seta Esquerda)">
+        <i class="fa-solid fa-chevron-left"></i> Anterior
+      </button>
+      <span class="slide-counter" id="slide-num">01 / 06</span>
+      <button class="btn-nav" id="btn-next" onclick="nextSlide()" title="Próximo Slide (Seta Direita / Espaço)">
+        Próximo <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <button class="btn-nav" onclick="toggleFullscreen()" title="Alternar Tela Cheia (F)">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-bar"></div>
+  </div>
+
+  <!-- Deck Viewport -->
+  <main class="deck-viewport">
+
+    <!-- SLIDE 1: ABERTURA & DIAGNÓSTICO -->
+    <section class="slide active" id="slide-1">
+      <div class="slide-tag"><i class="fa-solid fa-bullhorn"></i> Devolutiva da Aula Prática #1</div>
+      <h2 class="slide-title">Diagnóstico dos Objetivos: <span>Onde estamos & Para onde vamos</span></h2>
+      <p class="slide-lead">
+        Analisamos as redações submetidas pelas 11 equipes. A turma demonstrou excelente maturidade na escolha de temas sociais e técnicos, mas identificamos um padrão comum que precisamos alinhar antes de avançar para o código.
+      </p>
+
+      <div class="hero-stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" style="color: var(--accent-cyan);">11</div>
+          <div class="stat-label">Equipes com temas de grande relevância (LIBRAS, Quilombo da Aldeia, ENEM, Finanças, Linux...)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" style="color: var(--ifsc-green-light);">90%</div>
+          <div class="stat-label">Acertaram a fórmula do Objetivo Geral com verbo no infinitivo e propósito claro</div>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--ifsc-red);">
+          <div class="stat-num" style="color: var(--ifsc-red);">~80%</div>
+          <div class="stat-label">Omitiram a <strong>Modelagem draw.io (Degrau 2)</strong> e a <strong>Validação com Usuários (Degrau 4)</strong></div>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--accent-amber);">
+          <div class="stat-num" style="color: var(--accent-amber);">100%</div>
+          <div class="stat-label">Capazes de transpor a versão corrigida hoje para o <strong>Artigo COTB/SBC no Overleaf</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: O PIPELINE METODOLÓGICO COMPLETO -->
+    <section class="slide" id="slide-2">
+      <div class="slide-tag"><i class="fa-solid fa-diagram-project"></i> Arquitetura Metodológica</div>
+      <h2 class="slide-title">A Demanda: <span>Do Problema Real à Submissão do Artigo</span></h2>
+      <p class="slide-lead">
+        Os objetivos não são campos soltos de um formulário. Eles representam a linha do tempo executável que guiará o grupo da concepção aos testes práticos.
+      </p>
+
+      <div class="pipeline-container">
+        <div class="pipeline-step">
+          <div class="step-badge">1</div>
+          <div class="step-title">Problema Real</div>
+          <div class="step-desc">Dor real da comunidade ou estudantes identificada pela equipe.</div>
+        </div>
+
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <div class="pipeline-step active-focus">
+          <div class="step-badge" style="background: var(--ifsc-green); color: #fff;">2</div>
+          <div class="step-title">4 Degraus Técnicos</div>
+          <div class="step-desc">Requisitos &rarr; Modelagem draw.io &rarr; Código Web &rarr; Validação.</div>
+        </div>
+
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <div class="pipeline-step">
+          <div class="step-badge">3</div>
+          <div class="step-title">Artigo Overleaf</div>
+          <div class="step-desc">Inserção dos objetivos no fechamento da Seção 1 (Introdução).</div>
+        </div>
+
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <div class="pipeline-step">
+          <div class="step-badge">4</div>
+          <div class="step-title">Execução & Git</div>
+          <div class="step-desc">Diagramas vivos, repositório GitHub e deploy no GitHub Pages.</div>
+        </div>
+
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <div class="pipeline-step">
+          <div class="step-badge">5</div>
+          <div class="step-title">Submissão COTB</div>
+          <div class="step-desc">Artigo científico concluído e submetido a evento oficial da SBC.</div>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-top: 1.5rem; border-left: 4px solid var(--accent-cyan); display: flex; align-items: center; gap: 1rem;">
+        <i class="fa-solid fa-lightbulb" style="font-size: 1.6rem; color: var(--accent-cyan);"></i>
+        <div>
+          <strong style="color: #fff;">Por que isso importa?</strong>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Quando o avaliador da SBC lê seu artigo, ele avalia se a sua metodologia cumpriu exatamente o que foi prometido nos objetivos específicos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: OS 4 DEGRAUS METODOLÓGICOS DETALHADOS -->
+    <section class="slide" id="slide-3">
+      <div class="slide-tag"><i class="fa-solid fa-stairs"></i> Os 4 Degraus de Execução Técnica</div>
+      <h2 class="slide-title">A Trilha Obrigatória dos <span>Objetivos Específicos</span></h2>
+      <p class="slide-lead">
+        Todo projeto de PI-2 deve conter no mínimo 1 objetivo específico para cada um destes 4 degraus fundamentais:
+      </p>
+
+      <div class="degraus-grid">
+        <!-- Degrau 1 -->
+        <div class="degrau-card">
+          <div>
+            <div class="degrau-header">
+              <span class="degrau-pill">DEGRAU 1</span>
+              <i class="fa-solid fa-magnifying-glass" style="color: var(--ifsc-green-light);"></i>
+            </div>
+            <div class="degrau-title">Requisitos & Diagnóstico</div>
+            <div class="degrau-verbs">Mapear, Identificar, Levantar, Investigar</div>
+          </div>
+          <div class="degrau-deliverable">
+            <strong>Entregável:</strong> Questionários, entrevistas ou levantamento documental das dores dos usuários.
+          </div>
+        </div>
+
+        <!-- Degrau 2 -->
+        <div class="degrau-card" style="border-top-color: var(--accent-cyan);">
+          <div>
+            <div class="degrau-header">
+              <span class="degrau-pill" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">DEGRAU 2</span>
+              <i class="fa-solid fa-sitemap" style="color: var(--accent-cyan);"></i>
+            </div>
+            <div class="degrau-title">Modelagem & Design</div>
+            <div class="degrau-verbs">Modelar, Prototipar, Projetar, Estruturar</div>
+          </div>
+          <div class="degrau-deliverable">
+            <strong>Entregável:</strong> Diagrama de arquitetura no <code>draw.io</code> e wireframes visuais de navegação.
+          </div>
+        </div>
+
+        <!-- Degrau 3 -->
+        <div class="degrau-card" style="border-top-color: var(--accent-purple);">
+          <div>
+            <div class="degrau-header">
+              <span class="degrau-pill" style="background: rgba(168, 85, 247, 0.15); color: var(--accent-purple);">DEGRAU 3</span>
+              <i class="fa-solid fa-code" style="color: var(--accent-purple);"></i>
+            </div>
+            <div class="degrau-title">Implementação & Código</div>
+            <div class="degrau-verbs">Desenvolver, Codificar, Versionar, Publicar</div>
+          </div>
+          <div class="degrau-deliverable">
+            <strong>Entregável:</strong> Aplicação web (HTML/CSS/JS) no GitHub com deploy público no GitHub Pages.
+          </div>
+        </div>
+
+        <!-- Degrau 4 -->
+        <div class="degrau-card" style="border-top-color: var(--accent-amber);">
+          <div>
+            <div class="degrau-header">
+              <span class="degrau-pill" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">DEGRAU 4</span>
+              <i class="fa-solid fa-user-check" style="color: var(--accent-amber);"></i>
+            </div>
+            <div class="degrau-title">Validação & Testes</div>
+            <div class="degrau-verbs">Validar, Avaliar, Testar, Mensurar usabilidade</div>
+          </div>
+          <div class="degrau-deliverable">
+            <strong>Entregável:</strong> Testes empíricos com usuários reais ou colegas de turma e métricas de satisfação.
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-top: 1.2rem; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); padding: 0.85rem 1.25rem;">
+        <span style="color: var(--ifsc-red); font-weight: 700; font-size: 0.85rem;"><i class="fa-solid fa-triangle-exclamation"></i> REGRA ANTI-ESTUDO PASSIVO:</span>
+        <span style="font-size: 0.82rem; color: var(--text-muted); margin-left: 0.5rem;">
+          Nunca coloque tarefas rotineiras ("estudar JavaScript", "ler artigos") ou papéis do professor ("ensinar finanças"). O objetivo de vocês é <strong>construir e validar a solução de software</strong>!
+        </span>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: ANTES VS DEPOIS (CASOS DA TURMA) -->
+    <section class="slide" id="slide-4">
+      <div class="slide-tag"><i class="fa-solid fa-code-compare"></i> Análise Comparativa Real</div>
+      <h2 class="slide-title">Refatorando na Prática: <span>Antes vs. Depois</span></h2>
+      <p class="slide-lead">
+        Veja a diferença entre listar meras funcionalidades internas e estruturar os 4 degraus técnicos de engenharia:
+      </p>
+
+      <div class="compare-container">
+        <!-- ANTES -->
+        <div class="compare-box bad">
+          <div class="compare-title" style="color: var(--ifsc-red);">
+            <i class="fa-solid fa-circle-xmark"></i> Redação Típica Inicial (Problemas Comuns)
+          </div>
+          <ul class="compare-list">
+            <li><strong>Falta de degraus de engenharia:</strong> "Disponibilizar conteúdos educativos sobre LIBRAS / Finanças / Leis" <em>(Isso é conteúdo, não é entrega de software).</em></li>
+            <li><strong>Foco no papel do professor:</strong> "Ensinar conceitos básicos de economia para jovens" <em>(O software apoia, mas quem ensina é o usuário).</em></li>
+            <li><strong>Repetição do Geral:</strong> O 1º específico apenas repete com outras palavras o que já estava dito no Objetivo Geral.</li>
+            <li><strong>Omissão completa da modelagem e validação:</strong> Não cita draw.io, wireframes, nem testes de usabilidade com a turma.</li>
+          </ul>
+        </div>
+
+        <!-- DEPOIS -->
+        <div class="compare-box good">
+          <div class="compare-title" style="color: var(--ifsc-green-light);">
+            <i class="fa-solid fa-circle-check"></i> Redação Padrão COTB/SBC (Refatorada)
+          </div>
+          <ul class="compare-list">
+            <li><strong>Degrau 1 (Requisitos):</strong> "Mapear as necessidades e dificuldades de aprendizagem através de questionário com o público-alvo;"</li>
+            <li><strong>Degrau 2 (Modelagem):</strong> "Modelar a arquitetura no draw.io e prototipar wireframes responsivos de interação;"</li>
+            <li><strong>Degrau 3 (Código):</strong> "Desenvolver a plataforma web (HTML5, CSS3, JavaScript) versionada no GitHub com deploy no GitHub Pages;"</li>
+            <li><strong>Degrau 4 (Validação):</strong> "Validar a usabilidade e interatividade aplicando testes práticos com estudantes e coletando métricas."</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: A CONEXÃO COM O OVERLEAF (LATEX) -->
+    <section class="slide" id="slide-5">
+      <div class="slide-tag"><i class="fa-solid fa-file-code"></i> Overleaf & Modelo COTB/SBC</div>
+      <h2 class="slide-title">Onde os Objetivos Vivem no <span>Artigo Científico</span></h2>
+      <p class="slide-lead">
+        No modelo da SBC, a <strong>Seção 1 (Introdução)</strong> fecha obrigatoriamente com o parágrafo da meta geral e a enumeração dos 4 degraus.
+      </p>
+
+      <div class="latex-preview-wrap">
+        <!-- Código LaTeX -->
+        <div class="code-panel">
+          <button class="copy-btn" onclick="copiarLatex()" id="btn-copy-latex">
+            <i class="fa-solid fa-copy"></i> Copiar Código
+          </button>
+<pre><span style="color:#64748b;">% Fechamento da Seção 1 (Introdução) no template SBC</span>
+\section{Introdução}
+
+[... Problema real e contextualização da área ...]
+
+O objetivo geral deste trabalho é desenvolver uma 
+plataforma web interativa de apoio ao aprendizado... 
+
+Para tanto, definem-se os seguintes objetivos específicos:
+\begin{enumerate}
+  \item \textbf{Requisitos:} Mapear as principais necessidades 
+        dos usuários mediante aplicação de questionário;
+  \item \textbf{Modelagem:} Modelar a arquitetura no draw.io e 
+        prototipar os wireframes das interfaces;
+  \item \textbf{Implementação:} Desenvolver a aplicação web 
+        utilizando HTML5, CSS3, JavaScript e versionamento Git;
+  \item \textbf{Validação:} Validar a usabilidade da solução 
+        através de testes práticos com a turma.
+\end{enumerate}</pre>
+        </div>
+
+        <!-- Artigo Renderizado Simulado -->
+        <div class="rendered-article-panel">
+          <h4>1. Introdução</h4>
+          <p style="margin-bottom: 0.8rem; text-indent: 1.5em; text-align: justify;">
+            A utilização de ferramentas digitais no ensino técnico representa uma oportunidade essencial para a resolução de problemas práticos cotidianos. Entretanto, a falta de ferramentas acessíveis ainda dificulta...
+          </p>
+          <p style="margin-bottom: 0.6rem; text-indent: 1.5em; text-align: justify;">
+            O objetivo geral deste trabalho é desenvolver uma plataforma web interativa voltada ao apoio à aprendizagem acessível. Para tanto, definem-se os seguintes objetivos específicos:
+          </p>
+          <ol style="padding-left: 2rem; margin-bottom: 0.8rem;">
+            <li><strong>Requisitos:</strong> Mapear as principais necessidades dos usuários mediante aplicação de questionário;</li>
+            <li><strong>Modelagem:</strong> Modelar a arquitetura no draw.io e prototipar os wireframes das interfaces;</li>
+            <li><strong>Implementação:</strong> Desenvolver a aplicação web utilizando HTML5, CSS3, JavaScript e versionamento Git;</li>
+            <li><strong>Validação:</strong> Validar a usabilidade da solução através de testes práticos com a turma.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: LABORATÓRIO DE AMANHÃ (MISSÃO DA EQUIPE) -->
+    <section class="slide" id="slide-6">
+      <div class="slide-tag"><i class="fa-solid fa-clipboard-check"></i> Missão Prática de Produção</div>
+      <h2 class="slide-title">Roteiro de Aula: <span>Checklist das Equipes</span></h2>
+      <p class="slide-lead">
+        Trabalho cooperativo no laboratório: cada equipe senta junta no Overleaf para fechar a entrega:
+      </p>
+
+      <div class="checklist-container">
+        <!-- Tarefa 1 -->
+        <div class="task-card" onclick="toggleTask(this)">
+          <div class="task-top">
+            <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+            <div class="task-info">
+              <h4>1. Refatorar os 4 Degraus</h4>
+              <p>Reescrever os objetivos específicos do projeto garantindo a presença dos 4 degraus técnicos (Requisitos, Modelagem, Código e Testes).</p>
+            </div>
+          </div>
+          <span style="font-size:0.7rem;color:var(--text-dim);margin-top:0.8rem;">Clique para marcar como concluído</span>
+        </div>
+
+        <!-- Tarefa 2 -->
+        <div class="task-card" onclick="toggleTask(this)">
+          <div class="task-top">
+            <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+            <div class="task-info">
+              <h4>2. Inserir no Overleaf</h4>
+              <p>Abrir o projeto compartilhado no Overleaf, atualizar o cabeçalho (título/autores) e colar os objetivos na Seção 1 (Introdução). Compilar o PDF!</p>
+            </div>
+          </div>
+          <span style="font-size:0.7rem;color:var(--text-dim);margin-top:0.8rem;">Clique para marcar como concluído</span>
+        </div>
+
+        <!-- Tarefa 3 -->
+        <div class="task-card" onclick="toggleTask(this)">
+          <div class="task-top">
+            <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+            <div class="task-info">
+              <h4>3. Atualizar no Dashboard</h4>
+              <p>Acessar o card do projeto no Dashboard de PI-2, atualizar o texto final aprovado e registrar o avanço com o link de leitura do Overleaf.</p>
+            </div>
+          </div>
+          <span style="font-size:0.7rem;color:var(--text-dim);margin-top:0.8rem;">Clique para marcar como concluído</span>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, rgba(22, 163, 74, 0.15), rgba(6, 182, 212, 0.1));">
+        <div>
+          <strong style="color: #fff; font-size: 1.05rem;">Pronto para iniciar a oficina?</strong>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
+            Os orientadores passarão em cada bancada para validar os 4 degraus e homologar o PDF compilado!
+          </p>
+        </div>
+        <a href="../index.html" class="btn-nav" style="background: var(--ifsc-green); color: #fff; border-color: var(--ifsc-green); padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+          <i class="fa-solid fa-chart-line"></i> Acessar Dashboard PI-2
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="deck-footer">
+    <div class="kbd-hint">
+      <span>Navegação:</span>
+      <kbd>&larr;</kbd> Anterior
+      <kbd>&rarr;</kbd> ou <kbd>Espaço</kbd> Próximo
+      <kbd>F</kbd> Tela Cheia
+    </div>
+    <div>Prof. Dr. André Moraes • IFSC Câmpus Garopaba</div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <i class="fa-solid fa-circle-check" style="color: var(--ifsc-green-light);"></i>
+    <span id="toast-text">Código LaTeX copiado para a área de transferência!</span>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 6;
+
+    function updateSlide() {
+      // Toggle slides
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (slide) {
+          if (i === currentSlide) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        }
+      }
+
+      // Update counter
+      document.getElementById('slide-num').innerText = `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+
+      // Update progress bar
+      const pct = (currentSlide / totalSlides) * 100;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+
+      // Update buttons
+      document.getElementById('btn-prev').disabled = (currentSlide === 1);
+      document.getElementById('btn-next').disabled = (currentSlide === totalSlides);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Erro ao ativar tela cheia: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function toggleTask(card) {
+      card.classList.toggle('done');
+    }
+
+    function copiarLatex() {
+      const code = `% Fechamento da Seção 1 (Introdução) no template SBC
+\\section{Introdução}
+
+O objetivo geral deste trabalho é desenvolver uma plataforma web interativa... 
+
+Para tanto, definem-se os seguintes objetivos específicos:
+\\begin{enumerate}
+  \\item \\textbf{Requisitos:} Mapear as principais necessidades dos usuários mediante aplicação de questionário;
+  \\item \\textbf{Modelagem:} Modelar a arquitetura no draw.io e prototipar os wireframes das interfaces;
+  \\item \\textbf{Implementação:} Desenvolver a aplicação web utilizando HTML5, CSS3, JavaScript e versionamento Git;
+  \\item \\textbf{Validação:} Validar a usabilidade da solução através de testes práticos com a turma.
+\\end{enumerate}`;
+
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Código LaTeX copiado com sucesso!');
+        const btn = document.getElementById('btn-copy-latex');
+        if (btn) {
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar Código';
+          }, 2500);
+        }
+      }).catch(err => {
+        showToast('Erro ao copiar código.');
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-text');
+      if (toast && text) {
+        text.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    // Touch support (swipe)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    window.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) nextSlide();
+      if (touchEndX > touchStartX + 50) prevSlide();
+    }, false);
+  </script>
+</body>
+
+</html>

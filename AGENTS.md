@@ -226,6 +226,12 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Card da Aula de Elaboração de Objetivos na Central Pedagógica & Roteiro 1 de PI-1:
+  - **Novo Card Didático (`Card 0 • Objetivos`)**: Adicionado à grade da Central Pedagógica com foco na metodologia completa de formulação: Objetivo Geral com fórmula de 4 critérios (`[Verbo] + [Produto Tangível] + [Público] + [Propósito]`) e os 4 Degraus Metodológicos da Engenharia de Software (`D1 Requisitos`, `D2 Modelagem`, `D3 Código`, `D4 Validação`).
+  - **Clipart SVG Conceitual**: Desenho vetorial de alta definição ilustrando o alvo metodológico e a escada dos 4 degraus técnicos.
+  - **Integração de Materiais Didáticos**: Portados de Projeto Integrador 1 os roteiros práticos e slides completos para `2026-2/roteiro-1-objetivos/index.html` e `2026-2/devolutiva-objetivos/index.html`, com botões de acesso direto ("Roteiro" e "Slides") no rodapé do card.
+  - **Alinhamento com os Cards de Projetos**: Os estudantes de PI-2 agora contam com o mesmo padrão e exemplos comparativos práticos para registrar corretamente o Objetivo Geral e os Degraus Metodológicos nas fichas e no artigo final.
+
 - **19/10/2026** — Reorganização do Menu em Duas Linhas, Novas Abas de Eventos e Utilitários & Limpeza Visual:
   - **Menu de Navegação em Duas Linhas (`.nav-tabs-bar`)**: Reestruturação da barra de navegação com cor de destaque elegante e gradiente sutil, agrupando as abas em 2 linhas temáticas (`Gestão & Acompanhamento` e `Produção & Pesquisa`), eliminando a sobrecarga de largura lateral e o scroll horizontal excessivo.
   - **Aba de Eventos de Computação (`tab-eventos`)**: Seção nobre com cards elegantes para os principais eventos científicos da área (Computer on the Beach 2027, SEPEI IFSC, SNCT MCTI, Escolas Regionais SBC Sul e Sistema JEMS), detalhando prazos, formatos de artigo e botões de acesso.
