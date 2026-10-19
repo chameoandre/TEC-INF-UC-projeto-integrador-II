@@ -1629,3 +1629,103 @@ function linhasParaProjetos(linhas) {
   return projetos;
 }
 //</linhasParaProjetos>
+
+// ============================ FUNÇÕES ADMINISTRATIVAS & DIAGNÓSTICO ============================
+
+/**
+ * Diagnóstico completo do envio de e-mails:
+ * 1. Verifica se a aba 'membros' existe e lista a contagem de destinatários ativos;
+ * 2. Força a solicitação de autorização do GmailApp caso ainda não concedida;
+ * 3. Envia e-mail de prova para o endereço docente.
+ */
+function diagnosticoEnvioEmail() {
+  var ss = controle_();
+  var abaMembros = ss.getSheetByName('membros');
+  if (!abaMembros) {
+    Logger.log('❌ ERRO: Aba membros não encontrada!');
+    return;
+  }
+  var membros = abaMembros.getDataRange().getValues();
+  Logger.log('📊 Total de linhas na aba membros: ' + membros.length);
+
+  var ativos = [];
+  for (var i = 1; i < membros.length; i++) {
+    var email = String(membros[i][0] || '').trim();
+    var status = String(membros[i][4] || '').trim();
+    if (status === 'ativo' && email.indexOf('@') > 0) {
+      ativos.push(email);
+    }
+  }
+  Logger.log('👥 Total de membros ATIVOS com e-mail: ' + ativos.length);
+  Logger.log('Destinatários ativos: ' + JSON.stringify(ativos));
+
+  var emailDocente = CONFIG.DOCENTES[CONFIG.DOCENTES.length - 1]; // chameoandre@gmail.com
+  Logger.log('Tentando enviar e-mail de teste para ' + emailDocente + '...');
+  GmailApp.sendEmail(
+    emailDocente,
+    '[PI-2 DIAGNÓSTICO] Teste de autorização de e-mail',
+    'Olá André!\n\nSe você está lendo isto, o GmailApp do Apps Script está 100% autorizado e apto a disparar notificações.\n\nTotal de membros ativos cadastrados na aba membros: ' + ativos.length
+  );
+  Logger.log('✅ SUCESSO! E-mail de teste enviado para ' + emailDocente + '.');
+}
+
+/**
+ * Importa/sincroniza em lote os 33 estudantes da turma INF-2024 (dados extraídos do SIGAA)
+ * diretamente para a aba 'membros' da planilha de controle privada com status 'ativo'.
+ */
+function importarTurmaSIGAA() {
+  var ss = controle_();
+  var aba = ss.getSheetByName('membros');
+  if (!aba) throw new Error('Aba membros não encontrada.');
+
+  var turma = [
+    { email: 'lucaspachequinhoferreira@gmail.com', nome: 'LUCAS PACHECO FERREIRA', proj: '1' },
+    { email: 'pa.leopoldino@gmail.com', nome: 'BERNARDO LEOPOLDINO NUNES', proj: '1' },
+    { email: 'henriquecardosocandidoancelmo@gmail.com', nome: 'HENRIQUE CARDOSO CANDIDO ANCELMO', proj: '1' },
+    { email: 'a0680028@gmail.com', nome: 'ANDERSON MIGUEL DE OLIVEIRA ZANATTA', proj: '2' },
+    { email: 'eluneyemasuazo2@gmail.com', nome: 'ELUNEY EMA SUAZO', proj: '2' },
+    { email: 'joao.brasil.crescencio@gmail.com', nome: 'JOÃO PEDRO BRASIL CRESCENCIO', proj: '2' },
+    { email: 'danirduarte@gmail.com', nome: 'RODRIGO DUARTE ZOMER', proj: '2' },
+    { email: 'dublegextreme@gmail.com', nome: 'ARTHUR DYLAN EUFRAZIO FONSECA', proj: '3' },
+    { email: 'lucasfmedias@gmail.com', nome: 'LUCAS SEHN FRITSCH', proj: '3' },
+    { email: 'pfachinisoares@gmail.com', nome: 'PIETRO FACHINI SOARES', proj: '3' },
+    { email: 'felipe.lr06@aluno.ifsc.edu.br', nome: 'FELIPE LUIS RODRIGUEZ AMADO', proj: '4' },
+    { email: 'martinandreas.lti@gmail.com', nome: 'MARTIN ANDREAS HEMMER LAVRATTI', proj: '4' },
+    { email: 'janainaferreira_edfisica@hotmail.com', nome: 'PETRUS FERREIRA SILVA', proj: '4' },
+    { email: 'dudugamesmattioni@gmail.com', nome: 'EDUARDO SCHUQUEL MATTIONI', proj: '5' },
+    { email: 'ricaohgp@gmail.com', nome: 'HENRIQUE GAMA PEREIRA', proj: '5' },
+    { email: 'nicolassilveirateixeira@gmail.com', nome: 'NÍCOLAS SILVEIRA TEIXEIRA', proj: '5' },
+    { email: 'gutomacacudavid@gmail.com', nome: 'AUGUSTO DAVID MACHADO', proj: '6' },
+    { email: 'mariacabrunhosa@gmail.com', nome: 'MARIA CECILIA ABRUNHOSA DA SILVA NOVAES DE SOUZA', proj: '6' },
+    { email: 'peerinhohdx77@gmail.com', nome: 'PEDRO HENRIQUE VIEIRA COELHO', proj: '6' },
+    { email: 'rcrosileneraul@gmail.com', nome: 'RAUL CASTRO ANDRE', proj: '6' },
+    { email: 'luisanarvazblankenburg@gmail.com', nome: 'LUISA NARVAZ BLANKENBURG', proj: '7' },
+    { email: 'beatrizgoncalves1212@hotmail.com', nome: 'BEATRIZ DA ROSA GONCALVES', proj: '8' },
+    { email: 'dob_1990@hotmail.com', nome: 'LAURA OBERDORFER REVEILEAU MEIRELLES', proj: '8' },
+    { email: 'orianaavrilcarrasco@gmail.com', nome: 'ORIANA AVRIL CARRASCO', proj: '8' },
+    { email: 'sophiegf0608@gmail.com', nome: 'SOPHIE GONCALVES FAUSTINO', proj: '8' },
+    { email: 'email.victoria6@gmail.com', nome: 'VICTORIA ARAUJO ALEXANDRE', proj: '8' },
+    { email: 'joaocontreirap@gmail.com', nome: 'JOAO CONTREIRA GONCALVES', proj: '9' },
+    { email: 'preussmarilise@gmail.com', nome: 'NATHAN PREUSS WOTTAWA', proj: '9' },
+    { email: 'pedroenrik43@gmail.com', nome: 'PEDRO ENRIK MARTINS DA ROSA', proj: '9' },
+    { email: 'freitasvaleria23@gmail.com', nome: 'ARIANY FREITAS DA SILVA', proj: '10' },
+    { email: 'cauapassosdeabreu667@gmail.com', nome: 'CAUA PASSOS DE ABREU', proj: '10' },
+    { email: 'tenzobreno@gmail.com', nome: 'ENZO BRENO TORQUATO DEVES', proj: '10' },
+    { email: 'joelpdr475@gmail.com', nome: 'JOEL JORGE TEIXEIRA FILHO', proj: '11' }
+  ];
+
+  var dados = aba.getDataRange().getValues();
+  var existentes = dados.map(function (l) { return String(l[0]).toLowerCase().trim(); });
+  var agora = new Date().toISOString();
+  var count = 0;
+
+  turma.forEach(function (aluno) {
+    if (existentes.indexOf(aluno.email.toLowerCase().trim()) === -1) {
+      aba.appendRow([aluno.email, aluno.nome, aluno.proj, 'aluno', 'ativo', agora, 'SIGAA']);
+      count++;
+    }
+  });
+
+  Logger.log('Concluído! Alunos cadastrados na aba membros: ' + count);
+}
+

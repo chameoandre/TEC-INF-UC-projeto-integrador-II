@@ -117,9 +117,22 @@ no `sync_sheet.py` e é preservado no navegador por ter `isDomiciliar: true`.
 | `decidirLink` | docente | Aprova ou recusa um link pendente. `whoami` e `painel` devolvem `usuario.pendencias` (acessos e links aguardando), usado no contador do botão "Painel docente". |
 | `notasPainel`, `salvarPesos`, `salvarQuesito`, `lancarNota`, `salvarAlunos`, `importarAlunos`, `publicarNotas`, `abrirPares`, `salvarRegra` | docente | Painel de notas (ver seção "Notas"). Cada uma devolve o estado completo já recalculado. |
 | `minhasNotas`, `avaliarParticipacao` | aluno ligado à lista da turma | Notas publicadas do próprio aluno; e a avaliação de participação dele e dos colegas nas atividades abertas. |
+| `criarDemanda`, `concluirDemanda`, `removerDemanda`, `alterarPrazoDemanda`, `notificarDemanda` | docente (concluir também pelo aluno do grupo) | Gestão de demandas, checkpoints, prorrogação de prazos, reenvio de lembretes e disparo de comunicados por e-mail. |
+| `salvarAvaliacao` | docente | Rubricas formativas e notas pedagógicas por projeto. |
 
 Papéis: `docente` (lista `CONFIG.DOCENTES` ou aba `membros`), `aluno` (aba `membros`, situação
 `ativo`, com os números dos projetos). Alunos só alteram os campos de `CAMPOS_ALUNO`.
+
+### Notificações por E-mail (GmailApp) & Diagnóstico
+
+Disparo de e-mails em tempo real via `GmailApp.sendEmail` para avisos de novas demandas, lembretes de prazos e comunicados:
+- **Conta Remetente**: Todos os e-mails são disparados pela conta Google proprietária da implantação do Apps Script (`chameoandre@gmail.com`) e ficam registrados exclusivamente na pasta **Enviados** dessa conta.
+- **Autorização OAuth**: A funcionalidade requer permissão do escopo do Gmail (`https://www.googleapis.com/auth/gmail.send`). Se não autorizado, as chamadas falham silenciosamente no bloco `try/catch`. Para forçar a tela de consentimento de segurança do Google, execute manualmente a função `diagnosticoEnvioEmail()` no editor do Apps Script.
+- **Destinatários Ativos**: O script consulta exclusivamente a aba `membros` da planilha privada de controle (`PI2-2026 — controle de acessos e registros (PRIVADO)`), filtrando por `status == 'ativo'` e pelo projeto da demanda (ou todos se `*`). Se a aba estiver vazia, nenhum e-mail é disparado.
+- **Rotinas Administrativas Úteis no Editor**:
+  - `diagnosticoEnvioEmail`: Inspeciona a aba `membros`, lista a contagem de e-mails ativos, força a autorização do Gmail e envia e-mail de prova para o docente.
+  - `importarTurmaSIGAA`: Cadastra/sincroniza em lote os 33 alunos da turma INF-2024 vinculados aos seus respectivos projetos (1 a 11).
+  - `reenviarEmailUltimaDemanda`: Reenvia a notificação da última demanda cadastrada para todos os membros ativos.
 
 ### Notas
 

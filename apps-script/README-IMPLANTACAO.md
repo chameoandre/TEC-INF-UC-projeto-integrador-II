@@ -75,6 +75,23 @@ Só depois do teste: na planilha `PI-2-2026-INF-2024-dashboard-de-projetos`, **C
 Acesso geral → Qualquer pessoa com o link → Leitor**. A partir daí, aluno nenhum edita a
 planilha diretamente; tudo passa pelo dashboard. Os docentes continuam como editores.
 
+## Passo 7 — Notificações por E-mail (GmailApp) & Cadastro da Turma
+
+O sistema possui disparo automatizado de e-mails para:
+- Criação de novas demandas (broadcast geral ou por projeto);
+- Reenvio de lembretes/alertas de prazos e rubricas;
+- Envio de comunicados e orientações pedagógicas vinculadas à demanda;
+- Alteração ou prorrogação de prazos limites.
+
+### Requisitos Mandatórios para Envio:
+1. **Autorização do Gmail (Escopo OAuth):** O Apps Script precisa da permissão para enviar e-mails via `GmailApp`. Se o script foi instalado antes dessa funcionalidade, o Google não dispara os e-mails até que você execute uma função manual no editor (como `diagnosticoEnvioEmail`) e aceite as permissões do Gmail.
+2. **Aba `membros` preenchida:** O script busca os destinatários exclusivamente na aba `membros` da planilha privada de controle, filtrando por `status == 'ativo'` e pelo projeto da demanda (ou todos se for `*`). Se a aba estiver vazia, nenhum e-mail é enviado.
+3. **Conta Remetente:** Todos os e-mails são enviados a partir da conta proprietária da implantação (`chameoandre@gmail.com`) e ficam registrados na pasta **Enviados** dessa mesma conta.
+
+### Ferramentas Administrativas no Editor:
+- **`importarTurmaSIGAA`**: Cadastra/sincroniza os 33 alunos da turma INF-2024 diretamente na aba `membros` vinculados aos seus projetos, sem duplicar registros.
+- **`diagnosticoEnvioEmail`**: Verifica a contagem de destinatários ativos, força a tela de autorização do Gmail e envia um e-mail de prova para `chameoandre@gmail.com`.
+
 ## Depois de alterar o Code.gs
 
 **Implantar → Gerenciar implantações → lápis → Versão: Nova versão → Implantar.**
@@ -86,3 +103,4 @@ A URL continua a mesma.
 - Cada pessoa pode enviar até 12 registros ou alterações por hora.
 - O plano individual (#11) não tem linha na planilha: aceita registros, mas a ficha dele
   continua sendo editada em `scripts/sync_sheet.py`.
+
