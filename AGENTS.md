@@ -226,6 +226,11 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Inclusão do WebMedia 2026 como Congresso Alvo para Submissão:
+  - **Novo Card Oficial (`WebMedia 2026`)**: Inserido na aba de eventos (`tab-eventos`) destacando o *32º Simpósio Brasileiro de Sistemas Multimídia e Web* da SBC (Lavras-MG, 27 a 30 de outubro de 2026).
+  - **Trilhas e Sub-eventos Recomendados**: Destaque pedagógico para o WFA (*Workshop de Ferramentas e Aplicações*), CTIC (*Concurso de Trabalhos de Iniciação Científica*), W4E (*WebMedia for Everyone* / Acessibilidade e Inclusão), BrWeb3 e WTVDI.
+  - **Links e Utilitários**: Link direto para a chamada no JEMS3 SBC (`https://jems3.sbc.org.br/webmedia2026`), portal oficial e novo botão integrado na Central de Ferramentas Úteis (`tab-utilitarios`).
+
 - **19/10/2026** — Atualização do Link Oficial do JEMS para JEMS3 Events:
   - **Migração para JEMS3 SBC (`https://jems3.sbc.org.br/events`)**: Atualizadas todas as referências, botões de ação e guias práticos do dashboard (`tab-eventos`, `tab-utilitarios`, hero do `tab-cotb-2027` e slides multiaulas em `2026-2/slides-aulas/index.html`) substituindo o link antigo pelo portal oficial de eventos da SBC (JEMS3).
 
