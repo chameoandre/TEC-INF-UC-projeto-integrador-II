@@ -202,7 +202,9 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
-## Decisões (mais recente primeiro)
+- **19/10/2026** — Atualização da Implantação do Apps Script (Demandas & Rubricas):
+  - **Nova URL de Produção**: Atualizada a `apiUrl` em `pi2-config.js` para `https://script.google.com/macros/s/AKfycbxm4uKLXT9_lg827-dVINCuEqplZLGvn47q6wWli8iOyuUD3ZuroquoCF7A7Lme3r4/exec`.
+  - **Resolução do erro "Ação desconhecida"**: A versão anterior implantada na nuvem não possuía os endpoints `criarDemanda`, `concluirDemanda`, `removerDemanda` e `salvarAvaliacao`. Com a nova implantação e escopo público ("Qualquer pessoa"), o envio de demandas em broadcast geral e por projeto passa a operar normalmente. Incrementado cache-buster para `?v=2.6`.
 
 - **16/10/2026** — Objetivos Gerais e Específicos em Caixas Separadas com 4 Degraus Metodológicos e Desdobramentos Dinâmicos:
   - **Separação Estruturada**: o campo `objective` da planilha e do dashboard foi dividido em caixas dedicadas: uma para o **Objetivo Geral** (com guia da fórmula do Roteiro 1: verbo + produto tangível + público + propósito) e outra seção para os **Objetivos Específicos**, iniciando por padrão com no mínimo os **4 Degraus Metodológicos** (D1 Diagnóstico/Requisitos, D2 Modelagem/Design, D3 Implementação/Código, D4 Validação/Testes).
