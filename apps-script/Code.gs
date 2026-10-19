@@ -525,7 +525,7 @@ function criarDemanda_(usuario, body) {
 
   // Disparar e-mails para os estudantes
   if (CONFIG.NOTIFICAR_EMAIL) {
-    enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor);
+    enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor, pontos, criterios);
   }
 
   return { ok: true, id: id };
@@ -680,12 +680,36 @@ function notificarDemanda_(usuario, body) {
   return { ok: true, id: demandaId, tipo: tipo, totalEnviados: totalEnviados };
 }
 
+function formatarDataEmail_(prazoStr) {
+  if (!prazoStr) return '';
+  if (prazoStr instanceof Date) {
+    var dia = String(prazoStr.getDate()).padStart(2, '0');
+    var mes = String(prazoStr.getMonth() + 1).padStart(2, '0');
+    var ano = prazoStr.getFullYear();
+    return dia + '/' + mes + '/' + ano;
+  }
+  var str = String(prazoStr).trim();
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    var p = str.split('-');
+    return p[2] + '/' + p[1] + '/' + p[0];
+  }
+  var d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    var dia = String(d.getDate()).padStart(2, '0');
+    var mes = String(d.getMonth() + 1).padStart(2, '0');
+    var ano = d.getFullYear();
+    return dia + '/' + mes + '/' + ano;
+  }
+  return str;
+}
+
 function montarHtmlEmailDemanda_(params) {
   var tipo = params.tipo || 'nova';
   var titulo = params.titulo || '';
   var escopoTxt = params.escopoTxt || 'Geral (Turma)';
-  var prazo = params.prazo || '';
-  var prazoAnterior = params.prazoAnterior || '';
+  var prazoFormatado = formatarDataEmail_(params.prazo);
+  var prazoAnteriorFormatado = formatarDataEmail_(params.prazoAnterior);
   var pontos = params.pontos || '';
   var criterios = params.criterios || '';
   var descricao = params.descricao || '';
@@ -694,85 +718,88 @@ function montarHtmlEmailDemanda_(params) {
   var dashboardUrl = 'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/';
 
   // Paleta de cores por tipo
-  var corHeader = '#16a34a'; // Verde IFSC padrão
-  var tituloHeader = '🎯 Nova Demanda & Checkpoint Docente';
-  var introTexto = 'A equipe docente de Projeto Integrador II registrou uma nova meta avaliativa para você e seu grupo:';
+  var corHeader = '#16a34a'; // Verde IFSC padrao
+  var tituloHeader = '&#127919; Nova Demanda &amp; Checkpoint Docente';
+  var introTexto = 'A equipe docente de Projeto Integrador II registrou uma nova meta avaliativa para voc&ecirc; e seu grupo:';
 
   if (tipo === 'lembrete') {
-    corHeader = '#d97706'; // Âmbar
-    tituloHeader = '⏳ Lembrete de Prazo: Demanda Pendente';
-    introTexto = 'Este é um lembrete docente referente à demanda em andamento da sua equipe. Confiram o prazo e as entregas pendentes:';
+    corHeader = '#d97706'; // Ambar
+    tituloHeader = '&#9203; Lembrete de Prazo: Demanda Pendente';
+    introTexto = 'Este &eacute; um lembrete docente referente &agrave; demanda em andamento da sua equipe. Confiram o prazo e as entregas pendentes:';
   } else if (tipo === 'comunicado') {
     corHeader = '#7c3aed'; // Roxo
-    tituloHeader = '📢 Comunicado da Equipe Docente';
-    introTexto = 'A equipe docente enviou uma orientação/comunicado complementar vinculado à seguinte demanda:';
+    tituloHeader = '&#128227; Comunicado da Equipe Docente';
+    introTexto = 'A equipe docente enviou uma orienta&ccedil;&atilde;o/comunicado complementar vinculado &agrave; seguinte demanda:';
   } else if (tipo === 'prazo') {
     corHeader = '#0284c7'; // Azul Oceano
-    tituloHeader = '📅 Atualização de Prazo de Entrega';
+    tituloHeader = '&#128197; Atualiza&ccedil;&atilde;o de Prazo de Entrega';
     introTexto = 'O prazo da seguinte demanda foi atualizado pelos professores orientadores:';
   }
 
-  var html = '<div style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; color: #1e293b; line-height: 1.6; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff;">' +
-    '<div style="background: ' + corHeader + '; padding: 22px 26px; color: #ffffff;">' +
-      '<h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em;">' + tituloHeader + '</h2>' +
-      '<p style="margin: 4px 0 0; font-size: 0.85rem; opacity: 0.92;">Projeto Integrador II • Técnico em Informática • IFSC Garopaba</p>' +
-    '</div>' +
-    '<div style="padding: 26px;">' +
-      '<p style="margin-top: 0; font-size: 1rem; color: #0f172a;">Olá, estudantes do <strong>' + escopoTxt + '</strong>,</p>' +
-      '<p style="color: #475569; font-size: 0.95rem; margin-bottom: 20px;">' + introTexto + '</p>' +
+  var html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>' +
+    '<body style="margin:0;padding:24px 12px;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;">' +
+    '<div style="max-width:650px;margin:0 auto;color:#1e293b;line-height:1.6;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">' +
+      '<div style="background:' + corHeader + ';padding:22px 26px;color:#ffffff;">' +
+        '<h2 style="margin:0;font-size:1.25rem;font-weight:700;letter-spacing:-0.01em;">' + tituloHeader + '</h2>' +
+        '<p style="margin:4px 0 0;font-size:0.85rem;opacity:0.92;">Projeto Integrador II &bull; T&eacute;cnico em Inform&aacute;tica &bull; IFSC Garopaba</p>' +
+      '</div>' +
+      '<div style="padding:26px;">' +
+        '<p style="margin-top:0;font-size:1rem;color:#0f172a;">Ol&aacute;, estudantes do <strong>' + escopoTxt + '</strong>,</p>' +
+        '<p style="color:#475569;font-size:0.95rem;margin-bottom:20px;">' + introTexto + '</p>' +
 
-      '<div style="background: #f8fafc; border-left: 4px solid ' + corHeader + '; border-radius: 8px; padding: 14px 18px; margin: 18px 0; font-size: 0.92rem; border-top: 1px solid #f1f5f9; border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">' +
-        '<div style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">' + titulo + '</div>' +
-        '<div style="display: flex; flex-wrap: wrap; gap: 12px; color: #475569; font-size: 0.85rem; margin-top: 4px;">' +
-          '<div><strong>📋 Escopo:</strong> ' + escopoTxt + '</div>' +
-          (prazo ? ('<div><strong>📅 Prazo Limite:</strong> <span style="color: #b45309; font-weight: 700;">' + prazo + '</span></div>') : '') +
-          (prazoAnterior ? ('<div style="color: #94a3b8; font-size: 0.8rem;">(Prazo anterior: ' + prazoAnterior + ')</div>') : '') +
-          (pontos ? ('<div><strong>⭐ Pontuação / Peso:</strong> ' + pontos + '</div>') : '') +
-        '</div>' +
-      '</div>';
+        '<div style="background:#f8fafc;border-left:4px solid ' + corHeader + ';border-radius:8px;padding:14px 18px;margin:18px 0;font-size:0.92rem;border-top:1px solid #f1f5f9;border-right:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;">' +
+          '<div style="font-size:1.05rem;font-weight:700;color:#0f172a;margin-bottom:6px;">' + titulo + '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:12px;color:#475569;font-size:0.85rem;margin-top:4px;">' +
+            '<div><strong>&#128203; Escopo:</strong> ' + escopoTxt + '</div>' +
+            (prazoFormatado ? ('<div><strong>&#128197; Prazo Limite:</strong> <span style="color:#b45309;font-weight:700;">' + prazoFormatado + '</span></div>') : '') +
+            (prazoAnteriorFormatado ? ('<div style="color:#94a3b8;font-size:0.8rem;">(Prazo anterior: ' + prazoAnteriorFormatado + ')</div>') : '') +
+            (pontos ? ('<div><strong>&#11088; Pontua&ccedil;&atilde;o / Peso:</strong> ' + pontos + '</div>') : '') +
+          '</div>' +
+        '</div>';
 
   if (mensagem) {
-    html += '<div style="margin-top: 20px;">' +
-      '<h3 style="color: #475569; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">💬 Mensagem & Esclarecimento Docente (' + autor + '):</h3>' +
-      '<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 16px; font-size: 0.92rem; color: #1e3a8a; white-space: pre-line; line-height: 1.55;">' +
+    html += '<div style="margin-top:20px;">' +
+      '<h3 style="color:#475569;font-size:0.92rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">&#128172; Mensagem &amp; Esclarecimento Docente (' + autor + '):</h3>' +
+      '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid #3b82f6;border-radius:8px;padding:14px 16px;font-size:0.92rem;color:#1e3a8a;white-space:pre-line;line-height:1.55;">' +
         mensagem +
       '</div>' +
     '</div>';
   }
 
   if (criterios) {
-    html += '<div style="margin-top: 20px;">' +
-      '<h3 style="color: #166534; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">📋 Critérios de Aceite & Rubrica Formativa:</h3>' +
-      '<div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #22c55e; border-radius: 8px; padding: 14px 16px; font-size: 0.92rem; color: #14532d; white-space: pre-line; line-height: 1.55;">' +
+    html += '<div style="margin-top:20px;">' +
+      '<h3 style="color:#166534;font-size:0.92rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">&#128203; Crit&eacute;rios de Aceite &amp; Rubrica Formativa:</h3>' +
+      '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #22c55e;border-radius:8px;padding:14px 16px;font-size:0.92rem;color:#14532d;white-space:pre-line;line-height:1.55;">' +
         criterios +
       '</div>' +
     '</div>';
   }
 
   if (descricao) {
-    html += '<div style="margin-top: 20px;">' +
-      '<h3 style="color: #0e7490; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">📝 Detalhes e Orientações Técnicas:</h3>' +
-      '<div style="background: #ecfeff; border: 1px solid #a5f3fc; border-left: 4px solid #06b6d4; border-radius: 8px; padding: 14px 16px; font-size: 0.9rem; color: #155e75; white-space: pre-line; line-height: 1.55;">' +
+    html += '<div style="margin-top:20px;">' +
+      '<h3 style="color:#0e7490;font-size:0.92rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">&#128221; Detalhes e Orienta&ccedil;&otilde;es T&eacute;cnicas:</h3>' +
+      '<div style="background:#ecfeff;border:1px solid #a5f3fc;border-left:4px solid #06b6d4;border-radius:8px;padding:14px 16px;font-size:0.9rem;color:#155e75;white-space:pre-line;line-height:1.55;">' +
         descricao +
       '</div>' +
     '</div>';
   }
 
-  html += '<div style="margin-top: 28px; padding: 20px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; text-align: center;">' +
-      '<p style="margin: 0 0 10px; font-size: 0.88rem; color: #64748b;">Acompanhe o andamento e registre o avanço pelo dashboard da disciplina:</p>' +
-      '<a href="' + dashboardUrl + '" target="_blank" style="display: inline-block; background: #16a34a; color: #ffffff; text-decoration: none; font-weight: 700; padding: 10px 22px; border-radius: 6px; font-size: 0.92rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">' +
-        '🚀 Acessar Dashboard do Projeto Integrador II' +
-      '</a>' +
-    '</div>' +
+  html += '<div style="margin-top:28px;padding:20px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;text-align:center;">' +
+        '<p style="margin:0 0 10px;font-size:0.88rem;color:#64748b;">Acompanhe o andamento e registre o avan&ccedil;o pelo dashboard da disciplina:</p>' +
+        '<a href="' + dashboardUrl + '" target="_blank" style="display:inline-block;background:#16a34a;color:#ffffff;text-decoration:none;font-weight:700;padding:10px 22px;border-radius:6px;font-size:0.92rem;box-shadow:0 2px 4px rgba(0,0,0,0.1);">' +
+          '&#128640; Acessar Dashboard do Projeto Integrador II' +
+        '</a>' +
+      '</div>' +
 
-    '<hr style="border: none; border-top: 1px solid #e2e8f0; margin: 26px 0 16px;">' +
-    '<p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.5;">' +
-      '<strong>Equipe Docente — Projeto Integrador II</strong><br>' +
-      'Prof. André Moraes • Profa. Karyna Landra • Prof. Nauber Gavski<br>' +
-      'Instituto Federal de Santa Catarina (IFSC) — Câmpus Garopaba' +
-    '</p>' +
+      '<hr style="border:none;border-top:1px solid #e2e8f0;margin:26px 0 16px;">' +
+      '<p style="font-size:0.82rem;color:#64748b;margin:0;line-height:1.5;">' +
+        '<strong>Equipe Docente &mdash; Projeto Integrador II</strong><br>' +
+        'Prof. Andr&eacute; Moraes &bull; Profa. Karyna Landra &bull; Prof. Nauber Gavski<br>' +
+        'Instituto Federal de Santa Catarina (IFSC) &mdash; C&acirc;mpus Garopaba' +
+      '</p>' +
+    '</div>' +
   '</div>' +
-'</div>';
+  '</body></html>';
 
   return html;
 }
@@ -878,7 +905,7 @@ function lerDemandasPublicas_() {
   return list.reverse();
 }
 
-function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor) {
+function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor, pontos, criterios) {
   try {
     var emailsDestino = [];
     var ss = controle_();
@@ -904,7 +931,7 @@ function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor) {
     var escopoTxt = projeto === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + projeto);
     var assunto = '[PI-2] Nova Demanda Docente: ' + titulo + ' [' + escopoTxt + ']';
     var corpoTexto = 'Olá,\n\nA equipe docente registrou uma nova demanda para você:\n\n' +
-      'Título: ' + titulo + '\nEscopo: ' + escopoTxt + '\nPrazo: ' + (prazo || 'Sem data limite') + '\n\n' +
+      'Título: ' + titulo + '\nEscopo: ' + escopoTxt + '\nPrazo: ' + (formatarDataEmail_(prazo) || 'Sem data limite') + '\n\n' +
       'Dashboard: https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n';
 
     var htmlBody = montarHtmlEmailDemanda_({
@@ -912,7 +939,8 @@ function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor) {
       titulo: titulo,
       escopoTxt: escopoTxt,
       prazo: prazo,
-      criterios: '',
+      pontos: pontos || '',
+      criterios: criterios || '',
       descricao: descricao,
       mensagem: '',
       autor: autor
