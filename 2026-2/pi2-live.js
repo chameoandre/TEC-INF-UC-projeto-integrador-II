@@ -1221,12 +1221,16 @@ function linhasParaProjetos(linhas) {
         '<div style="display:flex;flex-direction:column;gap:0.5rem;">' +
           projsDemandas.map(function (d) {
             var isDone = d.status === 'concluida';
-            return '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border-left:3px solid ' + (isDone ? 'var(--ifsc-green)' : 'var(--accent-amber)') + ';font-size:0.82rem;">' +
+            var contagem = calcularContadorPrazo(d.prazo, isDone);
+            return '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:0.6rem 0.8rem;border-radius:6px;border-left:3px solid ' + (isDone ? 'var(--ifsc-green)' : 'var(--accent-amber)') + ';font-size:0.82rem;gap:0.5rem;flex-wrap:wrap;">' +
               '<div>' +
                 '<strong>' + (d.projeto === '*' ? '[Geral] ' : '') + esc(d.titulo) + '</strong>' +
-                (d.prazo ? '<span style="color:var(--accent-amber);font-size:0.75rem;margin-left:0.5rem;"><i class="fa-solid fa-calendar-day"></i> Prazo: ' + esc(d.prazo) + '</span>' : '') +
+                (d.prazo ? '<span style="color:var(--accent-amber);font-size:0.75rem;margin-left:0.5rem;"><i class="fa-solid fa-calendar-day"></i> ' + esc(d.prazo) + '</span>' : '') +
               '</div>' +
-              '<span class="status-tag ' + (isDone ? 'tag-ok' : 'tag-pendente') + '" style="font-size:0.7rem;">' + (isDone ? 'Concluída' : 'Pendente') + '</span>' +
+              '<div style="display:flex;align-items:center;gap:0.4rem;">' +
+                contagem.html +
+                '<span class="status-tag ' + (isDone ? 'tag-ok' : 'tag-pendente') + '" style="font-size:0.7rem;">' + (isDone ? 'Concluída' : 'Pendente') + '</span>' +
+              '</div>' +
             '</div>';
           }).join('') +
         '</div>' +
@@ -2482,6 +2486,231 @@ function linhasParaProjetos(linhas) {
     });
   }
 
+  function calcularContadorPrazo(prazoStr, isConcluida) {
+    if (isConcluida) {
+      return { html: '<span class="pi2-countdown-badge concluida"><i class="fa-solid fa-circle-check"></i> Concluída</span>', status: 'concluida' };
+    }
+    if (!prazoStr) {
+      return { html: '<span class="pi2-countdown-badge sem-prazo"><i class="fa-solid fa-calendar"></i> Sem prazo</span>', status: 'sem-prazo' };
+    }
+
+    var d = null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(prazoStr)) {
+      var partes = prazoStr.split('-');
+      d = new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]), 23, 59, 59);
+    } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(prazoStr)) {
+      var p = prazoStr.split('/');
+      d = new Date(Number(p[2]), Number(p[1]) - 1, Number(p[0]), 23, 59, 59);
+    } else {
+      d = new Date(prazoStr);
+      if (!isNaN(d.getTime()) && d.getHours() === 0 && d.getMinutes() === 0) {
+        d.setHours(23, 59, 59);
+      }
+    }
+
+    if (!d || isNaN(d.getTime())) {
+      return { html: '<span class="pi2-countdown-badge sem-prazo"><i class="fa-solid fa-calendar"></i> ' + esc(prazoStr) + '</span>', status: 'normal' };
+    }
+
+    var agora = Date.now();
+    var diffMs = d.getTime() - agora;
+
+    if (diffMs <= 0) {
+      var diffHorasPassadas = Math.floor(Math.abs(diffMs) / 3600000);
+      var diasPassados = Math.floor(diffHorasPassadas / 24);
+      var txtVenc = diasPassados > 0 ? (diasPassados + 'd atrás') : (diffHorasPassadas + 'h atrás');
+      return {
+        html: '<span class="pi2-countdown-badge vencido" title="Prazo expirado em ' + d.toLocaleDateString('pt-BR') + '"><i class="fa-solid fa-triangle-exclamation"></i> Prazo encerrado (' + txtVenc + ')</span>',
+        status: 'vencido',
+        diffMs: diffMs
+      };
+    }
+
+    var totalSeg = Math.floor(diffMs / 1000);
+    var dias = Math.floor(totalSeg / 86400);
+    var horas = Math.floor((totalSeg % 86400) / 3600);
+    var minutos = Math.floor((totalSeg % 3600) / 60);
+
+    var txt = '';
+    var classe = 'normal';
+
+    if (dias > 1) {
+      txt = '⏳ Restam ' + dias + ' dias e ' + horas + 'h';
+      classe = 'normal';
+    } else if (dias === 1) {
+      txt = '⏳ Resta 1 dia e ' + horas + 'h';
+      classe = 'normal';
+    } else if (horas > 0) {
+      txt = '⚡ Restam ' + horas + 'h ' + minutos + 'm';
+      classe = 'urgente';
+    } else {
+      txt = '🔥 Restam ' + minutos + ' minutos!';
+      classe = 'critico';
+    }
+
+    return {
+      html: '<span class="pi2-countdown-badge ' + classe + '" title="Prazo limite: ' + d.toLocaleDateString('pt-BR') + ' às 23:59"><i class="fa-solid fa-stopwatch"></i> ' + txt + '</span>',
+      status: classe,
+      diffMs: diffMs
+    };
+  }
+
+  function alterarPrazoDemanda(demandaId) {
+    if (!ehDocente()) return;
+    var d = (PI2.demandas || []).find(function (item) { return item.id === demandaId; });
+    if (!d) return aviso('Demanda não encontrada.', 'warning');
+
+    var dataAtualVal = '';
+    if (d.prazo) {
+      var dt = new Date(d.prazo);
+      if (!isNaN(dt.getTime())) {
+        var a = dt.getFullYear();
+        var m = String(dt.getMonth() + 1).padStart(2, '0');
+        var dia = String(dt.getDate()).padStart(2, '0');
+        dataAtualVal = a + '-' + m + '-' + dia;
+      } else if (/^\d{4}-\d{2}-\d{2}$/.test(d.prazo)) {
+        dataAtualVal = d.prazo;
+      }
+    }
+
+    var html = `
+      <div style="padding:1.5rem;max-width:480px;background:var(--bg-card);border-radius:var(--radius-lg,12px);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;">
+          <h3 style="margin:0;font-size:1.15rem;color:var(--text-main);display:flex;align-items:center;gap:0.5rem;">
+            <i class="fa-solid fa-calendar-days" style="color:var(--accent-blue);"></i> Alterar Prazo da Demanda
+          </h3>
+          <button type="button" class="btn-fechar" onclick="PI2.fecharModal()" style="background:none;border:none;font-size:1.2rem;color:var(--text-muted);cursor:pointer;">&times;</button>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">
+          <strong style="color:var(--text-main);">${esc(d.titulo)}</strong>
+        </p>
+        <div style="margin-bottom:1rem;">
+          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-main);">Novo Prazo / Data Limite</label>
+          <input type="date" id="pi2-alt-novo-prazo" value="${dataAtualVal}" class="form-control" style="width:100%;padding:0.55rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-main);color:var(--text-main);">
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--text-main);cursor:pointer;">
+            <input type="checkbox" id="pi2-alt-notificar" checked>
+            <span>Notificar estudantes sobre o novo prazo por e-mail</span>
+          </label>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-main);">Mensagem explicativa / Orientação (opcional)</label>
+          <textarea id="pi2-alt-msg" class="form-control" rows="2" placeholder="Ex: Prorrogado para que os grupos ajustem os objetivos específicos..." style="width:100%;padding:0.55rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-main);color:var(--text-main);font-size:0.82rem;"></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:0.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="PI2.fecharModal()" style="padding:0.45rem 0.85rem;font-size:0.85rem;">Cancelar</button>
+          <button type="button" id="pi2-btn-salvar-prazo" class="btn btn-primary" style="background:var(--accent-blue);color:#fff;padding:0.45rem 1rem;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.4rem;">
+            <i class="fa-solid fa-save"></i> Atualizar Prazo
+          </button>
+        </div>
+      </div>
+    `;
+
+    abrirModal(html);
+
+    var btnSalvar = document.getElementById('pi2-btn-salvar-prazo');
+    if (btnSalvar) {
+      btnSalvar.onclick = function () {
+        var novoPrazo = (document.getElementById('pi2-alt-novo-prazo').value || '').trim();
+        if (!novoPrazo) return aviso('Por favor, selecione uma data válida.', 'warning');
+        var notificar = document.getElementById('pi2-alt-notificar').checked;
+        var msg = (document.getElementById('pi2-alt-msg').value || '').trim();
+
+        btnSalvar.disabled = true;
+        btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+        api('alterarPrazoDemanda', { demandaId: demandaId, novoPrazo: novoPrazo, notificar: notificar, mensagem: msg }).then(function (res) {
+          d.prazo = novoPrazo;
+          var avisoTxt = 'Prazo atualizado com sucesso!';
+          if (res.totalEnviados > 0) avisoTxt += ' Notificação enviada para ' + res.totalEnviados + ' estudante(s).';
+          aviso(avisoTxt, 'success');
+          fecharModal();
+          renderDemandasTab();
+          redesenhar();
+        }).catch(function (err) {
+          btnSalvar.disabled = false;
+          btnSalvar.innerHTML = '<i class="fa-solid fa-save"></i> Atualizar Prazo';
+          aviso('Erro ao atualizar prazo: ' + (err.message || err), 'warning');
+        });
+      };
+    }
+  }
+
+  function reenviarAlertaDemanda(demandaId) {
+    if (!ehDocente()) return;
+    var d = (PI2.demandas || []).find(function (item) { return item.id === demandaId; });
+    if (!d) return aviso('Demanda não encontrada.', 'warning');
+
+    var escopoTxt = d.projeto === '*' ? 'todos os estudantes da turma' : ('os integrantes do Projeto #' + doisDigitos(d.projeto));
+    if (!confirm('Deseja reenviar o alerta/lembrete desta demanda por e-mail para ' + escopoTxt + '?')) return;
+
+    aviso('Disparando lembrete por e-mail...', 'info');
+    api('notificarDemanda', { demandaId: demandaId, tipo: 'lembrete' }).then(function (res) {
+      aviso('Lembrete enviado com sucesso para ' + (res.totalEnviados || 0) + ' estudante(s)!', 'success');
+    }).catch(function (err) {
+      aviso('Erro ao enviar lembrete: ' + (err.message || err), 'warning');
+    });
+  }
+
+  function abrirModalComunicado(demandaId) {
+    if (!ehDocente()) return;
+    var d = (PI2.demandas || []).find(function (item) { return item.id === demandaId; });
+    if (!d) return aviso('Demanda não encontrada.', 'warning');
+
+    var escopoTxt = d.projeto === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + doisDigitos(d.projeto));
+
+    var html = `
+      <div style="padding:1.5rem;max-width:520px;background:var(--bg-card);border-radius:var(--radius-lg,12px);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;">
+          <h3 style="margin:0;font-size:1.15rem;color:var(--text-main);display:flex;align-items:center;gap:0.5rem;">
+            <i class="fa-solid fa-bullhorn" style="color:var(--accent-purple, #a855f7);"></i> Enviar Comunicado / Atualização
+          </h3>
+          <button type="button" class="btn-fechar" onclick="PI2.fecharModal()" style="background:none;border:none;font-size:1.2rem;color:var(--text-muted);cursor:pointer;">&times;</button>
+        </div>
+        <div style="background:var(--chip-bg);border:1px solid var(--border-color);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.82rem;">
+          <div style="font-weight:700;color:var(--text-main);">${esc(d.titulo)}</div>
+          <div style="color:var(--text-muted);font-size:0.75rem;margin-top:0.25rem;">
+            <span><i class="fa-solid fa-users"></i> Escopo: ${escopoTxt}</span>
+            ${d.prazo ? `<span style="margin-left:0.75rem;"><i class="fa-solid fa-calendar"></i> Prazo: ${esc(d.prazo)}</span>` : ''}
+          </div>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-main);">Mensagem de Atualização ou Esclarecimento</label>
+          <textarea id="pi2-comunicado-msg" class="form-control" rows="4" placeholder="Escreva aqui a mensagem ou esclarecimento para os estudantes..." style="width:100%;padding:0.65rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-main);color:var(--text-main);font-size:0.85rem;line-height:1.45;"></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:0.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="PI2.fecharModal()" style="padding:0.45rem 0.85rem;font-size:0.85rem;">Cancelar</button>
+          <button type="button" id="pi2-btn-enviar-comunicado" class="btn btn-primary" style="background:linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);color:#fff;padding:0.45rem 1.15rem;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.4rem;border:none;">
+            <i class="fa-solid fa-paper-plane"></i> Disparar Comunicado
+          </button>
+        </div>
+      </div>
+    `;
+
+    abrirModal(html);
+
+    var btnEnviar = document.getElementById('pi2-btn-enviar-comunicado');
+    if (btnEnviar) {
+      btnEnviar.onclick = function () {
+        var msg = (document.getElementById('pi2-comunicado-msg').value || '').trim();
+        if (!msg) return aviso('Por favor, digite a mensagem do comunicado.', 'warning');
+
+        btnEnviar.disabled = true;
+        btnEnviar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Disparando...';
+
+        api('notificarDemanda', { demandaId: demandaId, tipo: 'comunicado', mensagem: msg }).then(function (res) {
+          aviso('Comunicado enviado com sucesso para ' + (res.totalEnviados || 0) + ' estudante(s)!', 'success');
+          fecharModal();
+        }).catch(function (err) {
+          btnEnviar.disabled = false;
+          btnEnviar.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Disparar Comunicado';
+          aviso('Erro ao disparar comunicado: ' + (err.message || err), 'warning');
+        });
+      };
+    }
+  }
+
   function renderDemandasTab() {
     var container = document.getElementById('tab-demandas');
     if (!container) return;
@@ -2527,6 +2756,7 @@ function linhasParaProjetos(linhas) {
           var isBroadcast = d.projeto === '*';
           var isDone = d.status === 'concluida';
           var podeConcluir = PI2.usuario && (isDocente || podeEditar(d.projeto));
+          var contagem = calcularContadorPrazo(d.prazo, isDone);
 
           return `
             <div class="pi2-demanda-card ${isDone ? 'concluida' : ''}">
@@ -2553,22 +2783,38 @@ function linhasParaProjetos(linhas) {
 
               <div>
                 <div class="pi2-demanda-meta">
-                  <span class="pi2-demanda-prazo">
-                    <i class="fa-solid fa-calendar-day"></i> ${d.prazo ? ('Prazo: ' + esc(d.prazo)) : 'Sem data limite'}
-                  </span>
+                  <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                    <span class="pi2-demanda-prazo">
+                      <i class="fa-solid fa-calendar-day"></i> ${d.prazo ? ('Prazo: ' + esc(d.prazo)) : 'Sem data limite'}
+                    </span>
+                    <div>${contagem.html}</div>
+                  </div>
                   <span style="font-size:0.75rem;">Por: ${esc(d.criadoPor)}</span>
                 </div>
 
-                <div style="display:flex;justify-content:flex-end;gap:0.4rem;margin-top:0.75rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">
-                  ${(!isDone && podeConcluir) ? `
-                    <button class="btn btn-outline" onclick="PI2.concluirDemanda('${esc(d.id)}')" style="color:var(--ifsc-green);border-color:rgba(34,197,94,0.3);font-size:0.75rem;padding:0.25rem 0.6rem;">
-                      <i class="fa-solid fa-check-double"></i> Concluir
-                    </button>
-                  ` : ''}
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">
+                  <div style="display:flex;gap:0.3rem;align-items:center;">
+                    ${(!isDone && podeConcluir) ? `
+                      <button class="btn btn-outline" onclick="PI2.concluirDemanda('${esc(d.id)}')" style="color:var(--ifsc-green);border-color:rgba(34,197,94,0.3);font-size:0.75rem;padding:0.25rem 0.6rem;">
+                        <i class="fa-solid fa-check-double"></i> Concluir
+                      </button>
+                    ` : ''}
+                  </div>
                   ${isDocente ? `
-                    <button class="btn btn-outline" onclick="PI2.removerDemanda('${esc(d.id)}')" style="color:var(--ifsc-red);border-color:rgba(239,68,68,0.3);font-size:0.75rem;padding:0.25rem 0.6rem;" title="Excluir demanda">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <div style="display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;">
+                      <button class="btn btn-outline" onclick="PI2.alterarPrazoDemanda('${esc(d.id)}')" style="color:var(--accent-blue);border-color:rgba(59,130,246,0.3);font-size:0.72rem;padding:0.25rem 0.5rem;" title="Alterar prazo / prorrogar meta">
+                        <i class="fa-solid fa-calendar-plus"></i> Prazo
+                      </button>
+                      <button class="btn btn-outline" onclick="PI2.reenviarAlertaDemanda('${esc(d.id)}')" style="color:#f59e0b;border-color:rgba(245,158,11,0.3);font-size:0.72rem;padding:0.25rem 0.5rem;" title="Reenviar alerta por e-mail">
+                        <i class="fa-solid fa-bell"></i> Alerta
+                      </button>
+                      <button class="btn btn-outline" onclick="PI2.abrirModalComunicado('${esc(d.id)}')" style="color:var(--text-main);border-color:var(--border-color);font-size:0.72rem;padding:0.25rem 0.5rem;" title="Enviar comunicado / esclarecimento">
+                        <i class="fa-solid fa-bullhorn"></i> Comunicado
+                      </button>
+                      <button class="btn btn-outline" onclick="PI2.removerDemanda('${esc(d.id)}')" style="color:var(--ifsc-red);border-color:rgba(239,68,68,0.3);font-size:0.72rem;padding:0.25rem 0.5rem;" title="Excluir demanda">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
                   ` : ''}
                 </div>
               </div>
@@ -2590,6 +2836,8 @@ function linhasParaProjetos(linhas) {
     filtrarTabelaNotas: filtrarTabelaNotas, filtrarNotasPorStatus: filtrarNotasPorStatus,
     renderDemandasTab: renderDemandasTab, abrirModalCriarDemanda: abrirModalCriarDemanda,
     concluirDemanda: concluirDemanda, removerDemanda: removerDemanda,
+    alterarPrazoDemanda: alterarPrazoDemanda, reenviarAlertaDemanda: reenviarAlertaDemanda,
+    abrirModalComunicado: abrirModalComunicado, calcularContadorPrazo: calcularContadorPrazo,
     trocarSubAbaNotas: trocarSubAbaNotas };
 
   PI2.renderNotasTab = renderNotasTab;
@@ -2601,6 +2849,10 @@ function linhasParaProjetos(linhas) {
   PI2.abrirModalCriarDemanda = abrirModalCriarDemanda;
   PI2.concluirDemanda = concluirDemanda;
   PI2.removerDemanda = removerDemanda;
+  PI2.alterarPrazoDemanda = alterarPrazoDemanda;
+  PI2.reenviarAlertaDemanda = reenviarAlertaDemanda;
+  PI2.abrirModalComunicado = abrirModalComunicado;
+  PI2.calcularContadorPrazo = calcularContadorPrazo;
   PI2.fecharModal = fecharModal;
 
   // 1) Escapa imediatamente a cópia salva no HTML, antes do primeiro desenho.

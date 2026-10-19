@@ -202,6 +202,19 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Gestão Avançada de Prazos, Contagem Regressiva e Alertas de Demandas:
+  - **Contador Dinâmico de Prazos (Countdown)**: Implementada a função `calcularContadorPrazo` com badges visuais reativos em cada card de demanda (`pi2-countdown-badge`):
+    - `⏳ Restam X dias e Y horas` (normal);
+    - `⚡ Restam X horas e Y minutos` (urgente, pulso suave);
+    - `🔥 Restam X minutos!` (crítico, < 1 hora);
+    - `⚠️ Prazo encerrado (há X dias)` (vencido);
+    - `✅ Concluída` (finalizada).
+    - Exibido tanto na aba central de Demandas & Checkpoints quanto no modal de detalhes dos projetos.
+  - **Alteração & Prorrogação de Prazo (`📅 Prazo`)**: Modal docente para ajustar a data limite de qualquer demanda, com opção de envio automático de e-mail aos estudantes informando o novo prazo e orientações/motivo.
+  - **Reenvio de Alerta / Lembrete (`🔔 Alerta`)**: Botão docente para redisparar e-mail formal de lembrete com prazos e rubricas para os alunos do escopo da demanda com 1 clique.
+  - **Comunicados e Esclarecimentos (`📢 Comunicado`)**: Modal docente para redigir mensagem complementar/esclarecimento vinculada à demanda e disparar diretamente para os e-mails dos alunos.
+  - **Backend**: Implementados endpoints `alterarPrazoDemanda` e `notificarDemanda` em `Code.gs`. Cache-buster incrementado para `?v=2.7`.
+
 - **19/10/2026** — Atualização da Implantação do Apps Script (Demandas & Rubricas):
   - **Nova URL de Produção**: Atualizada a `apiUrl` em `pi2-config.js` para `https://script.google.com/macros/s/AKfycbxm4uKLXT9_lg827-dVINCuEqplZLGvn47q6wWli8iOyuUD3ZuroquoCF7A7Lme3r4/exec`.
   - **Resolução do erro "Ação desconhecida"**: A versão anterior implantada na nuvem não possuía os endpoints `criarDemanda`, `concluirDemanda`, `removerDemanda` e `salvarAvaliacao`. Com a nova implantação e escopo público ("Qualquer pessoa"), o envio de demandas em broadcast geral e por projeto passa a operar normalmente. Incrementado cache-buster para `?v=2.6`.

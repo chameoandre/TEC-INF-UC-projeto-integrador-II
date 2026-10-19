@@ -156,7 +156,9 @@ function doPost(e) {
       avaliarObjetivos: salvarAvaliacao_,
       criarDemanda: criarDemanda_,
       concluirDemanda: concluirDemanda_,
-      removerDemanda: removerDemanda_
+      removerDemanda: removerDemanda_,
+      alterarPrazoDemanda: alterarPrazoDemanda_,
+      notificarDemanda: notificarDemanda_
     };
     var fn = acoes[req.acao];
     if (!fn) throw new Error('Ação desconhecida.');
@@ -596,6 +598,166 @@ function removerDemanda_(usuario, req) {
     }
   }
   return { ok: true };
+}
+
+function alterarPrazoDemanda_(usuario, body) {
+  exigirDocente_(usuario);
+  var demandaId = String(body.demandaId || body.id || '').trim();
+  var novoPrazo = seguro_(body.prazo || body.novoPrazo || '', 30);
+  var notificar = Boolean(body.notificar);
+  var mensagem = seguro_(body.mensagem || '', CONFIG.MAX_TEXTO);
+
+  if (!demandaId) throw new Error('Demanda não informada.');
+  if (!novoPrazo) throw new Error('Informe o novo prazo.');
+
+  var ss = controle_();
+  var aba = ss.getSheetByName('demandas');
+  if (!aba) throw new Error('Aba demandas não encontrada.');
+  var dados = aba.getDataRange().getValues();
+  var dem = null;
+
+  for (var i = 1; i < dados.length; i++) {
+    if (String(dados[i][0]).toUpperCase() === demandaId.toUpperCase()) {
+      aba.getRange(i + 1, 6).setValue(novoPrazo);
+      dem = {
+        id: dados[i][0],
+        projeto: dados[i][2],
+        titulo: dados[i][3],
+        descricao: dados[i][4],
+        prazoAnterior: dados[i][5],
+        novoPrazo: novoPrazo,
+        criadoPor: dados[i][6],
+        pontos: dados[i][11],
+        criterios: dados[i][12]
+      };
+      break;
+    }
+  }
+
+  if (!dem) throw new Error('Demanda não encontrada.');
+
+  var totalEnviados = 0;
+  if (notificar) {
+    totalEnviados = enviarNotificacaoDemandaCustom_(dem, 'prazo', mensagem, nomeCurto_(usuario.nome) || usuario.email);
+  }
+
+  return { ok: true, id: demandaId, novoPrazo: novoPrazo, totalEnviados: totalEnviados };
+}
+
+function notificarDemanda_(usuario, body) {
+  exigirDocente_(usuario);
+  var demandaId = String(body.demandaId || body.id || '').trim();
+  var tipo = String(body.tipo || 'lembrete'); // 'lembrete' | 'comunicado'
+  var mensagem = seguro_(body.mensagem || '', CONFIG.MAX_TEXTO);
+
+  if (!demandaId) throw new Error('Demanda não informada.');
+
+  var ss = controle_();
+  var aba = ss.getSheetByName('demandas');
+  if (!aba) throw new Error('Aba demandas não encontrada.');
+  var dados = aba.getDataRange().getValues();
+  var dem = null;
+
+  for (var i = 1; i < dados.length; i++) {
+    if (String(dados[i][0]).toUpperCase() === demandaId.toUpperCase()) {
+      dem = {
+        id: dados[i][0],
+        projeto: dados[i][2],
+        titulo: dados[i][3],
+        descricao: dados[i][4],
+        prazo: dados[i][5],
+        criadoPor: dados[i][6],
+        pontos: dados[i][11],
+        criterios: dados[i][12]
+      };
+      break;
+    }
+  }
+
+  if (!dem) throw new Error('Demanda não encontrada.');
+
+  var totalEnviados = enviarNotificacaoDemandaCustom_(dem, tipo, mensagem, nomeCurto_(usuario.nome) || usuario.email);
+  return { ok: true, id: demandaId, tipo: tipo, totalEnviados: totalEnviados };
+}
+
+function enviarNotificacaoDemandaCustom_(dem, tipo, mensagem, autor) {
+  var emailsDestino = [];
+  var ss = controle_();
+  var abaMembros = ss.getSheetByName('membros');
+  if (!abaMembros) return 0;
+  var membros = abaMembros.getDataRange().getValues();
+
+  var projStr = String(dem.projeto).trim();
+  for (var i = 1; i < membros.length; i++) {
+    var e = String(membros[i][0] || '').toLowerCase().trim();
+    var projs = String(membros[i][2] || '').split(',').map(function (s) { return s.trim(); });
+    var status = membros[i][4];
+    if (status === 'ativo' && e.indexOf('@') > 0) {
+      if (projStr === '*' || projs.indexOf(projStr) >= 0 || projs.indexOf('*') >= 0) {
+        if (emailsDestino.indexOf(e) === -1) {
+          emailsDestino.push(e);
+        }
+      }
+    }
+  }
+
+  if (!emailsDestino.length) return 0;
+
+  var escopoTxt = projStr === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + projStr);
+  var assunto = '';
+  var corpo = '';
+
+  if (tipo === 'prazo') {
+    assunto = '[PI-2 ALTERAÇÃO DE PRAZO] ' + dem.titulo + ' [' + escopoTxt + ']';
+    corpo = 'Olá,\n\n' +
+      'A equipe docente de Projeto Integrador II (' + autor + ') atualizou o prazo da seguinte demanda:\n\n' +
+      '🎯 Demanda: ' + dem.titulo + '\n' +
+      '📋 Escopo: ' + escopoTxt + '\n' +
+      '📅 NOVO PRAZO / DATA LIMITE: ' + dem.novoPrazo + '\n' +
+      (dem.prazoAnterior ? ('(Prazo anterior: ' + dem.prazoAnterior + ')\n') : '') +
+      (mensagem ? ('\n💬 Mensagem / Motivo da alteração:\n' + mensagem + '\n') : '') +
+      (dem.criterios ? ('\n📋 Critérios de Aceite:\n' + dem.criterios + '\n') : '') +
+      '\nConfiram as orientações no dashboard:\n' +
+      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
+      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+  } else if (tipo === 'comunicado') {
+    assunto = '[PI-2 COMUNICADO] ' + dem.titulo + ' [' + escopoTxt + ']';
+    corpo = 'Olá,\n\n' +
+      'A equipe docente de Projeto Integrador II (' + autor + ') enviou um comunicado sobre a demanda:\n\n' +
+      '🎯 Demanda: ' + dem.titulo + '\n' +
+      '📋 Escopo: ' + escopoTxt + '\n' +
+      (dem.prazo ? ('📅 Prazo: ' + dem.prazo + '\n') : '') +
+      '\n📢 MENSAGEM / COMUNICADO:\n' +
+      (mensagem || '(Sem mensagem adicional)') + '\n\n' +
+      '---\n' +
+      'Acompanhem os detalhes no dashboard:\n' +
+      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
+      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+  } else {
+    // lembrete
+    assunto = '[PI-2 LEMBRETE] Prazo de Demanda: ' + dem.titulo + ' [' + escopoTxt + ']';
+    corpo = 'Olá,\n\n' +
+      'Este é um lembrete docente (' + autor + ') referente à entrega/meta em andamento:\n\n' +
+      '🎯 Demanda: ' + dem.titulo + '\n' +
+      '📋 Escopo: ' + escopoTxt + '\n' +
+      (dem.prazo ? ('📅 Data Limite / Prazo: ' + dem.prazo + '\n') : '') +
+      (dem.criterios ? ('\n📋 Critérios de Aceite & Rubrica:\n' + dem.criterios + '\n') : '') +
+      (dem.descricao ? ('\n📝 Orientações:\n' + dem.descricao + '\n') : '') +
+      (mensagem ? ('\n⚠️ Recado adicional:\n' + mensagem + '\n') : '') +
+      '\nPor favor, atualizem seus cards e registrem o avanço pelo dashboard:\n' +
+      'https://chameoandre.github.io/TEC-INF-UC-projeto-integrador-II/2026-2/\n\n' +
+      'Atenciosamente,\nEquipe Docente — Projeto Integrador II (IFSC Garopaba)';
+  }
+
+  emailsDestino.forEach(function (to) {
+    try {
+      GmailApp.sendEmail(to, assunto, corpo);
+    } catch (err) {
+      Logger.log('Erro ao enviar para ' + to + ': ' + err);
+    }
+  });
+
+  return emailsDestino.length;
 }
 
 function lerDemandasPublicas_() {
