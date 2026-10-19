@@ -226,6 +226,9 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Atualização do Link Oficial do JEMS para JEMS3 Events:
+  - **Migração para JEMS3 SBC (`https://jems3.sbc.org.br/events`)**: Atualizadas todas as referências, botões de ação e guias práticos do dashboard (`tab-eventos`, `tab-utilitarios`, hero do `tab-cotb-2027` e slides multiaulas em `2026-2/slides-aulas/index.html`) substituindo o link antigo pelo portal oficial de eventos da SBC (JEMS3).
+
 - **19/10/2026** — Aplicação de Slides Interativos Multiaulas & Botões "Slides" na Central Pedagógica:
   - **Aplicação Completa de Slides Interativos (`2026-2/slides-aulas/index.html`)**: Ambiente dinâmico e imersivo para apresentação e explanação fluida dos conteúdos pedagógicos em sala de aula ou projeção. Suporte a tela cheia (tecla `F`), navegação por teclado (`←`, `→`, `Espaço`, `Home`, `End`), barra de progresso em tempo real, dots de navegação direta e seletor rápido de aulas.
   - **Aulas e Tópicos Contemplados na Apresentação**:
