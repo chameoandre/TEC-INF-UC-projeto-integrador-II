@@ -226,6 +226,11 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **19/10/2026** — Aumento de Dimensão e Realce de Destaque / Hover no Menu de Seções:
+  - **Botões do Menu Encorpados (`.tab-btn`)**: Aumento da tipografia para `0.92rem` e padding para `0.55rem 1.1rem` com bordas arredondadas de `9px`, garantindo maior conforto visual e ergonomia no clique.
+  - **Hover Altamente Evidente & Feedback Tátil**: Aplicação de gradiente iluminado verde/ciano (`rgba(34, 197, 94, 0.25)`), borda verde-clara acesa (`var(--ifsc-green-light)`), elevação tridimensional com sombra suave (`box-shadow: 0 6px 18px rgba(34, 197, 94, 0.32)`) e micro-animação de escala nos ícones (`scale(1.18)`).
+  - **Barra com Maior Presença**: Padding expandido para `0.8rem 1.8rem`, espaçamento entre linhas de `0.6rem` e gradiente esmeralda reforçado. Incrementado cache-buster para `?v=2.9`.
+
 - **19/10/2026** — Card da Aula de Elaboração de Objetivos na Central Pedagógica & Roteiro 1:
   - **Novo Card Didático (`Card 0 • Objetivos`)**: Adicionado à grade da Central Pedagógica com foco na metodologia completa de formulação: Objetivo Geral com fórmula de 4 critérios (`[Verbo] + [Produto Tangível] + [Público] + [Propósito]`) e os 4 Degraus Metodológicos da Engenharia de Software (`D1 Requisitos`, `D2 Modelagem`, `D3 Código`, `D4 Validação`).
   - **Clipart SVG Conceitual**: Desenho vetorial de alta definição ilustrando o alvo metodológico e a escada dos 4 degraus técnicos.

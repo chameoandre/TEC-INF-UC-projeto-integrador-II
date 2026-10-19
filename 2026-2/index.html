@@ -13,7 +13,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="pi2-live.css?v=2.8">
+  <link rel="stylesheet" href="pi2-live.css?v=2.9">
 
   <style>
     /* ==========================================================================
@@ -266,95 +266,123 @@
 
     /* Navigation Bar / Tabs em 2 Linhas com Cor de Destaque */
     .nav-tabs-bar {
-      background: linear-gradient(135deg, rgba(22, 163, 74, 0.14) 0%, rgba(15, 23, 42, 0.85) 50%, rgba(14, 165, 233, 0.12) 100%);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-top: 1px solid rgba(34, 197, 94, 0.35);
-      border-bottom: 2px solid rgba(34, 197, 94, 0.4);
-      padding: 0.65rem 1.5rem;
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.16) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(14, 165, 233, 0.14) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(34, 197, 94, 0.4);
+      border-bottom: 2px solid rgba(34, 197, 94, 0.45);
+      padding: 0.8rem 1.8rem;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+      gap: 0.6rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
       transition: var(--transition);
     }
     [data-theme="light"] .nav-tabs-bar {
-      background: linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, #f8fafc 50%, rgba(14, 165, 233, 0.08) 100%);
-      border-top: 1px solid rgba(22, 163, 74, 0.25);
-      border-bottom: 2px solid rgba(22, 163, 74, 0.35);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.14) 0%, #f8fafc 50%, rgba(14, 165, 233, 0.1) 100%);
+      border-top: 1px solid rgba(22, 163, 74, 0.3);
+      border-bottom: 2px solid rgba(22, 163, 74, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     }
     .nav-tabs-row {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.55rem;
       flex-wrap: wrap;
     }
     .nav-tabs-group-label {
-      font-size: 0.7rem;
-      font-weight: 700;
+      font-size: 0.74rem;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-muted);
-      padding: 0.25rem 0.55rem;
-      background: rgba(255, 255, 255, 0.05);
+      padding: 0.35rem 0.65rem;
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.4rem;
       white-space: nowrap;
       user-select: none;
     }
     [data-theme="light"] .nav-tabs-group-label {
       background: rgba(0, 0, 0, 0.04);
-      color: #475569;
+      color: #334155;
+      border-color: rgba(0, 0, 0, 0.08);
     }
     .tab-btn {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      font-size: 0.84rem;
+      font-size: 0.92rem;
       font-weight: 600;
-      padding: 0.42rem 0.85rem;
-      border-radius: var(--radius-sm);
+      padding: 0.55rem 1.1rem;
+      border-radius: 9px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.45rem;
-      transition: var(--transition);
+      gap: 0.55rem;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
+      position: relative;
+    }
+    .tab-btn i {
+      font-size: 1rem;
+      transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .tab-btn:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(34, 197, 94, 0.4);
-      transform: translateY(-1px);
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(14, 165, 233, 0.18) 100%);
+      border-color: var(--ifsc-green-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.32);
+    }
+    .tab-btn:hover i {
+      transform: scale(1.18);
     }
     [data-theme="light"] .tab-btn:hover {
-      background: #ffffff;
+      color: #14532d;
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.16) 0%, rgba(14, 165, 233, 0.12) 100%);
       border-color: var(--ifsc-green);
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.2);
     }
     .tab-btn.active {
       color: #ffffff;
-      background: var(--ifsc-green);
-      border-color: var(--ifsc-green-light);
-      box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
-    }
-    .tab-btn .badge-count {
-      background: rgba(128, 128, 128, 0.22);
-      font-size: 0.72rem;
-      padding: 0.08rem 0.42rem;
-      border-radius: 10px;
-      color: var(--text-muted);
-    }
-    .tab-btn.active .badge-count {
-      background: rgba(255, 255, 255, 0.25);
-      color: #fff;
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      border-color: #4ade80;
+      box-shadow: 0 4px 16px rgba(22, 163, 74, 0.45);
       font-weight: 700;
     }
+    .tab-btn.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.55);
+      border-color: #86efac;
+    }
+    .tab-btn .badge-count {
+      background: rgba(128, 128, 128, 0.25);
+      font-size: 0.74rem;
+      padding: 0.12rem 0.48rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .tab-btn:hover .badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+    [data-theme="light"] .tab-btn:hover .badge-count {
+      background: rgba(22, 163, 74, 0.2);
+      color: #14532d;
+    }
+    .tab-btn.active .badge-count {
+      background: rgba(255, 255, 255, 0.28);
+      color: #ffffff;
+      font-weight: 800;
+    }
     [data-theme="dark"] .tab-btn.active .badge-count {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.3);
       color: #ffffff;
     }
 
@@ -8239,8 +8267,8 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
     }
 
   </script>
-  <script src="pi2-config.js?v=2.8"></script>
-  <script src="pi2-live.js?v=2.8"></script>
-  <script src="pi2-notas.js?v=2.8"></script>
+  <script src="pi2-config.js?v=2.9"></script>
+  <script src="pi2-live.js?v=2.9"></script>
+  <script src="pi2-notas.js?v=2.9"></script>
 </body>
 </html>
