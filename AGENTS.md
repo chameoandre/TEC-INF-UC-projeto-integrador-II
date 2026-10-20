@@ -226,6 +226,11 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **20/10/2026** — Template do COTB 2027 corrigido e publicado para abrir no Overleaf:
+  - **Formato confirmado**: o template oficial da Trilha Principal é o ACM `sigconf` em duas colunas (classe `acmart`), o mesmo para Artigo Completo e Resumo Estendido. O dashboard dizia "Modelo SBC"; corrigido nas abas `tab-cotb-2027` e `tab-eventos`, no modal de Metodologia e em dois textos dos slides.
+  - **Por que uma cópia nossa**: o `template_cotb2027.tex` publicado no site do evento não compila (acentos gravados como entidades HTML, ex.: `Introdu&ccedil;&atilde;o`) e usa uma `figura_exemplo.png` que não é distribuída. A versão em `templates/template-cotb-2027/` corrige só isso (e o comentário que falava em 8 páginas); classe, margens e formatação ficaram iguais. Compilada e conferida nas versões final e `anonymous`.
+  - **Link para o Overleaf**: `templates/template-cotb-2027.zip` é servido pelo GitHub Pages e aberto com `https://www.overleaf.com/docs?snip_uri=<url do zip>`, que cria uma cópia na conta de quem clica. **Se mudar o `main.tex`, regere o `.zip`** (`cd templates/template-cotb-2027 && zip -X ../template-cotb-2027.zip main.tex figura_exemplo.png README.md`), senão o Overleaf continua entregando a versão antiga.
+
 - **19/10/2026** — Inclusão do WebMedia 2026 como Congresso Alvo para Submissão:
   - **Novo Card Oficial (`WebMedia 2026`)**: Inserido na aba de eventos (`tab-eventos`) destacando o *32º Simpósio Brasileiro de Sistemas Multimídia e Web* da SBC (Lavras-MG, 27 a 30 de outubro de 2026).
   - **Trilhas e Sub-eventos Recomendados**: Destaque pedagógico para o WFA (*Workshop de Ferramentas e Aplicações*), CTIC (*Concurso de Trabalhos de Iniciação Científica*), W4E (*WebMedia for Everyone* / Acessibilidade e Inclusão), BrWeb3 e WTVDI.
@@ -336,6 +341,7 @@ no GitHub **não** atualiza o backend.
 
 ## Pendências
 
+- [ ] COTB 2027: avisar a organização (computeronthebeachsc@gmail.com) que o `.tex` publicado não compila, e confirmar o limite do Resumo Estendido (a página da trilha diz 2 páginas; as instruções gerais e o template dizem 3).
 - [ ] Trocar o compartilhamento da planilha de projetos de "Editor" para "Leitor" depois do
       teste com um aluno. Até lá a edição livre continua possível.
 - [ ] Cadastrar ou aprovar os integrantes de cada projeto no Painel docente.
