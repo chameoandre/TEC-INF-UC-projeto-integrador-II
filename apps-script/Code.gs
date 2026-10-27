@@ -28,7 +28,9 @@ var CONFIG = {
 
   // Domínios que podem SOLICITAR acesso. Quem já está na aba "membros" como
   // ativo entra independentemente do domínio. Deixe [] para aceitar qualquer conta.
-  DOMINIOS_PERMITIDOS: ['ifsc.edu.br', 'aluno.ifsc.edu.br'],
+  // [] desde 27/10/2026: os e-mails do SIGAA são pessoais (@gmail/@hotmail, alguns de familiares);
+  // quem entra com outra conta precisa conseguir pedir acesso. A aprovação continua sendo do docente.
+  DOMINIOS_PERMITIDOS: [],
 
   MAX_TEXTO: 3000,
   MAX_CAMPO: 600,
@@ -317,6 +319,7 @@ function atualizarFicha_(usuario, req) {
   var campos = req.campos || {};
   return comTrava_(function () {
     var linha = linhaDoProjeto_(projeto);
+    if (!linha && projeto === 11) linha = garantirLinhaProjeto11_();
     if (!linha) throw new Error('Este projeto não tem linha na planilha; fale com um docente.');
     var aba = publica_().getSheetByName(CONFIG.ABA_PROJETOS);
     var atuais = aba.getRange(linha, 1, 1, COL.observations).getDisplayValues()[0];
@@ -973,7 +976,49 @@ function linhaDoProjeto_(projeto) {
   for (var i = 0; i < ids.length; i++) {
     if (/^\d+$/.test(ids[i][0].trim()) && Number(ids[i][0]) === Number(projeto)) return i + 1;
   }
+  if (Number(projeto) === 11) {
+    return garantirLinhaProjeto11_();
+  }
   return 0;
+}
+
+/** Garante que o projeto #11 (Joel - Plano Domiciliar) tenha sua linha na aba Visao-geral da planilha pública. */
+function garantirLinhaProjeto11_() {
+  var aba = publica_().getSheetByName(CONFIG.ABA_PROJETOS);
+  var ids = aba.getRange(1, 1, aba.getLastRow(), 1).getDisplayValues();
+  for (var i = 0; i < ids.length; i++) {
+    if (/^\d+$/.test(ids[i][0].trim()) && Number(ids[i][0]) === 11) return i + 1;
+  }
+  var novaLinha = [
+    '11',
+    'Plano de Atendimento Domiciliar — Artigo Científico Individual',
+    'Joel Jorge Teixeira Filho',
+    '[OBJETIVO GERAL]\nDesenvolvimento individual de pesquisa e redação de artigo científico no formato SBC adaptado para atendimento pedagógico domiciliar.\n\n[OBJETIVOS ESPECÍFICOS]\n- [D1] Marco M1 (15/10): Tema & 4 Trabalhos Relacionados\n- [D2] Marco M2 (31/10): Introdução & Metodologia de Pesquisa\n- [D3] Marco M3 (20/11): Experimentos/Simulações & Discussão\n- [D4] Marco M4 (05/12): Artigo Completo Finalizado (Formato SBC)',
+    '',
+    '',
+    'https://drive.google.com/drive/folders/1mSPjqJ0mF2bXyLc2lwCU3AdrASHG8Vm5',
+    '',
+    'M1 (Até 15/10): Mapeamento de 4 Trabalhos Relacionados no Google Scholar / SBC Open Lib',
+    'Marco M1 (15/10): Tema & 4 Trabalhos Relacionados',
+    'Planejado',
+    'Marco M2 (31/10): Introdução & Metodologia de Pesquisa',
+    'Planejado',
+    'Marco M3 (20/11): Experimentos/Simulações & Discussão',
+    'Planejado',
+    'Marco M4 (05/12): Artigo Completo Finalizado (Formato SBC)',
+    'Planejado',
+    '',
+    '',
+    '',
+    'Pendente',
+    'Dossiê pedagógico estruturado (26/09). Carta de orientações e cronograma de 4 marcos elaborados pelos docentes André e Nauber.',
+    'Marco M1: Definição do tema e busca dos 4 trabalhos relacionados. Envio do link do Overleaf individual.',
+    'Acompanhamento assíncrono à distância.',
+    'Atendimento Domiciliar, Pesquisa Científica, LaTeX / SBC',
+    'Pasta compartilhada com Coordenação e CP ativa no Google Drive. Semestre de conclusão de curso 2026-2.'
+  ];
+  aba.appendRow(novaLinha);
+  return aba.getLastRow();
 }
 
 /** Registros do mais novo para o mais antigo. */
@@ -1725,10 +1770,17 @@ function linhasParaProjetos(linhas) {
     var relatorio = c(linha, 5), paper1 = c(linha, 17), paper4 = c(linha, 20);
     var overleaf = '';
     [relatorio, paper4, paper1].some(function (v) {
-      var m = v.match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
+      var m = v.match(/https?:\/\/[^\s,"]*overleaf\.com\/read\/[^\s,"]*/);
       if (m) { overleaf = m[0]; return true; }
       return false;
     });
+    if (!overleaf) {
+      [relatorio, paper4, paper1].some(function (v) {
+        var m = v.match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
+        if (m) { overleaf = m[0]; return true; }
+        return false;
+      });
+    }
     var techsRaw = c(linha, 24);
     var techs = techsRaw.split(/[,;\n]+/).map(function (t) { return t.trim().replace(/\.$/, ''); }).filter(Boolean);
 
@@ -1756,6 +1808,7 @@ function linhasParaProjetos(linhas) {
       paperStatus: paper1 || 'Planejamento',
       cotbStatus: paper4 || 'Pendente'
     };
+    if (id === 11) p.isDomiciliar = true;
     projetos.push(p);
   });
   return projetos;
@@ -1887,5 +1940,15 @@ function reenviarEmailUltimaDemanda() {
   var total = enviarNotificacaoDemandaCustom_(dem, 'nova', '', dem.criadoPor);
   Logger.log('Concluído! E-mails HTML enviados para ' + total + ' estudantes.');
 }
+
+/**
+ * Garante e cadastra a linha do Projeto #11 (Joel) na planilha pública Visao-geral.
+ * Execute esta função diretamente no editor do Apps Script para criar imediatamente a linha 15.
+ */
+function adicionarProjeto11NaPlanilha() {
+  var linha = garantirLinhaProjeto11_();
+  Logger.log('Projeto 11 garantido na linha ' + linha + ' da planilha Visao-geral.');
+}
+
 
 

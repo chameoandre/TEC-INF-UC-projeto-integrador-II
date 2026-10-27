@@ -82,10 +82,14 @@ def parse_projects(csv_text):
 
         relatorio, paper1, paper4 = cell(row, 5), cell(row, 17), cell(row, 20)
         overleaf = ""
-        for candidate in (relatorio, paper4, paper1):
-            m = re.search(r'https?://[^\s,"]*overleaf\.com[^\s,"]*', candidate)
-            if m:
-                overleaf = m.group(0)
+        # Prefere o link de leitura (/read/) em qualquer coluna antes de aceitar um link de edição.
+        for pattern in (r'https?://[^\s,"]*overleaf\.com/read/[^\s,"]*', r'https?://[^\s,"]*overleaf\.com[^\s,"]*'):
+            for candidate in (relatorio, paper4, paper1):
+                m = re.search(pattern, candidate)
+                if m:
+                    overleaf = m.group(0)
+                    break
+            if overleaf:
                 break
         if not overleaf:
             overleaf_status = "pendente"
@@ -125,6 +129,8 @@ def parse_projects(csv_text):
         }
         if proj_id in DASHBOARDS:
             entry["dashboard"] = DASHBOARDS[proj_id]
+        if proj_id == 11:
+            entry["isDomiciliar"] = True
         projects.append(entry)
 
     if not any(p["id"] == PROJETO_INDIVIDUAL["id"] for p in projects):

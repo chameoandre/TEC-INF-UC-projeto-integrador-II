@@ -226,6 +226,29 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **27/10/2026** — Alunos relatavam que informações inseridas "não apareciam" no dashboard:
+  - **Diagnóstico**: a API e a planilha estavam iguais (o que foi salvo estava gravado). O problema era de exibição e de acesso:
+    1. O card mostrava só o Objetivo Geral; os objetivos específicos D1–D4 eram descartados no card e só apareciam no modal.
+    2. A tabela de Notas mostrava D1–D4 como "❌" e o Objetivo Geral como "Não avaliado" enquanto o docente não avaliasse, mesmo com o texto preenchido.
+    3. "Avanços Recentes" (coluna V) era escondido sempre que existisse qualquer registro na linha do tempo.
+    4. Nenhum registro novo (`registrar`) existia: a maioria dos alunos não consegue editar porque o e-mail do SIGAA (pessoal, às vezes de familiar) difere da conta Google usada no login; e o modal pedia "conta institucional", que também não está na aba `membros`. Com `DOMINIOS_PERMITIDOS` restrito, quem entrava com Gmail próprio nem conseguia pedir acesso.
+    5. Links extras de aluno ficam `pendente` até aprovação docente (comportamento intencional, mas visto como "sumiu").
+  - **Correções** (`pi2-live.js`, cache-buster `?v=3.2`): card exibe Objetivo Geral + D1–D4 + desdobramentos e selo "Objetivos D1–D4: n/4"; botão "Editar ficha" no card; tabela de Notas mostra "📝 Cadastrado" / "D1: 📝" para o que a equipe preencheu e ainda não foi avaliado; rubrica docente vem pré-marcada a partir do texto preenchido; `parseObjetivos` aceita D1–D4 sem cabeçalho e texto em várias linhas; normalização de `\r\n` na comparação da ficha; "Avanços Recentes" só some se for idêntico ao último registro; usuário sem cadastro passa a ver os botões e é levado ao pedido de acesso com o projeto já selecionado.
+  - **Overleaf**: os três conversores passaram a preferir um link `/read/` em qualquer coluna (F, U, R) antes de aceitar um link de edição.
+  - **Backend** (`Code.gs`, **exige colar no editor e publicar nova versão**): `DOMINIOS_PERMITIDOS: []`, para qualquer conta poder pedir acesso (a aprovação continua sendo do docente).
+
+- **22/10/2026** — Correção e Habilitação de Edição do Projeto #11 (Joel - Plano Domiciliar):
+  - **Problema**: O estudante Joel Jorge Teixeira Filho (`joelpdr475@gmail.com`), cadastrado com o projeto #11, recebia o erro *"Este projeto não tem linha na planilha; fale com um docente"* ao tentar salvar edições na ficha ou nos links do projeto. O motivo era que a planilha pública `Visao-geral` continha apenas as linhas dos projetos em grupo (#1 a #10) e a função `linhaDoProjeto_(11)` retornava `0`.
+  - **Solução no Apps Script (`Code.gs`)**:
+    - Implementada a função `garantirLinhaProjeto11_()`, que cria automaticamente a linha 15 do projeto 11 com todos os metadados pedagógicos na aba `Visao-geral` da planilha pública se ela não existir.
+    - `linhaDoProjeto_(projeto)` e `atualizarFicha_()` agora invocam `garantirLinhaProjeto11_()` quando `projeto === 11`, eliminando o erro de linha ausente.
+    - Criada a função utilitária administrativa `adicionarProjeto11NaPlanilha()`, permitindo execução manual com um clique no Apps Script.
+    - Em `linhasParaProjetos()` (`Code.gs` e `pi2-live.js`), adicionado `if (id === 11) p.isDomiciliar = true;`, garantindo a preservação visual e o isolamento dos KPIs.
+  - **Solução no Sync (`sync_sheet.py`)**:
+    - Em `parse_projects()`, adicionado `if proj_id == 11: entry["isDomiciliar"] = True`, permitindo ler a linha 11 do CSV oficial sem perder a flag `isDomiciliar`.
+
+- **21/10/2026** — Pasta `validacoes/` criada e incluída no `.gitignore`: guarda pareceres de validação de UC, que trazem nome de estudante e não podem ir para o repositório público. Primeiro caso: parecer favorável à validação de Projeto Integrador I da estudante transferida do IFFAR (pedido da coordenação, e-mails de 17/07 e 13/10/2026), em `validacoes/2026-laura-oberdorfer-pi1/` (`.tex` + PDF). O LaTeX do Mac não tem `babel-portuguese` nem `newtx`; o parecer usa `mathptmx` e foi compilado fora.
+
 - **20/10/2026** — Template do COTB 2027 corrigido e publicado para abrir no Overleaf:
   - **Formato confirmado**: o template oficial da Trilha Principal é o ACM `sigconf` em duas colunas (classe `acmart`), o mesmo para Artigo Completo e Resumo Estendido. O dashboard dizia "Modelo SBC"; corrigido nas abas `tab-cotb-2027` e `tab-eventos`, no modal de Metodologia e em dois textos dos slides.
   - **Por que uma cópia nossa**: o `template_cotb2027.tex` publicado no site do evento não compila (acentos gravados como entidades HTML, ex.: `Introdu&ccedil;&atilde;o`) e usa uma `figura_exemplo.png` que não é distribuída. A versão em `templates/template-cotb-2027/` corrige só isso (e o comentário que falava em 8 páginas); classe, margens e formatação ficaram iguais. Compilada e conferida nas versões final e `anonymous`.
@@ -341,6 +364,8 @@ no GitHub **não** atualiza o backend.
 
 ## Pendências
 
+- [ ] Republicar o `Code.gs` de 27/10/2026 no editor do Apps Script (nova versão) e aprovar no Painel docente os pedidos de acesso dos alunos que entrarem com conta diferente da do SIGAA.
+- [ ] Validação PI-1 (Laura/IFFAR): assinar o parecer, anexar ao rascunho de resposta à coordenação no Gmail e enviar.
 - [ ] COTB 2027: avisar a organização (computeronthebeachsc@gmail.com) que o `.tex` publicado não compila, e confirmar o limite do Resumo Estendido (a página da trilha diz 2 páginas; as instruções gerais e o template dizem 3).
 - [ ] Trocar o compartilhamento da planilha de projetos de "Editor" para "Leitor" depois do
       teste com um aluno. Até lá a edição livre continua possível.

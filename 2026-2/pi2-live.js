@@ -44,7 +44,7 @@
   function $(sel, raiz) { return (raiz || document).querySelector(sel); }
   function $$(sel, raiz) { return Array.prototype.slice.call((raiz || document).querySelectorAll(sel)); }
   function pendente(v) { var s = String(v || '').trim(); return !s || s.toUpperCase() === 'PENDENTE'; }
-  function ehIndividual(p) { return !!p.isDomiciliar; }
+  function ehIndividual(p) { return !!p.isDomiciliar || p.id === 11; }
   function doisDigitos(n) { return (n < 10 ? '0' : '') + n; }
   function dataBr(iso) {
     var d = new Date(iso);
@@ -83,10 +83,17 @@ function linhasParaProjetos(linhas) {
     var relatorio = c(linha, 5), paper1 = c(linha, 17), paper4 = c(linha, 20);
     var overleaf = '';
     [relatorio, paper4, paper1].some(function (v) {
-      var m = v.match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
+      var m = v.match(/https?:\/\/[^\s,"]*overleaf\.com\/read\/[^\s,"]*/);
       if (m) { overleaf = m[0]; return true; }
       return false;
     });
+    if (!overleaf) {
+      [relatorio, paper4, paper1].some(function (v) {
+        var m = v.match(/https?:\/\/[^\s,"]*overleaf\.com[^\s,"]*/);
+        if (m) { overleaf = m[0]; return true; }
+        return false;
+      });
+    }
     var techsRaw = c(linha, 24);
     var techs = techsRaw.split(/[,;\n]+/).map(function (t) { return t.trim().replace(/\.$/, ''); }).filter(Boolean);
 
@@ -114,6 +121,7 @@ function linhasParaProjetos(linhas) {
       paperStatus: paper1 || 'Planejamento',
       cotbStatus: paper4 || 'Pendente'
     };
+    if (id === 11) p.isDomiciliar = true;
     projetos.push(p);
   });
   return projetos;
@@ -198,21 +206,47 @@ function linhasParaProjetos(linhas) {
 
     if (/\[OBJETIVO GERAL\]/i.test(raw) || /\[OBJETIVOS ESPEC[ÍI]FICOS\]/i.test(raw) || /\[D[1-4]\]/i.test(raw)) {
       var partes = raw.split(/\[OBJETIVOS ESPEC[ÍI]FICOS\]/i);
-      res.geral = partes[0].replace(/\[OBJETIVO GERAL\]/i, '').trim();
+      var blocoGeral = partes[0].replace(/\[OBJETIVO GERAL\]/i, '');
+      var blocoEsp = partes.length > 1 ? partes.slice(1).join('\n') : '';
 
-      if (partes.length > 1) {
-        var linhas = partes[1].split(/\r?\n/);
+      // Caso o aluno tenha usado [D1]..[D4] sem o cabeçalho [OBJETIVOS ESPECÍFICOS]
+      if (!blocoEsp && /\[D[1-4]\]/i.test(blocoGeral)) {
+        var idxPrimeiroD = blocoGeral.search(/(?:^|\r?\n)\s*[-*•]?\s*\[D[1-4]\]/i);
+        if (idxPrimeiroD >= 0) {
+          blocoEsp = blocoGeral.slice(idxPrimeiroD);
+          blocoGeral = blocoGeral.slice(0, idxPrimeiroD);
+        }
+      }
+      res.geral = blocoGeral.trim();
+
+      if (blocoEsp) {
+        var linhas = blocoEsp.split(/\r?\n/);
+        var ultimoAlvo = null; // { tipo: 'd1'|'d2'|'d3'|'d4'|'extra', idx?: number }
         linhas.forEach(function (linha) {
-          var m = linha.match(/^[-*•]?\s*\[(D[1-4])\]\s*(.*)$/i);
+          var m = linha.match(/^\s*[-*•]?\s*\[(D[1-4])\]\s*(.*)$/i);
           if (m) {
             var deg = m[1].toUpperCase();
             var cont = m[2].trim();
-            if (deg === 'D1' && !res.d1) res.d1 = cont;
-            else if (deg === 'D2' && !res.d2) res.d2 = cont;
-            else if (deg === 'D3' && !res.d3) res.d3 = cont;
-            else if (deg === 'D4' && !res.d4) res.d4 = cont;
-            else if (cont) {
+            var chave = deg.toLowerCase();
+            if (!res[chave] && ultimoAlvo && ultimoAlvo.tipo === chave) {
+              res[chave] = cont;
+            } else if (!res[chave]) {
+              res[chave] = cont;
+              ultimoAlvo = { tipo: chave };
+            } else if (cont) {
               res.extras.push({ degrau: deg, texto: cont });
+              ultimoAlvo = { tipo: 'extra', idx: res.extras.length - 1 };
+            } else {
+              ultimoAlvo = { tipo: chave };
+            }
+          } else {
+            var contLinha = linha.trim();
+            if (contLinha && ultimoAlvo) {
+              if (ultimoAlvo.tipo === 'extra' && res.extras[ultimoAlvo.idx]) {
+                res.extras[ultimoAlvo.idx].texto += '\n' + contLinha;
+              } else if (ultimoAlvo.tipo && ultimoAlvo.tipo.indexOf('d') === 0) {
+                res[ultimoAlvo.tipo] = (res[ultimoAlvo.tipo] ? res[ultimoAlvo.tipo] + '\n' : '') + contLinha;
+              }
             }
           }
         });
@@ -602,36 +636,50 @@ function linhasParaProjetos(linhas) {
       abrirModal(cabecalho('Login ainda não ativado', 'O envio de registros pelo dashboard será liberado assim que o professor concluir a implantação do backend.'));
       return;
     }
-    var corpo = abrirModal(cabecalho('Entre com sua conta Google', 'Use a conta institucional. Só integrantes cadastrados no projeto conseguem registrar avanços, e cada envio fica gravado com seu nome e a data.') +
+    var corpo = abrirModal(cabecalho('Entre com sua conta Google', 'Use sua conta Google cadastrada no SIGAA ou sua conta institucional (@aluno.ifsc.edu.br). Só integrantes vinculados ao projeto conseguem editar a ficha e registrar avanços.') +
       '<div class="pi2-google-btn" id="pi2-google-modal"></div>');
     botaoGoogle($('#pi2-google-modal', corpo), true);
   }
 
-  function abrirSolicitacao() {
+  function abrirSolicitacao(projSugerido) {
     var u = PI2.usuario;
     if (!u) return abrirLogin();
     if (u.status === 'pendente') {
-      abrirModal(cabecalho('Solicitação enviada', 'Seu pedido de acesso ao projeto #' + esc((u.pedido || []).join(', #')) + ' aguarda a aprovação de um docente. Depois de aprovado, basta atualizar a página.'));
+      abrirModal(cabecalho('Solicitação enviada', 'Seu pedido de acesso ao projeto #' + esc((u.pedido || []).join(', #')) + ' com a conta <strong>' + esc(u.email) + '</strong> aguarda a aprovação de um docente. Depois de aprovado, basta atualizar a página.'));
       return;
     }
     if (u.dominioOk === false) {
-      abrirModal(cabecalho('Conta não autorizada', 'Você entrou como <strong>' + esc(u.email) + '</strong>. Saia e entre com a sua conta institucional do IFSC.'));
+      abrirModal(cabecalho('Conta não autorizada', 'Você entrou como <strong>' + esc(u.email) + '</strong>. Saia e entre com a sua conta institucional do IFSC ou com o e-mail cadastrado no SIGAA.'));
       return;
     }
-    var opcoes = PI2.bruto.map(function (p) { return '<option value="' + p.id + '">#' + doisDigitos(p.id) + ' — ' + esc(p.title) + '</option>'; }).join('');
+    var opcoes = PI2.bruto.map(function (p) {
+      var sel = Number(projSugerido) === Number(p.id) ? ' selected' : '';
+      return '<option value="' + p.id + '"' + sel + '>#' + doisDigitos(p.id) + ' — ' + esc(p.title) + ' (' + esc(p.team) + ')</option>';
+    }).join('');
     var corpo = abrirModal(cabecalho('Solicitar acesso a um projeto', 'Você entrou como <strong>' + esc(u.email) + '</strong>, que ainda não está vinculado a nenhum projeto. Escolha o seu; um docente confirma o vínculo.') +
       '<form class="pi2-form"><div class="pi2-field"><label for="pi2-sol-proj">Meu projeto</label><select id="pi2-sol-proj" name="projeto" required>' + opcoes + '</select></div>' +
       '<div class="pi2-erro" role="alert"></div><div class="pi2-actions"><button class="pi2-btn primario" type="submit">Enviar solicitação</button></div></form>');
     aoEnviar($('form', corpo), function (fd) {
-      return api('solicitarAcesso', { projeto: Number(fd.get('projeto')) }).then(function () {
-        desenharAuth(); abrirSolicitacao();
+      return api('solicitarAcesso', { projeto: Number(fd.get('projeto')) }).then(function (res) {
+        if (res && res.usuario) {
+          PI2.usuario = res.usuario;
+          guardarSessao(PI2.token, res.usuario);
+        }
+        desenharAuth();
+        redesenhar();
+        if (PI2.usuario && PI2.usuario.status === 'ativo') {
+          fecharModal();
+          aviso('Vínculo confirmado automaticamente! Você já pode editar seu projeto.');
+        } else {
+          abrirSolicitacao();
+        }
       });
     });
   }
 
   PI2.abrirRegistro = function (id) {
     if (!PI2.usuario) return abrirLogin(function () { PI2.abrirRegistro(id); });
-    if (PI2.usuario.status !== 'ativo') return abrirSolicitacao();
+    if (PI2.usuario.status !== 'ativo') return abrirSolicitacao(id);
     if (!podeEditar(id)) return aviso('Você só pode registrar avanços no seu próprio projeto.', 'warning');
     var p = projetoBruto(id);
     if (!p) return;
@@ -719,7 +767,7 @@ function linhasParaProjetos(linhas) {
       return pendente(v) && !m[2] ? '' : v;
     }
     if (/^paper\d$/.test(k)) return (p.papers && p.papers[k]) || '';
-    if (k === 'relatorio') return p.relatorio != null ? (pendente(p.relatorio) ? '' : p.relatorio) : (p.overleaf || '');
+    if (k === 'relatorio') return (p.relatorio != null && !pendente(p.relatorio)) ? p.relatorio : (p.overleaf || '');
     if (k === 'techs') return p.techsRaw != null ? p.techsRaw.replace(/\s*\n\s*/g, ', ') : (p.techs || []).join(', ');
     if (k === 'relatedWorks') return pendente(p.relatedWorks) ? '' : p.relatedWorks;
     return p[k] || '';
@@ -734,6 +782,7 @@ function linhasParaProjetos(linhas) {
 
   PI2.abrirFicha = function (id) {
     if (!PI2.usuario) return abrirLogin(function () { PI2.abrirFicha(id); });
+    if (PI2.usuario.status !== 'ativo') return abrirSolicitacao(id);
     if (!podeEditar(id)) return aviso('Você só pode editar a ficha do seu próprio projeto.', 'warning');
     var p = projetoBruto(id);
     if (!p) return;
@@ -889,15 +938,16 @@ function linhasParaProjetos(linhas) {
           extras.push({ degrau: sel ? sel.value : 'D1', texto: txt.value.trim() });
         }
       });
-      var objSerializado = serializarObjetivos({ geral: g, d1: d1, d2: d2, d3: d3, d4: d4, extras: extras });
-      if (objSerializado !== iniciais['objective']) {
+      var objSerializado = serializarObjetivos({ geral: g, d1: d1, d2: d2, d3: d3, d4: d4, extras: extras }).replace(/\r\n?/g, '\n');
+      if (objSerializado !== String(iniciais['objective'] || '').replace(/\r\n?/g, '\n')) {
         campos['objective'] = objSerializado;
       }
 
       Object.keys(iniciais).forEach(function (k) {
         if (k === 'objective') return;
-        var v = String(fd.get(k) || '').trim();
-        if (v !== iniciais[k]) campos[k] = v;
+        var v = String(fd.get(k) || '').replace(/\r\n?/g, '\n').trim();
+        var ini = String(iniciais[k] || '').replace(/\r\n?/g, '\n').trim();
+        if (v !== ini) campos[k] = v;
       });
       if (!Object.keys(campos).length) throw new Error('Nenhum campo foi alterado.');
       return api('atualizarFicha', { projeto: p.id, campos: campos }).then(function (d) {
@@ -980,11 +1030,12 @@ function linhasParaProjetos(linhas) {
   // Complementos nos cards e na ficha completa
   // ------------------------------------------------------------------
   function botoesAcao(id, compacto) {
-    if (PI2.usuario && !podeEditar(id)) return '';
+    if (PI2.usuario && PI2.usuario.status === 'ativo' && !podeEditar(id)) return '';
     if (!PI2.usuario && !loginConfigurado()) return '';
     if (compacto) {
       return (ehDocente() ? '<button type="button" class="link-btn pi2-notas-btn" data-pi2-notas="' + id + '" title="Avaliar rubricas e notas deste projeto"><i class="fa-solid fa-clipboard-list"></i> Avaliar</button> ' : '') +
         (ehDocente() ? '<button type="button" class="link-btn" data-pi2-demanda="' + id + '" title="Criar demanda para esta equipe"><i class="fa-solid fa-bullhorn"></i> Demanda</button> ' : '') +
+        '<button type="button" class="link-btn pi2-editar-ficha" data-pi2-ficha="' + id + '" title="Editar objetivos (Geral e D1-D4), experimentos, trabalhos relacionados e ficha"><i class="fa-solid fa-sliders"></i> Editar ficha</button> ' +
         '<button type="button" class="link-btn pi2-registrar" data-pi2-registrar="' + id + '" title="Registrar um avanço deste projeto"><i class="fa-solid fa-pen-to-square"></i> Registrar</button>';
     }
     return '<button type="button" class="pi2-btn mini primario" data-pi2-registrar="' + id + '"><i class="fa-solid fa-pen-to-square"></i> Registrar avanço</button> ' +
@@ -1015,6 +1066,7 @@ function linhasParaProjetos(linhas) {
 
   PI2.abrirLinks = function (id, doProjeto) {
     if (!PI2.usuario) return abrirLogin(function () { PI2.abrirLinks(id); });
+    if (PI2.usuario.status !== 'ativo') return abrirSolicitacao(id);
     if (!podeEditar(id)) return aviso('Você só pode alterar os links do seu próprio projeto.', 'warning');
     var p = projetoBruto(id);
     if (!p) return;
@@ -1077,6 +1129,10 @@ function linhasParaProjetos(linhas) {
   function complementarCards() {
     $$('.project-card').forEach(function (card) {
       var id = Number(card.id.replace('project-card-', ''));
+      var p = projetoBruto(id);
+      var parsedObj = p ? (p.objetivosParsed || parseObjetivos(p.objective)) : { geral: '', d1: '', d2: '', d3: '', d4: '', extras: [] };
+      var qtdDegraus = ['d1', 'd2', 'd3', 'd4'].filter(function (k) { return !!(parsedObj[k] && String(parsedObj[k]).trim()); }).length;
+
       var links = $('.proj-links', card);
       if (links && !$('.pi2-registrar', links) && !$('.pi2-link-extra', links)) {
         links.insertAdjacentHTML('beforeend', linksExtrasHtml(id, true) + botoesAcao(id, true) +
@@ -1084,11 +1140,64 @@ function linhasParaProjetos(linhas) {
       }
 
       var meta = $('.card-quick-meta', card), ult = ultimoRegistro(id);
-      if (meta && CFG.apiUrl) {
-        var dias = ult ? diasDesde(ult.data) : null;
-        var parado = dias === null || dias >= (CFG.diasParado || 14);
-        meta.insertAdjacentHTML('beforeend', '<span class="quick-meta-pill pi2-recencia ' + (parado ? 'parado' : 'green') + '"><i class="fa-solid fa-clock-rotate-left"></i> ' +
-          (ult ? 'Último registro ' + esc(haQuanto(ult.data)) : 'Sem registros') + '</span>');
+      if (meta) {
+        if (!$('.pi2-obj-meta', meta)) {
+          var corObj = qtdDegraus === 4 ? 'green' : (qtdDegraus > 0 || parsedObj.geral ? 'cyan' : 'amber');
+          var txtObj = qtdDegraus > 0 ? ('Objetivos D1–D4: ' + qtdDegraus + '/4') : (parsedObj.geral ? 'Obj. Geral OK (D1–D4 pend.)' : 'Objetivos: Pendentes');
+          meta.insertAdjacentHTML('beforeend', '<span class="quick-meta-pill pi2-obj-meta ' + corObj + '"><i class="fa-solid fa-bullseye"></i> ' + esc(txtObj) + '</span>');
+        }
+        if (CFG.apiUrl && !$('.pi2-recencia', meta)) {
+          var dias = ult ? diasDesde(ult.data) : null;
+          var parado = dias === null || dias >= (CFG.diasParado || 14);
+          meta.insertAdjacentHTML('beforeend', '<span class="quick-meta-pill pi2-recencia ' + (parado ? 'parado' : 'green') + '"><i class="fa-solid fa-clock-rotate-left"></i> ' +
+            (ult ? 'Último registro ' + esc(haQuanto(ult.data)) : 'Sem registros') + '</span>');
+        }
+      }
+
+      // Renderiza no próprio card tanto o Objetivo Geral quanto os 4 Objetivos Específicos (D1 a D4) e desdobramentos
+      var objBox = $('.card-obj-box', card);
+      if (objBox && p && !$('.pi2-card-degraus', objBox)) {
+        var degLabels = [
+          { k: 'D1', campo: 'd1', tit: 'Diagnóstico & Requisitos' },
+          { k: 'D2', campo: 'd2', tit: 'Modelagem & Design' },
+          { k: 'D3', campo: 'd3', tit: 'Implementação & Código' },
+          { k: 'D4', campo: 'd4', tit: 'Validação & Testes' }
+        ];
+        var listaDegHtml = degLabels.map(function (d) {
+          var val = String(parsedObj[d.campo] || '').trim();
+          var extrasDeg = (parsedObj.extras || []).filter(function (ex) { return ex.degrau === d.k; });
+          return '<li style="display:flex;align-items:flex-start;gap:0.45rem;padding:0.35rem 0;border-bottom:1px dashed var(--border-color);font-size:0.8rem;line-height:1.4;">' +
+            '<span class="proj-id-badge" style="font-size:0.65rem;padding:0.1rem 0.38rem;flex-shrink:0;margin-top:0.1rem;background:' + (val ? 'rgba(34,197,94,0.18)' : 'rgba(245,158,11,0.15)') + ';color:' + (val ? 'var(--ifsc-green-light)' : 'var(--accent-amber)') + ';">' + d.k + '</span>' +
+            '<div style="flex:1;">' +
+              (val
+                ? '<span style="color:var(--text-main);">' + esc(val) + '</span>'
+                : '<span style="color:var(--text-dim);font-style:italic;">' + esc(d.tit) + ' — pendente (preencher em Editar ficha)</span>') +
+              (extrasDeg.length ? extrasDeg.map(function (ex) {
+                return '<div style="margin-top:0.25rem;padding:0.2rem 0.45rem;background:rgba(6,182,212,0.08);border-left:2px solid var(--accent-cyan);border-radius:4px;font-size:0.76rem;color:var(--text-main);"><i class="fa-solid fa-code-branch" style="color:var(--accent-cyan);"></i> ' + esc(ex.texto) + '</div>';
+              }).join('') : '') +
+            '</div>' +
+          '</li>';
+        }).join('');
+
+        objBox.innerHTML =
+          '<div style="margin-bottom:0.65rem;">' +
+            '<i class="fa-solid fa-bullseye text-cyan"></i> <strong>Objetivo Geral:</strong> ' + esc(parsedObj.geral || 'Definição de escopo em andamento.') +
+          '</div>' +
+          '<div class="pi2-card-degraus" style="margin-top:0.55rem;padding-top:0.55rem;border-top:1px solid var(--border-color);">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;font-size:0.76rem;font-weight:700;color:var(--accent-cyan);text-transform:uppercase;letter-spacing:0.04em;">' +
+              '<span><i class="fa-solid fa-stairs"></i> Objetivos Específicos (Degraus D1–D4)</span>' +
+              '<span style="color:' + (qtdDegraus === 4 ? 'var(--ifsc-green-light)' : 'var(--accent-amber)') + ';">' + qtdDegraus + '/4 definidos</span>' +
+            '</div>' +
+            '<ul style="list-style:none;padding:0;margin:0;">' + listaDegHtml + '</ul>' +
+          '</div>';
+      }
+
+      // Sincroniza registro legado em memória caso a coluna AVANÇOS da planilha tenha sido atualizada
+      if (p && p.advances) {
+        var regsProj = registrosDo(id);
+        if (regsProj.length === 1 && regsProj[0].tipo === 'legado') {
+          regsProj[0].texto = p.advances;
+        }
       }
 
       var conteudo = $('.project-collapsible-content', card), rodape = $('.card-expanded-footer', card);
@@ -1097,11 +1206,13 @@ function linhasParaProjetos(linhas) {
         sec.className = 'card-extra-section';
         sec.innerHTML = '<div class="card-extra-title pi2-secao-titulo"><span><i class="fa-solid fa-timeline text-cyan"></i> Linha do tempo</span><span>' + botoesAcao(id, false) + '</span></div>' + timelineHtml(id, 3);
         conteudo.insertBefore(sec, rodape);
-        // A coluna AVANÇOS da planilha espelha estes registros; evita mostrar duas vezes.
-        if (ult) $$('.card-extra-section', conteudo).forEach(function (s) {
-          var t = $('.card-extra-title', s);
-          if (s !== sec && t && /Avanços Recentes/.test(t.textContent)) s.style.display = 'none';
-        });
+        // Só oculta "Avanços Recentes" quando o último registro da linha do tempo já espelha exatamente o texto da planilha.
+        if (ult && p && String(ult.texto || '').trim() === String(p.advances || '').trim()) {
+          $$('.card-extra-section', conteudo).forEach(function (s) {
+            var t = $('.card-extra-title', s);
+            if (s !== sec && t && /Avanços Recentes/.test(t.textContent)) s.style.display = 'none';
+          });
+        }
       }
     });
   }
@@ -1650,12 +1761,16 @@ function linhasParaProjetos(linhas) {
             <tbody>
               ${projsComAval.map(function (item) {
                 var p = item.projeto;
+                var pBruto = projetoBruto(p.id) || p;
+                var parsedObj = pBruto.objetivosParsed || parseObjetivos(pBruto.objective || '');
                 var a = item.avaliacao;
                 var nomeProj = p.title || ('Projeto #' + p.id);
                 var integrantesProj = p.team || 'Integrantes a definir';
                 var crit = a && a.criterios ? a.criterios : {};
-                var statusClass = item.status === 'aprovado' ? 'tag-ok' : (item.status === 'ajustar' ? 'tag-ajuste' : 'tag-pendente');
-                var statusLabel = item.status === 'aprovado' ? '🟢 Conforme' : (item.status === 'ajustar' ? '🟡 Ajustar' : '⚪ Pendente');
+                var qtdDegPreenchidos = ['d1', 'd2', 'd3', 'd4'].filter(function (k) { return !!(parsedObj[k] && String(parsedObj[k]).trim()); }).length;
+                var temGeral = !!(parsedObj.geral && String(parsedObj.geral).trim());
+                var statusClass = item.status === 'aprovado' ? 'tag-ok' : (item.status === 'ajustar' ? 'tag-ajuste' : ((temGeral && qtdDegPreenchidos === 4) ? 'tag-ok' : 'tag-pendente'));
+                var statusLabel = item.status === 'aprovado' ? '🟢 Conforme' : (item.status === 'ajustar' ? '🟡 Ajustar' : ((temGeral && qtdDegPreenchidos === 4) ? '📝 Em Análise' : '⚪ Pendente'));
                 var notaTxt = item.nota !== null ? item.nota.toFixed(1) : '—';
                 var notaClass = item.nota !== null ? (item.nota >= 7.0 ? 'excelente' : 'ajuste') : '';
 
@@ -1664,6 +1779,25 @@ function linhasParaProjetos(linhas) {
 
                 var eqDados = (PI2.notas && typeof PI2.notas.obterDadosEquipe === 'function') ? PI2.notas.obterDadosEquipe(p.id) : null;
                 var totalMembros = eqDados && eqDados.membros ? eqDados.membros.length : 0;
+
+                function degBadgeHtml(num, rotulo) {
+                  var st = crit['esp' + num + '_status'];
+                  var obs = crit['esp' + num + '_obs'];
+                  var txt = String(parsedObj['d' + num] || '').trim();
+                  if (st) {
+                    return '<span class="pi2-deg-badge ' + st + '" title="D' + num + ': ' + rotulo + ' (' + esc(obs || txt || 'Sem obs') + ')">' +
+                      'D' + num + ': ' + (st === 'conforme' ? '✔️' : (st === 'ajustar' ? '⚠️' : '❌')) +
+                    '</span>';
+                  }
+                  if (txt) {
+                    return '<span class="pi2-deg-badge conforme" style="background:rgba(6,182,212,0.14);color:var(--accent-cyan);border-color:rgba(6,182,212,0.35);" title="D' + num + ' preenchido pela equipe (aguardando avaliação): ' + esc(txt) + '">' +
+                      'D' + num + ': 📝' +
+                    '</span>';
+                  }
+                  return '<span class="pi2-deg-badge ausente" title="D' + num + ': ' + rotulo + ' (Ainda não preenchido pela equipe)">' +
+                    'D' + num + ': ❌' +
+                  '</span>';
+                }
 
                 return `
                   <tr class="pi2-nota-row" data-id="${p.id}" data-status="${item.status}" data-nome="${esc(nomeProj).toLowerCase()}" data-integrantes="${esc(integrantesProj).toLowerCase()}">
@@ -1684,22 +1818,18 @@ function linhasParaProjetos(linhas) {
                         <div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.25rem;">
                           ${crit.geral_verbo ? '✓ Verbo ' : ''}${crit.geral_produto ? '✓ Produto ' : ''}${crit.geral_publico ? '✓ Público ' : ''}${crit.geral_proposito ? '✓ Propósito' : ''}
                         </div>
-                      ` : '<span style="font-size:0.75rem;color:var(--text-dim);">Não avaliado</span>'}
+                      ` : (temGeral ? `
+                        <span class="status-tag" style="font-size:0.72rem;background:rgba(6,182,212,0.14);color:var(--accent-cyan);border:1px solid rgba(6,182,212,0.35);" title="${esc(parsedObj.geral)}">
+                          📝 Cadastrado
+                        </span>
+                      ` : '<span style="font-size:0.75rem;color:var(--text-dim);">Pendente</span>')}
                     </td>
                     <td>
                       <div style="display:flex;gap:0.25rem;flex-wrap:wrap;">
-                        <span class="pi2-deg-badge ${crit.esp1_status || 'ausente'}" title="D1: Exploração e Referenciais (${esc(crit.esp1_obs || 'Sem obs')})">
-                          D1: ${crit.esp1_status === 'conforme' ? '✔️' : (crit.esp1_status === 'ajustar' ? '⚠️' : '❌')}
-                        </span>
-                        <span class="pi2-deg-badge ${crit.esp2_status || 'ausente'}" title="D2: Modelagem, WBS e Wireframe (${esc(crit.esp2_obs || 'Sem obs')})">
-                          D2: ${crit.esp2_status === 'conforme' ? '✔️' : (crit.esp2_status === 'ajustar' ? '⚠️' : '❌')}
-                        </span>
-                        <span class="pi2-deg-badge ${crit.esp3_status || 'ausente'}" title="D3: Implementação Web e GitHub (${esc(crit.esp3_obs || 'Sem obs')})">
-                          D3: ${crit.esp3_status === 'conforme' ? '✔️' : (crit.esp3_status === 'ajustar' ? '⚠️' : '❌')}
-                        </span>
-                        <span class="pi2-deg-badge ${crit.esp4_status || 'ausente'}" title="D4: Validação e Testes (${esc(crit.esp4_obs || 'Sem obs')})">
-                          D4: ${crit.esp4_status === 'conforme' ? '✔️' : (crit.esp4_status === 'ajustar' ? '⚠️' : '❌')}
-                        </span>
+                        ${degBadgeHtml(1, 'Exploração e Referenciais')}
+                        ${degBadgeHtml(2, 'Modelagem, WBS e Wireframe')}
+                        ${degBadgeHtml(3, 'Implementação Web e GitHub')}
+                        ${degBadgeHtml(4, 'Validação e Testes')}
                       </div>
                     </td>
                     <td>
@@ -1835,13 +1965,19 @@ function linhasParaProjetos(linhas) {
       return Number(a.projeto) === Number(projId) && (a.tipo === 'objetivos' || !a.tipo);
     });
 
-    var crit = (aval && aval.criterios) ? aval.criterios : {};
+    var rawObj = valorAtual(proj, 'objective') || proj.objective || '';
+    var parsedObj = parseObjetivos(rawObj);
+
+    var crit = Object.assign({
+      geral_status: parsedObj.geral ? 'conforme' : 'ausente',
+      esp1_status: parsedObj.d1 ? 'conforme' : 'ausente',
+      esp2_status: parsedObj.d2 ? 'conforme' : 'ausente',
+      esp3_status: parsedObj.d3 ? 'conforme' : 'ausente',
+      esp4_status: parsedObj.d4 ? 'conforme' : 'ausente'
+    }, (aval && aval.criterios) ? aval.criterios : {});
     var notaAtual = aval ? (aval.nota || '') : '';
     var statusAtual = aval ? (aval.status || 'aprovado') : 'aprovado';
     var parecerAtual = aval ? (aval.parecer || '') : '';
-
-    var rawObj = valorAtual(proj, 'objective') || proj.objective || '';
-    var parsedObj = parseObjetivos(rawObj);
 
     var eqDados = (PI2.notas && typeof PI2.notas.obterDadosEquipe === 'function') ? PI2.notas.obterDadosEquipe(projId) : null;
     var membros = (eqDados && eqDados.membros) ? eqDados.membros : [];

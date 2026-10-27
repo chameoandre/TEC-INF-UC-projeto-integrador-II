@@ -26,3 +26,6 @@ __pycache__/
 dados-alunos/
 **/dados-alunos/
 *lista-turma*
+
+# Validações de estudos (pareceres com dados de estudantes): NUNCA publicar
+validacoes/
