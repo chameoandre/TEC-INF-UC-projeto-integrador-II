@@ -527,11 +527,12 @@ function criarDemanda_(usuario, body) {
   aba.appendRow([id, agora, projeto, titulo, descricao, prazo, autor, 'pendente', '', '', '', pontos, criterios]);
 
   // Disparar e-mails para os estudantes
+  var totalEnviados = 0;
   if (CONFIG.NOTIFICAR_EMAIL) {
-    enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor, pontos, criterios);
+    totalEnviados = enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor, pontos, criterios);
   }
 
-  return { ok: true, id: id };
+  return { ok: true, id: id, totalEnviados: totalEnviados };
 }
 
 function concluirDemanda_(usuario, body) {
@@ -868,18 +869,31 @@ function enviarNotificacaoDemandaCustom_(dem, tipo, mensagem, autor) {
     autor: autor
   });
 
+  var enviados = 0;
   emailsDestino.forEach(function (to) {
     try {
       GmailApp.sendEmail(to, assunto, corpoTexto, {
         htmlBody: htmlBody,
         name: 'Projeto Integrador II • IFSC Garopaba'
       });
-    } catch (err) {
-      Logger.log('Erro ao enviar para ' + to + ': ' + err);
+      enviados++;
+    } catch (err1) {
+      try {
+        MailApp.sendEmail({
+          to: to,
+          subject: assunto,
+          body: corpoTexto,
+          htmlBody: htmlBody,
+          name: 'Projeto Integrador II • IFSC Garopaba'
+        });
+        enviados++;
+      } catch (err2) {
+        Logger.log('Erro ao enviar para ' + to + ': ' + err2);
+      }
     }
   });
 
-  return emailsDestino.length;
+  return enviados;
 }
 
 function lerDemandasPublicas_() {
@@ -909,27 +923,45 @@ function lerDemandasPublicas_() {
 }
 
 function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor, pontos, criterios) {
+  var enviados = 0;
   try {
     var emailsDestino = [];
     var ss = controle_();
     var abaMembros = ss.getSheetByName('membros');
-    if (!abaMembros) return;
+    if (!abaMembros) return 0;
     var membros = abaMembros.getDataRange().getValues();
 
-    for (var i = 1; i < membros.length; i++) {
-      var e = String(membros[i][0] || '').toLowerCase().trim();
-      var projs = String(membros[i][2] || '').split(',').map(function (s) { return s.trim(); });
-      var status = membros[i][4];
-      if (status === 'ativo' && e.indexOf('@') > 0) {
-        if (projeto === '*' || projs.indexOf(String(projeto)) >= 0 || projs.indexOf('*') >= 0) {
-          if (emailsDestino.indexOf(e) === -1) {
-            emailsDestino.push(e);
+    function coletarDestinatarios(linhas) {
+      var arr = [];
+      for (var i = 1; i < linhas.length; i++) {
+        var e = String(linhas[i][0] || '').toLowerCase().trim();
+        var projs = String(linhas[i][2] || '').split(',').map(function (s) { return s.trim(); });
+        var status = String(linhas[i][4] || '').toLowerCase().trim();
+        if (status === 'ativo' && e.indexOf('@') > 0) {
+          if (projeto === '*' || projs.indexOf(String(projeto)) >= 0 || projs.indexOf('*') >= 0) {
+            if (arr.indexOf(e) === -1) {
+              arr.push(e);
+            }
           }
         }
       }
+      return arr;
     }
 
-    if (!emailsDestino.length) return;
+    emailsDestino = coletarDestinatarios(membros);
+
+    // Se nenhum membro foi encontrado, sincroniza automaticamente a lista do SIGAA e tenta novamente
+    if (!emailsDestino.length) {
+      try {
+        importarTurmaSIGAA();
+        membros = abaMembros.getDataRange().getValues();
+        emailsDestino = coletarDestinatarios(membros);
+      } catch (eImport) {
+        Logger.log('Erro ao auto-importar turma: ' + eImport);
+      }
+    }
+
+    if (!emailsDestino.length) return 0;
 
     var escopoTxt = projeto === '*' ? 'Geral (Todos os Projetos)' : ('Projeto #' + projeto);
     var assunto = '[PI-2] Nova Demanda Docente: ' + titulo + ' [' + escopoTxt + ']';
@@ -955,13 +987,26 @@ function enviarEmailDemanda_(projeto, titulo, descricao, prazo, autor, pontos, c
           htmlBody: htmlBody,
           name: 'Projeto Integrador II • IFSC Garopaba'
         });
-      } catch (err) {
-        Logger.log('Erro ao enviar para ' + to + ': ' + err);
+        enviados++;
+      } catch (err1) {
+        try {
+          MailApp.sendEmail({
+            to: to,
+            subject: assunto,
+            body: corpoTexto,
+            htmlBody: htmlBody,
+            name: 'Projeto Integrador II • IFSC Garopaba'
+          });
+          enviados++;
+        } catch (err2) {
+          Logger.log('Erro ao enviar para ' + to + ': ' + err2);
+        }
       }
     });
   } catch (err) {
     Logger.log('Erro ao enviar e-mail de demanda: ' + err);
   }
+  return enviados;
 }
 
 function lerProjetos_() {

@@ -1595,7 +1595,7 @@ function linhasParaProjetos(linhas) {
       };
     });
 
-    var mediaNotas = countNotasValidas > 0 ? (somaNotas / countNotasValidas).toFixed(1) : '—';
+    var mediaNotas = countNotasValidas > 0 ? (somaNotas / countNotasValidas).toFixed(1).replace('.', ',') : '—';
     var pendentesCount = totalProjetos - avaliadosCount;
 
     var avaliacaoMeuProjeto = meuProjetoId ? projsComAval.find(function (item) { return Number(item.projeto.id) === meuProjetoId; }) : null;
@@ -1655,7 +1655,7 @@ function linhasParaProjetos(linhas) {
                 <div style="text-align:right;">
                   <div style="font-size:0.75rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;">Nota Atual</div>
                   <div class="pi2-nota-val ${avaliacaoMeuProjeto.nota !== null ? (avaliacaoMeuProjeto.nota >= 7 ? 'excelente' : 'ajuste') : ''}" style="font-size:1.4rem;">
-                    ${avaliacaoMeuProjeto.nota !== null ? avaliacaoMeuProjeto.nota.toFixed(1) : 'Em avaliação'}
+                    ${avaliacaoMeuProjeto.nota !== null ? avaliacaoMeuProjeto.nota.toFixed(1).replace('.', ',') : 'Em avaliação'}
                   </div>
                 </div>
                 <div>
@@ -1771,7 +1771,7 @@ function linhasParaProjetos(linhas) {
                 var temGeral = !!(parsedObj.geral && String(parsedObj.geral).trim());
                 var statusClass = item.status === 'aprovado' ? 'tag-ok' : (item.status === 'ajustar' ? 'tag-ajuste' : ((temGeral && qtdDegPreenchidos === 4) ? 'tag-ok' : 'tag-pendente'));
                 var statusLabel = item.status === 'aprovado' ? '🟢 Conforme' : (item.status === 'ajustar' ? '🟡 Ajustar' : ((temGeral && qtdDegPreenchidos === 4) ? '📝 Em Análise' : '⚪ Pendente'));
-                var notaTxt = item.nota !== null ? item.nota.toFixed(1) : '—';
+                var notaTxt = item.nota !== null ? item.nota.toFixed(1).replace('.', ',') : '—';
                 var notaClass = item.nota !== null ? (item.nota >= 7.0 ? 'excelente' : 'ajuste') : '';
 
                 var demEquipe = (PI2.demandas || []).filter(function (d) { return d.projeto === '*' || Number(d.projeto) === Number(p.id); });
@@ -1975,7 +1975,7 @@ function linhasParaProjetos(linhas) {
       esp3_status: parsedObj.d3 ? 'conforme' : 'ausente',
       esp4_status: parsedObj.d4 ? 'conforme' : 'ausente'
     }, (aval && aval.criterios) ? aval.criterios : {});
-    var notaAtual = aval ? (aval.nota || '') : '';
+    var notaAtual = (aval && aval.nota != null && aval.nota !== '') ? String(aval.nota).replace('.', ',') : '';
     var statusAtual = aval ? (aval.status || 'aprovado') : 'aprovado';
     var parecerAtual = aval ? (aval.parecer || '') : '';
 
@@ -2262,9 +2262,9 @@ function linhasParaProjetos(linhas) {
                 </thead>
                 <tbody>
                   ${membros.map(function (m) {
-                    var mediaParesTxt = m.mediaPares !== null && m.mediaPares !== undefined ? Number(m.mediaPares).toFixed(1) : '—';
-                    var autoTxt = m.auto !== null && m.auto !== undefined ? Number(m.auto).toFixed(1) : '—';
-                    var valeVal = m.vale !== null && m.vale !== undefined ? m.vale : (m.mediaPares !== null ? m.mediaPares : '10');
+                    var mediaParesTxt = m.mediaPares !== null && m.mediaPares !== undefined ? Number(m.mediaPares).toFixed(1).replace('.', ',') : '—';
+                    var autoTxt = m.auto !== null && m.auto !== undefined ? Number(m.auto).toFixed(1).replace('.', ',') : '—';
+                    var valeVal = m.vale !== null && m.vale !== undefined ? m.vale : (m.mediaPares !== null ? String(m.mediaPares).replace('.', ',') : '10,0');
 
                     return `
                       <tr>
@@ -2306,7 +2306,7 @@ function linhasParaProjetos(linhas) {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;">
             <div class="pi2-form-group">
               <label>Nota Avaliativa Geral (0,0 a 10,0) *</label>
-              <input type="text" id="pi2-eval-nota" required placeholder="Ex: 9.5" value="${esc(notaAtual)}" style="font-size:1.05rem;font-weight:700;" />
+              <input type="text" id="pi2-eval-nota" required placeholder="Ex: 9,5" value="${esc(notaAtual)}" style="font-size:1.05rem;font-weight:700;" />
             </div>
             <div class="pi2-form-group">
               <label>Parecer Geral de Conformidade *</label>
@@ -2370,11 +2370,12 @@ function linhasParaProjetos(linhas) {
         }
 
         var notaFinal = Math.min(10.0, Math.max(0.0, pontos)).toFixed(1);
+        var notaFormatada = notaFinal.replace('.', ',');
         var notaInput = $('#pi2-eval-nota');
-        if (notaInput) notaInput.value = notaFinal;
+        if (notaInput) notaInput.value = notaFormatada;
         var stSelect = $('#pi2-eval-status');
         if (stSelect) stSelect.value = (Number(notaFinal) >= 7.0) ? 'aprovado' : 'ajustar';
-        aviso('Nota consolidada calculada: ' + notaFinal + ' (Objetivo Geral + 4 Degraus + Artefatos + Demandas).');
+        aviso('Nota consolidada calculada: ' + notaFormatada + ' (Objetivo Geral + 4 Degraus + Artefatos + Demandas).');
       };
     }
 
@@ -2431,7 +2432,7 @@ function linhasParaProjetos(linhas) {
         var payload = {
           projeto: projId,
           tipo: 'objetivos',
-          nota: $('#pi2-eval-nota').value.trim(),
+          nota: ($('#pi2-eval-nota').value || '').trim().replace('.', ','),
           status: $('#pi2-eval-status').value,
           criterios: criteriosObj,
           parecer: $('#pi2-eval-parecer').value.trim()
@@ -2541,7 +2542,7 @@ function linhasParaProjetos(linhas) {
         e.preventDefault();
         var btn = $('#pi2-btn-submit-dem');
         btn.disabled = true;
-        btn.innerText = 'Disparando demanda...';
+        btn.innerText = 'Disparando demanda e notificando por e-mail...';
 
         var payload = {
           projeto: $('#pi2-dem-projeto').value,
@@ -2568,11 +2569,17 @@ function linhasParaProjetos(linhas) {
             pontos: payload.pontos,
             criterios: payload.criterios
           };
+          PI2.demandas = PI2.demandas || [];
           PI2.demandas.unshift(novaDem);
-          aviso('Demanda criada com sucesso!');
           fecharModal();
           renderDemandasTab();
           redesenhar();
+
+          if (res && res.totalEnviados > 0) {
+            aviso('Demanda criada com sucesso e notificação disparada por e-mail para ' + res.totalEnviados + ' estudante(s)!', 'success');
+          } else {
+            aviso('Demanda cadastrada com sucesso! (Nenhum e-mail disparado: confira os integrantes ativos na aba membros da planilha privada).', 'info');
+          }
         }).catch(function (err) {
           btn.disabled = false;
           btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar & Notificar';
