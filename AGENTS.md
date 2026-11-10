@@ -226,6 +226,8 @@ no GitHub **não** atualiza o backend.
 - A pasta fica dentro do Google Drive. Arquivos `Icon` e `.DS_Store` são lixo do macOS e estão no `.gitignore`.
 - Mensagens de commit em português, no padrão `tipo(escopo): descrição` (`feat`, `fix`, `chore`, `docs`).
 
+- **03/11/2026** — Observações de correção por grupo (no formato usado no PI-1): script de console em `correcoes/observacoes-pi2-2026-11-03.js` que abre o modal "Avaliar" de cada projeto (`PI2.abrirModalAvaliarObjetivos`), preenche as observações D1–D4, artigo, GitHub, diagrama, pitch e o parecer, e salva pelo próprio formulário (`salvarAvaliacao`). Nota, situação e checkboxes são preservados. A pasta `correcoes/` entrou no `.gitignore`.
+
 - **27/10/2026** — Alunos relatavam que informações inseridas "não apareciam" no dashboard:
   - **Diagnóstico**: a API e a planilha estavam iguais (o que foi salvo estava gravado). O problema era de exibição e de acesso:
     1. O card mostrava só o Objetivo Geral; os objetivos específicos D1–D4 eram descartados no card e só apareciam no modal.
@@ -364,6 +366,7 @@ no GitHub **não** atualiza o backend.
 
 ## Pendências
 
+- [ ] **Privacidade das avaliações**: o `GET` público (`lerAvaliacoesPublicas_`) devolve nota, rubricas e parecer de todos os grupos, sem login, o que contraria a regra 9. Avaliar devolver só no `POST` autenticado (docente: todas; aluno: as do próprio projeto).
 - [ ] Republicar o `Code.gs` de 27/10/2026 no editor do Apps Script (nova versão) e aprovar no Painel docente os pedidos de acesso dos alunos que entrarem com conta diferente da do SIGAA.
 - [ ] Validação PI-1 (Laura/IFFAR): assinar o parecer, anexar ao rascunho de resposta à coordenação no Gmail e enviar.
 - [ ] COTB 2027: avisar a organização (computeronthebeachsc@gmail.com) que o `.tex` publicado não compila, e confirmar o limite do Resumo Estendido (a página da trilha diz 2 páginas; as instruções gerais e o template dizem 3).

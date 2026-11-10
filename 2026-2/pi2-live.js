@@ -540,9 +540,12 @@ function linhasParaProjetos(linhas) {
   function podeEditar(id) {
     var u = PI2.usuario;
     if (!u || u.status !== 'ativo') return false;
-    return u.papel === 'docente' || (u.projetos || []).indexOf(Number(id)) >= 0;
+    return ehDocente() || (u.projetos || []).indexOf(Number(id)) >= 0;
   }
-  function ehDocente() { return !!(PI2.usuario && PI2.usuario.papel === 'docente' && PI2.usuario.status === 'ativo'); }
+  function ehDocente() {
+    if (PI2.usuario && PI2.usuario.email && isDocenteEmail(PI2.usuario.email)) return true;
+    return !!(PI2.usuario && PI2.usuario.papel === 'docente' && PI2.usuario.status === 'ativo');
+  }
 
   /** Selo com o total de pedidos de acesso e links aguardando decisão do docente. */
   function contadorPendencias() {
@@ -557,12 +560,14 @@ function linhasParaProjetos(linhas) {
     if (!el) return;
     if (!loginConfigurado()) {
       el.innerHTML = '<button class="btn btn-outline" type="button" disabled title="O login será ativado quando o backend for implantado (ver apps-script/README-IMPLANTACAO.md)"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>';
+      atualizarVisibilidadeDocente();
       return;
     }
     var u = PI2.usuario;
     if (!u) {
       el.innerHTML = '<div id="pi2-google-header"></div>';
       botaoGoogle($('#pi2-google-header'), false);
+      atualizarVisibilidadeDocente();
       return;
     }
     var foto = urlSegura(PI2.perfil && PI2.perfil.picture);
@@ -578,9 +583,16 @@ function linhasParaProjetos(linhas) {
       '<button class="pi2-linkbtn" type="button" id="pi2-btn-sair">Sair</button>';
     $('#pi2-btn-sair').onclick = PI2.sair;
     PI2.ganchosAuth.forEach(function (f) { f(el, u); });
-    if ($('#pi2-btn-painel')) $('#pi2-btn-painel').onclick = abrirPainel;
+    if ($('#pi2-btn-painel')) $('#pi2-btn-painel').onclick = function () {
+      if (typeof window.switchTab === 'function') {
+        window.switchTab('docente');
+      } else {
+        abrirPainel();
+      }
+    };
     if ($('#pi2-btn-demanda-top')) $('#pi2-btn-demanda-top').onclick = function () { PI2.abrirModalCriarDemanda('*'); };
     if ($('#pi2-btn-solicitar')) $('#pi2-btn-solicitar').onclick = abrirSolicitacao;
+    atualizarVisibilidadeDocente();
   }
 
   // ------------------------------------------------------------------
@@ -2968,6 +2980,865 @@ function linhasParaProjetos(linhas) {
     `;
   }
 
+  // =============================================================================
+  // GESTÃO DA EQUIPE DOCENTE & PROFESSORES ORIENTADORES (TITULARES E SUBSTITUTOS)
+  // =============================================================================
+  var STORAGE_KEY_DOCENTES = 'pi2_docentes_cache_v1';
+
+  function obterDocentesCadastrados() {
+    if (PI2.docentes && Array.isArray(PI2.docentes) && PI2.docentes.length > 0) {
+      return PI2.docentes;
+    }
+    try {
+      var salvos = localStorage.getItem(STORAGE_KEY_DOCENTES);
+      if (salvos) {
+        var parsed = JSON.parse(salvos);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          PI2.docentes = parsed;
+          return PI2.docentes;
+        }
+      }
+    } catch (e) {}
+
+    var padrao = (window.PI2_CONFIG && Array.isArray(window.PI2_CONFIG.docentesIniciais))
+      ? window.PI2_CONFIG.docentesIniciais
+      : [
+        {
+          nome: 'Prof. Dr. André Moraes',
+          email: 'andre.moraes@ifsc.edu.br',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Semestre 2026/2 (Titular)',
+          observacao: 'Docente titular responsável pelo laboratório e submissão COTB 2027'
+        },
+        {
+          nome: 'Prof. Me. Karyna do Val Landra',
+          email: 'karyna.landra@ifsc.edu.br',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Semestre 2026/2 (Titular)',
+          observacao: 'Docente titular de Projeto Integrador II'
+        },
+        {
+          nome: 'Prof. Dr. Nauber Gavski da Silva',
+          email: 'nauber.gavski@ifsc.edu.br',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Semestre 2026/2 (Titular)',
+          observacao: 'Docente titular de Projeto Integrador II'
+        },
+        {
+          nome: 'Prof. André Moraes (Pessoal / Testes)',
+          email: 'chameoandre@gmail.com',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Acesso Administrativo',
+          observacao: 'Conta para testes e contingência'
+        }
+      ];
+
+    PI2.docentes = padrao;
+    salvarDocentesLocal(padrao);
+    return PI2.docentes;
+  }
+
+  function salvarDocentesLocal(lista) {
+    PI2.docentes = lista;
+    try {
+      localStorage.setItem(STORAGE_KEY_DOCENTES, JSON.stringify(lista));
+    } catch (e) {}
+  }
+
+  function isDocenteEmail(email) {
+    if (!email) return false;
+    var em = String(email).trim().toLowerCase();
+    var lista = obterDocentesCadastrados();
+    var doc = lista.find(function (d) { return String(d.email).trim().toLowerCase() === em; });
+    if (doc) {
+      return doc.status !== 'inativo';
+    }
+    // Salvaguardas institucionais
+    if (em === 'andre.moraes@ifsc.edu.br' || em === 'karyna.landra@ifsc.edu.br' || em === 'nauber.gavski@ifsc.edu.br' || em === 'chameoandre@gmail.com') return true;
+    if (em.indexOf('andre.moraes') !== -1 || em.indexOf('karyna') !== -1 || em.indexOf('nauber') !== -1) return true;
+    return false;
+  }
+
+  function atualizarVisibilidadeDocente() {
+    var doc = ehDocente();
+    if (doc) {
+      document.body.classList.add('is-docente');
+    } else {
+      document.body.classList.remove('is-docente');
+    }
+    $$('.docente-only').forEach(function (el) {
+      if (el.tagName === 'BUTTON' || el.classList.contains('tab-btn')) {
+        el.style.display = doc ? 'inline-flex' : 'none';
+      } else {
+        el.style.display = doc ? '' : 'none';
+      }
+    });
+  }
+
+  function renderizarTabelaDocentes() {
+    var tabela = $('#tabela-docentes-cadastrados');
+    if (!tabela) return;
+
+    var lista = obterDocentesCadastrados();
+    if (!lista || lista.length === 0) {
+      tabela.innerHTML = '<tr><td colspan="6" class="pi2-vazio">Nenhum professor cadastrado ainda.</td></tr>';
+      return;
+    }
+
+    var html = '';
+    lista.forEach(function (doc) {
+      var isAtivo = (doc.status || 'ativo') === 'ativo';
+      var badgeStatus = isAtivo
+        ? '<span class="badge badge-subtle-success"><i class="fa-solid fa-circle-check" style="margin-right:0.25rem;"></i>Ativo</span>'
+        : '<span class="badge badge-subtle-danger"><i class="fa-solid fa-circle-xmark" style="margin-right:0.25rem;"></i>Inativo</span>';
+
+      var badgeTipo = '<span class="badge" style="background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-muted);font-size:0.72rem;">' + esc(doc.tipo || 'substituto') + '</span>';
+      if (doc.tipo === 'titular') {
+        badgeTipo = '<span class="badge badge-subtle-success"><i class="fa-solid fa-crown" style="margin-right:0.25rem;"></i>Titular</span>';
+      } else if (doc.tipo === 'coorientador') {
+        badgeTipo = '<span class="badge badge-subtle-info"><i class="fa-solid fa-user-group" style="margin-right:0.25rem;"></i>Coorientador</span>';
+      } else if (doc.tipo === 'substituto') {
+        badgeTipo = '<span class="badge badge-subtle-warning"><i class="fa-solid fa-user-clock" style="margin-right:0.25rem;"></i>Substituto</span>';
+      }
+
+      var isPrincipal = String(doc.email).toLowerCase().trim() === 'andre.moraes@ifsc.edu.br';
+
+      html += `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:0.45rem;">
+              <i class="fa-solid fa-user-tie" style="color:${doc.tipo === 'titular' ? 'var(--ifsc-green-light)' : 'var(--accent-amber)'};"></i>
+              <strong>${esc(doc.nome || 'Professor')}</strong>
+            </div>
+            ${doc.observacao ? `<small style="color:var(--text-muted);font-size:0.75rem;display:block;">${esc(doc.observacao)}</small>` : ''}
+          </td>
+          <td>
+            <code style="font-family:'Fira Code', monospace;font-size:0.8rem;color:var(--accent-cyan);">${esc(doc.email)}</code>
+          </td>
+          <td>${badgeTipo}</td>
+          <td><span style="font-size:0.82rem;color:var(--text-muted);">${esc(doc.periodo || 'Semestre 2026/2')}</span></td>
+          <td>${badgeStatus}</td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex;gap:0.35rem;justify-content:flex-end;">
+              ${!isPrincipal ? `
+                <button type="button" class="btn btn-outline" style="padding:0.25rem 0.5rem;font-size:0.72rem;" onclick="PI2.alternarStatusDocente('${esc(doc.email)}')" title="Alternar status Ativo/Inativo">
+                  <i class="fa-solid ${isAtivo ? 'fa-user-slash text-warning' : 'fa-user-check text-success'}"></i>
+                </button>
+                <button type="button" class="btn btn-outline" style="padding:0.25rem 0.5rem;font-size:0.72rem;color:#f87171;" onclick="PI2.excluirDocente('${esc(doc.email)}')" title="Remover Docente">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              ` : `<small style="color:var(--text-muted);font-size:0.72rem;">Titular Responsável</small>`}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tabela.innerHTML = html;
+  }
+
+  function abrirModalNovoDocente() {
+    if (!ehDocente()) {
+      aviso('Apenas docentes autorizados podem cadastrar outros orientadores.', 'warning');
+      return;
+    }
+
+    var html = `
+      <div style="margin-bottom:1.25rem;">
+        <span class="proj-id-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-amber);font-weight:700;">
+          <i class="fa-solid fa-user-tie"></i> EQUIPE DOCENTE PI-II
+        </span>
+        <h2 style="font-size:1.35rem;font-weight:700;margin-top:0.4rem;color:var(--text-main);">Cadastrar Professor Orientador</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem;">Conceda permissão docente a professores orientadores, substitutos ou coorientadores convidados.</p>
+      </div>
+      <form id="form-pi2-docente" class="pi2-modal-form">
+        <div class="pi2-form-group" style="margin-bottom: 0.85rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Nome Completo do Docente *</label>
+          <input type="text" id="docente-nome" required placeholder="Ex: Prof. Alberto Barros" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+        </div>
+        <div class="pi2-form-group" style="margin-bottom: 0.85rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">E-mail Institucional *</label>
+          <input type="email" id="docente-email" required placeholder="nome.sobrenome@ifsc.edu.br" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+          <small style="color:var(--text-muted);font-size:0.75rem;">O login Google deve corresponder a este e-mail para acesso administrativo.</small>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;">
+          <div>
+            <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Vínculo / Papel *</label>
+            <select id="docente-tipo" required style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+              <option value="substituto">Professor Substituto Temporário</option>
+              <option value="titular">Docente Titular da UC</option>
+              <option value="coorientador">Coorientador Convidado</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Período / Atuação *</label>
+            <input type="text" id="docente-periodo" required placeholder="Ex: Sextas-feiras (2 semanas)" value="Semestre 2026/2" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+          </div>
+        </div>
+        <div class="pi2-form-group" style="margin-bottom: 1rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Observações / Motivo da Permissão</label>
+          <textarea id="docente-obs" rows="2" placeholder="Ex: Substituição temporária durante licença ou coorientação técnica de projetos..." style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);"></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:0.5rem;border-top:1px solid var(--border-color);padding-top:0.85rem;">
+          <button type="button" class="btn btn-outline" onclick="PI2.fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg, #f59e0b, #d97706);color:#000;font-weight:700;">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Professor Orientador
+          </button>
+        </div>
+      </form>
+    `;
+
+    abrirModal(html, false);
+
+    var form = $('#form-pi2-docente');
+    if (form) {
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        salvarDocenteModal();
+      };
+    }
+  }
+
+  function salvarDocenteModal() {
+    var nome = ($('#docente-nome').value || '').trim();
+    var email = ($('#docente-email').value || '').trim().toLowerCase();
+    var tipo = $('#docente-tipo').value || 'substituto';
+    var periodo = ($('#docente-periodo').value || '').trim();
+    var obs = ($('#docente-obs').value || '').trim();
+
+    if (!nome || !email) {
+      aviso('Nome e e-mail institucional são obrigatórios.', 'warning');
+      return;
+    }
+
+    var lista = obterDocentesCadastrados().slice();
+    var idx = lista.findIndex(function (d) { return String(d.email).trim().toLowerCase() === email; });
+
+    var novoDoc = {
+      nome: nome,
+      email: email,
+      tipo: tipo,
+      status: 'ativo',
+      periodo: periodo,
+      observacao: obs
+    };
+
+    if (idx >= 0) {
+      lista[idx] = Object.assign(lista[idx], novoDoc);
+    } else {
+      lista.push(novoDoc);
+    }
+
+    salvarDocentesLocal(lista);
+    renderizarTabelaDocentes();
+    fecharModal();
+    aviso('Professor Orientador ' + nome + ' cadastrado com sucesso!');
+
+    if (tokenValido()) {
+      api('salvarDocente', { docente: novoDoc }).then(function (res) {
+        if (res && res.mensagem) aviso(res.mensagem);
+      }).catch(function (err) {
+        console.warn('Aviso: docente salvo localmente, sincronização em nuvem pendente:', err);
+      });
+    }
+  }
+
+  function alternarStatusDocente(email) {
+    var em = String(email).trim().toLowerCase();
+    var lista = obterDocentesCadastrados().slice();
+    var doc = lista.find(function (d) { return String(d.email).trim().toLowerCase() === em; });
+    if (!doc) return;
+
+    doc.status = doc.status === 'ativo' ? 'inativo' : 'ativo';
+    salvarDocentesLocal(lista);
+    renderizarTabelaDocentes();
+    aviso('Status do docente ' + (doc.nome || em) + ' atualizado para ' + doc.status + '.');
+
+    if (tokenValido()) {
+      api('salvarDocente', { docente: doc }).catch(function (err) {
+        console.warn('Sincronização em nuvem pendente:', err);
+      });
+    }
+  }
+
+  function excluirDocente(email) {
+    var em = String(email).trim().toLowerCase();
+    if (em === 'andre.moraes@ifsc.edu.br') {
+      aviso('O docente titular principal não pode ser removido.', 'warning');
+      return;
+    }
+    if (!confirm('Deseja realmente remover o docente ' + em + ' da equipe da disciplina?')) {
+      return;
+    }
+
+    var lista = obterDocentesCadastrados().filter(function (d) { return String(d.email).trim().toLowerCase() !== em; });
+    salvarDocentesLocal(lista);
+    renderizarTabelaDocentes();
+    aviso('Docente removido com sucesso.');
+
+    if (tokenValido()) {
+      api('removerDocente', { email: em }).catch(function (err) {
+        console.warn('Remoção em nuvem pendente:', err);
+      });
+    }
+  }
+
+  // =============================================================================
+  // MURAL DE RECADOS & DEMANDAS (COMUNICAÇÃO ASSÍNCRONA E ARTICULAÇÃO)
+  // =============================================================================
+  var STORAGE_KEY_RECADOS = 'pi2_recados_cache_v1';
+
+  var RECADOS_INICIAIS = [
+    {
+      id: 'REC-001',
+      dataHora: '08/11/2026 09:00',
+      autorNome: 'Prof. André Moraes',
+      autorEmail: 'andre.moraes@ifsc.edu.br',
+      papel: 'docente',
+      tipoDestinatario: 'geral',
+      projetoIdAlvo: null,
+      equipeAlvo: 'Toda a Turma',
+      titulo: 'Boas-vindas ao Mural de Recados & Demandas de Projeto Integrador II!',
+      conteudo: 'Estudantes: este espaço é o canal oficial de comunicação assíncrona do PI II. Usem este mural para compartilhar links de formulários do Google Forms para validação dos protótipos e coleta de dados, articular trocas técnicas entre os grupos, relatar dúvidas de bancada e acompanhar as orientações para o COTB 2027.',
+      categoria: 'aviso',
+      linkApoio: 'https://www.overleaf.com',
+      fixado: true,
+      status: 'ativo'
+    },
+    {
+      id: 'REC-002',
+      dataHora: '08/11/2026 09:30',
+      autorNome: 'Prof. André Moraes',
+      autorEmail: 'andre.moraes@ifsc.edu.br',
+      papel: 'docente',
+      tipoDestinatario: 'geral',
+      projetoIdAlvo: null,
+      equipeAlvo: 'Toda a Turma',
+      titulo: 'Submissão ao COTB 2027: Atenção aos 4 Degraus Experimentais',
+      conteudo: 'Lembrem-se de manter o artigo no Overleaf sincronizado, com os 4 degraus experimentais e as figuras geradas em alta resolução (PDF vetorial). A estrutura metodológica deve conter a justificativa, trabalhos relacionados e a análise dos dados coletados.',
+      categoria: 'aviso',
+      linkApoio: '',
+      fixado: true,
+      status: 'ativo'
+    }
+  ];
+
+  function normalizarRecado(r) {
+    if (!r) return null;
+    return {
+      id: r.id || ('REC-' + Math.random().toString(36).substring(2, 8)),
+      dataHora: r.dataHora || r.data_hora || '',
+      autorNome: r.autorNome || r.autor_nome || 'Autor',
+      autorEmail: r.autorEmail || r.autor_email || '',
+      papel: r.papel || 'estudante',
+      tipoDestinatario: r.tipoDestinatario || r.tipo_destinatario || 'geral',
+      projetoIdAlvo: r.projetoIdAlvo != null ? r.projetoIdAlvo : (r.projeto_id_alvo != null ? r.projeto_id_alvo : null),
+      equipeAlvo: r.equipeAlvo || r.equipe_alvo || '',
+      titulo: r.titulo || 'Sem título',
+      conteudo: r.conteudo || '',
+      categoria: r.categoria || 'aviso',
+      linkApoio: r.linkApoio || r.link_apoio || '',
+      fixado: (r.fixado === true || String(r.fixado) === 'true'),
+      status: r.status || 'ativo'
+    };
+  }
+
+  function carregarRecados() {
+    try {
+      var salvos = localStorage.getItem(STORAGE_KEY_RECADOS);
+      if (salvos) {
+        var parsed = JSON.parse(salvos);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          PI2.recados = parsed.map(normalizarRecado).filter(Boolean);
+          renderizarMural();
+        }
+      }
+    } catch (e) {}
+
+    if (!PI2.recados || PI2.recados.length === 0) {
+      PI2.recados = RECADOS_INICIAIS.map(normalizarRecado);
+      salvarRecadosLocal(PI2.recados);
+      renderizarMural();
+    }
+
+    if (loginConfigurado()) {
+      api('listarRecados').then(function (res) {
+        if (res && res.recados && Array.isArray(res.recados) && res.recados.length > 0) {
+          PI2.recados = res.recados.map(normalizarRecado).filter(Boolean);
+          salvarRecadosLocal(PI2.recados);
+          renderizarMural();
+        }
+      }).catch(function (err) {
+        console.warn('Consulta de recados em nuvem ignorada:', err);
+      });
+    }
+  }
+
+  function salvarRecadosLocal(lista) {
+    PI2.recados = lista;
+    try {
+      localStorage.setItem(STORAGE_KEY_RECADOS, JSON.stringify(lista));
+    } catch (e) {}
+  }
+
+  function rotuloCategoriaMural(cat) {
+    switch (cat) {
+      case 'aviso':
+        return '<i class="fa-solid fa-bullhorn" style="color:var(--accent-amber);margin-right:0.25rem;"></i>Aviso Oficial';
+      case 'pesquisa_dados':
+        return '<i class="fa-solid fa-chart-column" style="color:var(--accent-cyan);margin-right:0.25rem;"></i>Coleta de Dados';
+      case 'articulacao':
+        return '<i class="fa-solid fa-handshake" style="color:var(--ifsc-green-light);margin-right:0.25rem;"></i>Articulação';
+      case 'duvida':
+        return '<i class="fa-solid fa-circle-question" style="color:var(--accent-blue);margin-right:0.25rem;"></i>Dúvida';
+      case 'material':
+        return '<i class="fa-solid fa-book-bookmark" style="color:var(--accent-purple);margin-right:0.25rem;"></i>Material';
+      default:
+        return '<i class="fa-solid fa-comments" style="margin-right:0.25rem;"></i>Geral';
+    }
+  }
+
+  function formatarBotaoLinkMural(link) {
+    if (!link) return '';
+    var texto = 'Acessar Recurso';
+    var icone = 'fa-arrow-up-right-from-square';
+
+    if (link.indexOf('forms.gle') !== -1 || link.indexOf('docs.google.com/forms') !== -1) {
+      texto = 'Preencher Google Forms';
+      icone = 'fa-square-poll-vertical';
+    } else if (link.indexOf('colab.research.google.com') !== -1) {
+      texto = 'Abrir Google Colab';
+      icone = 'fa-code';
+    } else if (link.indexOf('overleaf.com') !== -1) {
+      texto = 'Abrir Artigo Overleaf';
+      icone = 'fa-file-code';
+    } else if (link.indexOf('github.com') !== -1) {
+      texto = 'Repositório GitHub';
+      icone = 'fa-brands fa-github';
+    } else if (link.indexOf('drive.google.com') !== -1) {
+      texto = 'Google Drive';
+      icone = 'fa-folder-open';
+    } else if (link.slice(-4).toLowerCase() === '.pdf') {
+      texto = 'Visualizar Guia PDF';
+      icone = 'fa-file-pdf';
+    }
+
+    return `
+      <a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:0.25rem 0.65rem;font-size:0.75rem;font-weight:700;display:inline-flex;align-items:center;gap:0.35rem;text-decoration:none;border-color:var(--accent-cyan);color:var(--accent-cyan);">
+        <i class="fa-solid ${icone}"></i> <span>${texto}</span>
+      </a>
+    `;
+  }
+
+  function podeVerRecado(r, user) {
+    if (!r) return false;
+    if (!r.tipoDestinatario || r.tipoDestinatario === 'geral') return true;
+    if (user && (user.papel === 'docente' || ehDocente())) return true;
+    if (!user) return false;
+
+    if (r.tipoDestinatario === 'equipe') {
+      if (user.projetos && user.projetos.length > 0) {
+        var pid = Number(r.projetoIdAlvo);
+        if (user.projetos.indexOf(pid) !== -1) return true;
+      }
+    }
+    return false;
+  }
+
+  function renderizarMural() {
+    var container = $('#mural-recados-container');
+    if (!container) return;
+
+    var user = PI2.usuario;
+    var todos = (PI2.recados || []).map(normalizarRecado).filter(Boolean);
+
+    var visiveis = todos.filter(function (r) { return podeVerRecado(r, user); });
+
+    var countTodos = visiveis.length;
+    var countDoc = visiveis.filter(function (r) { return r.papel === 'docente' || r.categoria === 'aviso'; }).length;
+    var countDir = visiveis.filter(function (r) { return r.tipoDestinatario === 'equipe'; }).length;
+    var countGer = visiveis.filter(function (r) { return (!r.tipoDestinatario || r.tipoDestinatario === 'geral') && r.papel !== 'docente'; }).length;
+
+    var elTodos = $('#count-mural-todos');
+    var elDoc = $('#count-mural-docente');
+    var elDir = $('#count-mural-direcionados');
+    var elGer = $('#count-mural-geral');
+
+    if (elTodos) elTodos.textContent = String(countTodos);
+    if (elDoc) elDoc.textContent = String(countDoc);
+    if (elDir) elDir.textContent = String(countDir);
+    if (elGer) elGer.textContent = String(countGer);
+
+    var lista = visiveis.slice();
+    var filtroAud = PI2.filtroAudienciaMural || 'todos';
+    if (filtroAud === 'docente') {
+      lista = lista.filter(function (r) { return r.papel === 'docente' || r.categoria === 'aviso'; });
+    } else if (filtroAud === 'minha_equipe') {
+      lista = lista.filter(function (r) { return r.tipoDestinatario === 'equipe'; });
+    } else if (filtroAud === 'geral') {
+      lista = lista.filter(function (r) { return (!r.tipoDestinatario || r.tipoDestinatario === 'geral') && r.papel !== 'docente'; });
+    }
+
+    var filtroCat = PI2.filtroCategoriaMural || 'todas';
+    if (filtroCat !== 'todas') {
+      lista = lista.filter(function (r) { return r.categoria === filtroCat; });
+    }
+
+    lista.sort(function (a, b) {
+      if (a.fixado && !b.fixado) return -1;
+      if (!a.fixado && b.fixado) return 1;
+      var tA = String(a.dataHora || '');
+      var tB = String(b.dataHora || '');
+      return tB.localeCompare(tA);
+    });
+
+    if (lista.length === 0) {
+      container.innerHTML = `
+        <div class="mural-bloco" style="text-align: center; padding: 3rem 1.5rem;">
+          <div style="font-size: 2.2rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">
+            Nenhum recado ou demanda encontrada para este filtro
+          </h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem; max-width: 500px; margin: 0 auto 1.25rem auto;">
+            Use os filtros acima ou clique abaixo para iniciar uma nova conversa, compartilhar links de formulários de pesquisa ou tirar dúvidas.
+          </p>
+          <button type="button" class="btn btn-primary" onclick="PI2.abrirModalNovoRecado()" style="font-weight: 700;">
+            <i class="fa-solid fa-circle-plus me-1"></i> Publicar Primeiro Recado
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    var recadosDocente = lista.filter(function (r) { return r.papel === 'docente' || r.categoria === 'aviso'; });
+    var recadosEquipes = lista.filter(function (r) { return r.papel !== 'docente' && r.categoria !== 'aviso'; });
+
+    var html = '';
+
+    if (recadosDocente.length > 0 && filtroAud !== 'geral') {
+      html += `
+        <div class="mural-bloco mural-bloco-docente">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 1px solid rgba(245, 158, 11, 0.25);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="badge" style="background: var(--accent-amber); color: #000; font-weight: 700; font-size: 0.74rem; padding: 0.25rem 0.6rem;">
+                <i class="fa-solid fa-bullhorn me-1"></i> MURAL DO PROFESSOR — DEMANDAS &amp; ORIENTAÇÕES DO PI II
+              </span>
+              <span style="color: var(--text-muted); font-size: 0.82rem;">Orientações didáticas, critérios e prazos dos checkpoints</span>
+            </div>
+            <button type="button" onclick="switchTab('docente')" class="btn btn-outline docente-only" style="padding: 0.25rem 0.65rem; font-size: 0.75rem; color: var(--accent-amber); border-color: rgba(245, 158, 11, 0.4);">
+              <i class="fa-solid fa-shield-halved me-1"></i> Gestão Docente
+            </button>
+          </div>
+          <div class="mural-grid">
+            ${recadosDocente.map(function (r) { return renderizarCardRecadoIndividual(r, user); }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    if (recadosEquipes.length > 0 && filtroAud !== 'docente') {
+      html += `
+        <div class="mural-bloco mural-bloco-equipes">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 1px solid rgba(22, 163, 74, 0.25);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="badge" style="background: var(--ifsc-green); color: #fff; font-weight: 700; font-size: 0.74rem; padding: 0.25rem 0.6rem;">
+                <i class="fa-solid fa-users me-1"></i> MURAL DE ARTICULAÇÃO &amp; DEMANDAS DOS GRUPOS
+              </span>
+              <span style="color: var(--text-muted); font-size: 0.82rem;">Formulários de pesquisa, trocas de dados e comunicação assíncrona</span>
+            </div>
+            <button type="button" onclick="PI2.abrirModalNovoRecado()" class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.78rem; font-weight: 700;">
+              <i class="fa-solid fa-circle-plus me-1"></i> + Postar Demanda
+            </button>
+          </div>
+          <div class="mural-grid">
+            ${recadosEquipes.map(function (r) { return renderizarCardRecadoIndividual(r, user); }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+  }
+
+  function renderizarCardRecadoIndividual(r, user) {
+    var isDoc = r.papel === 'docente';
+    var isDir = r.tipoDestinatario === 'equipe';
+
+    var borda = 'border-geral';
+    if (isDoc) borda = 'border-docente';
+    else if (isDir) borda = 'border-direcionado';
+
+    var podeExcluir = (user && (user.papel === 'docente' || ehDocente())) ||
+      (user && user.email && r.autorEmail && String(user.email).trim().toLowerCase() === String(r.autorEmail).trim().toLowerCase());
+
+    return `
+      <div class="mural-card ${borda}">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+              <span class="mural-badge-categoria">${rotuloCategoriaMural(r.categoria)}</span>
+              ${r.fixado ? `<span class="mural-badge-fixado"><i class="fa-solid fa-thumbtack me-1"></i>Fixado</span>` : ''}
+              ${isDir ? `
+                <span class="mural-badge-direcionado" title="Direcionado: ${esc(r.equipeAlvo || ('Projeto #' + r.projetoIdAlvo))}">
+                  <i class="fa-solid fa-lock me-1"></i>${esc(r.equipeAlvo || ('Projeto #' + r.projetoIdAlvo))}
+                </span>
+              ` : `
+                <span class="mural-badge-geral">
+                  <i class="fa-solid fa-globe me-1"></i>Geral
+                </span>
+              `}
+            </div>
+            <span class="badge" style="font-family:'Fira Code',monospace;font-size:0.66rem;background:var(--chip-bg);color:var(--text-muted);border:1px solid var(--border-color);padding:0.15rem 0.35rem;">
+              ${esc(r.id)}
+            </span>
+          </div>
+
+          <h4 class="mural-card-title">${esc(r.titulo)}</h4>
+          <div class="mural-card-corpo">${esc(r.conteudo)}</div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); padding-top: 0.65rem; margin-top: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.45rem;">
+            <div style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: var(--text-muted);">
+              <i class="fa-solid ${isDoc ? 'fa-user-tie' : 'fa-circle-user'}" style="color:${isDoc ? 'var(--accent-amber)' : 'var(--accent-cyan)'};"></i>
+              <strong style="color:var(--text-main);">${esc(r.autorNome || 'Autor')}</strong>
+              ${isDoc ? `<span class="badge badge-subtle-warning" style="font-size:0.62rem;padding:0.1rem 0.3rem;">Prof</span>` : ''}
+            </div>
+            <span style="font-size: 0.70rem; color: var(--text-muted);">
+              <i class="fa-regular fa-clock me-1"></i>${esc(r.dataHora || '')}
+            </span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.35rem;">
+            <div>
+              ${formatarBotaoLinkMural(r.linkApoio)}
+            </div>
+            ${podeExcluir ? `
+              <button type="button" class="btn btn-outline" style="padding:0.2rem 0.45rem;font-size:0.7rem;color:#f87171;border-color:rgba(239,68,68,0.3);" onclick="PI2.excluirRecado('${esc(r.id)}')" title="Excluir este recado do Mural">
+                <i class="fa-solid fa-trash me-1"></i>Excluir
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function filtrarMural(tipo, btn) {
+    PI2.filtroAudienciaMural = tipo;
+    var container = $('#mural-audiencia-filtros');
+    if (container) {
+      container.querySelectorAll('.pill').forEach(function (b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+    }
+    renderizarMural();
+  }
+
+  function aplicarFiltroCategoriaMural(cat) {
+    PI2.filtroCategoriaMural = cat;
+    renderizarMural();
+  }
+
+  function alternarAudienciaRecado(val) {
+    var bloco = $('#recado-bloco-equipe-alvo');
+    var select = $('#recado-projeto-alvo');
+    if (!bloco) return;
+    if (val === 'equipe') {
+      bloco.style.display = 'block';
+      if (select) select.setAttribute('required', 'required');
+    } else {
+      bloco.style.display = 'none';
+      if (select) select.removeAttribute('required');
+    }
+  }
+
+  function abrirModalNovoRecado(prefillProjId) {
+    if (!PI2.usuario) {
+      return abrirLogin(function () { abrirModalNovoRecado(prefillProjId); });
+    }
+
+    var isDoc = ehDocente();
+
+    var optionsProjetos = (PI2.bruto || []).map(function (p) {
+      return '<option value="' + p.id + '">#' + p.id + ' • ' + esc(p.team || '') + ' — ' + esc(p.title || 'Sem título') + '</option>';
+    }).join('');
+
+    var html = `
+      <div style="margin-bottom:1.25rem;">
+        <span class="proj-id-badge" style="background:rgba(22,163,74,0.15);color:var(--ifsc-green-light);font-weight:700;">
+          <i class="fa-solid fa-comments"></i> MURAL DE RECADOS &amp; ARTICULAÇÃO
+        </span>
+        <h2 style="font-size:1.35rem;font-weight:700;margin-top:0.4rem;color:var(--text-main);">Publicar Recado / Demanda no Mural</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem;">Comunicação oficial e articulação técnica entre os grupos de Projeto Integrador II.</p>
+      </div>
+      <form id="form-pi2-recado" class="pi2-modal-form">
+        <div class="pi2-form-group" style="margin-bottom: 0.85rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Título do Recado / Demanda *</label>
+          <input type="text" id="recado-titulo" required placeholder="Ex: Formulário de Pesquisa sobre Acessibilidade / Lembrete COTB..." style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;">
+          <div>
+            <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Audiência / Destinatário *</label>
+            <select id="recado-audiencia-tipo" onchange="PI2.alternarAudienciaRecado(this.value)" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+              <option value="geral">Toda a Turma (Geral / Público)</option>
+              <option value="equipe">Grupo Específico</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Categoria *</label>
+            <select id="recado-categoria" required style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+              <option value="aviso">📢 Aviso Oficial</option>
+              <option value="pesquisa_dados">📊 Coleta de Dados / Google Forms</option>
+              <option value="articulacao">🤝 Articulação entre Grupos</option>
+              <option value="duvida">❓ Dúvidas &amp; Mentoria</option>
+              <option value="material">📚 Materiais &amp; Referências</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="recado-bloco-equipe-alvo" style="display:none;margin-bottom:0.85rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--accent-cyan);margin-bottom:0.35rem;">Selecione o Grupo Destinatário *</label>
+          <select id="recado-projeto-alvo" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--accent-cyan);background:var(--input-bg);color:var(--text-main);">
+            <option value="">-- Escolha o grupo --</option>
+            ${optionsProjetos}
+          </select>
+        </div>
+
+        <div class="pi2-form-group" style="margin-bottom: 0.85rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Link de Apoio (Google Forms, Overleaf, Colab, GitHub, Drive...)</label>
+          <input type="url" id="recado-link" placeholder="https://forms.gle/... ou https://overleaf.com/..." style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);">
+        </div>
+
+        <div class="pi2-form-group" style="margin-bottom: 0.85rem;">
+          <label style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.35rem;">Mensagem / Descrição Detalhada *</label>
+          <textarea id="recado-conteudo" required rows="4" placeholder="Descreva o aviso, pedido de preenchimento de formulário ou demanda..." style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-main);"></textarea>
+        </div>
+
+        ${isDoc ? `
+          <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="recado-fixado" style="accent-color: var(--accent-amber); width: 16px; height: 16px;">
+            <label for="recado-fixado" style="font-size: 0.82rem; color: var(--accent-amber); font-weight: 700; cursor: pointer; margin: 0;">
+              Fixar este recado no topo do Mural (Aviso Docente)
+            </label>
+          </div>
+        ` : ''}
+
+        <div style="display:flex;justify-content:flex-end;gap:0.5rem;border-top:1px solid var(--border-color);padding-top:0.85rem;">
+          <button type="button" class="btn btn-outline" onclick="PI2.fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="font-weight:700;">
+            <i class="fa-solid fa-paper-plane"></i> Publicar no Mural
+          </button>
+        </div>
+      </form>
+    `;
+
+    abrirModal(html, true);
+
+    if (prefillProjId != null) {
+      var audSelect = $('#recado-audiencia-tipo');
+      if (audSelect) {
+        audSelect.value = 'equipe';
+        alternarAudienciaRecado('equipe');
+      }
+      var projSelect = $('#recado-projeto-alvo');
+      if (projSelect) projSelect.value = String(prefillProjId);
+    }
+
+    var form = $('#form-pi2-recado');
+    if (form) {
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        salvarRecadoModal();
+      };
+    }
+  }
+
+  function salvarRecadoModal() {
+    var titulo = ($('#recado-titulo').value || '').trim();
+    var audTipo = $('#recado-audiencia-tipo').value || 'geral';
+    var projAlvo = audTipo === 'equipe' ? $('#recado-projeto-alvo').value : null;
+    var categoria = $('#recado-categoria').value || 'aviso';
+    var link = ($('#recado-link').value || '').trim();
+    var conteudo = ($('#recado-conteudo').value || '').trim();
+    var fixadoEl = $('#recado-fixado');
+    var fixado = fixadoEl ? fixadoEl.checked : false;
+
+    if (!titulo || !conteudo) {
+      aviso('Título e mensagem são obrigatórios.', 'warning');
+      return;
+    }
+    if (audTipo === 'equipe' && !projAlvo) {
+      aviso('Por favor selecione o grupo de destino.', 'warning');
+      return;
+    }
+
+    var equipeAlvo = 'Toda a Turma';
+    if (audTipo === 'equipe' && projAlvo) {
+      var proj = (PI2.bruto || []).find(function (p) { return String(p.id) === String(projAlvo); });
+      equipeAlvo = proj ? ('Projeto #' + proj.id + ' (' + (proj.team || '') + ')') : ('Projeto #' + projAlvo);
+    }
+
+    var agora = new Date();
+    var dataHora = doisDigitos(agora.getDate()) + '/' + doisDigitos(agora.getMonth() + 1) + '/' + agora.getFullYear() + ' ' + doisDigitos(agora.getHours()) + ':' + doisDigitos(agora.getMinutes());
+    var user = PI2.usuario || {};
+
+    var novo = {
+      id: 'REC-' + Date.now().toString(36).toUpperCase(),
+      dataHora: dataHora,
+      autorNome: user.nome || 'Participante',
+      autorEmail: user.email || '',
+      papel: ehDocente() ? 'docente' : 'estudante',
+      tipoDestinatario: audTipo,
+      projetoIdAlvo: projAlvo ? Number(projAlvo) : null,
+      equipeAlvo: equipeAlvo,
+      titulo: titulo,
+      conteudo: conteudo,
+      categoria: categoria,
+      linkApoio: link,
+      fixado: fixado,
+      status: 'ativo'
+    };
+
+    var lista = (PI2.recados || []).slice();
+    lista.unshift(novo);
+    salvarRecadosLocal(lista);
+    renderizarMural();
+    fecharModal();
+    aviso('Recado publicado com sucesso no mural!');
+
+    if (tokenValido()) {
+      api('salvarRecado', { recado: novo }).then(function (res) {
+        if (res && res.mensagem) aviso(res.mensagem);
+      }).catch(function (err) {
+        console.warn('Aviso: salvo localmente, sincronização em nuvem pendente:', err);
+      });
+    }
+  }
+
+  function excluirRecado(id) {
+    if (!confirm('Deseja realmente remover este recado do Mural?')) {
+      return;
+    }
+
+    var lista = (PI2.recados || []).filter(function (r) { return r.id !== id; });
+    salvarRecadosLocal(lista);
+    renderizarMural();
+    aviso('Recado excluído do mural.');
+
+    if (tokenValido()) {
+      api('excluirRecado', { id: id }).catch(function (err) {
+        console.warn('Exclusão em nuvem pendente:', err);
+      });
+    }
+  }
+
   // ------------------------------------------------------------------
   // Partida
   // ------------------------------------------------------------------
@@ -2981,7 +3852,16 @@ function linhasParaProjetos(linhas) {
     concluirDemanda: concluirDemanda, removerDemanda: removerDemanda,
     alterarPrazoDemanda: alterarPrazoDemanda, reenviarAlertaDemanda: reenviarAlertaDemanda,
     abrirModalComunicado: abrirModalComunicado, calcularContadorPrazo: calcularContadorPrazo,
-    trocarSubAbaNotas: trocarSubAbaNotas };
+    trocarSubAbaNotas: trocarSubAbaNotas,
+    obterDocentesCadastrados: obterDocentesCadastrados, salvarDocentesLocal: salvarDocentesLocal,
+    isDocenteEmail: isDocenteEmail, atualizarVisibilidadeDocente: atualizarVisibilidadeDocente,
+    renderizarTabelaDocentes: renderizarTabelaDocentes, abrirModalNovoDocente: abrirModalNovoDocente,
+    salvarDocenteModal: salvarDocenteModal, alternarStatusDocente: alternarStatusDocente, excluirDocente: excluirDocente,
+    carregarRecados: carregarRecados, salvarRecadosLocal: salvarRecadosLocal, renderizarMural: renderizarMural,
+    rotuloCategoriaMural: rotuloCategoriaMural, formatarBotaoLinkMural: formatarBotaoLinkMural,
+    filtrarMural: filtrarMural, aplicarFiltroCategoriaMural: aplicarFiltroCategoriaMural,
+    alternarAudienciaRecado: alternarAudienciaRecado, abrirModalNovoRecado: abrirModalNovoRecado,
+    salvarRecadoModal: salvarRecadoModal, excluirRecado: excluirRecado };
 
   PI2.renderNotasTab = renderNotasTab;
   PI2.trocarSubAbaNotas = trocarSubAbaNotas;
@@ -2997,6 +3877,28 @@ function linhasParaProjetos(linhas) {
   PI2.abrirModalComunicado = abrirModalComunicado;
   PI2.calcularContadorPrazo = calcularContadorPrazo;
   PI2.fecharModal = fecharModal;
+
+  PI2.obterDocentesCadastrados = obterDocentesCadastrados;
+  PI2.salvarDocentesLocal = salvarDocentesLocal;
+  PI2.isDocenteEmail = isDocenteEmail;
+  PI2.atualizarVisibilidadeDocente = atualizarVisibilidadeDocente;
+  PI2.renderizarTabelaDocentes = renderizarTabelaDocentes;
+  PI2.abrirModalNovoDocente = abrirModalNovoDocente;
+  PI2.salvarDocenteModal = salvarDocenteModal;
+  PI2.alternarStatusDocente = alternarStatusDocente;
+  PI2.excluirDocente = excluirDocente;
+
+  PI2.carregarRecados = carregarRecados;
+  PI2.salvarRecadosLocal = salvarRecadosLocal;
+  PI2.renderizarMural = renderizarMural;
+  PI2.rotuloCategoriaMural = rotuloCategoriaMural;
+  PI2.formatarBotaoLinkMural = formatarBotaoLinkMural;
+  PI2.filtrarMural = filtrarMural;
+  PI2.aplicarFiltroCategoriaMural = aplicarFiltroCategoriaMural;
+  PI2.alternarAudienciaRecado = alternarAudienciaRecado;
+  PI2.abrirModalNovoRecado = abrirModalNovoRecado;
+  PI2.salvarRecadoModal = salvarRecadoModal;
+  PI2.excluirRecado = excluirRecado;
 
   // 1) Escapa imediatamente a cópia salva no HTML, antes do primeiro desenho.
   PI2.bruto = JSON.parse(JSON.stringify(projectsData));
@@ -3022,6 +3924,9 @@ function linhasParaProjetos(linhas) {
   window.liveSyncFromSheet = PI2.sincronizar;
 
   window.addEventListener('load', function () {
+    obterDocentesCadastrados();
+    atualizarVisibilidadeDocente();
+    carregarRecados();
     desenharAuth();
     desenharRaioX();
     atualizarContadores();
@@ -3032,6 +3937,12 @@ function linhasParaProjetos(linhas) {
     if ($('#tab-demandas') && $('#tab-demandas').classList.contains('active')) {
       renderDemandasTab();
     }
+    if ($('#tab-mural') && $('#tab-mural').classList.contains('active')) {
+      renderizarMural();
+    }
+    if ($('#tab-docente') && $('#tab-docente').classList.contains('active')) {
+      renderizarTabelaDocentes();
+    }
     if (tokenValido()) {
       api('whoami').then(function (d) {
         if (d.usuario) {
@@ -3039,6 +3950,8 @@ function linhasParaProjetos(linhas) {
           guardarSessao(PI2.token, d.usuario);
           desenharAuth();
           redesenhar();
+          renderizarMural();
+          renderizarTabelaDocentes();
         }
       }).catch(function (e) {
         var msg = String(e && e.message || '');

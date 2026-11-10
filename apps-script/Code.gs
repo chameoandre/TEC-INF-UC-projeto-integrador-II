@@ -58,6 +58,7 @@ var CAB_REGISTROS = ['id', 'data', 'projeto', 'email', 'autor', 'tipo', 'texto',
 var CAB_ALTERACOES = ['data', 'projeto', 'email', 'autor', 'campo', 'valor_anterior', 'valor_novo'];
 var CAB_AVALIACOES = ['id', 'atualizado_em', 'projeto', 'tipo', 'nota', 'status', 'criterios', 'parecer', 'avaliador'];
 var CAB_DEMANDAS = ['id', 'data', 'projeto', 'titulo', 'descricao', 'prazo', 'criado_por', 'status', 'concluida_em', 'evidencia', 'concluida_por', 'pontos', 'criterios'];
+var CAB_RECADOS = ['id', 'dataHora', 'autorNome', 'autorEmail', 'papel', 'tipoDestinatario', 'projetoIdAlvo', 'equipeAlvo', 'titulo', 'conteudo', 'categoria', 'linkApoio', 'fixado', 'status'];
 
 // ============================ INSTALAÇÃO ============================
 
@@ -160,7 +161,19 @@ function doPost(e) {
       concluirDemanda: concluirDemanda_,
       removerDemanda: removerDemanda_,
       alterarPrazoDemanda: alterarPrazoDemanda_,
-      notificarDemanda: notificarDemanda_
+      notificarDemanda: notificarDemanda_,
+      listarDocentes: function(usuario, req) { return { docentes: lerDocentes_() }; },
+      salvarDocente: function(usuario, req) {
+        exigirDocente_(usuario);
+        return salvarDocente_(req.docente || req, usuario);
+      },
+      removerDocente: function(usuario, req) {
+        exigirDocente_(usuario);
+        return removerDocente_(req.email, usuario);
+      },
+      listarRecados: function(usuario, req) { return { recados: lerRecados_() }; },
+      salvarRecado: function(usuario, req) { return salvarRecado_(req.recado || req, usuario); },
+      excluirRecado: function(usuario, req) { return excluirRecado_(req.id, usuario); }
     };
     var fn = acoes[req.acao];
     if (!fn) throw new Error('Ação desconhecida.');
@@ -1994,6 +2007,311 @@ function adicionarProjeto11NaPlanilha() {
   var linha = garantirLinhaProjeto11_();
   Logger.log('Projeto 11 garantido na linha ' + linha + ' da planilha Visao-geral.');
 }
+
+// =============================================================================
+// GESTÃO DA EQUIPE DOCENTE & PROFESSORES ORIENTADORES
+// =============================================================================
+
+/**
+ * Lê todos os docentes cadastrados na aba membros e complementa com os titulares padrão.
+ */
+function lerDocentes_() {
+  var ss = controle_();
+  var aba = ss.getSheetByName('membros');
+  var resultado = [];
+  var vistos = {};
+
+  var docentesPadrao = [
+    {
+      nome: 'Prof. Dr. André Moraes',
+      email: 'andre.moraes@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular responsável pelo laboratório e submissão COTB 2027'
+    },
+    {
+      nome: 'Prof. Me. Karyna do Val Landra',
+      email: 'karyna.landra@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular de Projeto Integrador II'
+    },
+    {
+      nome: 'Prof. Dr. Nauber Gavski da Silva',
+      email: 'nauber.gavski@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular de Projeto Integrador II'
+    },
+    {
+      nome: 'Prof. André Moraes (Pessoal / Testes)',
+      email: 'chameoandre@gmail.com',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Acesso Administrativo',
+      observacao: 'Conta para testes e contingência'
+    }
+  ];
+
+  if (aba && aba.getLastRow() >= 2) {
+    var valores = aba.getDataRange().getValues();
+    for (var i = 1; i < valores.length; i++) {
+      var email = String(valores[i][0] || '').toLowerCase().trim();
+      var nome = String(valores[i][1] || '');
+      var tipoPeriodo = String(valores[i][2] || '');
+      var papel = String(valores[i][3] || '').toLowerCase().trim();
+      var status = String(valores[i][4] || 'ativo').toLowerCase().trim();
+
+      if (papel === 'docente' && email) {
+        var tipo = 'substituto';
+        var periodo = tipoPeriodo;
+        if (tipoPeriodo.indexOf('titular') !== -1 || email === 'andre.moraes@ifsc.edu.br' || email === 'karyna.landra@ifsc.edu.br' || email === 'nauber.gavski@ifsc.edu.br') {
+          tipo = 'titular';
+        } else if (tipoPeriodo.indexOf('coorientador') !== -1) {
+          tipo = 'coorientador';
+        }
+
+        vistos[email] = true;
+        resultado.push({
+          nome: nome || email.split('@')[0],
+          email: email,
+          tipo: tipo,
+          status: status || 'ativo',
+          periodo: periodo || (tipo === 'titular' ? 'Semestre 2026/2' : 'Temporário'),
+          observacao: 'Cadastrado no sistema'
+        });
+      }
+    }
+  }
+
+  docentesPadrao.forEach(function (dp) {
+    if (!vistos[dp.email]) {
+      resultado.push(dp);
+    }
+  });
+
+  return resultado;
+}
+
+/**
+ * Cadastra ou atualiza um docente orientador na aba membros.
+ */
+function salvarDocente_(doc, usuario) {
+  if (!doc || !doc.email) {
+    throw new Error('E-mail institucional do docente orientador é obrigatório.');
+  }
+
+  var email = String(doc.email).toLowerCase().trim();
+  var nome = String(doc.nome || email.split('@')[0]);
+  var tipo = String(doc.tipo || 'substituto');
+  var periodo = String(doc.periodo || '');
+  var status = String(doc.status || 'ativo');
+  var agora = new Date().toISOString();
+
+  var ss = controle_();
+  var aba = garantirAba_(ss, 'membros', CAB_MEMBROS);
+  var valores = aba.getDataRange().getValues();
+  var linhaAtualizada = -1;
+
+  for (var i = 1; i < valores.length; i++) {
+    var emailLinha = String(valores[i][0] || '').toLowerCase().trim();
+    if (emailLinha === email) {
+      linhaAtualizada = i + 1;
+      break;
+    }
+  }
+
+  var tipoPeriodo = tipo + (periodo ? ': ' + periodo : '');
+
+  if (linhaAtualizada > 0) {
+    aba.getRange(linhaAtualizada, 2).setValue(nome);
+    aba.getRange(linhaAtualizada, 3).setValue(tipoPeriodo);
+    aba.getRange(linhaAtualizada, 4).setValue('docente');
+    aba.getRange(linhaAtualizada, 5).setValue(status);
+  } else {
+    aba.appendRow([email, nome, tipoPeriodo, 'docente', status, agora, usuario ? usuario.email : 'admin']);
+  }
+
+  return {
+    ok: true,
+    mensagem: 'Docente orientador ' + nome + ' (' + email + ') salvo com sucesso!',
+    docente: {
+      nome: nome,
+      email: email,
+      tipo: tipo,
+      status: status,
+      periodo: periodo || (tipo === 'titular' ? 'Semestre 2026/2' : 'Temporário')
+    }
+  };
+}
+
+/**
+ * Remove um docente orientador ou inativa seu acesso.
+ */
+function removerDocente_(emailDocente, usuario) {
+  if (!emailDocente) throw new Error('E-mail inválido.');
+  var email = String(emailDocente).toLowerCase().trim();
+
+  if (CONFIG.DOCENTES.indexOf(email) !== -1 && email === 'andre.moraes@ifsc.edu.br') {
+    throw new Error('O docente titular principal não pode ser removido.');
+  }
+
+  var ss = controle_();
+  var aba = ss.getSheetByName('membros');
+  if (!aba) throw new Error('Aba membros não encontrada.');
+
+  var valores = aba.getDataRange().getValues();
+  for (var i = 1; i < valores.length; i++) {
+    if (String(valores[i][0]).toLowerCase().trim() === email) {
+      aba.deleteRow(i + 1);
+      return { ok: true, mensagem: 'Docente ' + email + ' removido com sucesso.' };
+    }
+  }
+
+  return { ok: true, mensagem: 'Docente não encontrado na aba dinâmica ou mantido como inativo.' };
+}
+
+// =============================================================================
+// MURAL DE RECADOS & DEMANDAS
+// =============================================================================
+
+/**
+ * Lê todos os recados da aba recados.
+ */
+function lerRecados_() {
+  var ss = controle_();
+  var aba = ss.getSheetByName('recados');
+  if (!aba) {
+    aba = garantirAba_(ss, 'recados', CAB_RECADOS);
+    var agora = new Date().toLocaleString('pt-BR');
+    aba.appendRow([
+      'REC-001', agora, 'Prof. André Moraes', 'andre.moraes@ifsc.edu.br', 'docente',
+      'geral', '', 'Toda a Turma',
+      'Boas-vindas ao Mural de Recados & Demandas de Projeto Integrador II!',
+      'Estudantes: este espaço é o canal oficial de comunicação assíncrona do PI II. Usem este mural para compartilhar links de formulários do Google Forms para validação dos protótipos e coleta de dados, articular trocas técnicas entre os grupos, relatar dúvidas de bancada e acompanhar as orientações para o COTB 2027.',
+      'aviso', 'https://www.overleaf.com', true, 'ativo'
+    ]);
+  }
+
+  var valores = aba.getDataRange().getValues();
+  if (valores.length < 2) return [];
+
+  var resultado = [];
+  for (var i = 1; i < valores.length; i++) {
+    var l = valores[i];
+    if (!l[0]) continue;
+    resultado.push({
+      id: String(l[0]),
+      dataHora: String(l[1]),
+      autorNome: String(l[2]),
+      autorEmail: String(l[3]),
+      papel: String(l[4]),
+      tipoDestinatario: String(l[5]),
+      projetoIdAlvo: l[6] ? parseInt(l[6], 10) : null,
+      equipeAlvo: String(l[7]),
+      titulo: String(l[8]),
+      conteudo: String(l[9]),
+      categoria: String(l[10]),
+      linkApoio: String(l[11]),
+      fixado: String(l[12]).toLowerCase() === 'true' || l[12] === true,
+      status: String(l[13] || 'ativo')
+    });
+  }
+  return resultado;
+}
+
+/**
+ * Salva ou atualiza um recado no mural.
+ */
+function salvarRecado_(dados, usuario) {
+  var titulo = String(dados.titulo || '').trim();
+  var conteudo = String(dados.conteudo || '').trim();
+  if (!titulo || !conteudo) {
+    throw new Error('Título e conteúdo da mensagem são obrigatórios.');
+  }
+
+  var ss = controle_();
+  var aba = garantirAba_(ss, 'recados', CAB_RECADOS);
+
+  var id = dados.id || ('REC-' + Utilities.formatDate(new Date(), 'GMT-3', 'yyyyMMdd-HHmmss'));
+  var dataHora = Utilities.formatDate(new Date(), 'GMT-3', 'dd/MM/yyyy HH:mm');
+  var autorNome = usuario ? usuario.nome : (dados.autorNome || 'Anônimo');
+  var autorEmail = usuario ? usuario.email : (dados.autorEmail || '');
+  var papel = (usuario && usuario.papel === 'docente') ? 'docente' : 'estudante';
+  var tipoDest = dados.tipoDestinatario || 'geral';
+  var projAlvo = dados.projetoIdAlvo || '';
+  var equipeAlvo = dados.equipeAlvo || (tipoDest === 'geral' ? 'Toda a Turma' : ('Projeto #' + projAlvo));
+  var categoria = dados.categoria || 'aviso';
+  var linkApoio = dados.linkApoio || '';
+  var fixado = (papel === 'docente' && (dados.fixado === true || String(dados.fixado) === 'true')) ? true : false;
+  var status = 'ativo';
+
+  aba.appendRow([
+    id, dataHora, autorNome, autorEmail, papel, tipoDest, projAlvo, equipeAlvo,
+    titulo, conteudo, categoria, linkApoio, fixado, status
+  ]);
+
+  return {
+    ok: true,
+    mensagem: 'Recado publicado com sucesso no mural!',
+    recado: {
+      id: id,
+      dataHora: dataHora,
+      autorNome: autorNome,
+      autorEmail: autorEmail,
+      papel: papel,
+      tipoDestinatario: tipoDest,
+      projetoIdAlvo: projAlvo,
+      equipeAlvo: equipeAlvo,
+      titulo: titulo,
+      conteudo: conteudo,
+      categoria: categoria,
+      linkApoio: linkApoio,
+      fixado: fixado,
+      status: status
+    }
+  };
+}
+
+/**
+ * Exclui um recado do mural (docente ou próprio autor).
+ */
+function excluirRecado_(idAlvo, usuario) {
+  if (!idAlvo) throw new Error('ID do recado inválido.');
+  var ss = controle_();
+  var aba = ss.getSheetByName('recados');
+  if (!aba) throw new Error('Aba recados não encontrada.');
+
+  var valores = aba.getDataRange().getValues();
+  var linhaAlvo = -1;
+  var autorRecado = '';
+
+  for (var i = 1; i < valores.length; i++) {
+    if (String(valores[i][0]) === String(idAlvo)) {
+      linhaAlvo = i + 1;
+      autorRecado = String(valores[i][3] || '').toLowerCase().trim();
+      break;
+    }
+  }
+
+  if (linhaAlvo === -1) {
+    throw new Error('Recado ' + idAlvo + ' não foi encontrado.');
+  }
+
+  var isDocente = usuario && usuario.papel === 'docente';
+  var isAutor = usuario && usuario.email && usuario.email.toLowerCase().trim() === autorRecado;
+
+  if (!isDocente && !isAutor) {
+    throw new Error('Acesso negado: você só pode excluir recados criados por você mesmo.');
+  }
+
+  aba.deleteRow(linhaAlvo);
+  return { ok: true, mensagem: 'Recado excluído com sucesso do mural.' };
+}
+
 
 
 

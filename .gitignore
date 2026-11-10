@@ -29,3 +29,6 @@ dados-alunos/
 
 # Validações de estudos (pareceres com dados de estudantes): NUNCA publicar
 validacoes/
+
+# Correções e observações por grupo (texto sobre o trabalho dos estudantes): NUNCA publicar
+correcoes/

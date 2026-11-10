@@ -13,7 +13,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="pi2-live.css?v=3.1">
+  <link rel="stylesheet" href="pi2-live.css?v=3.4">
 
   <style>
     /* ==========================================================================
@@ -2848,89 +2848,97 @@
 </head>
 <body>
 
-  <!-- Top Institutional Bar -->
-  <header>
-    <div class="brand-group">
-      <div class="ifsc-logo">
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot red"></div>
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot"></div>
-        <div class="ifsc-dot"></div>
+  <!-- Header Superior Fixo com Identidade Visual & Menu de Abas Acoplado -->
+  <header class="app-header">
+    <!-- Linha 1: Branding, Badges & Ações Rápidas -->
+    <div class="header-top-row">
+      <!-- Arte da Disciplina, Título & Badges Institucionais -->
+      <div class="header-brand-box">
+        <img src="logo-pi2.jpg" alt="Logo Projeto Integrador II IFSC" class="header-logo" title="Projeto Integrador II - IFSC Garopaba">
+        <div>
+          <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.25rem;">
+            <h1 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 0.45rem;">
+              Projeto Integrador II
+              <span class="badge" style="background: var(--ifsc-green); color: #fff; font-size: 0.68rem; padding: 0.2rem 0.45rem; border-radius: 6px; font-weight: 700;">INF-2024</span>
+            </h1>
+          </div>
+          <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem;">
+            <span class="badge-subtle-success">
+              <i class="fa-solid fa-graduation-cap" style="margin-right: 0.25rem;"></i> Técnico Integrado em Informática
+            </span>
+            <span class="badge-subtle-info">
+              <i class="fa-solid fa-users" style="margin-right: 0.25rem;"></i> 60h &bull; Projetos &amp; Pesquisa
+            </span>
+            <span class="badge-subtle-warning d-none d-md-inline">
+              <i class="fa-solid fa-trophy" style="margin-right: 0.25rem;"></i> Meta: Artigo COTB 2027
+            </span>
+            <small style="color: var(--text-muted); font-size: 0.74rem; margin-left: 0.25rem;">&bull; IFSC Garopaba &bull; Prof. André Moraes &amp; Equipe Docente</small>
+          </div>
+        </div>
       </div>
-      <div class="brand-text">
-        <h1>Projeto Integrador II <span>INF-2024</span></h1>
-        <p>IFSC Câmpus Garopaba • Gestão Pedagógica & Acompanhamento de Projetos</p>
+
+      <!-- Links Rápidos, Login Google & Tema -->
+      <div class="header-actions">
+        <button class="btn btn-outline" onclick="switchTab('avancos-pendencias')" style="border-color: var(--accent-cyan); color: var(--accent-cyan);" title="Raio-X de Avanços e Atendimento de Bancada">
+          <i class="fa-solid fa-clipboard-check"></i> <span class="d-none d-sm-inline">Raio-X da Aula</span>
+        </button>
+
+        <button class="btn btn-outline" onclick="switchTab('cotb-2027')" style="border-color: var(--accent-amber); color: var(--accent-amber);" title="Ver Chamada e Prazos do Computer on the Beach 2027">
+          <i class="fa-solid fa-umbrella-beach"></i> <span class="d-none d-sm-inline">COTB 2027 (15/11)</span>
+        </button>
+
+        <!-- Login Google (preenchido por pi2-live.js) -->
+        <div id="pi2-auth"></div>
+
+        <!-- Live Sync Button -->
+        <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar os dados mais recentes">
+          <i class="fa-solid fa-rotate" id="liveSyncIcon"></i>
+        </button>
+
+        <!-- Theme Switcher Button -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
       </div>
     </div>
 
-    <div class="header-actions">
-      <button class="btn btn-outline" onclick="switchTab('avancos-pendencias')" style="border-color: var(--accent-cyan); color: var(--accent-cyan);" title="Raio-X de Avanços e Atendimento de Bancada">
-        <i class="fa-solid fa-clipboard-check"></i> Raio-X da Aula
+    <!-- Linha 2: Menu Principal por Abas Acoplado na Barra Superior Fixa -->
+    <div class="nav-tabs-custom">
+      <button class="tab-btn active" onclick="switchTab('projetos')">
+        <i class="fa-solid fa-cubes"></i> 1. Painel de Projetos <span class="badge-count">11</span>
       </button>
-
-      <button class="btn btn-outline" onclick="switchTab('cotb-2027')" style="border-color: var(--accent-amber); color: var(--accent-amber);" title="Ver Chamada e Prazos do Computer on the Beach 2027">
-        <i class="fa-solid fa-umbrella-beach"></i> COTB 2027 (15/11)
+      <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
+        <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> 2. Raio-X da Turma
       </button>
-
-      <!-- Login Google (preenchido por pi2-live.js) -->
-      <div id="pi2-auth"></div>
-
-      <!-- Live Sync Button -->
-      <button class="btn btn-outline" id="liveSyncBtn" onclick="liveSyncFromSheet()" title="Buscar os dados mais recentes">
-        <i class="fa-solid fa-rotate" id="liveSyncIcon"></i> Sincronizar
+      <button class="tab-btn" onclick="switchTab('mural')">
+        <i class="fa-solid fa-comments" style="color: var(--ifsc-green-light);"></i> 3. Mural de Recados &amp; Demandas
       </button>
-
-      <!-- Theme Switcher Button -->
-      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">
-        <i class="fa-solid fa-sun" id="themeIcon"></i>
+      <button class="tab-btn" onclick="switchTab('notas')">
+        <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> 4. Notas &amp; Avaliações
+      </button>
+      <button class="tab-btn" onclick="switchTab('demandas')">
+        <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> 5. Demandas &amp; Checkpoints
+      </button>
+      <button class="tab-btn" onclick="switchTab('timeline')">
+        <i class="fa-solid fa-timeline"></i> 6. Timeline de Aulas
+      </button>
+      <button class="tab-btn" onclick="switchTab('eventos')">
+        <i class="fa-solid fa-award" style="color: var(--accent-amber);"></i> 7. Eventos &amp; Artigos
+      </button>
+      <button class="tab-btn" onclick="switchTab('utilitarios')">
+        <i class="fa-solid fa-screwdriver-wrench"></i> 8. Atalhos &amp; Links
+      </button>
+      <button class="tab-btn" onclick="switchTab('cotb-2027')">
+        <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> 9. Guia COTB 2027
+      </button>
+      <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
+        <i class="fa-solid fa-file-code"></i> 10. Status Overleaf <span class="badge-count" id="badge-overleaf-alert">2</span>
+      </button>
+      <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="Área restrita de gestão docente">
+        <i class="fa-solid fa-shield-halved text-warning"></i> 11. Painel Docente <span class="badge badge-subtle-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
       </button>
     </div>
   </header>
-
-  <!-- Navigation Tabs Dividida em 2 Linhas com Cor de Destaque -->
-  <nav class="nav-tabs-bar">
-    <!-- Linha 1: Gestao Pedagogica, Acompanhamento & Avaliacao -->
-    <div class="nav-tabs-row">
-      <span class="nav-tabs-group-label"><i class="fa-solid fa-layer-group"></i> Gest&atilde;o:</span>
-      <button class="tab-btn active" onclick="switchTab('projetos')">
-        <i class="fa-solid fa-cubes"></i> Painel de Projetos <span class="badge-count">11</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
-        <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> Raio-X da Turma (Pauta)
-      </button>
-      <button class="tab-btn" onclick="switchTab('notas')">
-        <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> Notas &amp; Avalia&ccedil;&otilde;es
-      </button>
-      <button class="tab-btn" onclick="switchTab('demandas')">
-        <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> Demandas &amp; Checkpoints
-      </button>
-      <button class="tab-btn" onclick="switchTab('timeline')">
-        <i class="fa-solid fa-timeline"></i> Timeline de Aulas
-      </button>
-    </div>
-
-    <!-- Linha 2: Producao Cientifica, Eventos, Escrita & Utilitarios -->
-    <div class="nav-tabs-row">
-      <span class="nav-tabs-group-label"><i class="fa-solid fa-flask"></i> Produ&ccedil;&atilde;o &amp; Pesquisa:</span>
-      <button class="tab-btn" onclick="switchTab('eventos')">
-        <i class="fa-solid fa-award" style="color: var(--accent-amber);"></i> Eventos de Computa&ccedil;&atilde;o <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); font-weight: 700;">Submiss&otilde;es</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('utilitarios')">
-        <i class="fa-solid fa-screwdriver-wrench" style="color: var(--ifsc-green-light);"></i> Atalhos &amp; Utilit&aacute;rios
-      </button>
-      <button class="tab-btn" onclick="switchTab('cotb-2027')">
-        <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> Guia COTB 2027 <span class="badge-count" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 700;">15/11</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
-        <i class="fa-solid fa-file-code"></i> Status Overleaf &amp; Links <span class="badge-count" id="badge-overleaf-alert">2 alertas</span>
-      </button>
-    </div>
-  </nav>
 
   <!-- Main Body -->
   <main>
@@ -7459,6 +7467,157 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
       <!-- Injetado dinamicamente via pi2-live.js -->
     </section>
 
+    <!-- =========================================================================
+         ABA: MURAL DE RECADOS & DEMANDAS
+         ========================================================================= -->
+    <section id="tab-mural" class="tab-content">
+      <!-- Banner de Cabeçalho do Mural -->
+      <div class="mural-banner-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+              <span class="badge badge-subtle-success" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+                <i class="fa-solid fa-comments me-1"></i> Comunicação Assíncrona &amp; Articulação
+              </span>
+              <span class="badge" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.72rem;">Mural da Turma</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">
+              Mural de Recados &amp; Demandas do Projeto Integrador II
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+              Espaço compartilhado para orientações docentes, pedidos de formulários do Google Forms, trocas de dados entre grupos e avisos pontuais.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline" onclick="PI2.carregarRecados()" title="Atualizar recados agora" style="font-size: 0.82rem;">
+              <i class="fa-solid fa-rotate me-1"></i> Atualizar
+            </button>
+            <button type="button" class="btn btn-primary" onclick="PI2.abrirModalNovoRecado()" style="font-size: 0.82rem; font-weight: 700;">
+              <i class="fa-solid fa-circle-plus me-1"></i> + Novo Recado / Demanda
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros e Categorias -->
+      <div class="mural-filter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);"><i class="fa-solid fa-filter"></i> Filtrar Audiência:</span>
+            <div class="filter-pills" id="mural-audiencia-filtros" style="display: inline-flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button type="button" class="pill active" onclick="PI2.filtrarMural('todos', this)">
+                Todos Visíveis (<span id="count-mural-todos">0</span>)
+              </button>
+              <button type="button" class="pill" onclick="PI2.filtrarMural('docente', this)">
+                <i class="fa-solid fa-bullhorn" style="color: var(--accent-amber);"></i> Avisos Docentes (<span id="count-mural-docente">0</span>)
+              </button>
+              <button type="button" class="pill" onclick="PI2.filtrarMural('minha_equipe', this)">
+                <i class="fa-solid fa-lock" style="color: var(--accent-cyan);"></i> Meu Grupo / Direcionados (<span id="count-mural-direcionados">0</span>)
+              </button>
+              <button type="button" class="pill" onclick="PI2.filtrarMural('geral', this)">
+                <i class="fa-solid fa-globe"></i> Gerais da Turma (<span id="count-mural-geral">0</span>)
+              </button>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <label for="filtro-mural-categoria" style="font-size: 0.82rem; color: var(--text-muted); font-weight: 700; white-space: nowrap; margin: 0;">
+              Categoria:
+            </label>
+            <select id="filtro-mural-categoria" onchange="PI2.aplicarFiltroCategoriaMural(this.value)" style="padding: 0.35rem 0.65rem; font-size: 0.82rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main);">
+              <option value="todas">Todas as categorias</option>
+              <option value="aviso">📢 Avisos Oficiais</option>
+              <option value="pesquisa_dados">📊 Coleta de Dados &amp; Formulários</option>
+              <option value="articulacao">🤝 Articulação entre Grupos</option>
+              <option value="duvida">❓ Dúvidas &amp; Mentoria</option>
+              <option value="material">📚 Materiais &amp; Referências</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container do Mural Dinâmico (Bloco Docente + Bloco Estudantes) -->
+      <div id="mural-recados-container">
+        <!-- Renderizado dinamicamente por pi2-live.js -->
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         ABA: PAINEL DE GESTÃO DOCENTE (RESTRITO)
+         ========================================================================= -->
+    <section id="tab-docente" class="tab-content docente-only">
+      <!-- BANNER SUPERIOR DOCENTE -->
+      <div class="mural-banner-card" style="border-left: 5px solid var(--accent-amber); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(22, 163, 74, 0.04) 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--accent-amber);">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <span class="badge badge-subtle-danger" style="font-weight: 700; font-size: 0.68rem;">ÁREA RESTRITA</span>
+                <span class="badge badge-subtle-warning" style="font-size: 0.68rem;">Gestão Docente</span>
+              </div>
+              <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem;">
+                Painel de Controle e Gestão da Equipe Docente
+              </h3>
+              <p style="color: var(--text-muted); font-size: 0.84rem; margin: 0;">
+                Gerenciamento de professores orientadores, substitutos temporários, avisos e permissões de acesso ao PI II.
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="https://docs.google.com/spreadsheets/d/1w7wAwPBdNTfh7lvynoP7x35S__lvRyuTjRqP26oEhNQ/edit" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.82rem;">
+              <i class="fa-solid fa-file-excel me-1"></i> Abrir Planilha Google Sheets
+            </a>
+            <button type="button" class="btn btn-outline" onclick="liveSyncFromSheet()" style="font-size: 0.82rem;">
+              <i class="fa-solid fa-rotate me-1"></i> Atualizar Dados
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO DE GESTÃO DA EQUIPE DOCENTE & PROFESSORES ORIENTADORES -->
+      <div class="pi2-demandas-sinc-box" style="margin-top: 1rem; border-top: 3.5px solid var(--accent-amber);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="badge badge-subtle-warning" style="font-size: 0.7rem; font-weight: 700;">
+                <i class="fa-solid fa-user-tie me-1"></i> Docentes &amp; Orientadores
+              </span>
+              <span class="badge" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.68rem;">Permissões de Acesso</span>
+            </div>
+            <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem;">
+              <i class="fa-solid fa-shield-check" style="color: var(--accent-amber);"></i> Equipe Docente &amp; Professores Orientadores do PI II
+            </h4>
+            <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+              Controle de acesso administrativo ao dashboard para docentes titulares, substitutos temporários e coorientadores convidados.
+            </p>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="PI2.abrirModalNovoDocente()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 700; font-size: 0.82rem;">
+            <i class="fa-solid fa-user-plus me-1"></i> + Cadastrar Professor Orientador
+          </button>
+        </div>
+
+        <div class="pi2-table-wrap">
+          <table class="pi2-table">
+            <thead>
+              <tr>
+                <th>Professor / Orientador</th>
+                <th>E-mail Institucional</th>
+                <th>Vínculo / Papel</th>
+                <th>Período / Atuação</th>
+                <th>Status Administrativo</th>
+                <th style="text-align: right; width: 140px;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-docentes-cadastrados">
+              <!-- Renderizado dinamicamente por pi2-live.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Modal Project Deep View -->
@@ -8473,6 +8632,12 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
       if (tabId === 'demandas' && window.PI2 && typeof window.PI2.renderDemandasTab === 'function') {
         window.PI2.renderDemandasTab();
       }
+      if (tabId === 'mural' && window.PI2 && typeof window.PI2.renderizarMural === 'function') {
+        window.PI2.renderizarMural();
+      }
+      if (tabId === 'docente' && window.PI2 && typeof window.PI2.renderizarTabelaDocentes === 'function') {
+        window.PI2.renderizarTabelaDocentes();
+      }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -8735,8 +8900,8 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
     }
 
   </script>
-  <script src="pi2-config.js?v=3.3"></script>
-  <script src="pi2-live.js?v=3.3"></script>
-  <script src="pi2-notas.js?v=3.3"></script>
+  <script src="pi2-config.js?v=3.4"></script>
+  <script src="pi2-live.js?v=3.4"></script>
+  <script src="pi2-notas.js?v=3.4"></script>
 </body>
 </html>

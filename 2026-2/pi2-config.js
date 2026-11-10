@@ -13,5 +13,41 @@ window.PI2_CONFIG = {
   sheetTab: 'Visao-geral',
 
   // Dias sem registro a partir dos quais um grupo aparece como "parado" no Raio-X.
-  diasParado: 14
+  diasParado: 14,
+
+  // Equipe Docente & Professores Orientadores (Titulares, Substitutos e Coorientadores com Acesso Administrativo)
+  docentesIniciais: [
+    {
+      nome: 'Prof. Dr. André Moraes',
+      email: 'andre.moraes@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular responsável pelo laboratório e submissão COTB 2027'
+    },
+    {
+      nome: 'Prof. Me. Karyna do Val Landra',
+      email: 'karyna.landra@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular de Projeto Integrador II'
+    },
+    {
+      nome: 'Prof. Dr. Nauber Gavski da Silva',
+      email: 'nauber.gavski@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular de Projeto Integrador II'
+    },
+    {
+      nome: 'Prof. André Moraes (Pessoal / Testes)',
+      email: 'chameoandre@gmail.com',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Acesso Administrativo',
+      observacao: 'Conta para testes e contingência'
+    }
+  ]
 };
