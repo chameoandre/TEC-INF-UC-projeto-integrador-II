@@ -1415,6 +1415,20 @@ function linhasParaProjetos(linhas) {
       var hora = PI2.atualizadoEm ? doisDigitos(PI2.atualizadoEm.getHours()) + ':' + doisDigitos(PI2.atualizadoEm.getMinutes()) : '';
       fonte.textContent = 'Dados: ' + PI2.fonte + (hora ? ', lidos às ' + hora : (window.PI2_BAKED_AT ? ' em ' + window.PI2_BAKED_AT : ''));
     }
+
+    // Atualiza selo dinâmico de aprovações pendentes para docentes
+    var p = (PI2.usuario && PI2.usuario.pendencias) || PI2._pendencias;
+    var nPend = p ? (p.acessos || 0) + (p.links || 0) : 0;
+    var badgeDoc = $('#badge-docente-pendencias');
+    if (badgeDoc) {
+      if (ehDocente() && nPend > 0) {
+        badgeDoc.textContent = String(nPend);
+        badgeDoc.style.display = 'inline-block';
+        badgeDoc.title = nPend + ' aprovação(ões) pendente(s) aguardando você';
+      } else {
+        badgeDoc.style.display = 'none';
+      }
+    }
   }
 
   function kpi(titulo, valor, sub, cor, icone) {
@@ -3073,10 +3087,28 @@ function linhasParaProjetos(linhas) {
     $$('.docente-only').forEach(function (el) {
       if (el.tagName === 'BUTTON' || el.classList.contains('tab-btn')) {
         el.style.display = doc ? 'inline-flex' : 'none';
+      } else if (el.classList.contains('tab-content')) {
+        // As abas tab-content são controladas exclusivamente pela classe .active via switchTab
+        if (!doc) el.classList.remove('active');
+        el.style.removeProperty('display');
       } else {
         el.style.display = doc ? '' : 'none';
       }
     });
+
+    // Atualização dinâmica do selo de pendências no botão docente
+    var p = (PI2.usuario && PI2.usuario.pendencias) || PI2._pendencias;
+    var nPend = p ? (p.acessos || 0) + (p.links || 0) : 0;
+    var badgeDoc = $('#badge-docente-pendencias');
+    if (badgeDoc) {
+      if (doc && nPend > 0) {
+        badgeDoc.textContent = String(nPend);
+        badgeDoc.style.display = 'inline-block';
+        badgeDoc.title = nPend + ' aprovação(ões) pendente(s) aguardando você';
+      } else {
+        badgeDoc.style.display = 'none';
+      }
+    }
   }
 
   function renderizarTabelaDocentes() {
@@ -3285,6 +3317,150 @@ function linhasParaProjetos(linhas) {
         console.warn('Remoção em nuvem pendente:', err);
       });
     }
+  }
+
+  // =============================================================================
+  // PAINEL DOCENTE: CENTRAL DE APROVAÇÕES E SOLICITAÇÕES PENDENTES
+  // =============================================================================
+  function carregarPainelDocenteTab() {
+    var cont = $('#container-pendencias-docente');
+    var badgeTab = $('#badge-total-pendencias-tab');
+    if (!cont) return;
+
+    if (!tokenValido() || !ehDocente()) {
+      cont.innerHTML = '<div class="pi2-vazio" style="padding: 1.25rem 0; font-size: 0.86rem; color: var(--text-muted);">' +
+        '<i class="fa-solid fa-lock me-1"></i> Faça login com sua conta institucional docente para gerenciar aprovações de acesso e links em tempo real.</div>';
+      return;
+    }
+
+    cont.innerHTML = '<div style="text-align:center; padding: 1.5rem 0; color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-circle-notch fa-spin me-2"></i>Consultando pedidos e solicitações pendentes...</div>';
+
+    api('painel').then(function (d) {
+      desenharPainelDocenteTab(d);
+    }).catch(function (err) {
+      cont.innerHTML = '<div class="pi2-vazio" style="padding: 1.25rem 0; font-size: 0.86rem; color: var(--text-muted);">' +
+        '<i class="fa-solid fa-triangle-exclamation text-amber me-1"></i> Não foi possível consultar as pendências da nuvem (' + esc(err.message) + '). Verifique a conexão com o Google Apps Script.</div>';
+    });
+  }
+
+  function desenharPainelDocenteTab(d) {
+    var cont = $('#container-pendencias-docente');
+    var badgeTab = $('#badge-total-pendencias-tab');
+    if (!cont) return;
+
+    var pend = (d && d.membros ? d.membros.filter(function (m) { return m.status === 'pendente'; }) : []);
+    var lp = (d && d.linksPendentes ? d.linksPendentes : []);
+    var totalPend = pend.length + lp.length;
+
+    // Atualiza pendências no usuário local
+    if (!PI2.usuario) PI2.usuario = {};
+    PI2.usuario.pendencias = { acessos: pend.length, links: lp.length };
+    PI2._pendencias = PI2.usuario.pendencias;
+
+    if (badgeTab) {
+      badgeTab.textContent = totalPend === 0 ? '0 pendências' : (totalPend === 1 ? '1 pendência' : totalPend + ' pendências');
+      if (totalPend > 0) {
+        badgeTab.style.background = 'rgba(239, 68, 68, 0.15)';
+        badgeTab.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+        badgeTab.style.color = '#ef4444';
+      } else {
+        badgeTab.style.background = 'rgba(255, 255, 255, 0.08)';
+        badgeTab.style.borderColor = 'var(--border-color)';
+        badgeTab.style.color = 'var(--text-muted)';
+      }
+    }
+
+    var badgeDoc = $('#badge-docente-pendencias');
+    if (badgeDoc) {
+      if (totalPend > 0) {
+        badgeDoc.textContent = String(totalPend);
+        badgeDoc.style.display = 'inline-block';
+        badgeDoc.title = totalPend + ' aprovação(ões) pendente(s) aguardando você';
+      } else {
+        badgeDoc.style.display = 'none';
+      }
+    }
+
+    if (totalPend === 0) {
+      cont.innerHTML = '<div class="pi2-vazio" style="padding: 1.25rem 0; font-size: 0.86rem; color: var(--text-muted);">' +
+        '<i class="fa-solid fa-circle-check" style="color: var(--ifsc-green); margin-right: 0.35rem;"></i>' +
+        'Nenhuma solicitação ou link aguardando aprovação no momento. Todas as decisões estão em dia!' +
+        '</div>';
+      return;
+    }
+
+    var html = '';
+    var tituloProj = function (id) {
+      var p = projetoBruto(id);
+      return p ? '#' + doisDigitos(p.id) + ' ' + esc(p.title) : '#' + esc(id);
+    };
+
+    if (pend.length > 0) {
+      html += '<h5 style="font-size:0.86rem;font-weight:700;color:var(--text-main);margin:0.5rem 0 0.4rem 0;"><i class="fa-solid fa-user-plus me-1 text-amber"></i> Pedidos de Acesso aos Projetos (' + pend.length + ')</h5>' +
+        '<div class="pi2-table-wrap" style="margin-bottom:1rem;"><table class="pi2-table"><thead><tr><th>Estudante</th><th>E-mail</th><th>Projeto Solicitado</th><th style="text-align:right;">Decisão Docente</th></tr></thead><tbody>';
+      pend.forEach(function (m) {
+        html += '<tr>' +
+          '<td><strong>' + esc(m.nome || 'Estudante') + '</strong></td>' +
+          '<td><span style="font-size:0.8rem;color:var(--text-muted);">' + esc(m.email) + '</span></td>' +
+          '<td><span class="badge badge-subtle-success">' + tituloProj(m.projetos) + '</span></td>' +
+          '<td style="text-align:right;white-space:nowrap;">' +
+            '<button class="btn btn-outline" type="button" style="padding:0.25rem 0.55rem;font-size:0.75rem;border-color:var(--ifsc-green);color:var(--ifsc-green);margin-right:0.35rem;" data-tab-aprovar="' + esc(m.email) + '"><i class="fa-solid fa-check me-1"></i>Aprovar</button>' +
+            '<button class="btn btn-outline" type="button" style="padding:0.25rem 0.55rem;font-size:0.75rem;border-color:#ef4444;color:#ef4444;" data-tab-recusar="' + esc(m.email) + '"><i class="fa-solid fa-xmark me-1"></i>Recusar</button>' +
+          '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+
+    if (lp.length > 0) {
+      html += '<h5 style="font-size:0.86rem;font-weight:700;color:var(--text-main);margin:0.5rem 0 0.4rem 0;"><i class="fa-solid fa-link me-1 text-cyan"></i> Links Públicos Aguardando Validação (' + lp.length + ')</h5>' +
+        '<div class="pi2-table-wrap"><table class="pi2-table"><thead><tr><th>Projeto</th><th>Identificação do Link</th><th>Autor / Data</th><th style="text-align:right;">Decisão Docente</th></tr></thead><tbody>';
+      lp.forEach(function (l) {
+        html += '<tr>' +
+          '<td><span class="badge badge-subtle-success">' + tituloProj(l.projeto) + '</span></td>' +
+          '<td><strong>' + esc(l.nome) + '</strong><br><a href="' + esc(urlSegura(l.url)) + '" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent-cyan);">' + esc(l.url.length > 50 ? l.url.slice(0, 50) + '…' : l.url) + '</a></td>' +
+          '<td><span style="font-size:0.78rem;color:var(--text-muted);">' + esc(l.autor || '—') + ' &bull; ' + esc(dataBr(l.data)) + '</span></td>' +
+          '<td style="text-align:right;white-space:nowrap;">' +
+            '<button class="btn btn-outline" type="button" style="padding:0.25rem 0.55rem;font-size:0.75rem;border-color:var(--ifsc-green);color:var(--ifsc-green);margin-right:0.35rem;" data-tab-link-ok="' + esc(l.id) + '"><i class="fa-solid fa-check me-1"></i>Aprovar</button>' +
+            '<button class="btn btn-outline" type="button" style="padding:0.25rem 0.55rem;font-size:0.75rem;border-color:#ef4444;color:#ef4444;" data-tab-link-nao="' + esc(l.id) + '"><i class="fa-solid fa-xmark me-1"></i>Recusar</button>' +
+          '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+
+    cont.innerHTML = html;
+
+    $$('[data-tab-aprovar],[data-tab-recusar]', cont).forEach(function (b) {
+      b.onclick = function () {
+        b.disabled = true;
+        var email = b.dataset.tabAprovar || b.dataset.tabRecusar;
+        var aprovar = !!b.dataset.tabAprovar;
+        api('decidirAcesso', { email: email, aprovar: aprovar }).then(function (res) {
+          aviso(aprovar ? 'Acesso de ' + email + ' aprovado!' : 'Solicitação recusada.');
+          desenharPainelDocenteTab(res);
+          desenharAuth();
+        }).catch(function (e) {
+          b.disabled = false;
+          aviso(e.message, 'warning');
+        });
+      };
+    });
+
+    $$('[data-tab-link-ok],[data-tab-link-nao]', cont).forEach(function (b) {
+      b.onclick = function () {
+        b.disabled = true;
+        var id = b.dataset.tabLinkOk || b.dataset.tabLinkNao;
+        var aprovar = !!b.dataset.tabLinkOk;
+        api('decidirLink', { id: id, aprovar: aprovar }).then(function (res) {
+          if (res.links) PI2.links = res.links;
+          aviso(aprovar ? 'Link aprovado com sucesso!' : 'Link recusado.');
+          redesenhar();
+          desenharPainelDocenteTab(res);
+        }).catch(function (e) {
+          b.disabled = false;
+          aviso(e.message, 'warning');
+        });
+      };
+    });
   }
 
   // =============================================================================
@@ -3857,6 +4033,7 @@ function linhasParaProjetos(linhas) {
     isDocenteEmail: isDocenteEmail, atualizarVisibilidadeDocente: atualizarVisibilidadeDocente,
     renderizarTabelaDocentes: renderizarTabelaDocentes, abrirModalNovoDocente: abrirModalNovoDocente,
     salvarDocenteModal: salvarDocenteModal, alternarStatusDocente: alternarStatusDocente, excluirDocente: excluirDocente,
+    carregarPainelDocenteTab: carregarPainelDocenteTab, desenharPainelDocenteTab: desenharPainelDocenteTab,
     carregarRecados: carregarRecados, salvarRecadosLocal: salvarRecadosLocal, renderizarMural: renderizarMural,
     rotuloCategoriaMural: rotuloCategoriaMural, formatarBotaoLinkMural: formatarBotaoLinkMural,
     filtrarMural: filtrarMural, aplicarFiltroCategoriaMural: aplicarFiltroCategoriaMural,
@@ -3887,6 +4064,8 @@ function linhasParaProjetos(linhas) {
   PI2.salvarDocenteModal = salvarDocenteModal;
   PI2.alternarStatusDocente = alternarStatusDocente;
   PI2.excluirDocente = excluirDocente;
+  PI2.carregarPainelDocenteTab = carregarPainelDocenteTab;
+  PI2.desenharPainelDocenteTab = desenharPainelDocenteTab;
 
   PI2.carregarRecados = carregarRecados;
   PI2.salvarRecadosLocal = salvarRecadosLocal;
@@ -3942,6 +4121,7 @@ function linhasParaProjetos(linhas) {
     }
     if ($('#tab-docente') && $('#tab-docente').classList.contains('active')) {
       renderizarTabelaDocentes();
+      carregarPainelDocenteTab();
     }
     if (tokenValido()) {
       api('whoami').then(function (d) {
@@ -3952,6 +4132,7 @@ function linhasParaProjetos(linhas) {
           redesenhar();
           renderizarMural();
           renderizarTabelaDocentes();
+          if (ehDocente()) carregarPainelDocenteTab();
         }
       }).catch(function (e) {
         var msg = String(e && e.message || '');

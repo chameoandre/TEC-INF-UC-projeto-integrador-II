@@ -13,7 +13,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="pi2-live.css?v=3.5">
+  <link rel="stylesheet" href="pi2-live.css?v=3.6">
 
   <style>
     /* ==========================================================================
@@ -2934,8 +2934,8 @@
       <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')" title="10. Diagnóstico &amp; Status Overleaf">
         <i class="fa-solid fa-file-code"></i> 10. Overleaf <span class="badge-count" id="badge-overleaf-alert">2</span>
       </button>
-      <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="11. Gestão e Controle Docente (Restrito)">
-        <i class="fa-solid fa-shield-halved text-warning"></i> 11. Docente <span class="badge badge-subtle-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
+      <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="11. Gestão e Controle Docente &amp; Aprovações">
+        <i class="fa-solid fa-shield-halved text-warning"></i> 11. Docente <span class="badge-count" id="badge-docente-pendencias" style="display:none; background:#ef4444; color:#ffffff;" title="Aprovações pendentes">0</span>
       </button>
     </div>
   </header>
@@ -7576,6 +7576,38 @@ A Figura~\ref{fig:latencia_jiftv} demonstra a evolução temporal da latência d
         </div>
       </div>
 
+      <!-- SEÇÃO DE APROVAÇÕES E SOLICITAÇÕES PENDENTES -->
+      <div class="pi2-demandas-sinc-box" id="bloco-pendencias-docente" style="margin-top: 1rem; border-top: 3.5px solid var(--accent-red, #ef4444);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.85rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.7rem; font-weight: 700;">
+                <i class="fa-solid fa-user-check me-1"></i> Central de Aprovações
+              </span>
+              <span class="badge" id="badge-total-pendencias-tab" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">
+                0 pendências
+              </span>
+            </div>
+            <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem;">
+              <i class="fa-solid fa-clipboard-check" style="color: #ef4444;"></i> Pedidos de Vínculo de Estudantes e Validação de Links
+            </h4>
+            <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+              Solicitações de estudantes para ingressar em equipes de projetos ou registrar links públicos aguardando decisão docente.
+            </p>
+          </div>
+          <button type="button" class="btn btn-outline" onclick="PI2.carregarPainelDocenteTab()" style="font-size: 0.82rem;">
+            <i class="fa-solid fa-rotate me-1"></i> Atualizar Pedidos
+          </button>
+        </div>
+
+        <div id="container-pendencias-docente">
+          <div class="pi2-vazio" style="padding: 1.25rem 0; font-size: 0.86rem; color: var(--text-muted);">
+            <i class="fa-solid fa-circle-check" style="color: var(--ifsc-green); margin-right: 0.35rem;"></i>
+            Nenhuma solicitação ou link aguardando aprovação no momento.
+          </div>
+        </div>
+      </div>
+
       <!-- SEÇÃO DE GESTÃO DA EQUIPE DOCENTE & PROFESSORES ORIENTADORES -->
       <div class="pi2-demandas-sinc-box" style="margin-top: 1rem; border-top: 3.5px solid var(--accent-amber);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
@@ -8635,8 +8667,9 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
       if (tabId === 'mural' && window.PI2 && typeof window.PI2.renderizarMural === 'function') {
         window.PI2.renderizarMural();
       }
-      if (tabId === 'docente' && window.PI2 && typeof window.PI2.renderizarTabelaDocentes === 'function') {
-        window.PI2.renderizarTabelaDocentes();
+      if (tabId === 'docente' && window.PI2) {
+        if (typeof window.PI2.renderizarTabelaDocentes === 'function') window.PI2.renderizarTabelaDocentes();
+        if (typeof window.PI2.carregarPainelDocenteTab === 'function') window.PI2.carregarPainelDocenteTab();
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -8901,7 +8934,7 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
 
   </script>
   <script src="pi2-config.js?v=3.4"></script>
-  <script src="pi2-live.js?v=3.5"></script>
+  <script src="pi2-live.js?v=3.6"></script>
   <script src="pi2-notas.js?v=3.4"></script>
 </body>
 </html>

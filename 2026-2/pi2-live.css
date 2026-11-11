@@ -1136,6 +1136,17 @@ body.is-docente .nav-tabs-custom button.docente-only {
   display: inline-flex;
 }
 
+/* Abas de conteúdo com .docente-only NUNCA devem aparecer sem .active */
+.tab-content.docente-only,
+body.is-docente .tab-content.docente-only:not(.active),
+.is-docente .tab-content.docente-only:not(.active) {
+  display: none !important;
+}
+body.is-docente .tab-content.docente-only.active,
+.is-docente .tab-content.docente-only.active {
+  display: block !important;
+}
+
 /* ==========================================================================
    Responsividade do Header e Menu de Abas
    ========================================================================== */
