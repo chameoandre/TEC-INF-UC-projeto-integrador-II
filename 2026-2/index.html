@@ -13,7 +13,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="pi2-live.css?v=3.4">
+  <link rel="stylesheet" href="pi2-live.css?v=3.5">
 
   <style>
     /* ==========================================================================
@@ -2854,7 +2854,7 @@
     <div class="header-top-row">
       <!-- Arte da Disciplina, Título & Badges Institucionais -->
       <div class="header-brand-box">
-        <img src="logo-pi2.jpg" alt="Logo Projeto Integrador II IFSC" class="header-logo" title="Projeto Integrador II - IFSC Garopaba">
+        <img src="logo-ifsc.png" alt="Instituto Federal de Santa Catarina" class="header-logo" title="IFSC Câmpus Garopaba — Projeto Integrador II">
         <div>
           <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.25rem;">
             <h1 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 0.45rem;">
@@ -2864,15 +2864,15 @@
           </div>
           <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem;">
             <span class="badge-subtle-success">
-              <i class="fa-solid fa-graduation-cap" style="margin-right: 0.25rem;"></i> Técnico Integrado em Informática
+              <i class="fa-solid fa-graduation-cap" style="margin-right: 0.25rem;"></i> Técnico em Informática
             </span>
             <span class="badge-subtle-info">
-              <i class="fa-solid fa-users" style="margin-right: 0.25rem;"></i> 60h &bull; Projetos &amp; Pesquisa
+              <i class="fa-solid fa-users" style="margin-right: 0.25rem;"></i> 60h &bull; Projetos
             </span>
             <span class="badge-subtle-warning d-none d-md-inline">
               <i class="fa-solid fa-trophy" style="margin-right: 0.25rem;"></i> Meta: Artigo COTB 2027
             </span>
-            <small style="color: var(--text-muted); font-size: 0.74rem; margin-left: 0.25rem;">&bull; IFSC Garopaba &bull; Prof. André Moraes &amp; Equipe Docente</small>
+            <small class="header-inst-txt" style="color: var(--text-muted); font-size: 0.74rem; margin-left: 0.25rem;">&bull; IFSC Garopaba &bull; Prof. André Moraes &amp; Equipe Docente</small>
           </div>
         </div>
       </div>
@@ -2904,38 +2904,38 @@
 
     <!-- Linha 2: Menu Principal por Abas Acoplado na Barra Superior Fixa -->
     <div class="nav-tabs-custom">
-      <button class="tab-btn active" onclick="switchTab('projetos')">
-        <i class="fa-solid fa-cubes"></i> 1. Painel de Projetos <span class="badge-count">11</span>
+      <button class="tab-btn active" onclick="switchTab('projetos')" title="1. Painel de Projetos Integradores">
+        <i class="fa-solid fa-cubes"></i> 1. Projetos <span class="badge-count">11</span>
       </button>
-      <button class="tab-btn" onclick="switchTab('avancos-pendencias')">
-        <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> 2. Raio-X da Turma
+      <button class="tab-btn" onclick="switchTab('avancos-pendencias')" title="2. Raio-X da Turma (Avanços &amp; Pendências)">
+        <i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan);"></i> 2. Raio-X
       </button>
-      <button class="tab-btn" onclick="switchTab('mural')">
-        <i class="fa-solid fa-comments" style="color: var(--ifsc-green-light);"></i> 3. Mural de Recados &amp; Demandas
+      <button class="tab-btn" onclick="switchTab('mural')" title="3. Mural Geral de Recados &amp; Demandas">
+        <i class="fa-solid fa-comments" style="color: var(--ifsc-green-light);"></i> 3. Mural
       </button>
-      <button class="tab-btn" onclick="switchTab('notas')">
-        <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> 4. Notas &amp; Avaliações
+      <button class="tab-btn" onclick="switchTab('notas')" title="4. Notas &amp; Avaliações da Turma">
+        <i class="fa-solid fa-clipboard-list" style="color: var(--accent-amber);"></i> 4. Notas
       </button>
-      <button class="tab-btn" onclick="switchTab('demandas')">
-        <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> 5. Demandas &amp; Checkpoints
+      <button class="tab-btn" onclick="switchTab('demandas')" title="5. Demandas &amp; Checkpoints">
+        <i class="fa-solid fa-list-check" style="color: var(--accent-blue);"></i> 5. Demandas
       </button>
-      <button class="tab-btn" onclick="switchTab('timeline')">
-        <i class="fa-solid fa-timeline"></i> 6. Timeline de Aulas
+      <button class="tab-btn" onclick="switchTab('timeline')" title="6. Timeline do Semestre &amp; Aulas">
+        <i class="fa-solid fa-timeline"></i> 6. Timeline
       </button>
-      <button class="tab-btn" onclick="switchTab('eventos')">
-        <i class="fa-solid fa-award" style="color: var(--accent-amber);"></i> 7. Eventos &amp; Artigos
+      <button class="tab-btn" onclick="switchTab('eventos')" title="7. Eventos &amp; Chamadas Científicas">
+        <i class="fa-solid fa-award" style="color: var(--accent-amber);"></i> 7. Eventos
       </button>
-      <button class="tab-btn" onclick="switchTab('utilitarios')">
-        <i class="fa-solid fa-screwdriver-wrench"></i> 8. Atalhos &amp; Links
+      <button class="tab-btn" onclick="switchTab('utilitarios')" title="8. Atalhos &amp; Links Úteis">
+        <i class="fa-solid fa-screwdriver-wrench"></i> 8. Atalhos
       </button>
-      <button class="tab-btn" onclick="switchTab('cotb-2027')">
-        <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> 9. Guia COTB 2027
+      <button class="tab-btn" onclick="switchTab('cotb-2027')" title="9. Guia do Artigo Computer on the Beach 2027">
+        <i class="fa-solid fa-umbrella-beach" style="color: var(--accent-amber);"></i> 9. COTB 2027
       </button>
-      <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')">
-        <i class="fa-solid fa-file-code"></i> 10. Status Overleaf <span class="badge-count" id="badge-overleaf-alert">2</span>
+      <button class="tab-btn" onclick="switchTab('diagnostico-overleaf')" title="10. Diagnóstico &amp; Status Overleaf">
+        <i class="fa-solid fa-file-code"></i> 10. Overleaf <span class="badge-count" id="badge-overleaf-alert">2</span>
       </button>
-      <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="Área restrita de gestão docente">
-        <i class="fa-solid fa-shield-halved text-warning"></i> 11. Painel Docente <span class="badge badge-subtle-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
+      <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="11. Gestão e Controle Docente (Restrito)">
+        <i class="fa-solid fa-shield-halved text-warning"></i> 11. Docente <span class="badge badge-subtle-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
       </button>
     </div>
   </header>
@@ -8901,7 +8901,7 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
 
   </script>
   <script src="pi2-config.js?v=3.4"></script>
-  <script src="pi2-live.js?v=3.4"></script>
+  <script src="pi2-live.js?v=3.5"></script>
   <script src="pi2-notas.js?v=3.4"></script>
 </body>
 </html>
