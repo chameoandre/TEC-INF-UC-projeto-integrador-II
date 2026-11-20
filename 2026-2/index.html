@@ -1050,8 +1050,8 @@
 
     .proj-links {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.4rem;
+      grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
+      gap: 0.35rem;
       padding-top: 0.9rem;
       border-top: 1px solid var(--border-color);
     }
@@ -7869,7 +7869,7 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
     }
 
     // Cópia dos dados gravada pelo scripts/sync_sheet.py (reserva para quando a leitura ao vivo falhar)
-    window.PI2_BAKED_AT = "19/11/2026 às 22:59";
+window.PI2_BAKED_AT = "19/11/2026 às 23:40";
     const projectsData = [
   {
     "id": 1,
@@ -8221,7 +8221,8 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
       "paper4": ""
     },
     "paperStatus": "https://www.overleaf.com/read/mkrntbkpvmgg#d42881",
-    "cotbStatus": "Pendente"
+    "cotbStatus": "Pendente",
+    "tutorial": "tutoriais/tutorial-dominio-proprio-estacao.pdf"
   },
   {
     "id": 9,
@@ -8521,6 +8522,12 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
                  </a>`
               : ''
             }
+            ${p.tutorial
+              ? `<a href="${p.tutorial}" target="_blank" class="link-btn" title="Tutorial Técnico: Registro de Domínio Próprio Gratuito" onclick="event.stopPropagation();" style="background: rgba(14, 165, 233, 0.18); border-color: rgba(14, 165, 233, 0.4); color: var(--accent-cyan); font-weight: 700;">
+                   <i class="fa-solid fa-graduation-cap"></i> Tutoriais
+                 </a>`
+              : ''
+            }
             <a href="${p.github}" target="_blank" class="link-btn ${!p.github ? 'disabled' : ''}" title="Repositório GitHub" onclick="event.stopPropagation();">
               <i class="fa-brands fa-github"></i> Git
             </a>
@@ -8757,6 +8764,7 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
             ? `<a href="${p.canva}" target="_blank" class="btn btn-outline" style="border-color: #60a5fa; color: #60a5fa;"><i class="fa-brands fa-google-drive"></i> Pasta Drive (Atend. Domiciliar)</a>`
             : `<a href="${p.canva}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-diagram-project"></i> Diagrama da arquitetura</a>`) : ''}
           ${p.pitch ? `<a href="${p.pitch}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-video"></i> Pitch em vídeo</a>` : ''}
+          ${p.tutorial ? `<a href="${p.tutorial}" target="_blank" class="btn btn-outline" style="border-color: var(--accent-cyan); color: var(--accent-cyan);"><i class="fa-solid fa-graduation-cap"></i> Tutorial Técnico (PDF)</a>` : ''}
         </div>
       `;
 
@@ -8934,7 +8942,7 @@ A avalia\c{c}\~{a}o do artefato foi dividida em quatro experimentos controlados:
 
   </script>
   <script src="pi2-config.js?v=3.4"></script>
-  <script src="pi2-live.js?v=3.6"></script>
+  <script src="pi2-live.js?v=3.7"></script>
   <script src="pi2-notas.js?v=3.4"></script>
 </body>
 </html>

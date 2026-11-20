@@ -1,0 +1,145 @@
+% =====================================================
+% CAPA / ABERTURA
+% =====================================================
+\capaTutorial{\faGlobe}{Registro de Domínio Próprio Gratuito \& Deploy Web}
+  {Guia prático para a Estação Meteorológica e projetos web/IoT com GitHub Student Pack}
+  {\chip{\faCloud}{Estação Meteorológica}\hspace{4pt}
+   \chip{\faGithub}{GitHub Pages \& DNS}\hspace{4pt}
+   \chip{\faGraduationCap}{GitHub Student Pack}}
+
+\vspace{0.4em}
+\cartoesUC{Domínio próprio oficial registrado sem custos e conectado com HTTPS ao dashboard da equipe}
+
+\begin{boxObjetivos}
+\begin{itemize}
+  \item \textbf{Ativar o benefício do GitHub Student Developer Pack} utilizando o e-mail institucional do IFSC (\texttt{@aluno.ifsc.edu.br});
+  \item \textbf{Resgatar um domínio de primeiro nível gratuito por 1 ano} (\texttt{.me} ou \texttt{.tech}) sem necessidade de cartão de crédito;
+  \item \textbf{Configurar os apontamentos de DNS (CNAME e registros A)} direcionados aos servidores do GitHub Pages;
+  \item \textbf{Ativar o domínio personalizado com HTTPS forçado} no repositório do projeto, garantindo 99,9\% de disponibilidade para bancas e avaliadores.
+\end{itemize}
+\end{boxObjetivos}
+
+\section{Contexto \& Arquitetura Recomendada}
+
+Para sistemas que integram hardware e web (como a Estação Meteorológica com Raspberry Pi e sensor BME280), manter o servidor web dependente exclusivamente da conexão local da placa pode trazer instabilidade (quedas de energia, IP dinâmico ou bloqueios de firewall/CGNAT da operadora).
+
+\begin{boxAtencao}[Por Que Evitar No-IP e Antigos Domínios Gratuitos?]
+Historicamente, muitos estudantes utilizam serviços como o \textbf{No-IP} gratuito ou domínios do antigo \textbf{Freenom} (\texttt{.tk}, \texttt{.ml}). Ambos devem ser evitados:
+\begin{itemize}
+  \item O \textbf{Freenom faliu e foi descontinuado} internacionalmente em decorrência de litígios jurídicos e abuso de spam;
+  \item O plano gratuito do \textbf{No-IP exige renovação manual por clique em e-mail a cada 30 dias} com captcha. Se a equipe esquecer, o link sai do ar repentinamente.
+\end{itemize}
+A solução profissional adotada pela indústria acadêmica é resgatar um \textbf{domínio próprio oficial de primeiro nível} através do programa educacional do GitHub.
+\end{boxAtencao}
+
+\begin{destaque}{ciano}{\faLayerGroup}{Arquitetura em Duas Camadas (Edge + Cloud)}
+A abordagem mais moderna e resiliente para o projeto é o desacoplamento:
+\begin{enumerate}
+  \item \textbf{Camada de Coleta (Raspberry Pi):} Script em Python realiza as leituras periódicas do sensor BME280 e apenas envia os dados (via requisição POST simples) para um banco/API em nuvem;
+  \item \textbf{Camada de Visualização (Dashboard Web):} O painel em HTML5/JavaScript fica hospedado na infraestrutura de alta disponibilidade do \textbf{GitHub Pages}, acessível publicamente através do domínio personalizado com certificado SSL automático.
+\end{enumerate}
+\end{destaque}
+
+\section{Passo a Passo: Da Ativação ao Ar}
+
+\passo{1}{Vincular o E-mail Institucional e Ativar o GitHub Student Pack}
+
+Qualquer uma das integrantes da equipe matriculadas no curso técnico integrado pode realizar este procedimento:
+
+\begin{enumerate}
+  \item Acesse sua conta no GitHub e navegue até \textbf{Settings $\rightarrow$ Emails};
+  \item No campo \textit{Add email address}, adicione seu e-mail institucional do IFSC (ex.: \texttt{nome.sobrenome@aluno.ifsc.edu.br}) e confirme a mensagem de verificação recebida na sua caixa de entrada;
+  \item Em seguida, abra o portal do programa: \url{https://education.github.com/pack};
+  \item Clique no botão verde \textbf{Sign up for Student Developer Pack} e selecione o seu e-mail \texttt{@aluno.ifsc.edu.br};
+  \item Como o domínio do IFSC já é pré-aprovado na base acadêmica do GitHub Education, a validação é concluída rapidamente (muitas vezes de forma automática).
+\end{enumerate}
+
+\passo{2}{Resgatar o Domínio Gratuito (Namecheap ou .TECH)}
+
+Com o pacote ativado, a equipe tem direito a um domínio de primeiro nível gratuito por 12 meses:
+
+\begin{destaque}{verdeVivo}{\faGlobe}{Opção A: Domínio .ME via Namecheap (nc.me) — Recomendada}
+\begin{enumerate}
+  \item Acesse diretamente o portal estudantil da Namecheap: \url{https://nc.me};
+  \item Clique no botão superior direito \textbf{Sign in with GitHub} e autorize a integração;
+  \item No campo de busca, pesquise o domínio desejado para o projeto (veja as sugestões abaixo);
+  \item O valor do carrinho será atualizado automaticamente para \textbf{\$0.00} (100\% gratuito com WhoisGuard e SSL);
+  \item Conclua o cadastro na Namecheap para ter acesso ao painel de gerenciamento de DNS.
+\end{enumerate}
+\end{destaque}
+
+\begin{boxDica}[Nomes de Domínio Testados e Disponíveis para Registro]
+Testamos a disponibilidade DNS no momento da elaboração deste material e os seguintes endereços estão livres para registro imediato:
+\begin{itemize}
+  \item \texttt{estacaogaropaba.me}
+  \item \texttt{estacao-ifsc.me}
+  \item \texttt{estacaometeorologica-ifsc.me}
+  \item \texttt{estacaogaropaba.tech} (disponível via \href{https://get.tech/github-student-pack}{\texttt{get.tech/github-student-pack}})
+\end{itemize}
+\end{boxDica}
+
+\passo{3}{Configurar os Apontamentos de DNS para o GitHub Pages}
+
+Para que os navegadores saibam que o domínio registrado deve abrir o site hospedado no GitHub, é necessário criar registros de DNS no painel da registradora (Namecheap ou .TECH):
+
+\begin{enumerate}
+  \item Entre no painel da Namecheap, acesse \textbf{Domain List $\rightarrow$ Manage $\rightarrow$ Advanced DNS};
+  \item Remova os registros padrão existentes e adicione os seguintes apontamentos:
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l X l}
+\toprule
+\textbf{Tipo de Registro} & \textbf{Host} & \textbf{Valor / Destino} & \textbf{TTL} \\
+\midrule
+\texttt{CNAME} & \texttt{www} & \texttt{sophirie.github.io} & Automático \\
+\texttt{A} & \texttt{@} & \texttt{185.199.108.153} & Automático \\
+\texttt{A} & \texttt{@} & \texttt{185.199.109.153} & Automático \\
+\texttt{A} & \texttt{@} & \texttt{185.199.110.153} & Automático \\
+\texttt{A} & \texttt{@} & \texttt{185.199.111.153} & Automático \\
+\bottomrule
+\end{tabularx}
+\caption{Registros DNS oficiais dos servidores do GitHub Pages.}
+\end{table}
+
+\passo{4}{Ativar o Domínio Personalizado no Repositório do GitHub}
+
+Agora basta informar ao repositório do projeto qual é o domínio que ele deve atender:
+
+\begin{enumerate}
+  \item Acesse o repositório da equipe: \url{https://github.com/sophirie/Estacao-Meteorologica-no-IFSC-Garopaba};
+  \item Clique na aba \textbf{Settings $\rightarrow$ Pages};
+  \item No campo \textbf{Custom domain}, digite o domínio registrado (ex.: \texttt{estacaogaropaba.me}) e clique em \textbf{Save};
+  \item O GitHub criará automaticamente um arquivo chamado \texttt{CNAME} na raiz do repositório;
+  \item Aguarde alguns instantes pela checagem de DNS e marque a caixa \textbf{Enforce HTTPS}. O GitHub emitirá um certificado SSL gratuito (Let's Encrypt) automaticamente.
+\end{enumerate}
+
+\section{Validação \& Verificação Técnica}
+
+\begin{boxTeste}[Como Testar a Propagação do Domínio]
+Após salvar as configurações de DNS, o processo de propagação mundial leva geralmente de 5 a 30 minutos. Para conferir o status:
+\begin{enumerate}
+  \item \textbf{Pelo Terminal:}
+\begin{saida}[Testando a resolução DNS no terminal]
+# Consulta o registro CNAME do subdomínio www
+nslookup www.estacaogaropaba.me
+
+# Consulta os registros A do domínio raiz
+dig +short estacaogaropaba.me
+# Resposta esperada: os IPs 185.199.108.153 ... do GitHub
+\end{saida}
+  \item \textbf{Pelo Navegador:} Abra uma janela anônima e acesse \url{https://estacaogaropaba.me}. O cadeado de conexão segura deve aparecer verde/fechado ao lado da URL.
+\end{enumerate}
+\end{boxTeste}
+
+\begin{boxChecklist}[Checklist de Entrega para a Equipe]
+\begin{itemize}[label={\faSquare[regular]}]
+  \item Solicitação aprovada no GitHub Student Developer Pack com e-mail do IFSC;
+  \item Domínio registrado na Namecheap (\texttt{nc.me}) ou .TECH com custo \$0.00;
+  \item Registros de DNS (\texttt{CNAME} e 4 registros \texttt{A}) configurados;
+  \item Opção \textit{Enforce HTTPS} ativa no GitHub Pages;
+  \item URL final atualizada no card do projeto e no artigo SBC no Overleaf.
+\end{itemize}
+\end{boxChecklist}

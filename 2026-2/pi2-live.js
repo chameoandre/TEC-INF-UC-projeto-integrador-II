@@ -39,6 +39,7 @@
   }
   function urlSegura(v) {
     var s = String(v == null ? '' : v).trim();
+    if (/^tutoriais\/[a-zA-Z0-9_\-\./]+\.pdf$/i.test(s) || /^[a-zA-Z0-9_\-\./]+\.pdf$/i.test(s)) return s;
     return /^https?:\/\/[^\s<>"'`]+$/i.test(s) ? s : '';
   }
   function $(sel, raiz) { return (raiz || document).querySelector(sel); }
@@ -175,7 +176,7 @@ function linhasParaProjetos(linhas) {
     novos.forEach(function (p) {
       ids[p.id] = true;
       var a = antigos[p.id];
-      if (a) ['dashboard', 'isDomiciliar'].forEach(function (k) { if (a[k] && !p[k]) p[k] = a[k]; });
+      if (a) ['dashboard', 'isDomiciliar', 'tutorial'].forEach(function (k) { if (a[k] && !p[k]) p[k] = a[k]; });
     });
     // Só o que fica fora da planilha por definição é mantido; projeto removido da planilha some daqui também.
     PI2.bruto.forEach(function (p) { if (!ids[p.id] && p.isDomiciliar) novos.push(p); });

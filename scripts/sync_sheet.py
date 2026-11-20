@@ -51,6 +51,9 @@ PROJETO_INDIVIDUAL = {
 # Painéis próprios de alguns projetos.
 DASHBOARDS = {7: "https://chameoandre.github.io/Luisa-s-COTB-Python-Game-notes-Project/"}
 
+# Tutoriais técnicos direcionados por projeto.
+TUTORIAIS = {8: "tutoriais/tutorial-dominio-proprio-estacao.pdf"}
+
 
 def fetch_csv_data():
     print("[*] Baixando a planilha em CSV...")
@@ -129,6 +132,8 @@ def parse_projects(csv_text):
         }
         if proj_id in DASHBOARDS:
             entry["dashboard"] = DASHBOARDS[proj_id]
+        if proj_id in TUTORIAIS:
+            entry["tutorial"] = TUTORIAIS[proj_id]
         if proj_id == 11:
             entry["isDomiciliar"] = True
         projects.append(entry)

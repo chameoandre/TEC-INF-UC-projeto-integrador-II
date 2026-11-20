@@ -1,0 +1,339 @@
+% =====================================================================
+% PREÂMBULO PADRÃO — TUTORIAIS TÉCNICOS DE PROJETO INTEGRADOR II (visual moderno)
+% UC Projeto Integrador II — Curso Técnico Integrado em Informática
+% IFSC Câmpus Garopaba
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\providecommand{\numeroRoteiro}{01}
+\providecommand{\tituloCurto}{Tutorial: Domínio Próprio Gratuito}
+
+% =====================================================
+% PACOTES
+% =====================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\AtBeginDocument{\shorthandoff{"}}
+\usepackage[default]{sourcesanspro}          % texto: sem serifa, leitura confortável
+\usepackage[scale=0.86]{sourcecodepro}       % código: monoespaçada moderna
+
+% =====================================================
+% ÍCONES (fontawesome5 com compatibilidade Tectonic no macOS)
+% =====================================================
+\usepackage{expl3}
+\ExplSyntaxOn
+\cs_set:Npn \tex_XeTeXglyphname:D #1#2 { }
+\ExplSyntaxOff
+\newcommand{\faDice}{}
+\usepackage{fontawesome5}
+
+\NewDocumentCommand\definirFaIcone{m m}{%
+  \expandafter\NewDocumentCommand\csname fa#1\endcsname{O{}}{%
+    \if\relax\detokenize{##1}\relax
+      \faIcon{#2}%
+    \else
+      \faIcon[##1]{#2}%
+    \fi
+  }%
+}
+\definirFaIcone{AngleRight}{angle-right}
+\definirFaIcone{BookOpen}{book-open}
+\definirFaIcone{Bullseye}{bullseye}
+\definirFaIcone{Calculator}{calculator}
+\definirFaIcone{ChalkboardTeacher}{chalkboard-teacher}
+\definirFaIcone{CheckCircle}{check-circle}
+\definirFaIcone{ChevronRight}{chevron-right}
+\definirFaIcone{Circle}{circle}
+\definirFaIcone{ClipboardCheck}{clipboard-check}
+\definirFaIcone{Code}{code}
+\definirFaIcone{Columns}{columns}
+\definirFaIcone{Database}{database}
+\definirFaIcone{DraftingCompass}{drafting-compass}
+\definirFaIcone{ExclamationTriangle}{exclamation-triangle}
+\definirFaIcone{ExternalLinkAlt}{external-link-alt}
+\definirFaIcone{Flag}{flag}
+\definirFaIcone{FolderOpen}{folder-open}
+\definirFaIcone{Github}{github}
+\definirFaIcone{LaptopCode}{laptop-code}
+\definirFaIcone{LayerGroup}{layer-group}
+\definirFaIcone{Lightbulb}{lightbulb}
+\definirFaIcone{Link}{link}
+\definirFaIcone{Lock}{lock}
+\definirFaIcone{Map}{map}
+\definirFaIcone{MapMarkerAlt}{map-marker-alt}
+\definirFaIcone{MousePointer}{mouse-pointer}
+\definirFaIcone{Server}{server}
+\definirFaIcone{Square}{square}
+\definirFaIcone{Terminal}{terminal}
+\definirFaIcone{Tools}{tools}
+\definirFaIcone{University}{university}
+\definirFaIcone{Check}{check}
+\definirFaIcone{Times}{times}
+\definirFaIcone{InfoCircle}{info-circle}
+\definirFaIcone{QuestionCircle}{question-circle}
+\definirFaIcone{Play}{play}
+\definirFaIcone{FileCode}{file-code}
+\definirFaIcone{FileAlt}{file-alt}
+\definirFaIcone{Folder}{folder}
+\definirFaIcone{Cogs}{cogs}
+\definirFaIcone{Cog}{cog}
+\definirFaIcone{Eye}{eye}
+\definirFaIcone{Desktop}{desktop}
+\definirFaIcone{Globe}{globe}
+\definirFaIcone{Search}{search}
+\definirFaIcone{Download}{download}
+\definirFaIcone{Upload}{upload}
+\definirFaIcone{Sync}{sync}
+\definirFaIcone{ShareAlt}{share-alt}
+\definirFaIcone{Edit}{edit}
+\definirFaIcone{Trash}{trash}
+\definirFaIcone{Plus}{plus}
+\definirFaIcone{Minus}{minus}
+\definirFaIcone{Cloud}{cloud}
+\definirFaIcone{GraduationCap}{graduation-cap}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\graphicspath{{../../figures/}{figures/}{../figures/}}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{xurl}                            % URLs longas quebram em qualquer ponto
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, babel}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{upquote}
+\usepackage{lastpage}
+\usepackage{qrcode}
+\usepackage{multicol}
+\usepackage{setspace}
+\usepackage{needspace}
+\usepackage{adjustbox}
+
+\geometry{top=2.6cm, bottom=2.6cm, left=2cm, right=2cm, headsep=0.8cm}
+\linespread{1.18}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{6em}
+
+% =====================================================
+% PALETA (cores institucionais IFSC, em tons suaves)
+% =====================================================
+\definecolor{azul}{RGB}{30,60,90}
+\definecolor{azulMedio}{RGB}{37,99,235}
+\definecolor{verde}{RGB}{22,101,52}
+\definecolor{verdeVivo}{RGB}{22,163,74}
+\definecolor{ambar}{RGB}{217,119,6}
+\definecolor{vermelho}{RGB}{220,38,38}
+\definecolor{roxo}{RGB}{124,58,237}
+\definecolor{laranja}{RGB}{194,65,12}
+\definecolor{ciano}{RGB}{14,116,144}
+\definecolor{tinta}{RGB}{30,41,59}
+\definecolor{suave}{RGB}{100,116,139}
+\definecolor{borda}{RGB}{226,232,240}
+\definecolor{fundo}{RGB}{248,250,252}
+\definecolor{barraTitulo}{RGB}{241,245,249}
+\definecolor{terminal}{RGB}{15,23,42}
+
+\colorlet{azulTitulo}{azul}
+\colorlet{azulObjetivos}{azul}
+\colorlet{ifscGreen}{verdeVivo}
+\colorlet{borderGray}{borda}
+\colorlet{bordaCodigo}{borda}
+
+\color{tinta}
+
+% =====================================================
+% LISTINGS — estilos de código
+% =====================================================
+\newcommand{\fonteCodigo}{\fontsize{8.5pt}{11.2pt}\selectfont\ttfamily}
+
+\lstdefinestyle{base}{
+    basicstyle=\fonteCodigo\color{tinta},
+    keywordstyle=\color{roxo}\bfseries,
+    ndkeywordstyle=\color{ciano}\bfseries,
+    commentstyle=\color{suave}\itshape,
+    stringstyle=\color{verde},
+    identifierstyle=\color{tinta},
+    breaklines=true, columns=fullflexible, keepspaces=true,
+    showstringspaces=false, upquote=true, tabsize=2,
+    frame=none, numbers=none, aboveskip=0pt, belowskip=0pt,
+    extendedchars=true,
+    literate=
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+      {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+      {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1
+      {ç}{{\c c}}1 {Ç}{{\c C}}1
+      {–}{{--}}1 {—}{{---}}1 {±}{{$\pm$}}1 {≈}{{$\approx$}}1 {÷}{{$\div$}}1
+}
+
+\lstdefinestyle{saida}{
+    style=base,
+    language={},
+    basicstyle=\fonteCodigo\color{white!92!black},
+    identifierstyle=\color{white!92!black}
+}
+\lstset{style=base}
+
+% =====================================================
+% TCOLORBOX — caixas modernas
+% =====================================================
+\tcbset{
+  janela/.style={
+    enhanced, breakable,
+    colback=fundo, colframe=borda, boxrule=0.6pt, arc=6pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    fonttitle=\sffamily\footnotesize\bfseries,
+    coltitle=suave, colbacktitle=barraTitulo,
+    toptitle=5pt, bottomtitle=5pt, titlerule=0.6pt,
+    titlerule style={borda},
+    before skip=6pt, after skip=10pt,
+  },
+  cartao/.style={
+    enhanced, colback=fundo, colframe=borda, boxrule=0.6pt, arc=6pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt, fontupper=\small
+  }
+}
+
+\newcommand{\pontosJanela}{%
+  \textcolor{vermelho!60}{\faCircle}\hspace{3pt}%
+  \textcolor{ambar!60}{\faCircle}\hspace{3pt}%
+  \textcolor{verdeVivo!60}{\faCircle}\hspace{8pt}}
+
+\newtcblisting{saida}[1][Terminal]{
+    enhanced, listing only, breakable,
+    colback=terminal, colframe=terminal, boxrule=0pt, arc=6pt,
+    left=10pt, right=10pt, top=4pt, bottom=6pt,
+    title={\faTerminal\hspace{0.5em}#1}, coltitle=white!65!black,
+    colbacktitle=terminal, fonttitle=\sffamily\footnotesize\bfseries,
+    toptitle=3pt, bottomtitle=0pt, titlerule=0pt,
+    before skip=6pt, after skip=10pt,
+    listing options={style=saida}
+}
+
+\newtcolorbox{destaque}[3]{
+    enhanced, breakable,
+    colback=#1!6, frame hidden, arc=6pt,
+    borderline west={3.5pt}{0pt}{#1},
+    left=14pt, right=12pt, top=9pt, bottom=9pt,
+    title={{\color{#1}#2}\hspace{0.5em}\textbf{#3}},
+    coltitle=#1!85!black, fonttitle=\sffamily\normalsize\bfseries,
+    attach title to upper, after title={\par\vspace{4pt}},
+    before skip=8pt, after skip=10pt
+}
+
+\newenvironment{boxObjetivos}[1][Objetivos Deste Tutorial]{%
+  \begin{destaque}{azul}{\faBullseye}{#1}}{\end{destaque}}
+
+\newenvironment{boxAtencao}[1][Atenção]{%
+  \begin{destaque}{ambar}{\faExclamationTriangle}{#1}}{\end{destaque}}
+
+\newenvironment{boxDica}[1][Dica Prática]{%
+  \begin{destaque}{verdeVivo}{\faLightbulb}{#1}}{\end{destaque}}
+
+\newenvironment{boxTeste}[1][Como Testar]{%
+  \begin{destaque}{ciano}{\faCheckCircle}{#1}}{\end{destaque}}
+
+\newenvironment{boxChecklist}[1][Checklist de Finalização]{%
+  \begin{destaque}{roxo}{\faClipboardCheck}{#1}}{\end{destaque}}
+
+\newcommand{\chip}[2]{%
+  \tcbox[on line, colback=fundo, colframe=borda, arc=4pt, boxrule=0.6pt,
+      left=6pt, right=6pt, top=2pt, bottom=2pt, boxsep=0pt]{%
+    \footnotesize{\color{azulMedio}#1}\hspace{4pt}\textbf{#2}}}
+
+\newcommand{\circulo}[2][verdeVivo]{%
+  \tikz[baseline=(c.base)]\node[circle, fill=#1, inner sep=0pt, minimum size=1.5em,
+      text=white, font=\sffamily\small\bfseries](c){#2};}
+
+\newcommand{\passo}[2]{%
+  \par\vspace{0.6em}\noindent
+  \tcbox[on line, colback=azul, colframe=azul, arc=4pt, boxrule=0pt,
+      left=6pt, right=6pt, top=2pt, bottom=2pt, boxsep=0pt]{\sffamily\footnotesize\bfseries\color{white}Passo #1}%
+  \hspace{0.55em}{\bfseries\color{azul}#2}%
+  \par\nopagebreak\vspace{-0.2em}}
+
+% =====================================================
+% ABERTURA PADRÃO DO TUTORIAL
+% =====================================================
+\newcommand{\capaTutorial}[4]{%
+\begin{tcolorbox}[enhanced, frame hidden, arc=12pt,
+    interior style={left color=azul, right color=verde},
+    left=20pt, right=20pt, top=18pt, bottom=16pt, colupper=white,
+    overlay={\node[anchor=east, opacity=0.13, font=\fontsize{90}{90}\selectfont, text=white] at ([xshift=-14pt]frame.east) {#1};}]
+{\footnotesize\bfseries\color{white!80!azul}TUTORIAL PRÁTICO \numeroRoteiro\hspace{0.6em}\textbullet\hspace{0.6em}PROJETO INTEGRADOR II}\par\vspace{2pt}
+{\fontsize{22}{27}\selectfont\bfseries #2}\par\vspace{2pt}
+{\large #3}\par\vspace{10pt}
+#4
+\end{tcolorbox}}
+
+\newcommand{\cartoesUC}[1]{%
+\begin{tcbraster}[raster columns=3, raster equal height, raster column skip=8pt]
+\begin{tcolorbox}[cartao]
+{\color{azulMedio}\faUniversity}\hspace{0.4em}\textbf{Unidade Curricular}\par\vspace{2pt}
+Projeto Integrador II\\ {\color{suave}Técnico em Informática Integrado}
+\end{tcolorbox}
+\begin{tcolorbox}[cartao]
+{\color{azulMedio}\faChalkboardTeacher}\hspace{0.4em}\textbf{Orientação Docente}\par\vspace{2pt}
+Prof. Dr. André Moraes\\ {\color{suave}IFSC Câmpus Garopaba}
+\end{tcolorbox}
+\begin{tcolorbox}[cartao]
+{\color{azulMedio}\faFlag}\hspace{0.4em}\textbf{Resultado Esperado}\par\vspace{2pt}
+#1
+\end{tcolorbox}
+\end{tcbraster}}
+
+% =====================================================
+% HIPERLINKS
+% =====================================================
+\hypersetup{colorlinks=true, linkcolor=azulMedio, urlcolor=verde, citecolor=azul}
+
+% =====================================================
+% CABEÇALHO E RODAPÉ
+% =====================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{%
+    \IfFileExists{../../figures/garopaba_horizontal_marca2015_PNG.png}{%
+        \raisebox{-0.25\height}{\includegraphics[height=0.95cm]{../../figures/garopaba_horizontal_marca2015_PNG.png}}%
+    }{%
+        \IfFileExists{figures/garopaba_horizontal_marca2015_PNG.png}{%
+            \raisebox{-0.25\height}{\includegraphics[height=0.95cm]{figures/garopaba_horizontal_marca2015_PNG.png}}%
+        }{\textbf{\color{verde} IFSC — Câmpus Garopaba}}%
+    }}
+\fancyhead[R]{\footnotesize\color{suave}\textbf{\color{azul}Tutorial Técnico}\hspace{0.5em}\textbullet\hspace{0.5em}\tituloCurto}
+\fancyfoot[L]{\footnotesize\color{suave}Projeto Integrador II\hspace{0.4em}\textbullet\hspace{0.4em}Técnico em Informática Integrado}
+\fancyfoot[R]{\tcbox[on line, colback=azul!8, colframe=azul!8, arc=6pt, boxrule=0pt, left=5pt, right=5pt, top=1pt, bottom=1pt, boxsep=0pt]{\footnotesize\color{azul}\bfseries\thepage\,/\,\pageref*{LastPage}}}
+\renewcommand{\headrule}{{\color{borda}\hrule height 0.6pt}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{36pt}
+
+% =====================================================
+% TÍTULOS DE SEÇÃO
+% =====================================================
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{azul}}
+  {\tikz[baseline=(n.base)]\node[fill=azul, rounded corners=5pt, text=white, inner sep=5pt,
+      minimum width=1.9em, font=\large\bfseries](n){\thesection};}
+  {0.7em}{}
+\titlespacing*{\section}{0pt}{1.5em}{0.6em}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{azul!85!black}}
+  {{\color{verdeVivo}\thesubsection}}
+  {0.6em}{}
+\titlespacing*{\subsection}{0pt}{1.1em}{0.4em}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=0.25em, topsep=0.3em, label={\color{verdeVivo}\small\faAngleRight}}
+\setlist[enumerate]{leftmargin=2.2em, itemsep=0.45em, topsep=0.3em}
